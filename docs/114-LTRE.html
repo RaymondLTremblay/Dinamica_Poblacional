@@ -1,0 +1,2568 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>ltre – Diagnostico Poblacional</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./113-Funciones_de_Transferencia.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b53751a350365c71b6c909e95f209ed1.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-0309b8b1721542f374478695392ebb2d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-083d847ecde08941f1699ed9c8914ce7.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="site_libs/viz-1.8.2/viz.js"></script>
+<link href="site_libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
+<script src="site_libs/grViz-binding-1.0.11.9000/grViz.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta property="og:title" content="Diagnostico Poblacional">
+<meta property="og:description" content="">
+<meta property="og:image" content="Figures/imagen1.jpg">
+<meta property="og:site_name" content="Diagnostico Poblacional">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Capítulos</a></li><li class="breadcrumb-item"><a href="./114-LTRE.html">Experimento de Respuesta de Tabla de Vida</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./images/logo.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Capítulos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./102-Intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introducción</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./103-Ciclos_de_Vida.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ciclos de Vida</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./104-Recopilacion_datos_en_el_campo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Recopilación de datos en el campo</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./105-Transiciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Calcular transiciones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./106-calcular_fecundidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Calcular fecundidad</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./107-matU_matF_matC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Suma de matrices</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./108-Bayesian_PPM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Estimados bayesianos de PPM</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./109-Crecimiento_poblacional.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Crecimiento poblacional</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./110-Indices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Índices demográficos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./111-Elasticidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Elasticidad</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./112-Dinamica_de_Transiciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dinámica de Transiciones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./113-Funciones_de_Transferencia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Funciones de Transferencia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./114-LTRE.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Experimento de Respuesta de Tabla de Vida</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#ERTV" id="toc-ERTV" class="nav-link active" data-scroll-target="#ERTV">Experimento de Respuesta de Tabla de Vida</a>
+  <ul class="collapse">
+  <li><a href="#introducción-a-experimento-de-respuesta-de-tabla-de-vida" id="toc-introducción-a-experimento-de-respuesta-de-tabla-de-vida" class="nav-link" data-scroll-target="#introducción-a-experimento-de-respuesta-de-tabla-de-vida">Introducción a <strong>Experimento de Respuesta de Tabla de Vida</strong></a>
+  <ul class="collapse">
+  <li><a href="#cómo-se-diferencia-la-elasticidad-de-ertv" id="toc-cómo-se-diferencia-la-elasticidad-de-ertv" class="nav-link" data-scroll-target="#cómo-se-diferencia-la-elasticidad-de-ertv">¿Cómo se diferencia la elasticidad de ERTV?</a></li>
+  </ul></li>
+  <li><a href="#métodos" id="toc-métodos" class="nav-link" data-scroll-target="#métodos">Métodos</a>
+  <ul class="collapse">
+  <li><a href="#ejemplo-práctico-de-ertv" id="toc-ejemplo-práctico-de-ertv" class="nav-link" data-scroll-target="#ejemplo-práctico-de-ertv">Ejemplo práctico de ERTV</a></li>
+  <li><a href="#matrices-de-proyecciones-y-ciclo-de-vida-por-especie-de-hospedero" id="toc-matrices-de-proyecciones-y-ciclo-de-vida-por-especie-de-hospedero" class="nav-link" data-scroll-target="#matrices-de-proyecciones-y-ciclo-de-vida-por-especie-de-hospedero">Matrices de proyecciones y ciclo de vida por especie de hospedero</a></li>
+  <li><a href="#diagrama-del-ciclo-de-vida" id="toc-diagrama-del-ciclo-de-vida" class="nav-link" data-scroll-target="#diagrama-del-ciclo-de-vida">Diagrama del ciclo de vida</a></li>
+  <li><a href="#diagrama-para-quercus-martinezii" id="toc-diagrama-para-quercus-martinezii" class="nav-link" data-scroll-target="#diagrama-para-quercus-martinezii">Diagrama para <em>Quercus martinezii</em></a></li>
+  <li><a href="#diagrama-para-quercus-rugosa" id="toc-diagrama-para-quercus-rugosa" class="nav-link" data-scroll-target="#diagrama-para-quercus-rugosa">Diagrama para Quercus rugosa</a></li>
+  </ul></li>
+  <li><a href="#procedimiento-para-ertv-en-excel" id="toc-procedimiento-para-ertv-en-excel" class="nav-link" data-scroll-target="#procedimiento-para-ertv-en-excel">Procedimiento para ERTV en Excel</a></li>
+  <li><a href="#procedimiento-en-r" id="toc-procedimiento-en-r" class="nav-link" data-scroll-target="#procedimiento-en-r">Procedimiento en R</a>
+  <ul class="collapse">
+  <li><a href="#tasa-vital-sobre-q.-martinezzi" id="toc-tasa-vital-sobre-q.-martinezzi" class="nav-link" data-scroll-target="#tasa-vital-sobre-q.-martinezzi">Tasa vital sobre <em>Q. martinezzi</em></a></li>
+  <li><a href="#tasa-vital-sobre-q.-rugosa" id="toc-tasa-vital-sobre-q.-rugosa" class="nav-link" data-scroll-target="#tasa-vital-sobre-q.-rugosa">Tasa vital sobre <em>Q. rugosa</em></a></li>
+  <li><a href="#extraer-los-elementos-de-matriz-utilizando-los-nombres-de-las-tasas-vitales" id="toc-extraer-los-elementos-de-matriz-utilizando-los-nombres-de-las-tasas-vitales" class="nav-link" data-scroll-target="#extraer-los-elementos-de-matriz-utilizando-los-nombres-de-las-tasas-vitales">Extraer los elementos de matriz utilizando los nombres de las tasas vitales</a></li>
+  <li><a href="#calcular-las-sensibilidades-y-elasticidades-de-onciudium-brachyandrum-de-ambas-matrices" id="toc-calcular-las-sensibilidades-y-elasticidades-de-onciudium-brachyandrum-de-ambas-matrices" class="nav-link" data-scroll-target="#calcular-las-sensibilidades-y-elasticidades-de-onciudium-brachyandrum-de-ambas-matrices">Calcular las sensibilidades y elasticidades de <em>Onciudium brachyandrum</em> de ambas matrices</a></li>
+  </ul></li>
+  <li><a href="#hay-algo-extraño-en-la-matriz-de-sensibilidades-y-elasticidades-no-se-ve-bien.-hay-elasticidad-negativas-y-esto-no-es-posible.-hay-que-revisar-el-código." id="toc-hay-algo-extraño-en-la-matriz-de-sensibilidades-y-elasticidades-no-se-ve-bien.-hay-elasticidad-negativas-y-esto-no-es-posible.-hay-que-revisar-el-código." class="nav-link" data-scroll-target="#hay-algo-extraño-en-la-matriz-de-sensibilidades-y-elasticidades-no-se-ve-bien.-hay-elasticidad-negativas-y-esto-no-es-posible.-hay-que-revisar-el-código.">HAY algo extraño en la matriz de sensibilidades y elasticidades, no se ve bien., hay elasticidad negativas, y esto no es posible. Hay que revisar el código.</a>
+  <ul class="collapse">
+  <li><a href="#calcular-las-diferencias-en-tasas-vitales-entre-las-especies" id="toc-calcular-las-diferencias-en-tasas-vitales-entre-las-especies" class="nav-link" data-scroll-target="#calcular-las-diferencias-en-tasas-vitales-entre-las-especies">Calcular las diferencias en tasas vitales entre las especies</a></li>
+  <li><a href="#calcular-las-tasas-vitales-para-la-matriz-media" id="toc-calcular-las-tasas-vitales-para-la-matriz-media" class="nav-link" data-scroll-target="#calcular-las-tasas-vitales-para-la-matriz-media">Calcular las tasas vitales para la matriz media</a></li>
+  <li><a href="#calcular-las-tasas-sensibilidades-y-elasticidades-para-la-matriz-media" id="toc-calcular-las-tasas-sensibilidades-y-elasticidades-para-la-matriz-media" class="nav-link" data-scroll-target="#calcular-las-tasas-sensibilidades-y-elasticidades-para-la-matriz-media">Calcular las tasas sensibilidades y elasticidades para la matriz media</a></li>
+  <li><a href="#calcular-las-contribuciones-de-ertv-y-ver-los-resultados" id="toc-calcular-las-contribuciones-de-ertv-y-ver-los-resultados" class="nav-link" data-scroll-target="#calcular-las-contribuciones-de-ertv-y-ver-los-resultados">Calcular las contribuciones de ERTV y ver los resultados</a></li>
+  <li><a href="#resultados-de-ertv" id="toc-resultados-de-ertv" class="nav-link" data-scroll-target="#resultados-de-ertv">Resultados de ERTV</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Capítulos</a></li><li class="breadcrumb-item"><a href="./114-LTRE.html">Experimento de Respuesta de Tabla de Vida</a></li></ol></nav></header>
+
+
+
+
+<section id="ERTV" class="level1">
+<h1>Experimento de Respuesta de Tabla de Vida</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>por : Adriana Ramírez-Martínez</p>
+<section id="introducción-a-experimento-de-respuesta-de-tabla-de-vida" class="level2">
+<h2 class="anchored" data-anchor-id="introducción-a-experimento-de-respuesta-de-tabla-de-vida">Introducción a <strong>Experimento de Respuesta de Tabla de Vida</strong></h2>
+<p>La variación en los estimados de los parámetros de la matriz son inherentes a la biología. Esa variación puede ser a consecuencia de múltiples factores individuales y en combinaciones, incluyendo efectos de tiempo, espacio, genético, tamaño de muestra y suerte (<span class="citation" data-cites="hernandez2024natural">Hernández et al. (<a href="#ref-hernandez2024natural" role="doc-biblioref">2024</a>)</span>) La variación en las parámetros de la historia de vida de una especie y las causas de estas diferencias se puede evaluar a diferentes niveles: genético, demográfico, espacial o temporal. Esta variación en ecología es la norma. La variación se encuentra en todos aspectos desde la parte genética de los individuos que compone una población, la variación ambiental y las interacciones bióticas y abióticas; además de la plasticidad fenotípica que es la interacción entre la genética y el ambiente. ¿Cuál es esa variación? ¿en otra palabra qué es lo que varía? y ¿cómo los individuos responden a las variables bióticas y abióticas? son aspectos importantes para determinar la ecología, evolución y conservación de las especies. La causa de la variación en una población se puede resumir a tres componentes principales, la genética, el efecto del ambiente y la interacción entre ambiente y genética (plasticidad fenotípica) (<span class="citation" data-cites="hastings2021effects">Hastings et al. (<a href="#ref-hastings2021effects" role="doc-biblioref">2021</a>)</span>; <span class="citation" data-cites="sun2019multivariate">Sun et al. (<a href="#ref-sun2019multivariate" role="doc-biblioref">2019</a>)</span>). Se asume que el tamaño de muestra es suficiente grande para no ser la causa de la variación. Dentro de un contexto de dinámica poblacional las condiciones que los individuos en las poblaciones experimentan varían, ya sea durante tratamientos manipulados, localidades o periodos de tiempo, y por consecuencia los datos que colectamos con diferencias en espacio/tiempo también varían y pudieran tener efecto sobre la matriz de proyección poblacional <strong>A</strong>. Por tanto, las entradas (los parámetros) de esa matriz <strong>A</strong> variarán en tiempo/espacio o experimento y esto tendría un impacto sobre la tasa de crecimiento poblacional (λ) y en los estimados de dispersión (Intervalo de confianza o credibilidad; <span class="citation" data-cites="caswell2000matrix">Caswell (<a href="#ref-caswell2000matrix" role="doc-biblioref">2000</a>)</span>, <span class="citation" data-cites="caswell2010life">Caswell (<a href="#ref-caswell2010life" role="doc-biblioref">2010</a>)</span>).</p>
+<p>Tomando en cuenta lo anterior un Experimento de Respuesta de Tabla de Vida (<strong>ERTV</strong>) conocido también como <em>Life Table Response Experiment</em> (LTRE por sus siglas en inglés) descompone la diferencia o varianza en <em>λ</em> entre múltiples poblaciones o tiempo dentro de las contribuciones de los elementos de la matriz y sus interacciones (<span class="citation" data-cites="caswell1989analysis">Caswell (<a href="#ref-caswell1989analysis" role="doc-biblioref">1989</a>)</span>). Entonces al realizar este análisis podemos tener una apreciación de cómo los cambios en la matriz de datos recolectados en diferentes tiempos y espacio impactan las tasas vitales y a su vez que causan cambios en el crecimiento intrínseco <em>λ</em> y otros parámetros poblacionales (<span class="citation" data-cites="caswell1989analysis">Caswell (<a href="#ref-caswell1989analysis" role="doc-biblioref">1989</a>)</span>, <span class="citation" data-cites="caswell2010life">Caswell (<a href="#ref-caswell2010life" role="doc-biblioref">2010</a>)</span>).</p>
+<p>Desde la aplicación del primer ERTV por Birch (1953) en su estudio sobre el efecto de la temperatura, humedad y el alimento sobre tres especies de escarabajos de harina, las aplicaciones de estos análisis han sido variadas con diversos fines en las últimas dos décadas (<span class="citation" data-cites="caswell1989analysis">Caswell (<a href="#ref-caswell1989analysis" role="doc-biblioref">1989</a>)</span>, <span class="citation" data-cites="caswell2010life">Caswell (<a href="#ref-caswell2010life" role="doc-biblioref">2010</a>)</span>). Tanto en diseños fijos en los que se manipulan uno o más factores, como en diseños aleatorios en los que se analizan parámetros demográficos en condiciones naturales no manipuladas a lo largo del tiempo o del espacio (<span class="citation" data-cites="horvitz1997relative">Horvitz, Schemske, and Caswell (<a href="#ref-horvitz1997relative" role="doc-biblioref">1997</a>)</span>; <span class="citation" data-cites="teitel2016assessing">Teitel, Klimowski, and Campbell (<a href="#ref-teitel2016assessing" role="doc-biblioref">2016</a>)</span>). Los diseños fijos se han utilizado en poblaciones de animales para investigar las consecuencias demográficas de la exposición a contaminantes, la manipulación del alimento o la manipulación de la densidad poblacional (<span class="citation" data-cites="hansen1999multiannual">Hansen, Stenseth, and Henttonen (<a href="#ref-hansen1999multiannual" role="doc-biblioref">1999</a>)</span>, 1999; <span class="citation" data-cites="levin1996demographic">Levin et al. (<a href="#ref-levin1996demographic" role="doc-biblioref">1996</a>)</span>; <span class="citation" data-cites="oli2001effect">Oli, Slade, and Dobson (<a href="#ref-oli2001effect" role="doc-biblioref">2001</a>)</span>). En plantas, los análisis ERTV se han utilizado para evaluar las consecuencias demográficas de la disponibilidad de polinizadores o de la herbívora, competencia, efectos en intensidades de cosecha y de fenómenos naturales e inducidos por el humano (<span class="citation" data-cites="davison2010demographic">Davison et al. (<a href="#ref-davison2010demographic" role="doc-biblioref">2010</a>)</span>; <span class="citation" data-cites="gaoue2010effects">Gaoue and Ticktin (<a href="#ref-gaoue2010effects" role="doc-biblioref">2010</a>)</span>; <span class="citation" data-cites="garcia2002reproductive">Garcı́a and Ehrlén (<a href="#ref-garcia2002reproductive" role="doc-biblioref">2002</a>)</span>; <span class="citation" data-cites="hart2021simulated">Hart-Fredeluces, Ticktin, and Lake (<a href="#ref-hart2021simulated" role="doc-biblioref">2021</a>)</span>; <span class="citation" data-cites="jacquemyn2012stochastic">Jacquemyn et al. (<a href="#ref-jacquemyn2012stochastic" role="doc-biblioref">2012</a>)</span>; <span class="citation" data-cites="miriti2001effects">Miriti, Joseph Wright, and Howe (<a href="#ref-miriti2001effects" role="doc-biblioref">2001</a>)</span>; <span class="citation" data-cites="mondragon2009population">Mondragón (<a href="#ref-mondragon2009population" role="doc-biblioref">2009</a>)</span>; <span class="citation" data-cites="nordbakken2004demography">Nordbakken, Rydgren, and Økland (<a href="#ref-nordbakken2004demography" role="doc-biblioref">2004</a>)</span>; <span class="citation" data-cites="schmidt2011matrix">Schmidt et al. (<a href="#ref-schmidt2011matrix" role="doc-biblioref">2011</a>)</span>).</p>
+<p>Los métodos para calcular los ERTV están constantemente actualizándose y de acuerdo con (<span class="citation" data-cites="hernandez2023exact">Hernández et al. (<a href="#ref-hernandez2023exact" role="doc-biblioref">2023</a>)</span>) existen 186 análisis de ERTV para 75 especies de animales y 1487 para 200 especies de plantas. Aunque en este trabajo no utilizamos la metodología expuesta por dichos autores mostramos una forma práctica de la aplicación de este análisis.</p>
+<section id="cómo-se-diferencia-la-elasticidad-de-ertv" class="level3">
+<h3 class="anchored" data-anchor-id="cómo-se-diferencia-la-elasticidad-de-ertv">¿Cómo se diferencia la elasticidad de ERTV?</h3>
+<p>A diferencia de la elasticidad, el cual es un tipo de análisis de perturbación que examina cuánto cambiaría el crecimiento de la población si se cambiaran una de las entradas de la matriz comparando múltiples matriz, el análisis ERTV examina cuánto cambió <em>λ</em> en función de la variación observada en las entradas de la matriz (<span class="citation" data-cites="caswell2000matrix">Caswell (<a href="#ref-caswell2000matrix" role="doc-biblioref">2000</a>)</span>, <span class="citation" data-cites="caswell2010life">Caswell (<a href="#ref-caswell2010life" role="doc-biblioref">2010</a>)</span>; <span class="citation" data-cites="horvitz1997relative">Horvitz, Schemske, and Caswell (<a href="#ref-horvitz1997relative" role="doc-biblioref">1997</a>)</span>); y por consecuencia es un análisis que toma en cuenta el cambio de las variaciones individualmente registradas en matrices en diferentes poblaciones/ tiempo / experimentos, etc. (<span class="citation" data-cites="caswell2010life">Caswell (<a href="#ref-caswell2010life" role="doc-biblioref">2010</a>)</span>). Nota que ERTV es una herramienta suplementaria para evaluar el efecto de perturbaciones como los de elasticidad (<span class="citation" data-cites="caswell1989analysis">Caswell (<a href="#ref-caswell1989analysis" role="doc-biblioref">1989</a>)</span>), dinámica de transiciones (<span class="citation" data-cites="stott2011framework">Stott, Townley, and Hodgson (<a href="#ref-stott2011framework" role="doc-biblioref">2011</a>)</span>) y funciones de transferencias (<span class="citation" data-cites="stott2012beyond">Stott, Hodgson, and Townley (<a href="#ref-stott2012beyond" role="doc-biblioref">2012</a>)</span>) y no un reemplazos. Cada una de estas herramientas tiene un propósito y una interpretación diferente con sus supuestos.</p>
+<hr>
+</section>
+</section>
+<section id="métodos" class="level2">
+<h2 class="anchored" data-anchor-id="métodos">Métodos</h2>
+<section id="ejemplo-práctico-de-ertv" class="level3">
+<h3 class="anchored" data-anchor-id="ejemplo-práctico-de-ertv">Ejemplo práctico de ERTV</h3>
+<p>Para ejemplificar el cálculo de los ERTV utilizaremos los datos recabados por Ramírez-Martínez colectados de a 2017-2018 para la orquídea epífita <em>Oncidium brachyandrum</em> Lindl. en un bosque de encino estacional en Oaxaca, México (<span class="citation" data-cites="ramirez2021host">Ramı́rez Martı́nez et al. (<a href="#ref-ramirez2021host" role="doc-biblioref">2021</a>)</span>). La pregunta principal del estudio era saber qué tasas vitales estaban ligadas a las variaciones en los valores de λ de poblaciones de <em>O. brachyandrum</em> creciendo sobre dos hospederos <em>Quercus martinezii</em> C.H.Mull. y <em>Q. rugosa</em> Née. Usando el método ERTV se pudo evaluar el efecto que tiene la variación observada en los parámetros de las matrices en función de las especies de hospedero en los que se encontraban creciendo.</p>
+<p>Como el ERTV es una forma de análisis retrospectivo y es análogo al ANOVA (porque cuantifica los efectos observados de los elementos individuales de matriz sobre la variación observada en <em>λ</em>, en contraposición a los efectos esperados) se requiere de un valor de referencia para realizar las comparaciones, por lo que se toma la matriz con el valor más alto de <em>λ</em> como valor de referencia (<span class="citation" data-cites="caswell2010life">Caswell (<a href="#ref-caswell2010life" role="doc-biblioref">2010</a>)</span>; <span class="citation" data-cites="timsina2021six">Timsina et al. (<a href="#ref-timsina2021six" role="doc-biblioref">2021</a>)</span>).</p>
+<p>A continuación, se muestran dos matrices de tipo Lefkovitch (matrices construidas a base de estadíos) para las poblaciones de <em>O. brachyandrum</em> y sus valores respectivos de λ en los dos hospederos, <em>Q. martinezii</em> (λ=1.3; I.C: 1.11-1.45) y <em>Q. rugosa</em> (λ=0.98; I.C: 0.87-0.99) (Cuadro 1). Notamos claramente que el valor de λ era mayor en <em>Q. martinezii</em> por lo que la matriz de esta especie fue la matriz de referencia para calcular los ERTV.</p>
+<hr>
+</section>
+<section id="matrices-de-proyecciones-y-ciclo-de-vida-por-especie-de-hospedero" class="level3">
+<h3 class="anchored" data-anchor-id="matrices-de-proyecciones-y-ciclo-de-vida-por-especie-de-hospedero">Matrices de proyecciones y ciclo de vida por especie de hospedero</h3>
+<p>Cuadro 1. Matrices de proyección poblaciones de dos poblaciones de <em>Oncidiun brachyandrum</em> creciendo sobre <em>Quercus martinezii</em> y <em>Q. rugosa</em>. Los valores de λ (intervalos de confianza ± 95%) son mostrados en la parte superior izquierda de cada matriz, <em>qx</em>, mortalidad por estadío; <em>w</em>, categorías estables de tamaño por estadío; valor reproductivo por estadío, <em>n</em> = el tamaño de muestra en el tiempo cero (el primer muestreo). p: plántula, i: infantil, j: juvenil, A; adulto (<span class="citation" data-cites="ramirez2021host">Ramı́rez Martı́nez et al. (<a href="#ref-ramirez2021host" role="doc-biblioref">2021</a>)</span>). Los valores en negritas son los valores que representan la proporción de individuos que se queda en ese estadio.</p>
+<p><img src="Figures/imagen1.jpg" class="img-fluid"></p>
+<hr>
+</section>
+<section id="diagrama-del-ciclo-de-vida" class="level3">
+<h3 class="anchored" data-anchor-id="diagrama-del-ciclo-de-vida">Diagrama del ciclo de vida</h3>
+</section>
+<section id="diagrama-para-quercus-martinezii" class="level3">
+<h3 class="anchored" data-anchor-id="diagrama-para-quercus-martinezii">Diagrama para <em>Quercus martinezii</em></h3>
+<p>Primeramente se creó el ciclo de vida por especie de hospedero utilizando el siguiente código:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>matmart <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.68</span>, <span class="fl">0.02</span>, <span class="fl">3.88</span>, <span class="fl">16.53</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.22</span>, <span class="fl">0.76</span>, <span class="fl">0.23</span>, <span class="fl">0.0</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.13</span>, <span class="fl">0.53</span>, <span class="fl">0.58</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.17</span>, <span class="fl">0.38</span>))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>stages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"plántula"</span>, <span class="st">"infantil"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto"</span>) <span class="co"># asignar los nombres de los estadíos</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span> <span class="co"># título del diagrama ninguno</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> stages, <span class="at">from =</span> stages) <span class="co"># crear un data frame con los estadíos</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matmart), <span class="dv">4</span>) <span class="co"># redondear los valores de la matriz a 4 decimales</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ] <span class="co"># seleccionar solo los valores mayores a 0</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, stages, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>) <span class="co"># crear los nodos</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">4</span> <span class="co"># calcular la longitud de las flechas</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="grViz html-widget html-fill-item" id="htmlwidget-af61921d1da9f21eb87f" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-af61921d1da9f21eb87f">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\"; \"infantil\"; \"juvenil\"; \"adulto\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\"; \"infantil\"; \"juvenil\"; \"adulto\" } [style=invis] \"plántula\" -> \"plántula\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.68\"]\n\"plántula\" -> \"infantil\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.22\"]\n\"infantil\" -> \"plántula\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.02\"]\n\"infantil\" -> \"infantil\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.76\"]\n\"infantil\" -> \"juvenil\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.13\"]\n\"juvenil\" -> \"plántula\"[minlen=-8,fontsize=10,color=Goldenrod1,xlabel=\" 3.88\"]\n\"juvenil\" -> \"infantil\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.23\"]\n\"juvenil\" -> \"juvenil\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.53\"]\n\"juvenil\" -> \"adulto\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.17\"]\n\"adulto\" -> \"plántula\"[minlen=-12,fontsize=10,color=Goldenrod1,xlabel=\" 16.53\"]\n\"adulto\" -> \"juvenil\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.58\"]\n\"adulto\" -> \"adulto\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.38\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Figura x: Ciclo de vida de <em>Oncidium brachyandrum</em> creciendo sobre <em>Quercus martinezii</em>. Las flechas representan las transiciones entre estadíos, estasis y fecundidades y los números son las tasas vitales de fecundidad, supervivencia y crecimiento. El color <span class="math inline">\(\color{#ffc125}{\text{amarillo}}\)</span> para fecundidad, <span class="math inline">\(\color{#36648b}{\text{azul}}\)</span> para supervivencia y <span class="math inline">\(\color{#548b54}{\text{verde}}\)</span> para crecimiento, <span class="math inline">\(\color{#7a378b}{\text{violeta}}\)</span> para retroceso y azul oscuro para permanencia.</p>
+</section>
+<section id="diagrama-para-quercus-rugosa" class="level3">
+<h3 class="anchored" data-anchor-id="diagrama-para-quercus-rugosa">Diagrama para Quercus rugosa</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>matrug <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.64</span>, <span class="fl">0.06</span>, <span class="dv">0</span>, <span class="fl">0.0045</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.27</span>, <span class="fl">0.75</span>, <span class="fl">0.27</span>, <span class="fl">0.0</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.08</span>, <span class="fl">0.47</span>, <span class="fl">0.28</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.27</span>, <span class="fl">0.68</span>))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>stages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"plántula"</span>, <span class="st">"infantil"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> stages, <span class="at">from =</span> stages)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matrug), <span class="dv">4</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, stages, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">4</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="st">"steelblue4"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"MediumOrchid4"</span>, <span class="st">"steelblue4"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"MediumOrchid4"</span>,<span class="st">"steelblue4"</span>, <span class="st">"PaleGreen4"</span>,  <span class="st">"Goldenrod1"</span>, <span class="st">"MediumOrchid4"</span>, <span class="st">"steelblue4"</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>                <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>                <span class="at">collapse =</span> <span class="st">""</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="grViz html-widget html-fill-item" id="htmlwidget-2f4c4231b44d94a86cd9" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-2f4c4231b44d94a86cd9">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\"; \"infantil\"; \"juvenil\"; \"adulto\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\"; \"infantil\"; \"juvenil\"; \"adulto\" } [style=invis] \"plántula\" -> \"plántula\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.64\"]\n\"plántula\" -> \"infantil\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.27\"]\n\"infantil\" -> \"plántula\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.06\"]\n\"infantil\" -> \"infantil\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.75\"]\n\"infantil\" -> \"juvenil\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.08\"]\n\"juvenil\" -> \"infantil\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.27\"]\n\"juvenil\" -> \"juvenil\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.47\"]\n\"juvenil\" -> \"adulto\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.27\"]\n\"adulto\" -> \"plántula\"[minlen=-12,fontsize=10,color=Goldenrod1,xlabel=\" 0.0045\"]\n\"adulto\" -> \"juvenil\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.28\"]\n\"adulto\" -> \"adulto\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.68\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Figura x: Ciclo de vida de <em>Oncidium brachyandrum</em> creciendo sobre <em>Quercus rugosa</em>. Las flechas representan las transiciones entre estadíos, estasis y fecundidades y los números son las tasas vitales de fecundidad, supervivencia y crecimiento. El color <span class="math inline">\(\color{#ffc125}{\text{amarillo}}\)</span> para fecundidad, <span class="math inline">\(\color{#36648b}{\text{azul}}\)</span> para supervivencia y <span class="math inline">\(\color{#548b54}{\text{verde}}\)</span> para crecimiento, <span class="math inline">\(\color{#7a378b}{\text{violeta}}\)</span> para retroceso y azul oscuro para permanencia.</p>
+<hr>
+</section>
+</section>
+<section id="procedimiento-para-ertv-en-excel" class="level2">
+<h2 class="anchored" data-anchor-id="procedimiento-para-ertv-en-excel">Procedimiento para ERTV en Excel</h2>
+<p>Para facilitar el entendimiento de cómo se calcula ERTV se creó la matriz con los términos de referencia (Cuadro 2).</p>
+<p>Cuadro 2. Matriz de términos para el entendimiento de los ERTV. Donde: f= fecundidad, g= crecimiento o retrogresión, p= permanencia y s=supervivencia. Los subíndices se refieren a las transiciones entre estadíos. Nota que los parámetros de juvenil que retrogresan a plántula y y esa etapa produciendo plántulas se suman.</p>
+<p><img src="Figures/imagen2.jpg" class="img-fluid"></p>
+<p>Una vez colocadas las matrices en la hoja de trabajo el primer paso será sumar las columnas para cada estadio, esto significará la supervivencia (s) por estadío (s1, s2, s3, s4); para el caso de <em>Q. martinezii</em> en plántulas sería s1= 0.68+0.22= 0.90 (Figura 3). Después se tienen que calcular las transiciones con respecto a la supervivencia; por lo que para el caso de la transición g12 para la matriz de <em>Q. martinezii</em> tenemos g12= 0.22/0.90=0.25; este cálculo se realiza para todas las transiciones. Los valores de fecundidad (f) se tomarán tal cual de la matriz de fecundidad <strong>mat$F</strong>. Una vez obtenido esto se procederá a realizar los cálculos con las ecuaciones que se muestran del lado derecho para cada una de las celdas y, además, esto nos sirve para verificar que hayamos calculado bien cada una de las tasas vitales. Por ejemplo, observamos que una proporción de plántulas en <em>Q. martinezii</em> se mantuvo (0.67) este valor se obtiene de multiplicar la supervivencia de plántulas (s1) por la sustracción de 1 menos el crecimiento de plántulas a infantiles 0.89 (1-0.25) = 0.68 (ecuación s1* (1-g12)).</p>
+<p><img src="Figures/imagen3.jpg" class="img-fluid"></p>
+<p>Figura 3. Forma de calcular las ecuaciones para la base de ERTV.</p>
+<p>En un archivo nuevo de Excel se arma la base, con la columna de vital rate al principio, seguido por las especies de hospederos (tratamientos) poniendo primeramente el control y después la columna de matrix (Figura 4). Esta base contendrá las ecuaciones de la matriz de referencia. Como la matriz de <em>Q. martinezii</em> tuvo los valores más altos de lambda está ultima de colocará en nuestra base que utilizaremos para correr el análisis ERTV.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fiofpfhcuc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#fiofpfhcuc table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#fiofpfhcuc thead, #fiofpfhcuc tbody, #fiofpfhcuc tfoot, #fiofpfhcuc tr, #fiofpfhcuc td, #fiofpfhcuc th {
+  border-style: none;
+}
+
+#fiofpfhcuc p {
+  margin: 0;
+  padding: 0;
+}
+
+#fiofpfhcuc .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#fiofpfhcuc .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#fiofpfhcuc .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#fiofpfhcuc .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#fiofpfhcuc .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#fiofpfhcuc .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fiofpfhcuc .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#fiofpfhcuc .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#fiofpfhcuc .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#fiofpfhcuc .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#fiofpfhcuc .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#fiofpfhcuc .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#fiofpfhcuc .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#fiofpfhcuc .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#fiofpfhcuc .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#fiofpfhcuc .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#fiofpfhcuc .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#fiofpfhcuc .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#fiofpfhcuc .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fiofpfhcuc .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#fiofpfhcuc .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#fiofpfhcuc .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#fiofpfhcuc .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fiofpfhcuc .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#fiofpfhcuc .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#fiofpfhcuc .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fiofpfhcuc .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fiofpfhcuc .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#fiofpfhcuc .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fiofpfhcuc .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#fiofpfhcuc .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fiofpfhcuc .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#fiofpfhcuc .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fiofpfhcuc .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#fiofpfhcuc .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fiofpfhcuc .gt_left {
+  text-align: left;
+}
+
+#fiofpfhcuc .gt_center {
+  text-align: center;
+}
+
+#fiofpfhcuc .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#fiofpfhcuc .gt_font_normal {
+  font-weight: normal;
+}
+
+#fiofpfhcuc .gt_font_bold {
+  font-weight: bold;
+}
+
+#fiofpfhcuc .gt_font_italic {
+  font-style: italic;
+}
+
+#fiofpfhcuc .gt_super {
+  font-size: 65%;
+}
+
+#fiofpfhcuc .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#fiofpfhcuc .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#fiofpfhcuc .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#fiofpfhcuc .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#fiofpfhcuc .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#fiofpfhcuc .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#fiofpfhcuc .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#fiofpfhcuc .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#fiofpfhcuc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="names.vitalrate" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">names.vitalrate</th>
+<th id="Martinezzi" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Martinezzi</th>
+<th id="Rugosa" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Rugosa</th>
+<th id="matrix" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">matrix</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="names.vitalrate">lambda</td>
+<td class="gt_row gt_right" headers="Martinezzi">1.30000</td>
+<td class="gt_row gt_right" headers="Rugosa">0.9300</td>
+<td class="gt_row gt_left" headers="matrix"></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="names.vitalrate">s1</td>
+<td class="gt_row gt_right" headers="Martinezzi">0.89610</td>
+<td class="gt_row gt_right" headers="Rugosa">0.8636</td>
+<td class="gt_row gt_left" headers="matrix">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="names.vitalrate">g12</td>
+<td class="gt_row gt_right" headers="Martinezzi">0.24630</td>
+<td class="gt_row gt_right" headers="Rugosa">0.2631</td>
+<td class="gt_row gt_left" headers="matrix">s1*g12</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="names.vitalrate">s2</td>
+<td class="gt_row gt_right" headers="Martinezzi">0.90163</td>
+<td class="gt_row gt_right" headers="Rugosa">0.8888</td>
+<td class="gt_row gt_left" headers="matrix">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="names.vitalrate">g21</td>
+<td class="gt_row gt_right" headers="Martinezzi">0.01818</td>
+<td class="gt_row gt_right" headers="Rugosa">0.0625</td>
+<td class="gt_row gt_left" headers="matrix">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="names.vitalrate">g23</td>
+<td class="gt_row gt_right" headers="Martinezzi">0.14540</td>
+<td class="gt_row gt_right" headers="Rugosa">0.0937</td>
+<td class="gt_row gt_left" headers="matrix">s2*g21</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="names.vitalrate">s3</td>
+<td class="gt_row gt_right" headers="Martinezzi">0.93750</td>
+<td class="gt_row gt_right" headers="Rugosa">1.0000</td>
+<td class="gt_row gt_left" headers="matrix">2*(1-g23-g21)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="names.vitalrate">g32</td>
+<td class="gt_row gt_right" headers="Martinezzi">0.25000</td>
+<td class="gt_row gt_right" headers="Rugosa">0.2667</td>
+<td class="gt_row gt_left" headers="matrix">s2*g23</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="names.vitalrate">g34</td>
+<td class="gt_row gt_right" headers="Martinezzi">0.18330</td>
+<td class="gt_row gt_right" headers="Rugosa">0.2667</td>
+<td class="gt_row gt_left" headers="matrix">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="names.vitalrate">s4</td>
+<td class="gt_row gt_right" headers="Martinezzi">0.96670</td>
+<td class="gt_row gt_right" headers="Rugosa">0.9545</td>
+<td class="gt_row gt_left" headers="matrix">f31</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="names.vitalrate">g43</td>
+<td class="gt_row gt_right" headers="Martinezzi">0.60340</td>
+<td class="gt_row gt_right" headers="Rugosa">0.2857</td>
+<td class="gt_row gt_left" headers="matrix">s3*g32</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="names.vitalrate">f31</td>
+<td class="gt_row gt_right" headers="Martinezzi">3.88000</td>
+<td class="gt_row gt_right" headers="Rugosa">0.0001</td>
+<td class="gt_row gt_left" headers="matrix">3*(1-g34-g32)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="names.vitalrate">f41</td>
+<td class="gt_row gt_right" headers="Martinezzi">16.53000</td>
+<td class="gt_row gt_right" headers="Rugosa">0.0045</td>
+<td class="gt_row gt_left" headers="matrix">s3*g34</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="names.vitalrate">NA</td>
+<td class="gt_row gt_right" headers="Martinezzi">NA</td>
+<td class="gt_row gt_right" headers="Rugosa">NA</td>
+<td class="gt_row gt_left" headers="matrix">f41</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="names.vitalrate">NA</td>
+<td class="gt_row gt_right" headers="Martinezzi">NA</td>
+<td class="gt_row gt_right" headers="Rugosa">NA</td>
+<td class="gt_row gt_left" headers="matrix">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="names.vitalrate">NA</td>
+<td class="gt_row gt_right" headers="Martinezzi">NA</td>
+<td class="gt_row gt_right" headers="Rugosa">NA</td>
+<td class="gt_row gt_left" headers="matrix">s4*g43</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="names.vitalrate">NA</td>
+<td class="gt_row gt_right" headers="Martinezzi">NA</td>
+<td class="gt_row gt_right" headers="Rugosa">NA</td>
+<td class="gt_row gt_left" headers="matrix">s4*(1-g43)</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Figura 4. Ejemplo de base para poder calcular los ERTV.</p>
+<p>Es importante colocar en la segunda fila la palabra lambda en la primera columna y después los valores según corresponda a cada tratamiento. Debido a que en <em>Q. rugosa</em> no hubo producción de plántulas (f31) pero en <em>Q. martinezii</em> si hubo se coloca una cantidad muy pequeña pero mayor a cero (e.g.&nbsp;0.00001) para que se pueda correr el análisis, para las otras transiciones en valor puede ser 0. Una vez culminada la base se guarda el archivo en formato de texto, para continuar en R. Es importante comenzar a colocar las ecuaciones a partir de la segunda fila en la columna matrix.</p>
+<hr>
+</section>
+<section id="procedimiento-en-r" class="level2">
+<h2 class="anchored" data-anchor-id="procedimiento-en-r">Procedimiento en R</h2>
+<p>Subir la base de datos de la carpeta de trabajo y cargarla en R.</p>
+<ul>
+<li>Nota que debería observar la base de datos en la consola de R para verificar que se haya cargado correctamente con los mismos valores que en la hoja de Excel.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Asegurarse de tener instalado y cargado el paquete 'popbio' package </span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (popbio)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># oncidium&lt;-read.table("data/vitalratesoncidium.txt", sep="\t", header=TRUE, stringsAsFactors=FALSE, fill=TRUE) </span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Aqui la alternativa si tiene los datos en una hoja de Excel</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#oncidium </span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>Oncidium</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 17 × 4
+   names.vitalrate Martinezzi  Rugosa matrix         
+   &lt;chr&gt;                &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;          
+ 1 lambda              1.3     0.93   ""             
+ 2 s1                  0.896   0.864  "0"            
+ 3 g12                 0.246   0.263  "s1*g12"       
+ 4 s2                  0.902   0.889  "0"            
+ 5 g21                 0.0182  0.0625 "0"            
+ 6 g23                 0.145   0.0937 "s2*g21"       
+ 7 s3                  0.938   1      "2*(1-g23-g21)"
+ 8 g32                 0.25    0.267  "s2*g23"       
+ 9 g34                 0.183   0.267  "0"            
+10 s4                  0.967   0.954  "f31"          
+11 g43                 0.603   0.286  "s3*g32"       
+12 f31                 3.88    0.0001 "3*(1-g34-g32)"
+13 f41                16.5     0.0045 "s3*g34"       
+14 &lt;NA&gt;               NA      NA      "f41"          
+15 &lt;NA&gt;               NA      NA      "0"            
+16 &lt;NA&gt;               NA      NA      "s4*g43"       
+17 &lt;NA&gt;               NA      NA      "s4*(1-g43)"   </code></pre>
+</div>
+</div>
+<p>Debido a que la columna de matrix contiene más filas con datos nos aparecerá la leyenda NA en las otras columnas esto se refiere a que no hay valores disponibles para esas filas</p>
+<p>Para extraer los nombres de las tasas vitales (de la fila 2 a la 13), sin incluir el valor de <em>λ</em> el cual está en la primera</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>razonvital<span class="ot">&lt;-</span>Oncidium<span class="sc">$</span>names.vitalrate[<span class="dv">2</span><span class="sc">:</span><span class="dv">13</span>] </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>razonvital <span class="co"># mostrar los nombres del objeto razonvital</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "s1"  "g12" "s2"  "g21" "g23" "s3"  "g32" "g34" "s4"  "g43" "f31" "f41"</code></pre>
+</div>
+</div>
+<section id="tasa-vital-sobre-q.-martinezzi" class="level3">
+<h3 class="anchored" data-anchor-id="tasa-vital-sobre-q.-martinezzi">Tasa vital sobre <em>Q. martinezzi</em></h3>
+<p>Extraer tasas vitales de de la orquídea <em>Oncidium brachyandrum</em> que crecen sobre <em>Q. martinezzi</em> y dejar a lambda a un lado</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Martinezzi<span class="ot">&lt;-</span>Oncidium<span class="sc">$</span>Martinezzi [<span class="dv">2</span><span class="sc">:</span><span class="dv">13</span>] <span class="co"># [2:13] se refiere a la fila 2 hasta la 13. </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(Martinezzi)<span class="ot">&lt;-</span>razonvital <span class="co"># asignar los nombres de las tasas vitales</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>Martinezzi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      s1      g12       s2      g21      g23       s3      g32      g34 
+ 0.89610  0.24630  0.90163  0.01818  0.14540  0.93750  0.25000  0.18330 
+      s4      g43      f31      f41 
+ 0.96670  0.60340  3.88000 16.53000 </code></pre>
+</div>
+</div>
+</section>
+<section id="tasa-vital-sobre-q.-rugosa" class="level3">
+<h3 class="anchored" data-anchor-id="tasa-vital-sobre-q.-rugosa">Tasa vital sobre <em>Q. rugosa</em></h3>
+<p>Extraer tasas vitales de de la orquidea <em>Oncidium brachyandrum</em> que crecen sobre <em>Q. rugosa</em> y dejar a lambda a un lado</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Rugosa<span class="ot">&lt;-</span>Oncidium<span class="sc">$</span>Rugosa [<span class="dv">2</span><span class="sc">:</span><span class="dv">13</span>]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(Rugosa)<span class="ot">&lt;-</span>razonvital <span class="co"># asignar los nombres de las tasas vitales</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>Rugosa</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    s1    g12     s2    g21    g23     s3    g32    g34     s4    g43    f31 
+0.8636 0.2631 0.8888 0.0625 0.0937 1.0000 0.2667 0.2667 0.9545 0.2857 0.0001 
+   f41 
+0.0045 </code></pre>
+</div>
+</div>
+</section>
+<section id="extraer-los-elementos-de-matriz-utilizando-los-nombres-de-las-tasas-vitales" class="level3">
+<h3 class="anchored" data-anchor-id="extraer-los-elementos-de-matriz-utilizando-los-nombres-de-las-tasas-vitales">Extraer los elementos de matriz utilizando los nombres de las tasas vitales</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>matrix.el<span class="ot">&lt;-</span><span class="fu">as.expression</span>(<span class="fu">parse</span>(<span class="at">text=</span>Oncidium<span class="sc">$</span>matrix)) </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>matrix.el</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>expression(0, s1 * g12, 0, 0, s2 * g21, 2 * (1 - g23 - g21), 
+    s2 * g23, 0, f31, s3 * g32, 3 * (1 - g34 - g32), s3 * g34, 
+    f41, 0, s4 * g43, s4 * (1 - g43))</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">expression</span>(s1<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>g12), s1<span class="sc">*</span>g12, <span class="dv">0</span>, <span class="dv">0</span>, s2<span class="sc">*</span>g21, s2<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>g23<span class="sc">-</span>g21), </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    s2<span class="sc">*</span>g23, <span class="dv">0</span>, f31, s3<span class="sc">*</span>g32, s3<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>g34<span class="sc">-</span>g32), s3<span class="sc">*</span>g34, f41, <span class="dv">0</span>, s4<span class="sc">*</span>g43, </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    s4<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>g43))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>expression(s1 * (1 - g12), s1 * g12, 0, 0, s2 * g21, s2 * (1 - 
+    g23 - g21), s2 * g23, 0, f31, s3 * g32, s3 * (1 - g34 - g32), 
+    s3 * g34, f41, 0, s4 * g43, s4 * (1 - g43))</code></pre>
+</div>
+</div>
+</section>
+<section id="calcular-las-sensibilidades-y-elasticidades-de-onciudium-brachyandrum-de-ambas-matrices" class="level3">
+<h3 class="anchored" data-anchor-id="calcular-las-sensibilidades-y-elasticidades-de-onciudium-brachyandrum-de-ambas-matrices">Calcular las sensibilidades y elasticidades de <em>Onciudium brachyandrum</em> de ambas matrices</h3>
+<p>Nota que usando la función vitalsens se pueden calcular las sensibilidades y elasticidades de las tasas vitales de las matrices de <em>Oncidium brachyandrum</em> creciendo sobre <em>Q. martinezii</em> y <em>Q. rugosa</em> en un mismo objeto.</p>
+<section id="quercus-matinezzi" class="level4">
+<h4 class="anchored" data-anchor-id="quercus-matinezzi"><em>Quercus matinezzi</em></h4>
+</section>
+</section>
+</section>
+<section id="hay-algo-extraño-en-la-matriz-de-sensibilidades-y-elasticidades-no-se-ve-bien.-hay-elasticidad-negativas-y-esto-no-es-posible.-hay-que-revisar-el-código." class="level2">
+<h2 class="anchored" data-anchor-id="hay-algo-extraño-en-la-matriz-de-sensibilidades-y-elasticidades-no-se-ve-bien.-hay-elasticidad-negativas-y-esto-no-es-posible.-hay-que-revisar-el-código.">HAY algo extraño en la matriz de sensibilidades y elasticidades, no se ve bien., hay elasticidad negativas, y esto no es posible. Hay que revisar el código.</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>Martinezzi.se<span class="ot">&lt;-</span><span class="fu">vitalsens</span>(matrix.el, Martinezzi)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>Martinezzi.se</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    estimate  sensitivity   elasticity
+s1   0.89610  0.120542139  0.052664512
+g12  0.24630  0.438561960  0.052664512
+s2   0.90163  0.166235301  0.073075921
+g21  0.01818 -0.754130522 -0.006684410
+g23  0.14540  0.233443420  0.016548885
+s3   0.93750  0.112464437  0.051405452
+g32  0.25000 -1.371318930 -0.167147994
+g34  0.18330 -1.191967463 -0.106524512
+s4   0.96670  0.047010515  0.022156921
+g43  0.60340  0.014244139  0.004190484
+f31  3.88000  0.019221293  0.036361100
+f41 16.53000  0.001980653  0.015962610</code></pre>
+</div>
+</div>
+<section id="quercus-rugosa" class="level4">
+<h4 class="anchored" data-anchor-id="quercus-rugosa"><em>Quercus rugosa</em></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Rugosa.se<span class="ot">&lt;-</span><span class="fu">vitalsens</span>(matrix.el, Rugosa)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>Rugosa.se</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    estimate  sensitivity    elasticity
+s1    0.8636  0.006581052  3.213853e-03
+g12   0.2631  0.021601660  3.213853e-03
+s2    0.8888  0.071964612  3.616938e-02
+g21   0.0625 -1.492714505 -5.275636e-02
+g23   0.0937 -0.960775138 -5.090722e-02
+s3    1.0000  0.071247612  4.028918e-02
+g32   0.2667 -0.361373194 -5.450006e-02
+g34   0.2667 -0.531264040 -8.012195e-02
+s4    0.9545  0.022079896  1.191766e-02
+g43   0.2857  0.033892600  5.475619e-03
+f31   0.0001  0.028076228  1.587658e-06
+f41   0.0045  0.006891115  1.753558e-05</code></pre>
+</div>
+</div>
+</section>
+<section id="calcular-las-diferencias-en-tasas-vitales-entre-las-especies" class="level3">
+<h3 class="anchored" data-anchor-id="calcular-las-diferencias-en-tasas-vitales-entre-las-especies">Calcular las diferencias en tasas vitales entre las especies</h3>
+<p>En esta parte se calculará la diferencia entre las tasas vitales de <em>Oncidium brachyandrum</em> creciendo sobre <em>Q. martinezii</em> y <em>Q. rugosa</em>. ¿Como se interpreta estos resultados?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>vr.dif.Martinezzi.Rugosa<span class="ot">&lt;-</span>Rugosa<span class="sc">-</span>Martinezzi </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>vr.dif.Martinezzi.Rugosa</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       s1       g12        s2       g21       g23        s3       g32       g34 
+ -0.03250   0.01680  -0.01283   0.04432  -0.05170   0.06250   0.01670   0.08340 
+       s4       g43       f31       f41 
+ -0.01220  -0.31770  -3.87990 -16.52550 </code></pre>
+</div>
+</div>
+</section>
+<section id="calcular-las-tasas-vitales-para-la-matriz-media" class="level3">
+<h3 class="anchored" data-anchor-id="calcular-las-tasas-vitales-para-la-matriz-media">Calcular las tasas vitales para la matriz media</h3>
+<p>En este paso se calculará la tasa vital media para <em>Oncidium brachyandrum</em> creciendo sobre <em>Q. martinezii</em> y <em>Q. rugosa</em>. La tasa vital media se calcula sumando las tasas vitales de las dos matrices y dividiendo entre 2.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>vr.promedia.Martinezzi.Rugosa<span class="ot">&lt;-</span>((Rugosa<span class="sc">+</span>Martinezzi)<span class="sc">/</span><span class="dv">2</span>) <span class="co">#calcular la tazas vitales parta la matrix promedia</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Nota: si se tuvieran 3 matrices se sumarían las tasas vitales de las tres dividido por 3. </span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>vr.promedia.Martinezzi.Rugosa</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      s1      g12       s2      g21      g23       s3      g32      g34 
+0.879850 0.254700 0.895215 0.040340 0.119550 0.968750 0.258350 0.225000 
+      s4      g43      f31      f41 
+0.960600 0.444550 1.940050 8.267250 </code></pre>
+</div>
+</div>
+</section>
+<section id="calcular-las-tasas-sensibilidades-y-elasticidades-para-la-matriz-media" class="level3">
+<h3 class="anchored" data-anchor-id="calcular-las-tasas-sensibilidades-y-elasticidades-para-la-matriz-media">Calcular las tasas sensibilidades y elasticidades para la matriz media</h3>
+<p>En este paso se calculará las sensibilidades y elasticidades para la matriz promedia de <em>Oncidium brachyandrum</em> creciendo sobre <em>Q. martinezii</em> y <em>Q. rugosa</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>media.sens.Martinezzi.Rugosa<span class="ot">&lt;-</span><span class="fu">vitalsens</span>(matrix.el, vr.promedia.Martinezzi.Rugosa) </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>media.sens.Martinezzi.Rugosa</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    estimate  sensitivity   elasticity
+s1  0.879850  0.083822341  0.038554963
+g12 0.254700  0.289560608  0.038554963
+s2  0.895215  0.134980693  0.063169999
+g21 0.040340 -0.984263812 -0.020756746
+g23 0.119550 -0.046349418 -0.002896715
+s3  0.968750  0.106300200  0.053834126
+g32 0.258350 -1.022414354 -0.138085243
+g34 0.225000 -0.956257799 -0.112478463
+s4  0.960600  0.050717590  0.025469068
+g43 0.444550  0.022031005  0.005119963
+f31 1.940050  0.022040319  0.022353352
+f41 8.267250  0.003482957  0.015052932</code></pre>
+</div>
+</div>
+</section>
+<section id="calcular-las-contribuciones-de-ertv-y-ver-los-resultados" class="level3">
+<h3 class="anchored" data-anchor-id="calcular-las-contribuciones-de-ertv-y-ver-los-resultados">Calcular las contribuciones de ERTV y ver los resultados</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>LTRE.contrib.Martinezzi.Rugosa<span class="ot">&lt;-</span>vr.dif.Martinezzi.Rugosa<span class="sc">*</span>media.sens.Martinezzi.Rugosa<span class="sc">$</span>sensitivity  </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>LTRE.contrib.Martinezzi.Rugosa</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           s1           g12            s2           g21           g23 
+-0.0027242261  0.0048646182 -0.0017318023 -0.0436225722  0.0023962649 
+           s3           g32           g34            s4           g43 
+ 0.0066437625 -0.0170743197 -0.0797519005 -0.0006187546 -0.0069992504 
+          f31           f41 
+-0.0855142334 -0.0575576132 </code></pre>
+</div>
+</div>
+</section>
+<section id="resultados-de-ertv" class="level3">
+<h3 class="anchored" data-anchor-id="resultados-de-ertv">Resultados de ERTV</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>LTRE.resultados.Martinezzi.Rugosa<span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">razonvital=</span>razonvital,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">rug.vr=</span>Rugosa, </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">mart.vr=</span>Martinezzi, </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">vr.differencia=</span>vr.dif.Martinezzi.Rugosa, </span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">media.sens=</span>media.sens.Martinezzi.Rugosa<span class="sc">$</span>sensitivity, </span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">contribucion=</span>LTRE.contrib.Martinezzi.Rugosa)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(LTRE.resultados.Martinezzi.Rugosa)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="msccxudmzj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#msccxudmzj table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#msccxudmzj thead, #msccxudmzj tbody, #msccxudmzj tfoot, #msccxudmzj tr, #msccxudmzj td, #msccxudmzj th {
+  border-style: none;
+}
+
+#msccxudmzj p {
+  margin: 0;
+  padding: 0;
+}
+
+#msccxudmzj .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#msccxudmzj .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#msccxudmzj .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#msccxudmzj .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#msccxudmzj .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#msccxudmzj .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#msccxudmzj .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#msccxudmzj .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#msccxudmzj .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#msccxudmzj .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#msccxudmzj .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#msccxudmzj .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#msccxudmzj .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#msccxudmzj .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#msccxudmzj .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#msccxudmzj .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#msccxudmzj .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#msccxudmzj .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#msccxudmzj .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#msccxudmzj .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#msccxudmzj .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#msccxudmzj .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#msccxudmzj .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#msccxudmzj .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#msccxudmzj .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#msccxudmzj .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#msccxudmzj .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#msccxudmzj .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#msccxudmzj .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#msccxudmzj .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#msccxudmzj .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#msccxudmzj .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#msccxudmzj .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#msccxudmzj .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#msccxudmzj .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#msccxudmzj .gt_left {
+  text-align: left;
+}
+
+#msccxudmzj .gt_center {
+  text-align: center;
+}
+
+#msccxudmzj .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#msccxudmzj .gt_font_normal {
+  font-weight: normal;
+}
+
+#msccxudmzj .gt_font_bold {
+  font-weight: bold;
+}
+
+#msccxudmzj .gt_font_italic {
+  font-style: italic;
+}
+
+#msccxudmzj .gt_super {
+  font-size: 65%;
+}
+
+#msccxudmzj .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#msccxudmzj .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#msccxudmzj .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#msccxudmzj .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#msccxudmzj .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#msccxudmzj .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#msccxudmzj .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#msccxudmzj .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#msccxudmzj div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="razonvital" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">razonvital</th>
+<th id="rug.vr" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">rug.vr</th>
+<th id="mart.vr" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">mart.vr</th>
+<th id="vr.differencia" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">vr.differencia</th>
+<th id="media.sens" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">media.sens</th>
+<th id="contribucion" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">contribucion</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="razonvital">s1</td>
+<td class="gt_row gt_right" headers="rug.vr">0.8636</td>
+<td class="gt_row gt_right" headers="mart.vr">0.89610</td>
+<td class="gt_row gt_right" headers="vr.differencia">-0.03250</td>
+<td class="gt_row gt_right" headers="media.sens">0.083822341</td>
+<td class="gt_row gt_right" headers="contribucion">-0.0027242261</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="razonvital">g12</td>
+<td class="gt_row gt_right" headers="rug.vr">0.2631</td>
+<td class="gt_row gt_right" headers="mart.vr">0.24630</td>
+<td class="gt_row gt_right" headers="vr.differencia">0.01680</td>
+<td class="gt_row gt_right" headers="media.sens">0.289560608</td>
+<td class="gt_row gt_right" headers="contribucion">0.0048646182</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="razonvital">s2</td>
+<td class="gt_row gt_right" headers="rug.vr">0.8888</td>
+<td class="gt_row gt_right" headers="mart.vr">0.90163</td>
+<td class="gt_row gt_right" headers="vr.differencia">-0.01283</td>
+<td class="gt_row gt_right" headers="media.sens">0.134980693</td>
+<td class="gt_row gt_right" headers="contribucion">-0.0017318023</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="razonvital">g21</td>
+<td class="gt_row gt_right" headers="rug.vr">0.0625</td>
+<td class="gt_row gt_right" headers="mart.vr">0.01818</td>
+<td class="gt_row gt_right" headers="vr.differencia">0.04432</td>
+<td class="gt_row gt_right" headers="media.sens">-0.984263812</td>
+<td class="gt_row gt_right" headers="contribucion">-0.0436225722</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="razonvital">g23</td>
+<td class="gt_row gt_right" headers="rug.vr">0.0937</td>
+<td class="gt_row gt_right" headers="mart.vr">0.14540</td>
+<td class="gt_row gt_right" headers="vr.differencia">-0.05170</td>
+<td class="gt_row gt_right" headers="media.sens">-0.046349418</td>
+<td class="gt_row gt_right" headers="contribucion">0.0023962649</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="razonvital">s3</td>
+<td class="gt_row gt_right" headers="rug.vr">1.0000</td>
+<td class="gt_row gt_right" headers="mart.vr">0.93750</td>
+<td class="gt_row gt_right" headers="vr.differencia">0.06250</td>
+<td class="gt_row gt_right" headers="media.sens">0.106300200</td>
+<td class="gt_row gt_right" headers="contribucion">0.0066437625</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="razonvital">g32</td>
+<td class="gt_row gt_right" headers="rug.vr">0.2667</td>
+<td class="gt_row gt_right" headers="mart.vr">0.25000</td>
+<td class="gt_row gt_right" headers="vr.differencia">0.01670</td>
+<td class="gt_row gt_right" headers="media.sens">-1.022414354</td>
+<td class="gt_row gt_right" headers="contribucion">-0.0170743197</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="razonvital">g34</td>
+<td class="gt_row gt_right" headers="rug.vr">0.2667</td>
+<td class="gt_row gt_right" headers="mart.vr">0.18330</td>
+<td class="gt_row gt_right" headers="vr.differencia">0.08340</td>
+<td class="gt_row gt_right" headers="media.sens">-0.956257799</td>
+<td class="gt_row gt_right" headers="contribucion">-0.0797519005</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="razonvital">s4</td>
+<td class="gt_row gt_right" headers="rug.vr">0.9545</td>
+<td class="gt_row gt_right" headers="mart.vr">0.96670</td>
+<td class="gt_row gt_right" headers="vr.differencia">-0.01220</td>
+<td class="gt_row gt_right" headers="media.sens">0.050717590</td>
+<td class="gt_row gt_right" headers="contribucion">-0.0006187546</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="razonvital">g43</td>
+<td class="gt_row gt_right" headers="rug.vr">0.2857</td>
+<td class="gt_row gt_right" headers="mart.vr">0.60340</td>
+<td class="gt_row gt_right" headers="vr.differencia">-0.31770</td>
+<td class="gt_row gt_right" headers="media.sens">0.022031005</td>
+<td class="gt_row gt_right" headers="contribucion">-0.0069992504</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="razonvital">f31</td>
+<td class="gt_row gt_right" headers="rug.vr">0.0001</td>
+<td class="gt_row gt_right" headers="mart.vr">3.88000</td>
+<td class="gt_row gt_right" headers="vr.differencia">-3.87990</td>
+<td class="gt_row gt_right" headers="media.sens">0.022040319</td>
+<td class="gt_row gt_right" headers="contribucion">-0.0855142334</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="razonvital">f41</td>
+<td class="gt_row gt_right" headers="rug.vr">0.0045</td>
+<td class="gt_row gt_right" headers="mart.vr">16.53000</td>
+<td class="gt_row gt_right" headers="vr.differencia">-16.52550</td>
+<td class="gt_row gt_right" headers="media.sens">0.003482957</td>
+<td class="gt_row gt_right" headers="contribucion">-0.0575576132</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<hr>
+<p>Se puede crear un gráfico de la contribucioón de cada tasa vitales sobre la historia de vida de la especies comparando las dos matrix</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(LTRE.resultados.Martinezzi.Rugosa, <span class="fu">aes</span>(<span class="at">y=</span>contribucion, <span class="at">x=</span>razonvital, <span class="at">fill=</span>razonvital))<span class="sc">+</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">"identity"</span>)<span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Oncidium vital rate contribución a la diferencia en lambda"</span>, <span class="at">x=</span><span class="st">"razonvital"</span>, <span class="at">y=</span><span class="st">"contribución"</span>)<span class="sc">+</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="dv">0</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)<span class="sc">+</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Tasa vitales"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="114-LTRE_files/figure-html/LTRE15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 5. Resultados de un Experimento de Respuesta de la Tabla de Vida (ERTV) llevado a cabo para evaluar las contribuciones de las entradas de la matriz a la variación observada en <em>λ</em>.</p>
+<p>De acuerdo con el análisis de elasticidad para cada una de las poblaciones de <em>O. brachyandrum</em>, tanto en <em>Q. martinezii</em> como en <em>Q. rugosa</em> la permanencia de individuos infantiles es la que tiene un mayor impacto sobre los valores de la tasa de crecimiento poblacional (Figura 6). De acuerdo al ERTV, el cual toma en cuenta las diferencias en las tasas vitales y la sensibilidad de lambda que es una función no linear de esas tasas vitales, podemos observar que la fecundidad (fsa) y el crecimiento de plantulas a juveniles (gsj), de juveniles a adultos (gja) y el retroceso de adultos a juveniles (gaj) tiene las mayores contribuciones a las diferencias en lambda entre Q. martinezii y Q. rugosa que la permanencia de plántulas.</p>
+<p>Figure 6. Resultados de los análisis de elasticidad, para dos poblaciones de <em>Oncidium brachyandrum</em> creciendo sobre <em>Quercus martinezii</em> y <em>Q. rugosa</em>. Por proceso demográfico (a) y por estadío (b).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(LTRE.resultados.Martinezzi.Rugosa, <span class="fu">aes</span>(<span class="at">y=</span>media.sens, <span class="at">x=</span>razonvital, <span class="at">fill=</span>razonvital))<span class="sc">+</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">"identity"</span>)<span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Media Sensitividad ????"</span>, <span class="at">x=</span><span class="st">"razonvital"</span>, <span class="at">y=</span><span class="st">"contribución"</span>)<span class="sc">+</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="dv">0</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)<span class="sc">+</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Tasa vitales"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="114-LTRE_files/figure-html/LTRE16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+<p>Ahora enseñar como hacer estos análisis sin tener que usar Excel, aquí un set de script para aplicar a <em>Oncidium brachyandrum</em>.</p>
+<p>Sugiero que cambie las gráficas a ggplot2 para que se vean más bonitas y consistencia en el libro de herramientas. YO TE AYUDO CON ESTE PASO</p>
+<hr>
+<p>AHORA: Si se puede hacer los analisis sin todos los pasos de Excel, se puede hacer directamente en R.</p>
+<p>Revisión:</p>
+
+
+
+</section>
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-caswell1989analysis" class="csl-entry" role="listitem">
+Caswell, Hal. 1989. <span>“Analysis of Life Table Response Experiments i. Decomposition of Effects on Population Growth Rate.”</span> <em>Ecological Modelling</em> 46 (3-4): 221–37.
+</div>
+<div id="ref-caswell2000matrix" class="csl-entry" role="listitem">
+———. 2000. <em>Matrix Population Models</em>. Vol. 1. Sinauer Sunderland, MA.
+</div>
+<div id="ref-caswell2010life" class="csl-entry" role="listitem">
+———. 2010. <span>“Life Table Response Experiment Analysis of the Stochastic Growth Rate.”</span> <em>Journal of Ecology</em> 98 (2): 324–33.
+</div>
+<div id="ref-davison2010demographic" class="csl-entry" role="listitem">
+Davison, Raziel, Hans Jacquemyn, Dries Adriaens, Olivier Honnay, Hans De Kroon, and Shripad Tuljapurkar. 2010. <span>“Demographic Effects of Extreme Weather Events on a Short-Lived Calcareous Grassland Species: Stochastic Life Table Response Experiments.”</span> <em>Journal of Ecology</em> 98 (2): 255–67.
+</div>
+<div id="ref-gaoue2010effects" class="csl-entry" role="listitem">
+Gaoue, Orou G, and Tamara Ticktin. 2010. <span>“Effects of Harvest of Nontimber Forest Products and Ecological Differences Between Sites on the Demography of African Mahogany.”</span> <em>Conservation Biology</em> 24 (2): 605–14.
+</div>
+<div id="ref-garcia2002reproductive" class="csl-entry" role="listitem">
+Garcı́a, Marı́a B, and Johan Ehrlén. 2002. <span>“Reproductive Effort and Herbivory Timing in a Perennial Herb: Fitness Components at the Individual and Population Levels.”</span> <em>American Journal of Botany</em> 89 (8): 1295–1302.
+</div>
+<div id="ref-hansen1999multiannual" class="csl-entry" role="listitem">
+Hansen, Thomas F, Nils C Stenseth, and Heikki Henttonen. 1999. <span>“Multiannual Vole Cycles and Population Regulation During Long Winters: An Analysis of Seasonal Density Dependence.”</span> <em>The American Naturalist</em> 154 (2): 129–39.
+</div>
+<div id="ref-hart2021simulated" class="csl-entry" role="listitem">
+Hart-Fredeluces, GM, Tamara Ticktin, and Frank K Lake. 2021. <span>“Simulated Indigenous Fire Stewardship Increases the Population Growth Rate of an Understorey Herb.”</span> <em>Journal of Ecology</em> 109 (3): 1133–47.
+</div>
+<div id="ref-hastings2021effects" class="csl-entry" role="listitem">
+Hastings, Alan, Karen C Abbott, Kim Cuddington, Tessa B Francis, Ying-Cheng Lai, Andrew Morozov, Sergei Petrovskii, and Mary Lou Zeeman. 2021. <span>“Effects of Stochasticity on the Length and Behaviour of Ecological Transients.”</span> <em>Journal of the Royal Society Interface</em> 18 (180): 20210257.
+</div>
+<div id="ref-hernandez2023exact" class="csl-entry" role="listitem">
+Hernández, Christina M, Stephen P Ellner, Peter B Adler, Giles Hooker, and Robin E Snyder. 2023. <span>“An Exact Version of Life Table Response Experiment Analysis, and the r Package exactLTRE.”</span> <em>Methods in Ecology and Evolution</em> 14 (3): 939–51.
+</div>
+<div id="ref-hernandez2024natural" class="csl-entry" role="listitem">
+Hernández, Christina M, Stephen P Ellner, Robin E Snyder, and Giles Hooker. 2024. <span>“The Natural History of Luck: A Synthesis Study of Structured Population Models.”</span> <em>Ecology Letters</em> 27 (3): e14390.
+</div>
+<div id="ref-horvitz1997relative" class="csl-entry" role="listitem">
+Horvitz, Carol, Douglas W Schemske, and Hal Caswell. 1997. <span>“The Relative <span>‘Importance’</span> of Life-History Stages to Population Growth: Prospective and Retrospective Analyses.”</span> In <em>Structured-Population Models in Marine, Terrestrial, and Freshwater Systems</em>, 247–71. Springer.
+</div>
+<div id="ref-jacquemyn2012stochastic" class="csl-entry" role="listitem">
+Jacquemyn, Hans, Rein Brys, Raziel Davison, Shripad Tuljapurkar, and Eelke Jongejans. 2012. <span>“Stochastic LTRE Analysis of the Effects of Herbivory on the Population Dynamics of a Perennial Grassland Herb.”</span> <em>Oikos</em> 121 (2): 211–18.
+</div>
+<div id="ref-levin1996demographic" class="csl-entry" role="listitem">
+Levin, Lisa, Hal Caswell, Todd Bridges, Claudio DiBacco, Debra Cabrera, and Gayle Plaia. 1996. <span>“Demographic Responses of Estuarine Polychaetes to Pollutants: Life Table Response Experiments.”</span> <em>Ecological Applications</em> 6 (4): 1295–1313.
+</div>
+<div id="ref-miriti2001effects" class="csl-entry" role="listitem">
+Miriti, Maria N, S Joseph Wright, and Henry F Howe. 2001. <span>“The Effects of Neighbors on the Demography of a Dominant Desert Shrub (<em>Ambrosia <span class="nocase">d</span>umosa</em>).”</span> <em>Ecological Monographs</em> 71 (4): 491–509.
+</div>
+<div id="ref-mondragon2009population" class="csl-entry" role="listitem">
+Mondragón, Demetria. 2009. <span>“Population Viability Analysis for <em>Guarianthe <span class="nocase">a</span>urantiaca</em>, an Ornamental Epiphytic Orchid Harvested in Southeast m<span>é</span>xico.”</span> <em>Plant Species Biology</em> 24 (1): 35–41.
+</div>
+<div id="ref-nordbakken2004demography" class="csl-entry" role="listitem">
+Nordbakken, J-F, K Rydgren, and RH Økland. 2004. <span>“Demography and Population Dynamics of <em>Drosera <span class="nocase">a</span>nglica</em> and <em>d. <span class="nocase">r</span>otundifolia</em>.”</span> <em>Journal of Ecology</em> 92 (1): 110–21.
+</div>
+<div id="ref-oli2001effect" class="csl-entry" role="listitem">
+Oli, Madan K, Norman A Slade, and F Stephen Dobson. 2001. <span>“Effect of Density Reduction on Uinta Ground Squirrels: Analysis of Life Table Response Experiments.”</span> <em>Ecology</em> 82 (7): 1921–29.
+</div>
+<div id="ref-ramirez2021host" class="csl-entry" role="listitem">
+Ramı́rez Martı́nez, Adriana et al. 2021. <span>“Host Tree Effect on Demography and Phenology of Epiphytic Species.”</span>
+</div>
+<div id="ref-schmidt2011matrix" class="csl-entry" role="listitem">
+Schmidt, Isabel B, Lisa Mandle, Tamara Ticktin, and Orou G Gaoue. 2011. <span>“What Do Matrix Population Models Reveal about the Sustainability of Non-Timber Forest Product Harvest?”</span> <em>Journal of Applied Ecology</em> 48 (4): 815–26.
+</div>
+<div id="ref-stott2012beyond" class="csl-entry" role="listitem">
+Stott, Iain, David James Hodgson, and Stuart Townley. 2012. <span>“Beyond Sensitivity: Nonlinear Perturbation Analysis of Transient Dynamics.”</span> <em>Methods in Ecology and Evolution</em> 3 (4): 673–84.
+</div>
+<div id="ref-stott2011framework" class="csl-entry" role="listitem">
+Stott, Iain, Stuart Townley, and David James Hodgson. 2011. <span>“A Framework for Studying Transient Dynamics of Population Projection Matrix Models.”</span> <em>Ecology Letters</em> 14 (9): 959–70.
+</div>
+<div id="ref-sun2019multivariate" class="csl-entry" role="listitem">
+Sun, Weihong, Xueyan Yuan, Zhong-Jian Liu, Siren Lan, Wen-chieh Tsai, and Shuang-Quan Zou. 2019. <span>“Multivariate Analysis Reveals Phenotypic Diversity of <em>Euscaphis <span class="nocase">j</span>aponica</em> Population.”</span> <em>PloS One</em> 14 (7): e0219046.
+</div>
+<div id="ref-teitel2016assessing" class="csl-entry" role="listitem">
+Teitel, Zachary, Agnieszka Klimowski, and Lesley G Campbell. 2016. <span>“Assessing the Effects of Hybridization and Precipitation on Invasive Weed Demography Using Strength of Selection on Vital Rates.”</span> <em>BMC Evolutionary Biology</em> 16: 1–13.
+</div>
+<div id="ref-timsina2021six" class="csl-entry" role="listitem">
+Timsina, Binu, Pavel Kindlmann, Zuzana Münzbergová, and Maan B Rokaya. 2021. <span>“Six-Year Demographic Study of the Terrestrial Orchid, <em>Crepidium <span class="nocase">a</span>cuminatum</em>: Implications for Conservation.”</span> <em>Frontiers in Ecology and Evolution</em> 9: 676993.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./113-Funciones_de_Transferencia.html" class="pagination-link" aria-label="Funciones de Transferencia">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Funciones de Transferencia</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2025, Raymond L. Tremblay</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>This page is built with ❤️ and <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

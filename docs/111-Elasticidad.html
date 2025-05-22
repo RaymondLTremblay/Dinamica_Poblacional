@@ -1,0 +1,2248 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>elasticidad – Diagnostico Poblacional</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./112-Dinamica_de_Transiciones.html" rel="next">
+<link href="./110-Indices.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b53751a350365c71b6c909e95f209ed1.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-0309b8b1721542f374478695392ebb2d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-083d847ecde08941f1699ed9c8914ce7.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta property="og:title" content="Diagnostico Poblacional">
+<meta property="og:description" content="">
+<meta property="og:image" content="111-Elasticidad_files/figure-html/Elas7-1.png">
+<meta property="og:site_name" content="Diagnostico Poblacional">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Capítulos</a></li><li class="breadcrumb-item"><a href="./111-Elasticidad.html">Elasticidad</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./images/logo.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Capítulos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./102-Intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introducción</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./103-Ciclos_de_Vida.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ciclos de Vida</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./104-Recopilacion_datos_en_el_campo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Recopilación de datos en el campo</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./105-Transiciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Calcular transiciones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./106-calcular_fecundidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Calcular fecundidad</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./107-matU_matF_matC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Suma de matrices</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./108-Bayesian_PPM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Estimados bayesianos de PPM</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./109-Crecimiento_poblacional.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Crecimiento poblacional</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./110-Indices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Índices demográficos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./111-Elasticidad.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Elasticidad</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./112-Dinamica_de_Transiciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dinámica de Transiciones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./113-Funciones_de_Transferencia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Funciones de Transferencia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./114-LTRE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Experimento de Respuesta de Tabla de Vida</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#Elasticidad" id="toc-Elasticidad" class="nav-link active" data-scroll-target="#Elasticidad">Elasticidad</a>
+  <ul class="collapse">
+  <li><a href="#librerías-de-r-requeridas-para-el-siguiente-modulo" id="toc-librerías-de-r-requeridas-para-el-siguiente-modulo" class="nav-link" data-scroll-target="#librerías-de-r-requeridas-para-el-siguiente-modulo">Librerías de R requeridas para el siguiente modulo</a></li>
+  <li><a href="#qué-es-la-elasticidad" id="toc-qué-es-la-elasticidad" class="nav-link" data-scroll-target="#qué-es-la-elasticidad">Qué es la Elasticidad</a>
+  <ul class="collapse">
+  <li><a href="#sensibilidad-y-elasticidad" id="toc-sensibilidad-y-elasticidad" class="nav-link" data-scroll-target="#sensibilidad-y-elasticidad">Sensibilidad y Elasticidad</a></li>
+  <li><a href="#el-impacto-de-cambio-en-las-etapas" id="toc-el-impacto-de-cambio-en-las-etapas" class="nav-link" data-scroll-target="#el-impacto-de-cambio-en-las-etapas">El impacto de cambio en las etapas</a></li>
+  <li><a href="#efecto-de-cambio-en-las-tansiciones-de-crecimiento-permanencia-y-fecundidad" id="toc-efecto-de-cambio-en-las-tansiciones-de-crecimiento-permanencia-y-fecundidad" class="nav-link" data-scroll-target="#efecto-de-cambio-en-las-tansiciones-de-crecimiento-permanencia-y-fecundidad">Efecto de cambio en las tansiciones, de crecimiento, permanencia y fecundidad</a></li>
+  <li><a href="#como-se-usa-los-análisis-de-elasticidad-en-un-plan-de-conservación" id="toc-como-se-usa-los-análisis-de-elasticidad-en-un-plan-de-conservación" class="nav-link" data-scroll-target="#como-se-usa-los-análisis-de-elasticidad-en-un-plan-de-conservación">Como se usa los análisis de elasticidad en un plan de conservación</a></li>
+  <li><a href="#comparación-entre-especies" id="toc-comparación-entre-especies" class="nav-link" data-scroll-target="#comparación-entre-especies">Comparación entre especies</a></li>
+  </ul></li>
+  <li><a href="#limitaciones" id="toc-limitaciones" class="nav-link" data-scroll-target="#limitaciones">Limitaciones</a></li>
+  <li><a href="#introducir-los-nombres-de-los-estadíos-o-categorías-de-tamaño-según-sea-su-caso" id="toc-introducir-los-nombres-de-los-estadíos-o-categorías-de-tamaño-según-sea-su-caso" class="nav-link" data-scroll-target="#introducir-los-nombres-de-los-estadíos-o-categorías-de-tamaño-según-sea-su-caso">Introducir los nombres de los estadíos o categorías de tamaño, según sea su caso</a></li>
+  <li><a href="#capturar-los-datos-de-la-matriz-para-erycina-crita-galli-mondragon2007life-tabla-4-del-artículo" id="toc-capturar-los-datos-de-la-matriz-para-erycina-crita-galli-mondragon2007life-tabla-4-del-artículo" class="nav-link" data-scroll-target="#capturar-los-datos-de-la-matriz-para-erycina-crita-galli-mondragon2007life-tabla-4-del-artículo">Capturar los datos de la matriz para Erycina crita-galli <span class="citation" data-cites="mondragon2007life">(Mondragón, Maldonado, and Aguilar-Santelises 2007)</span> (tabla 4 del artículo)</a></li>
+  <li><a href="#para-calcular-los-autovalores-y-autovectores-de-la-matriz" id="toc-para-calcular-los-autovalores-y-autovectores-de-la-matriz" class="nav-link" data-scroll-target="#para-calcular-los-autovalores-y-autovectores-de-la-matriz">Para calcular los autovalores y autovectores de la matriz</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Capítulos</a></li><li class="breadcrumb-item"><a href="./111-Elasticidad.html">Elasticidad</a></li></ol></nav></header>
+
+
+
+
+<section id="Elasticidad" class="level1">
+<h1>Elasticidad</h1>
+<p>Autores: “Demetria Mondragón, Ernesto Mujica y Elaine González”</p>
+<section id="librerías-de-r-requeridas-para-el-siguiente-modulo" class="level2">
+<h2 class="anchored" data-anchor-id="librerías-de-r-requeridas-para-el-siguiente-modulo">Librerías de R requeridas para el siguiente modulo</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popdemo)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popbio)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="qué-es-la-elasticidad" class="level2">
+<h2 class="anchored" data-anchor-id="qué-es-la-elasticidad">Qué es la Elasticidad</h2>
+<p>Las matrices de elasticidad son un complemento de las matrices de transición, que nos permiten evaluar el efecto de “pequeños cambios” en los parámetros de la matriz de transición sobre la tasa de crecimiento de la población (<span class="math inline">\(\lambda\)</span>); así, las entradas de la matriz de elasticidad que presenten los valores más altos, serán aquellas que más impacto tendrán sobre el comportamiento de lambda (<span class="math inline">\(\lambda\)</span>) <span class="citation" data-cites="caswell2001matrix de1986elasticity">(<a href="#ref-caswell2001matrix" role="doc-biblioref">Caswell 2001</a>; <a href="#ref-de1986elasticity" role="doc-biblioref">Kroon et al. 1986</a>)</span>. Esos cambios pueden tener un efecto positivo o negativo sobre el crecimiento poblacional <span class="citation" data-cites="caswell2001matrix">(<a href="#ref-caswell2001matrix" role="doc-biblioref">Caswell 2001</a>)</span>. El uso de las elasticidades en ecología de plantas se remonta a 1974 cuando Sarukan y Gadgil trataron de evaluar la importancia relativa de la reproducción sexual vsv la reproducción vegetativa de tres especies de <em>Ranunculus</em> <span class="citation" data-cites="sarukhan1974studies de1986elasticity">(<a href="#ref-sarukhan1974studies" role="doc-biblioref">Sarukhan and Gadgil 1974</a>; <a href="#ref-de1986elasticity" role="doc-biblioref">Kroon et al. 1986</a>)</span>.</p>
+<p>El concepto de elasticidad en biología es un método orientado a evaluar el cambio proporcional en una variable en respuesta a un cambio proporcional en otra variable. En términos de matrices de transición, la elasticidad es una medida de la sensibilidad de la tasa de crecimiento poblacional a cambios. En otra palabra si uno cambia uno de los parámetros de la matriz de transición, la elasticidad mide cuánto cambiaría la tasa de crecimiento poblacional <span class="citation" data-cites="de1986elasticity">(<a href="#ref-de1986elasticity" role="doc-biblioref">Kroon et al. 1986</a>)</span>. En biología, la elasticidad es una herramienta para entender la importancia <em>del cambio</em> de cada etapa de la historia de vida sobre la tasa de crecimiento poblacional ya que permite identificar las etapas que más contribuyen a la tasa de crecimiento poblacional. Esa herramienta es muy útil para la conservación de especies y para la gestión de recursos naturales por que en parte nos indica cuan sensitiva esta el crecimiento poblacional cuando se cambia los parámetros de la historia de vida (las transiciones, supervivencia y fecundidad) de una especie.</p>
+<p>La elasticidad en la Biología de la Conservación no solo se basa en la observación de su matriz, que con sus valores podemos interpretar la vulnerabilidad de la población a las transiciones. La elasticidad predice el efecto futuro de las probabilidades medias de hechos pasados, respondiendo a la pregunta: ¿cuál de los cambios en las tasas vitales, tomados de uno en uno y manteniendo constante los demás, produciría el mayor efecto en la tasa de crecimiento de la población? En otras palabras, la elasticidad nos dará los efectos de pequeños cambios en las tasas vitales. Las tasas vitales con una baja elasticidad suelen tener una alta variabilidad, mientras que las de elevada suelen variar poco. La variabilidad de los parámetros vitales suele estar negativamente correlacionada con su elasticidad media [ehrlen1998direct]. Por ello no solamente se debe tener en cuenta cuan sensible es lambda (<span class="math inline">\(\lambda\)</span>) a una transición, sino también, cuanta variación en esa transición puede ocurrir, o de hecho ocurre, y cómo covaría con otras transiciones [ehrlen1998direct].</p>
+<p>En términos matemáticos la elasticidad es el cambio proporcional de <span class="math inline">\(\lambda\)</span> con cambios proporcionales en los parámetros de la matriz. En otras palabras, por cada unidad de cambio en un parámetro se reflejará en un cambio en <span class="math inline">\(\lambda\)</span> <span class="citation" data-cites="de1986elasticity">(<a href="#ref-de1986elasticity" role="doc-biblioref">Kroon et al. 1986</a>)</span>. La elasticidad <span class="math inline">\(e_{ij}\)</span> de <span class="math inline">\(\lambda\)</span> con respecto <span class="math inline">\(a_{ij}\)</span> (es el elemento i, j de la matriz) es definida como:</p>
+<p><span class="math display">\[e_{ij}=\frac{a_{ij}}{\lambda}\frac{\alpha}{\alpha_{ij}}\]</span></p>
+<p><span class="math display">\[=\frac{\alpha log \lambda}{\alpha log a_{ij}}\]</span></p>
+<p>La elasticidad <span class="math inline">\(e_{ij}\)</span> es solamente la pendiente del log de <span class="math inline">\(\lambda\)</span> gráficado contra log <span class="math inline">\(e_{ij}\)</span>. Debido a que los incrementos sobre una escala logarítmica corresponden a cambios similares proporcionales en una escala aritmética, por consecuencia la elasticidad mide la sensibilidad proporcional. Las elasticidades pueden ser calculadas y mostradas de manera conveniente como una matriz de elasticidad.</p>
+<p><span class="math display">\[E=\frac{a_{ij}}{\lambda}\frac{\alpha}{\alpha_{ij}}\]</span> <span class="math display">\[=\frac{1}{\lambda}{S}\circ A\]</span> Donde <strong>S</strong> es la matriz de sensibilidad y <span class="math inline">\(\circ\)</span> el producto de Hadamard <span class="citation" data-cites="caswell2001matrix">(<a href="#ref-caswell2001matrix" role="doc-biblioref">Caswell 2001</a>)</span>.</p>
+<p>Las matrices de elasticidad tienen la ventaja de que la suma de las entradas suman a uno, por lo que permite sumar diferentes entradas de la matriz, para evaluar la importancia de procesos (crecimiento, decrecimiento, permanencia o reproducción) o estadios sobre la <span class="math inline">\(\lambda\)</span> <span class="citation" data-cites="silvertown1996interpretation">(<a href="#ref-silvertown1996interpretation" role="doc-biblioref">Silvertown, Franco, and Menges 1996</a>)</span>, por lo que ha sido una herramienta ampliamente utilizada para el desarrollo de planes de manejo y conservación de especies ya que permite identificar a que estadios o procesos se deben enfocar los esfuerzos de conservación [<span class="citation" data-cites="mondragon2009population">Mondragón (<a href="#ref-mondragon2009population" role="doc-biblioref">2009</a>)</span>; tremblay1997lepanthes; <span class="citation" data-cites="berry2021population">Berry and Cleavitt (<a href="#ref-berry2021population" role="doc-biblioref">2021</a>)</span>; timsina2021six] o en caso opuesto para determinar que estadios pueden ser utilizados sin impactar fuertemente a la población <span class="citation" data-cites="mondragon2009population">(<a href="#ref-mondragon2009population" role="doc-biblioref">Mondragón 2009</a>)</span>. En el último concepto si tuviésemos que remover individuos de la población, cuál de los estados tuviese el menos impacto sobre la supervivencia de la población si fuesen removido.</p>
+<section id="sensibilidad-y-elasticidad" class="level3">
+<h3 class="anchored" data-anchor-id="sensibilidad-y-elasticidad">Sensibilidad y Elasticidad</h3>
+<p>La diferencia entre sensibilidad y elasticidad es que la sensibilidad mide el impacto en λ de cambiar la magnitud absoluta de una tasa vital particular en relación con el cambio de otras tasas vitales <span class="citation" data-cites="caswell1989analysis">(<a href="#ref-caswell1989analysis" role="doc-biblioref">Caswell 1989</a>)</span>, lo que implica que los cambios en las tasas de crecimiento, permanencia tendrán un valor de uno (ya que se estas tasas son proporciones), en tanto que los cambios en fecundidad podrán ser desde uno hasta cientos o miles, ya que se la fecundidad se calcula con en base a otra escala (tal como número de semillas o plántulas). La elasticidad por su parte, calcula la sensibilidad proporcional de λ a los cambios en una tasa vital <span class="citation" data-cites="de1986elasticity">(<a href="#ref-de1986elasticity" role="doc-biblioref">Kroon et al. 1986</a>)</span> evitando de esta forma el efecto de la magnitud del cambio. Cuanto mayor sea el valor de la elasticidad de la tasa vital, mayor será la contribución relativa de esa tasa vital a <span class="math inline">\(\lambda\)</span>.</p>
+</section>
+<section id="el-impacto-de-cambio-en-las-etapas" class="level3">
+<h3 class="anchored" data-anchor-id="el-impacto-de-cambio-en-las-etapas">El impacto de cambio en las etapas</h3>
+<p>Tomando como ejemplo la matriz de elasticidad de <em>Erycina crista-galli</em> una orquídea de ramilla <span class="citation" data-cites="mondragon2007life">(<a href="#ref-mondragon2007life" role="doc-biblioref">Mondragón, Maldonado, and Aguilar-Santelises 2007</a>)</span>, podremos recapitular todo lo previamente dicho (Tabla 1), así, lo <strong>primero</strong> que hay que recalcar es que el valor más alto de elasticidad para esta orquídea corresponde a la permanencia de los individuos adultos 2, es decir que cualquier pequeño cambio en el valor de dicha entrada (en la matriz de transición), tendrá el mayor impacto en el valor de * al comparar con otras estados de vida; <strong>segundo</strong>, es importante observar que al sumar todas las entradas de la matriz se obtiene un valor de uno. Lo mismo se mantiene cuando se suman todos los valores de elasticidad por estadio o por proceso. Es decir, si sumamos todos los valores de cada columna, tendremos el valor de elasticidad de cada estadio, para este caso el valor más alto lo ostenta el estadio de adultos 2 (0.818), lo que implica que el destino de la población de E. crista-galli* depende mayormente de lo que les pase a los individuos adultos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span> (<span class="st">"plántula"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto1"</span>, <span class="st">"adulto2"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>ec <span class="ot">&lt;-</span> <span class="fu">matrix</span> (<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.004</span>, <span class="fl">0.062</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                <span class="fl">0.195</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                <span class="fl">0.171</span>, <span class="fl">0.120</span>, <span class="fl">0.053</span>, <span class="fl">0.04</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                <span class="fl">0.073</span>, <span class="fl">0.10</span>, <span class="fl">0.435</span>, <span class="fl">0.447</span>), </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">ncol=</span><span class="dv">4</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">dimnames =</span> <span class="fu">list</span>(etapas, etapas))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>ec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         plántula juvenil adulto1 adulto2
+plántula    0.000    0.00   0.004   0.062
+juvenil     0.195    0.00   0.000   0.000
+adulto1     0.171    0.12   0.053   0.040
+adulto2     0.073    0.10   0.435   0.447</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">elas</span>(ec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           plántula     juvenil      adulto1    adulto2
+plántula 0.00000000 0.000000000 0.0005286107 0.05824146
+juvenil  0.01493867 0.000000000 0.0000000000 0.00000000
+adulto1  0.03007910 0.007893670 0.0109312556 0.05864336
+adulto2  0.01375230 0.007045004 0.0960875206 0.70185904</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertir la matriz de elasticidad en un data frame</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ec_df<span class="ot">=</span><span class="fu">as.data.frame</span>(<span class="fu">elas</span>(ec)) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Sumar las elasticidades por etapas y añadir una fila con las sumas</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>ec_df<span class="ot">=</span>ec_df <span class="sc">%&gt;%</span> <span class="fu">bind_rows</span>(<span class="fu">summarise_all</span>(., <span class="sc">~</span><span class="cf">if</span>(<span class="fu">is.numeric</span>(.)) <span class="fu">sum</span>(.) <span class="cf">else</span> <span class="st">"Total"</span>))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>ec_df <span class="sc">%&gt;%</span> </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data_color</span>(</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(adulto2),</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">colors =</span>  <span class="fu">c</span>(<span class="st">"blue"</span>),</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">domain =</span> <span class="cn">NULL</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_style</span>(</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">cell_fill</span>(<span class="at">color =</span> <span class="st">'black'</span>),</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_body</span>(</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">columns =</span> <span class="fu">c</span>(adulto2), </span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">rows =</span> <span class="dv">5</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Since gt v0.9.0, the `colors` argument has been deprecated.
+• Please use the `palette` argument to define a color palette.
+This warning is displayed once every 8 hours.</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="ulcbhpycde" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ulcbhpycde table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ulcbhpycde thead, #ulcbhpycde tbody, #ulcbhpycde tfoot, #ulcbhpycde tr, #ulcbhpycde td, #ulcbhpycde th {
+  border-style: none;
+}
+
+#ulcbhpycde p {
+  margin: 0;
+  padding: 0;
+}
+
+#ulcbhpycde .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ulcbhpycde .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ulcbhpycde .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ulcbhpycde .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ulcbhpycde .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ulcbhpycde .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ulcbhpycde .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ulcbhpycde .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ulcbhpycde .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ulcbhpycde .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ulcbhpycde .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ulcbhpycde .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ulcbhpycde .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ulcbhpycde .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ulcbhpycde .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ulcbhpycde .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ulcbhpycde .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ulcbhpycde .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ulcbhpycde .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ulcbhpycde .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ulcbhpycde .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ulcbhpycde .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ulcbhpycde .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ulcbhpycde .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ulcbhpycde .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ulcbhpycde .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ulcbhpycde .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ulcbhpycde .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ulcbhpycde .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ulcbhpycde .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ulcbhpycde .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ulcbhpycde .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ulcbhpycde .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ulcbhpycde .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ulcbhpycde .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ulcbhpycde .gt_left {
+  text-align: left;
+}
+
+#ulcbhpycde .gt_center {
+  text-align: center;
+}
+
+#ulcbhpycde .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ulcbhpycde .gt_font_normal {
+  font-weight: normal;
+}
+
+#ulcbhpycde .gt_font_bold {
+  font-weight: bold;
+}
+
+#ulcbhpycde .gt_font_italic {
+  font-style: italic;
+}
+
+#ulcbhpycde .gt_super {
+  font-size: 65%;
+}
+
+#ulcbhpycde .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ulcbhpycde .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ulcbhpycde .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ulcbhpycde .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ulcbhpycde .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ulcbhpycde .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ulcbhpycde .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ulcbhpycde .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#ulcbhpycde div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="plántula" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">plántula</th>
+<th id="juvenil" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">juvenil</th>
+<th id="adulto1" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">adulto1</th>
+<th id="adulto2" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">adulto2</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="plántula">0.000</td>
+<td class="gt_row gt_right" headers="juvenil">0.000</td>
+<td class="gt_row gt_right" headers="adulto1">0.001</td>
+<td class="gt_row gt_right" headers="adulto2" style="background-color: #0000FF; color: #FFFFFF">0.058</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="plántula">0.015</td>
+<td class="gt_row gt_right" headers="juvenil">0.000</td>
+<td class="gt_row gt_right" headers="adulto1">0.000</td>
+<td class="gt_row gt_right" headers="adulto2" style="background-color: #0000FF; color: #FFFFFF">0.000</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="plántula">0.030</td>
+<td class="gt_row gt_right" headers="juvenil">0.008</td>
+<td class="gt_row gt_right" headers="adulto1">0.011</td>
+<td class="gt_row gt_right" headers="adulto2" style="background-color: #0000FF; color: #FFFFFF">0.059</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="plántula">0.014</td>
+<td class="gt_row gt_right" headers="juvenil">0.007</td>
+<td class="gt_row gt_right" headers="adulto1">0.096</td>
+<td class="gt_row gt_right" headers="adulto2" style="background-color: #0000FF; color: #FFFFFF">0.702</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="plántula">0.059</td>
+<td class="gt_row gt_right" headers="juvenil">0.015</td>
+<td class="gt_row gt_right" headers="adulto1">0.108</td>
+<td class="gt_row gt_right" headers="adulto2" style="background-color: #000000; color: #FFFFFF">0.819</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="efecto-de-cambio-en-las-tansiciones-de-crecimiento-permanencia-y-fecundidad" class="level3">
+<h3 class="anchored" data-anchor-id="efecto-de-cambio-en-las-tansiciones-de-crecimiento-permanencia-y-fecundidad">Efecto de cambio en las tansiciones, de crecimiento, permanencia y fecundidad</h3>
+<p>En la tabla se ve los diferentes valores de elasticidad por procesos en <em>Erycina crista-galli</em> <span class="citation" data-cites="mondragon2007life">(<a href="#ref-mondragon2007life" role="doc-biblioref">Mondragón, Maldonado, and Aguilar-Santelises 2007</a>)</span> y el impacto por diferentes procesos de la historia de vida de la población. Ahora, si lo que quisiéramos saber es que proceso o tasa vital es lo que rige el comportamiento de la población, lo que se hace es sumar las entradas de la matriz que lo representan, en este caso hemos puesto en diferentes colores las estradas que manifiestan cada tasa, en rojo es la permanencia, en azul el crecimiento, en amarillo el decrecimiento o retrogresión y en verde la fecundidad. Eso nos permite determinar que es el impacto de elasticidad por procesos y tasas vitales, sumando cada uno de los valores en cada categoría. Es claro que el impacto principal de la población de <em>E. crista-galli</em> depende de la permanencia de los individuos, seguido por el crecimiento, en tanto que la fecundidad y la retrogresión tienen un impacto menor.</p>
+<p>La suma de cada grupo:</p>
+<ul>
+<li>Permanencia: 0.713</li>
+<li>Crecimiento: 0.170</li>
+<li>Retrogresión: 0.060</li>
+<li>Fecundidad: 0.058</li>
+</ul>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>           plántula     juvenil      adulto1    adulto2
+plántula 0.00000000 0.000000000 0.0005286107 0.05824146
+juvenil  0.01493867 0.000000000 0.0000000000 0.00000000
+adulto1  0.03007910 0.007893670 0.0109312556 0.05864336
+adulto2  0.01375230 0.007045004 0.0960875206 0.70185904</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         plántula juvenil adulto1 adulto2
+plántula    0.000   0.000   0.001   0.058
+juvenil     0.015   0.000   0.000   0.000
+adulto1     0.030   0.008   0.011   0.059
+adulto2     0.014   0.007   0.096   0.702</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="nakrconrtk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#nakrconrtk table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#nakrconrtk thead, #nakrconrtk tbody, #nakrconrtk tfoot, #nakrconrtk tr, #nakrconrtk td, #nakrconrtk th {
+  border-style: none;
+}
+
+#nakrconrtk p {
+  margin: 0;
+  padding: 0;
+}
+
+#nakrconrtk .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#nakrconrtk .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#nakrconrtk .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#nakrconrtk .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#nakrconrtk .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#nakrconrtk .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nakrconrtk .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#nakrconrtk .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#nakrconrtk .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#nakrconrtk .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#nakrconrtk .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#nakrconrtk .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#nakrconrtk .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#nakrconrtk .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#nakrconrtk .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#nakrconrtk .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#nakrconrtk .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#nakrconrtk .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#nakrconrtk .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nakrconrtk .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#nakrconrtk .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#nakrconrtk .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#nakrconrtk .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nakrconrtk .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#nakrconrtk .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#nakrconrtk .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nakrconrtk .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nakrconrtk .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#nakrconrtk .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nakrconrtk .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#nakrconrtk .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nakrconrtk .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#nakrconrtk .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nakrconrtk .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#nakrconrtk .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nakrconrtk .gt_left {
+  text-align: left;
+}
+
+#nakrconrtk .gt_center {
+  text-align: center;
+}
+
+#nakrconrtk .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#nakrconrtk .gt_font_normal {
+  font-weight: normal;
+}
+
+#nakrconrtk .gt_font_bold {
+  font-weight: bold;
+}
+
+#nakrconrtk .gt_font_italic {
+  font-style: italic;
+}
+
+#nakrconrtk .gt_super {
+  font-size: 65%;
+}
+
+#nakrconrtk .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#nakrconrtk .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#nakrconrtk .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#nakrconrtk .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#nakrconrtk .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#nakrconrtk .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#nakrconrtk .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#nakrconrtk .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#nakrconrtk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="plántula" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">plántula</th>
+<th id="juvenil" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">juvenil</th>
+<th id="adulto1" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">adulto1</th>
+<th id="adulto2" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">adulto2</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="plántula">0.000</td>
+<td class="gt_row gt_right" headers="juvenil">0.000</td>
+<td class="gt_row gt_right" headers="adulto1" style="background-color: #FFFF00">0.001</td>
+<td class="gt_row gt_right" headers="adulto2" style="background-color: #90EE90">0.058</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="plántula" style="background-color: #ADD8E6">0.015</td>
+<td class="gt_row gt_right" headers="juvenil">0.000</td>
+<td class="gt_row gt_right" headers="adulto1">0.000</td>
+<td class="gt_row gt_right" headers="adulto2">0.000</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="plántula" style="background-color: #ADD8E6">0.030</td>
+<td class="gt_row gt_right" headers="juvenil" style="background-color: #ADD8E6">0.008</td>
+<td class="gt_row gt_right" headers="adulto1" style="background-color: #FF0000">0.011</td>
+<td class="gt_row gt_right" headers="adulto2" style="background-color: #FFFF00">0.059</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="plántula" style="background-color: #ADD8E6">0.014</td>
+<td class="gt_row gt_right" headers="juvenil" style="background-color: #ADD8E6">0.007</td>
+<td class="gt_row gt_right" headers="adulto1" style="background-color: #ADD8E6">0.096</td>
+<td class="gt_row gt_right" headers="adulto2" style="background-color: #FF0000">0.702</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="como-se-usa-los-análisis-de-elasticidad-en-un-plan-de-conservación" class="level3">
+<h3 class="anchored" data-anchor-id="como-se-usa-los-análisis-de-elasticidad-en-un-plan-de-conservación">Como se usa los análisis de elasticidad en un plan de conservación</h3>
+<p>Por lo que, de manera simplista, pudiéramos decir que, si quisiéramos desarrollar un plan de conservación para esta especie, nuestros esfuerzos debieran enfocarse a asegurar la supervivencia de los individuos adultos, ya que remover o la mortandad de los individuos adultos tiene el mayor impacto sobre la persistencia de la población. En tanto que si quisiéramos hacer un uso sustentable de esta orquídea lo recomendable sería recolectar individuos juveniles, cuyos valores de elasticidad son menores a la de los estadios adultos. El impacto de remover plántulas o juveniles de la población tendría menos impacto a largo plazo sobre la supervivencia de la población.</p>
+</section>
+<section id="comparación-entre-especies" class="level3">
+<h3 class="anchored" data-anchor-id="comparación-entre-especies">Comparación entre especies</h3>
+<p>Las elasticidades también han sido utilizadas para establecer el comportamiento demográfico de las especies, lo que ha permitido generar patrones entre formas de vida, así como comparaciones tanto entre formas de vida como entre especies <span class="citation" data-cites="mondragon2015population silvertown1996interpretation">(<a href="#ref-mondragon2015population" role="doc-biblioref">Mondragón Chaparro et al. 2015</a>; <a href="#ref-silvertown1996interpretation" role="doc-biblioref">Silvertown, Franco, and Menges 1996</a>)</span>. Así, por ejemplo, si quisiéramos comparar el comportamiento demográfico de las orquídeas de ramillas vs las orquídeas epífitas convencionales (reconstruido de <span class="citation" data-cites="mondragon2007life">(<a href="#ref-mondragon2007life" role="doc-biblioref">Mondragón, Maldonado, and Aguilar-Santelises 2007</a>)</span>), veríamos que para ambos tipos de orquídeas en general lo más importante es la permanencia (supervivencia) de los individuos, en tanto que se puede observar que una diferencia entre la orquídea de ramilla y las otras en la contribución de los estadios al comportamiento de *, ya que para la primera los individuos reproductivos presentan mayores valores de elasticidad (al igual que para Lepanthes eltoroensis*), en tanto que para las otras orquídea los valores más altos los tienen los individuos no reproductivos <span class="citation" data-cites="mondragon2007life">(<a href="#ref-mondragon2007life" role="doc-biblioref">Mondragón, Maldonado, and Aguilar-Santelises 2007</a>)</span>.</p>
+<p>En la Figura 1a y b se observa los valores de elasticidad añadidos por proceso de historia de vida para</p>
+<ul>
+<li><em>Artorima erubescens</em> <span class="citation" data-cites="garcia2003demografia">(<a href="#ref-garcia2003demografia" role="doc-biblioref">Garcı́a-Soriano 2003</a>)</span> -rojo-,</li>
+<li><em>Erycina crista-galli</em> <span class="citation" data-cites="mondragon2007life">(<a href="#ref-mondragon2007life" role="doc-biblioref">Mondragón, Maldonado, and Aguilar-Santelises 2007</a>)</span> -verde-marón-,</li>
+<li><em>Laelia speciosa</em> <span class="citation" data-cites="hernandez1992dinamica">(<a href="#ref-hernandez1992dinamica" role="doc-biblioref">Hernández-Apolinar 1992</a>)</span> -verde-</li>
+<li><em>Lepanthes caritensis</em> <span class="citation" data-cites="tremblay1997lepanthes">(<a href="#ref-tremblay1997lepanthes" role="doc-biblioref">R. L. Tremblay 1997</a>)</span> -azul-</li>
+<li><em>Lepanthes eltoroensis</em> <span class="citation" data-cites="tremblay2003population">(<a href="#ref-tremblay2003population" role="doc-biblioref">R. Tremblay and Hutchings 2003</a>)</span> -violeta-.</li>
+</ul>
+<p>en la figura 1a, la suma por la historia de vida, F: fecundidad, P: permenancia y C: crecimiento y en la figura 1b los valores de elasticidad sumados por estadios (b), P: plántulas, NR; individuos no reproductivos, R: individuos reproductivos o adultos.</p>
+<p>Se observa que en los valores de elasticidad estan más altos en los procesos de permanencia seguido por el crecimiento. En la figura 1b se observa que los valores de elasticidad son más altos en los estadios de no reproductivo y reproductivos (adultos activos) al comparar que individuos en la etapa de plántulas.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Elasticidad_estadios <span class="ot">=</span><span class="fu">tribble</span>(<span class="sc">~</span>Especie, <span class="sc">~</span>Fecundidad, <span class="sc">~</span>Estasis, <span class="sc">~</span>Crecimiento, <span class="sc">~</span>Plántulas, <span class="sc">~</span>No_reproductivos, <span class="sc">~</span>Reproductivos,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"Erycina crista-galli"</span>,  <span class="fl">0.035</span>, <span class="fl">0.718</span>, <span class="fl">0.247</span>, <span class="fl">0.0345</span>, <span class="fl">0.0456</span>, <span class="fl">0.9197</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"Artorima erubescens"</span>,   <span class="fl">0.000</span>, <span class="fl">0.646</span>, <span class="fl">0.354</span>, <span class="fl">0.0023</span>, <span class="fl">0.7207</span>, <span class="fl">0.277</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"Laelia speciosa"</span>,       <span class="fl">0.116</span>, <span class="fl">0.651</span>, <span class="fl">0.328</span>, <span class="fl">0.120</span>, <span class="fl">0.669</span>, <span class="fl">0.216</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"Lepanthes eltoroensis"</span>, <span class="fl">0.005</span>, <span class="fl">0.880</span>, <span class="fl">0.115</span>, <span class="fl">0.1133</span>, <span class="fl">0.0784</span>, <span class="fl">0.8083</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"Lepanthes caritensis"</span>,  <span class="fl">0.002</span>, <span class="fl">0.885</span>, <span class="fl">0.114</span>, <span class="fl">0.018</span>, <span class="fl">0.648</span>, <span class="fl">0.335</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Elasticidad_estadios</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 7
+  Especie              Fecundidad Estasis Crecimiento Plántulas No_reproductivos
+  &lt;chr&gt;                     &lt;dbl&gt;   &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;            &lt;dbl&gt;
+1 Erycina crista-galli      0.035   0.718       0.247    0.0345           0.0456
+2 Artorima erubescens       0       0.646       0.354    0.0023           0.721 
+3 Laelia speciosa           0.116   0.651       0.328    0.12             0.669 
+4 Lepanthes eltoroens…      0.005   0.88        0.115    0.113            0.0784
+5 Lepanthes caritensis      0.002   0.885       0.114    0.018            0.648 
+# ℹ 1 more variable: Reproductivos &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>EE<span class="ot">=</span>Elasticidad_estadios <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Especie, Fecundidad, Estasis, Crecimiento) <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Especie, <span class="at">names_to =</span> <span class="st">"Estadios"</span>, <span class="at">values_to =</span> <span class="st">"Elasticidad"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>EE<span class="sc">$</span>Estadios<span class="ot">=</span><span class="fu">factor</span>(EE<span class="sc">$</span>Estadios, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Fecundidad"</span>, <span class="st">"Estasis"</span>, <span class="st">"Crecimiento"</span>))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(EE, <span class="fu">aes</span>(<span class="at">x =</span> Estadios, <span class="at">y =</span> Elasticidad, <span class="at">fill =</span> Especie)) <span class="sc">+</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">color=</span><span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Elasticidad por proceso demográfico"</span>,</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Estadios"</span>,</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Elasticidad"</span>)<span class="sc">+</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">guide =</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">guide_legend</span>(<span class="at">label.theme =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>, <span class="at">face =</span> <span class="st">"italic"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="111-Elasticidad_files/figure-html/Elas7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>EE1<span class="ot">=</span>Elasticidad_estadios <span class="sc">%&gt;%</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Especie, Plántulas, No_reproductivos, Reproductivos) <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Especie, <span class="at">names_to =</span> <span class="st">"Estadios"</span>, <span class="at">values_to =</span> <span class="st">"Elasticidad"</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>EE1<span class="sc">$</span>Estadios<span class="ot">=</span><span class="fu">factor</span>(EE1<span class="sc">$</span>Estadios, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Plántulas"</span>, <span class="st">"No_reproductivos"</span>, <span class="st">"Reproductivos"</span>))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(EE, <span class="fu">aes</span>(<span class="at">x =</span> Estadios, <span class="at">y =</span> Elasticidad, <span class="at">fill =</span> Especie)) <span class="sc">+</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">color=</span><span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Elasticidad por proceso demográfico"</span>,</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Etapas"</span>,</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Elasticidad"</span>)<span class="sc">+</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">guide =</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">guide_legend</span>(<span class="at">label.theme =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>, <span class="at">face =</span> <span class="st">"italic"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="111-Elasticidad_files/figure-html/Elas8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="limitaciones" class="level2">
+<h2 class="anchored" data-anchor-id="limitaciones">Limitaciones</h2>
+<p>Aunque las matrices son una herramienta muy útil para determinar el comportamiento demográfico de una especie o un conjunto de estas, es necesario estar conscientes que las diferentes entradas de dicha matriz son el resultado, en la mayoría de los casos, de la conjunción de varias tasas vitales a la vez <span class="citation" data-cites="franco2004comparative">(<a href="#ref-franco2004comparative" role="doc-biblioref">Franco and Silvertown 2004</a>)</span> ademas que dependen fuertemente de la calidad de los datos (vea capitulo xx ) . Así mismo, es importante considerar que ciertas entradas son la combinación de varios procesos demográficos, es decir por ejemplo la entrada que representa la transición de plántula a juvenil, implica que el individuo debe sobrevivir y además crecer lo suficiente para pasar al siguiente estadio, o en el caso de la fecundidad que el individuo debe sobrevivir y además, por lo que se recomiendo separar los valores de cada proceso de cada entrada y calcular las elasticidades de las tasas vitales per se. Por consecuencia el acercamiento más reciente de “transient function” desarollado por Stott et al. <span class="citation" data-cites="stott2012beyond">(<a href="#ref-stott2012beyond" role="doc-biblioref">Stott, Hodgson, and Townley 2012</a>)</span> pudiese ser un acercamiento más adecuado si los cambios en sean grandes.</p>
+<p>Una de las limitaciones principales de los análisis de elasticidad tradicional mencionado arriba es que el modelo de respuestas es lineal. En otra palabra se asume que los cambios en las tasas vitales son proporcionales a los cambios en la tasa de crecimiento poblacional y que irrelevante del tamaño del cambio el cambio seguirá una respuesta lineal. En la realidad, los cambios en las tasas vitales no son proporcionales y lineal a los cambios en la tasa de crecimiento poblacional. Por ejemplo, si uno aumenta mucho la supervivencia de los individuos de una etapa, la tasa de crecimiento poblacional no aumentará de manera proporcional. Por consecuencia, la elasticidad es una aproximación y no una descripción exacta de la relación entre los cambios en las tasas vitales y la tasa de crecimiento poblacional y es aplicable a solamente analisis de perturbaciones pequeñas. Vea el capitulo x para metodos más avanzados de análisis de elasticidad.</p>
+<hr>
+</section>
+<section id="introducir-los-nombres-de-los-estadíos-o-categorías-de-tamaño-según-sea-su-caso" class="level2">
+<h2 class="anchored" data-anchor-id="introducir-los-nombres-de-los-estadíos-o-categorías-de-tamaño-según-sea-su-caso">Introducir los nombres de los estadíos o categorías de tamaño, según sea su caso</h2>
+</section>
+<section id="capturar-los-datos-de-la-matriz-para-erycina-crita-galli-mondragon2007life-tabla-4-del-artículo" class="level2">
+<h2 class="anchored" data-anchor-id="capturar-los-datos-de-la-matriz-para-erycina-crita-galli-mondragon2007life-tabla-4-del-artículo">Capturar los datos de la matriz para Erycina crita-galli <span class="citation" data-cites="mondragon2007life">(<a href="#ref-mondragon2007life" role="doc-biblioref">Mondragón, Maldonado, and Aguilar-Santelises 2007</a>)</span> (tabla 4 del artículo)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span> (<span class="st">"plántula"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto1"</span>, <span class="st">"adulto2"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>ec <span class="ot">&lt;-</span> <span class="fu">matrix</span> (<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.004</span>, <span class="fl">0.062</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                <span class="fl">0.195</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                <span class="fl">0.171</span>, <span class="fl">0.120</span>, <span class="fl">0.053</span>, <span class="fl">0.04</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>                <span class="fl">0.073</span>, <span class="fl">0.10</span>, <span class="fl">0.435</span>, <span class="fl">0.447</span>), </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">ncol=</span><span class="dv">4</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">dimnames =</span> <span class="fu">list</span>(etapas, etapas))</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>ec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         plántula juvenil adulto1 adulto2
+plántula    0.000    0.00   0.004   0.062
+juvenil     0.195    0.00   0.000   0.000
+adulto1     0.171    0.12   0.053   0.040
+adulto2     0.073    0.10   0.435   0.447</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Introducir los valores iniciales por estadío (vector N)</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>N0_ec<span class="ot">&lt;-</span> <span class="fu">matrix</span> (<span class="fu">c</span>(<span class="dv">41</span>,<span class="dv">50</span>,<span class="dv">246</span>,<span class="dv">226</span>), <span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>N0_ec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1]
+[1,]   41
+[2,]   50
+[3,]  246
+[4,]  226</code></pre>
+</div>
+</div>
+</section>
+<section id="para-calcular-los-autovalores-y-autovectores-de-la-matriz" class="level2">
+<h2 class="anchored" data-anchor-id="para-calcular-los-autovalores-y-autovectores-de-la-matriz">Para calcular los autovalores y autovectores de la matriz</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eigen.analysis</span>(ec, <span class="at">zero=</span><span class="cn">FALSE</span>) <span class="co"># la función es del paquete popbio</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$lambda1
+[1] 0.5214416
+
+$stable.stage
+  plántula    juvenil    adulto1    adulto2 
+0.09190164 0.03436784 0.10775779 0.76597273 
+
+$sensitivities
+           plántula    juvenil   adulto1   adulto2
+plántula 0.05877008 0.02197785 0.0689099 0.4898310
+juvenil  0.03994690 0.01493867 0.0468391 0.3329455
+adulto1  0.09172220 0.03430073 0.1075474 0.7644772
+adulto2  0.09823314 0.03673558 0.1151817 0.8187439
+
+$elasticities
+           plántula     juvenil      adulto1    adulto2
+plántula 0.00000000 0.000000000 0.0005286107 0.05824146
+juvenil  0.01493867 0.000000000 0.0000000000 0.00000000
+adulto1  0.03007910 0.007893670 0.0109312556 0.05864336
+adulto2  0.01375230 0.007045004 0.0960875206 0.70185904
+
+$repro.value
+ plántula   juvenil   adulto1   adulto2 
+1.0000000 0.6797151 1.5606957 1.6714823 
+
+$damping.ratio
+[1] 4.222528</code></pre>
+</div>
+</div>
+<p>Revisión:</p>
+
+
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-berry2021population" class="csl-entry" role="listitem">
+Berry, Eric J, and Natalie L Cleavitt. 2021. <span>“Population Dynamics and Comparative Demographics in Sympatric Populations of the Round-Leaved Orchids <em>Platanthera <span class="nocase">m</span>acrophylla</em> and <em>p. <span class="nocase">o</span>rbiculata</em>.”</span> <em>Population Ecology</em> 63 (4): 274–89.
+</div>
+<div id="ref-caswell1989analysis" class="csl-entry" role="listitem">
+Caswell, Hal. 1989. <span>“Analysis of Life Table Response Experiments i. Decomposition of Effects on Population Growth Rate.”</span> <em>Ecological Modelling</em> 46 (3-4): 221–37.
+</div>
+<div id="ref-caswell2001matrix" class="csl-entry" role="listitem">
+———. 2001. <em>Matrix Population Models: Construction, Analysis, and Interpretation</em>. 2nd ed. Sunderland, Massachusetts, USA: Sinauer Associates.
+</div>
+<div id="ref-franco2004comparative" class="csl-entry" role="listitem">
+Franco, Miguel, and Jonathan Silvertown. 2004. <span>“A Comparative Demography of Plants Based Upon Elasticities of Vital Rates.”</span> <em>Ecology</em> 85 (2): 531–38.
+</div>
+<div id="ref-garcia2003demografia" class="csl-entry" role="listitem">
+Garcı́a-Soriano, R. 2003. <span>“Demograf<span>ı́</span>a, Manejo y Conservaci<span>ó</span>n de <em>Artorima <span class="nocase">e</span>rubescens</em> En Oaxaca, Orqu<span>ı́</span>dea End<span>é</span>mica Del Sur de m<span>é</span>xico.”</span> Master’s thesis, Universidad Autonoma de Yucatan.
+</div>
+<div id="ref-hernandez1992dinamica" class="csl-entry" role="listitem">
+Hernández-Apolinar, Mariana. 1992. <span>“Din<span>á</span>mica Poblacional de <em>Laelia <span class="nocase">s</span>peciosa</em> (HBK) Schltr. (Orchidaceae).”</span> <em>Bachelor Thesis. Faculdad de Ciencias, UNAM</em>. Master’s thesis, Mexico City, Mexico.
+</div>
+<div id="ref-de1986elasticity" class="csl-entry" role="listitem">
+Kroon, Hans de, Anton Plaisier, Jan van Groenendael, and Hal Caswell. 1986. <span>“Elasticity: The Relative Contribution of Demographic Parameters to Population Growth Rate.”</span> <em>Ecology</em> 67 (5): 1427–31.
+</div>
+<div id="ref-mondragon2015population" class="csl-entry" role="listitem">
+Mondragón Chaparro, Demetria Martha, Marı́a Teresa Valverde Valdés, Mariana Hernández Apolinar, et al. 2015. <span>“Population Ecology of Epiphytic Angiosperms: A Review.”</span>
+</div>
+<div id="ref-mondragon2009population" class="csl-entry" role="listitem">
+Mondragón, Demetria. 2009. <span>“Population Viability Analysis for <em>Guarianthe <span class="nocase">a</span>urantiaca</em>, an Ornamental Epiphytic Orchid Harvested in Southeast m<span>é</span>xico.”</span> <em>Plant Species Biology</em> 24 (1): 35–41.
+</div>
+<div id="ref-mondragon2007life" class="csl-entry" role="listitem">
+Mondragón, Demetria, Citlalli Maldonado, and Remedios Aguilar-Santelises. 2007. <span>“Life History and Demography of a Twig Epiphyte: A Case Study of <em>Erycina <span class="nocase">c</span>rista-Galli</em> (Orchidaceae).”</span> <em>Selbyana</em>, 137–44.
+</div>
+<div id="ref-sarukhan1974studies" class="csl-entry" role="listitem">
+Sarukhan, Jose, and Madhav Gadgil. 1974. <span>“Studies on Plant Demography: <em>Ranunculus <span class="nocase">r</span>epens</em> l., <em>r. <span class="nocase">b</span>ulbosus</em> l. And <em>r. <span class="nocase">a</span>cris</em> l.: III. A Mathematical Model Incorporating Multiple Modes of Reproduction.”</span> <em>The Journal of Ecology</em>, 921–36.
+</div>
+<div id="ref-silvertown1996interpretation" class="csl-entry" role="listitem">
+Silvertown, Jonathan, Miguel Franco, and Eric Menges. 1996. <span>“Interpretation of Elasticity Matrices as an Aid to the Management of Plant Populations for Conservation.”</span> <em>Conservation Biology</em> 10 (2): 591–97.
+</div>
+<div id="ref-stott2012beyond" class="csl-entry" role="listitem">
+Stott, Iain, David James Hodgson, and Stuart Townley. 2012. <span>“Beyond Sensitivity: Nonlinear Perturbation Analysis of Transient Dynamics.”</span> <em>Methods in Ecology and Evolution</em> 3 (4): 673–84.
+</div>
+<div id="ref-tremblay1997lepanthes" class="csl-entry" role="listitem">
+Tremblay, Raymond L. 1997. <span>“<em>Lepanthes <span class="nocase">c</span>aritensis</em>, an Endangered Orchid: No Sex, No Future?”</span> <em>Selbyana</em>, 160–66.
+</div>
+<div id="ref-tremblay2003population" class="csl-entry" role="listitem">
+Tremblay, RL, and MJ Hutchings. 2003. <span>“Population Dynamics in Orchid Conservation: A Review of Analytical Methods Based on the Rare Species <em>Lepanthes <span class="nocase">e</span>ltoroensis</em>.”</span> <em>Orchid Conservation. Kota Kinabalu: Natural History Publications (Borneo)</em>, 183–204.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./110-Indices.html" class="pagination-link" aria-label="Índices demográficos">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Índices demográficos</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./112-Dinamica_de_Transiciones.html" class="pagination-link" aria-label="Dinámica de Transiciones">
+        <span class="nav-page-text">Dinámica de Transiciones</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2025, Raymond L. Tremblay</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>This page is built with ❤️ and <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
