@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>bayesian_ppm – Diagnostico Poblacional</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./107-matU_matF_matC.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b53751a350365c71b6c909e95f209ed1.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-0309b8b1721542f374478695392ebb2d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-083d847ecde08941f1699ed9c8914ce7.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="site_libs/viz-1.8.2/viz.js"></script>
+<link href="site_libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
+<script src="site_libs/grViz-binding-1.0.11.9000/grViz.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta property="og:title" content="Diagnostico Poblacional">
+<meta property="og:description" content="">
+<meta property="og:image" content="108-Bayesian_PPM_files/figure-html/bayes24-1.png">
+<meta property="og:site_name" content="Diagnostico Poblacional">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Capítulos</a></li><li class="breadcrumb-item"><a href="./108-Bayesian_PPM.html">Estimados bayesianos de PPM</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./images/logo.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Capítulos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./102-Intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introducción</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./103-Ciclos_de_Vida.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ciclos de Vida</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./104-Recopilacion_datos_en_el_campo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Recopilación de datos en el campo</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./105-calcular_transiciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Calcular transiciones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./106-calcular_fecundidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Calcular fecundidad</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./107-matU_matF_matC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Suma de matrices</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./108-Bayesian_PPM.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Estimados bayesianos de PPM</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#Bayesiano" id="toc-Bayesiano" class="nav-link active" data-scroll-target="#Bayesiano">Método bayesiano para calcular transiciones y fertilidades</a>
+  <ul class="collapse">
+  <li><a href="#el-paquete-raretrans" id="toc-el-paquete-raretrans" class="nav-link" data-scroll-target="#el-paquete-raretrans">El paquete “raretrans”</a></li>
+  <li><a href="#instalación-de-los-paquetes" id="toc-instalación-de-los-paquetes" class="nav-link" data-scroll-target="#instalación-de-los-paquetes">Instalación de los paquetes</a></li>
+  <li><a href="#instalación-del-paquete-raretrans" id="toc-instalación-del-paquete-raretrans" class="nav-link" data-scroll-target="#instalación-del-paquete-raretrans">Instalación del paquete raretrans</a></li>
+  <li><a href="#obtención-de-la-matriz-de-proyección" id="toc-obtención-de-la-matriz-de-proyección" class="nav-link" data-scroll-target="#obtención-de-la-matriz-de-proyección">Obtención de la matriz de proyección</a></li>
+  <li><a href="#paso-1-cargar-los-datos-de-la-una-población-de-l.-elto" id="toc-paso-1-cargar-los-datos-de-la-una-población-de-l.-elto" class="nav-link" data-scroll-target="#paso-1-cargar-los-datos-de-la-una-población-de-l.-elto">Paso 1: Cargar los datos de la una población de <em>L. elto</em></a></li>
+  <li><a href="#organización-de-los-datos-en-el-data.frame" id="toc-organización-de-los-datos-en-el-data.frame" class="nav-link" data-scroll-target="#organización-de-los-datos-en-el-data.frame">Organización de los datos en el “data.frame”</a></li>
+  <li><a href="#nota" id="toc-nota" class="nav-link" data-scroll-target="#nota">Nota:</a></li>
+  <li><a href="#paso-2-obtener-el-número-inicial-de-individuos-por-etapa" id="toc-paso-2-obtener-el-número-inicial-de-individuos-por-etapa" class="nav-link" data-scroll-target="#paso-2-obtener-el-número-inicial-de-individuos-por-etapa">Paso 2: Obtener el número inicial de individuos por etapa</a></li>
+  <li><a href="#método-alterno-para-calcular-transiciones-fertilidades-y-el-número-de-individuos-por-etapas." id="toc-método-alterno-para-calcular-transiciones-fertilidades-y-el-número-de-individuos-por-etapas." class="nav-link" data-scroll-target="#método-alterno-para-calcular-transiciones-fertilidades-y-el-número-de-individuos-por-etapas.">Método alterno para calcular transiciones, fertilidades y el número de individuos por etapas.</a></li>
+  <li><a href="#uso-de-priors-para-incorporar-transiciones-raras" id="toc-uso-de-priors-para-incorporar-transiciones-raras" class="nav-link" data-scroll-target="#uso-de-priors-para-incorporar-transiciones-raras">Uso de priors para incorporar transiciones raras</a>
+  <ul class="collapse">
+  <li><a href="#uso-priors-no-informativos" id="toc-uso-priors-no-informativos" class="nav-link" data-scroll-target="#uso-priors-no-informativos">Uso priors no informativos</a></li>
+  <li><a href="#matriz-de-transición" id="toc-matriz-de-transición" class="nav-link" data-scroll-target="#matriz-de-transición">Matriz de transición</a></li>
+  <li><a href="#cómo-calcular-a-mano-las-transiciones-de-estado" id="toc-cómo-calcular-a-mano-las-transiciones-de-estado" class="nav-link" data-scroll-target="#cómo-calcular-a-mano-las-transiciones-de-estado">¿Cómo calcular a mano las transiciones de estado ?</a></li>
+  <li><a href="#matriz-de-fertilidad" id="toc-matriz-de-fertilidad" class="nav-link" data-scroll-target="#matriz-de-fertilidad">Matriz de fertilidad</a></li>
+  <li><a href="#calculando-los-valores-a-priori-de-fertilidad-a-mano" id="toc-calculando-los-valores-a-priori-de-fertilidad-a-mano" class="nav-link" data-scroll-target="#calculando-los-valores-a-priori-de-fertilidad-a-mano">Calculando los valores <em>a priori</em> de fertilidad a mano</a></li>
+  </ul></li>
+  <li><a href="#el-crecimiento-poblacional" id="toc-el-crecimiento-poblacional" class="nav-link" data-scroll-target="#el-crecimiento-poblacional">El crecimiento poblacional</a>
+  <ul class="collapse">
+  <li><a href="#otras-opciones-para-el-argumento-returntype" id="toc-otras-opciones-para-el-argumento-returntype" class="nav-link" data-scroll-target="#otras-opciones-para-el-argumento-returntype">Otras opciones para el argumento `returnType</a></li>
+  </ul></li>
+  <li><a href="#añadiendo-realidad-a-los-análisis" id="toc-añadiendo-realidad-a-los-análisis" class="nav-link" data-scroll-target="#añadiendo-realidad-a-los-análisis">Añadiendo realidad a los análisis</a>
+  <ul class="collapse">
+  <li><a href="#incorporar-priores-informativos" id="toc-incorporar-priores-informativos" class="nav-link" data-scroll-target="#incorporar-priores-informativos">Incorporar priores informativos</a></li>
+  <li><a href="#modificar-el-peso-de-los-valores-a-priori" id="toc-modificar-el-peso-de-los-valores-a-priori" class="nav-link" data-scroll-target="#modificar-el-peso-de-los-valores-a-priori">Modificar el peso de los valores <em>a priori</em></a></li>
+  </ul></li>
+  <li><a href="#intervalos-de-credibilidad-de-los-parámetros" id="toc-intervalos-de-credibilidad-de-los-parámetros" class="nav-link" data-scroll-target="#intervalos-de-credibilidad-de-los-parámetros">Intervalos de credibilidad de los parámetros</a>
+  <ul class="collapse">
+  <li><a href="#el-efecto-del-tamaño-de-muestra-sobre-los-intervalos-de-credibilidad" id="toc-el-efecto-del-tamaño-de-muestra-sobre-los-intervalos-de-credibilidad" class="nav-link" data-scroll-target="#el-efecto-del-tamaño-de-muestra-sobre-los-intervalos-de-credibilidad">El efecto del tamaño de muestra sobre los intervalos de credibilidad</a></li>
+  </ul></li>
+  <li><a href="#intervalo-de-credibilidad-de-lambda" id="toc-intervalo-de-credibilidad-de-lambda" class="nav-link" data-scroll-target="#intervalo-de-credibilidad-de-lambda">Intervalo de credibilidad de <span class="math inline">\(\lambda\)</span></a></li>
+  <li><a href="#determinar-si-el-lambda-es-significativamente-diferente-de-1" id="toc-determinar-si-el-lambda-es-significativamente-diferente-de-1" class="nav-link" data-scroll-target="#determinar-si-el-lambda-es-significativamente-diferente-de-1">Determinar si el <span class="math inline">\(\lambda\)</span> es significativamente diferente de 1</a>
+  <ul class="collapse">
+  <li><a href="#tabla-de-resultado-de-lambda" id="toc-tabla-de-resultado-de-lambda" class="nav-link" data-scroll-target="#tabla-de-resultado-de-lambda">Tabla de resultado de lambda</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Capítulos</a></li><li class="breadcrumb-item"><a href="./108-Bayesian_PPM.html">Estimados bayesianos de PPM</a></li></ol></nav></header>
+
+
+
+
+<section id="Bayesiano" class="level1">
+<h1>Método bayesiano para calcular transiciones y fertilidades</h1>
+<p>Por: Raymond L. Tremblay</p>
+<p>El objetivo de este capítulo es mostrar algunos de los problemas a los que nos enfrentamos al estimar parámetros de matrices poblacionales de especies raras, de especies con tamaños de muestra limitados o de especies con transiciones poco frecuentes. Particularmente, se muestran los problemas asociados a las matrices de especies raras y se propone un método basado en estadística bayesiana que permita estimar parámetros que representen de manera realista el ciclo de vida de la especie de estudio.</p>
+<p>Considere un primer ejemplo donde sabemos que la especie de interés tiene tres etapas en su ciclo de vida (semillas, plántulas y adultos) de las cuales sólo la etapa más grande (i.e., adultos) produce semillas. El primer paso para llevar a cabo el análisis es evaluar las etapas del ciclo de vida para determinar cuáles de éstas determinan mayoritariamente la dinámica poblacional de la especie así como evaluar que cuales son más prácticas de medir para llevar a cabo una óptima colecta de datos.</p>
+<p>En la primera figura podemos observar el ciclo de vida considerado para esta especie hipotética. Una vez definido el ciclo de vida de la especie procedimos a colectar datos de campo y a estimar las transiciones y la fertilidad. Los resultados obtenidos mostraron lo siguiente:</p>
+<ol type="1">
+<li>Las semilla germinaron y transitaron a la etapa de plántula?<br>
+</li>
+</ol>
+<ul>
+<li>¿Es realista que todas las semillas germinen?</li>
+<li>¿Por qué no se encontraron semillas que NO germinen?</li>
+</ul>
+<ol start="2" type="1">
+<li>Todos las plántulas murieron antes de llegar a la etapa de adulto.</li>
+</ol>
+<ul>
+<li>¿Es realista que todas las plántulas se mueran durante el ciclo de vida de una especie?</li>
+</ul>
+<p>Aquí podemos observar dos resultados no realistas de las matrices de proyección poblacionales (MPM). En estos casos ningún individuo muere o que todos se mueren, sin embargo, estos resultados están afectados por el tamaño de muestra. Suponga que para nuestra especie de interés solamente se tuvo acceso a 4 plantas adultas ya que es un especies rara, si estos 4 individuos sobreviven obtendríamos una supervivencia del 100%. Es decir, obtendríamos que ¡los individuos son inmortales! Claramente este resultado se debe más a un error debido al reducido tamaño de muestra que al ciclo de vida de la especie ya que por pura probabilidad no se encontró ninguna planta que se muera. Entonces, es importante reconocer cuando los parámetros que estimamos a partir de los datos colectados no reflejan la historia de vida típica de la especie.</p>
+<p>El paquete <strong>raretrans</strong> ayuda a resolver estos problemas y a estimar parámetros más realistas al considerar explicítamente el ciclo de vida típico de la especie estudiada.</p>
+<p>Algunas características de ciclos de vida biológicamente NO realistas:</p>
+<ul>
+<li>Todas las semilla sobreviven y pasan a plántulas</li>
+<li>Ninguna plántula sobrevive y/o pasa a ser adulto -La mayorías de los adultos se quedan como adulto pero ninguno produce semillas</li>
+</ul>
+<p>NOTE que es posible que los datos colectados en campo arrojen estos valores, pero muchas veces esas observaciones son resultado de tamaños de muestra limitados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hidden code to produce figures</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>matA <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.9</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>stages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"semillas"</span>, <span class="st">"plantulas"</span>, <span class="st">"adultos"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(matA, <span class="at">stages =</span> stages)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="grViz html-widget html-fill-item" id="htmlwidget-7b655c37a4d6ce9297d7" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-7b655c37a4d6ce9297d7">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"semillas\" -> \"plantulas\" -> \"adultos\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"semillas\" -> \"plantulas\" -> \"adultos\" [style=invis] } [style=invis] \"semillas\" -> \"plantulas\"[minlen=3,fontsize=10,color=grey,xlabel=\" 1\"]\n\"adultos\" -> \"adultos\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.9\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Considera el siguiente ejemplo:</p>
+<ul>
+<li>Se quiere estudiar a los árboles del género <em>Sequoia</em>. Si se muestrean los árboles grandes (con un dbh de &gt; xxx) aunque la muestra sea de más de 1000 individuos es posible que no encontremos ningun individuo que muera entre un año y otro. Con estos datos podríamos determinar que la supervivencia para esta especie es del 100%. Sin embargo, es necesario considerar que 1) si el tamaño de muestra aumenta a 10,000 o 100,000 árboles se podrían haber detectado uno o más individuos muertos, 2) la mortalidad en plantas frecuentemente está relacionada con el tamaño del individuo, por lo que, entre más grande es un individuo menor es la probabilidad de morir y 3) que la mortalidad en este tipo de individuos puede ser dependiente del tiempo, es decir, en años con variación biótica o abiótica muy alta la mortalidad puede aumentar. Si toma en cuenta estas consideraciones en el estudio de <em>Sequoias</em> la mortalidad en estos individuos sería baja pero no 0.</li>
+</ul>
+<p>Tomando en cuenta los ejemplos anteriores podemos concluir que es importante considerar la biología de la especie, el método de muestreo y el tamaño de muestra para llevar a cabo un análisis de datos correcto.</p>
+<section id="el-paquete-raretrans" class="level2">
+<h2 class="anchored" data-anchor-id="el-paquete-raretrans">El paquete “raretrans”</h2>
+<p>El manuscrito <span class="citation" data-cites="tremblay2021population">Tyre, RL, and Perez (<a href="#ref-raretrans2024" role="doc-biblioref">2024</a>)</span> contiene los datos originales y el uso del paquete y se encuentra en https://doi.org/10.1016/j.ecolmodel.2021.109526.</p>
+<p><strong>Population projections from holey matrices: Using prior information to estimate rare transition events</strong></p>
+<p>Resumen</p>
+<p>Las matrices de proyección poblacional (MPM) son una herramienta común para predecir el comportamiento de la población a corto y largo plazo. Sin embargo, cuando se utilizan para especies raras, amenazadas y en peligro de extinción los datos disponibles suelen tener tamaños de muestra reducido. En consecuencia, algunos eventos demográficos podrían perderse en la modelación dando como resultado matrices con eventos faltantes que reflejen trayectorias de ciclo de vida incompletas o biológicamente poco realistas. Estas matrices con eventos faltantes (ceros; e.g., sin observación de semillas que se transforman en plántulas) a menudo se sustituye utilizando información de la literatura aunque información referente a otras poblaciones, otros períodos de tiempo, otras especies usualmente se omite.</p>
+<p>Una forma de abordar este problema es a través de estadística bayesiana para el ajuste de los parámetros matriciales. Este marco estadístico nos permite completar los valores faltantes usando un modelo multinomial de Dirichlet para parametrizar las transiciones de estado y una distribución Gamma para parametrizar la fecundida. Este método permite integrar información conocida (<em>a priori</em>) e incluir explícitamente el peso de la información previa en las distribuciones posteriores. Además, al establecer explícitamente las distribuciones a priori, los resultados son reproducibles y se pueden volver a evaluar con diferentes distribuciones <em>a priori</em> disponibles en el futuro. A continuación mostramos como el uso de estos métodos en datos reales influye en la dispersión de los posteriores y origina matrices irreducibles y ergódicas además de que nos permite hacer inferencias biológicamente más realistas sobre las probabilidades de transición y fertilidad.</p>
+</section>
+<section id="instalación-de-los-paquetes" class="level2">
+<h2 class="anchored" data-anchor-id="instalación-de-los-paquetes">Instalación de los paquetes</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(janitor, tidyverse, devtools)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popbio) <span class="co"># para la función projection.matrix()</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(devtools) <span class="co"># para instalar el paquete desde github</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="instalación-del-paquete-raretrans" class="level2">
+<h2 class="anchored" data-anchor-id="instalación-del-paquete-raretrans">Instalación del paquete raretrans</h2>
+<p>Para instalar <strong>raretrans</strong> removemos el <strong>#</strong> antes de correr el script para tener acceso a los códigos de <strong>raretrans</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#devtools::install_github("atyre2/raretrans", build = TRUE, build_opts = c("--no-resave-data", "--no-manual")) # instalar el paquete raretrans</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raretrans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ver el siguiente enlace para más información, la información que se presenta a continuación es una traducción y ampliación de la información del siguiente enlace.</p>
+<p><a href="https://atyre2.github.io/raretrans/articles/onepopperiod.html" class="uri">https://atyre2.github.io/raretrans/articles/onepopperiod.html</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mi tema de formato de las gráficas de ggplot2 personal</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>rlt_theme <span class="ot">&lt;-</span> <span class="fu">theme</span>(<span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">colour=</span><span class="st">"grey20"</span>,<span class="at">size=</span><span class="dv">15</span>,<span class="at">face=</span><span class="st">"bold"</span>),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">colour=</span><span class="st">"grey20"</span>,<span class="at">size=</span><span class="dv">15</span>, <span class="at">face=</span><span class="st">"bold"</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">colour=</span><span class="st">"grey20"</span>,<span class="at">size=</span><span class="dv">15</span>,<span class="at">face=</span><span class="st">"bold"</span>),  </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">colour=</span><span class="st">"grey20"</span>,<span class="at">size=</span><span class="dv">15</span>,<span class="at">face=</span><span class="st">"bold"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A continuación se muestra el uso del paquete <code>raretrans</code> para estimar los parámetros en una población y en un periodo de transición determinados.</p>
+</section>
+<section id="obtención-de-la-matriz-de-proyección" class="level2">
+<h2 class="anchored" data-anchor-id="obtención-de-la-matriz-de-proyección">Obtención de la matriz de proyección</h2>
+<p><code>raretrans</code> asume que la matriz de proyección es una lista de dos matrices, una matriz de transición y una matriz de fertilidad. Este es el formato de salida de <code>popbio::projection.matrix</code>. Si tenemos transiciones individuales en nuestra base de datos (con clase data.frame()), podemos usar <code>raretrans::get_state_vector</code> para obtener el número inicial de individuos por etapa.</p>
+<p>Podemos utilizar la función <code>popbio::projection.matrix</code> para obtener los datos necesarios. Hacemos una demostración con los datos de transición y fertilidad de <em>Lepanthes elto</em> <strong>POPNUM 250</strong> en el <strong>periodo 5</strong>. <em>Lepanthes eltoroensis</em> es la orquídea epifita, endémica de Puerto Rico y con una distribución limitada a una pequeña región de la isla.</p>
+</section>
+<section id="paso-1-cargar-los-datos-de-la-una-población-de-l.-elto" class="level2">
+<h2 class="anchored" data-anchor-id="paso-1-cargar-los-datos-de-la-una-población-de-l.-elto">Paso 1: Cargar los datos de la una población de <em>L. elto</em></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"L_elto"</span>) <span class="co"># carga el conjunto de datos `L_elto` en la memoria de la computadora (los datos están incluido en el paquete `raretrans`)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(L_elto) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 13
+  POPNUM  year seedlings adults fertility IND_NUM stage next_stage first_year
+   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt;
+1    209     1         1      6         0      67 j     j                   1
+2    209     1         1      6         0      68 a     a                   1
+3    209     1         1      6         0      69 a     a                   1
+4    209     1         1      6         0      70 a     a                   1
+5    209     1         1      6         0      71 j     a                   1
+6    209     1         1      6         0      72 a     a                   1
+# ℹ 4 more variables: last_year &lt;dbl&gt;, recruited &lt;lgl&gt;, died &lt;dbl&gt;,
+#   lifespan &lt;int&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="organización-de-los-datos-en-el-data.frame" class="level2">
+<h2 class="anchored" data-anchor-id="organización-de-los-datos-en-el-data.frame">Organización de los datos en el “data.frame”</h2>
+<p>El primer paso es seleccionar los datos de la población y el periodo de tiempo que queremos analizar. Posteriormente, cambiamos el nombre del estado más pequeño a “seedling”. Este paso no es estrictamente necesario pero nos ayuda a entender más fácil la nomenclatura.</p>
+<p>En la base de datos “L_elto” está compuesta por datos individuales del estado actual (<em>stage</em>, periodo <strong>t</strong>), del estado siguiente (<em>next_stage</em>, periodo <strong>t+1</strong>) y de la fertilidad. Tenga en cuenta que aquí “p” significa “plántula” por la traducción al español. En la siguiente caja de código las primeras líneas seleccionan la población de interés y el periodo de tiempo sobre el que queremos trabajar y cambian el nombre de la etapa del ciclo vital de “p” a “s”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>onepop <span class="ot">&lt;-</span> L_elto <span class="sc">%&gt;%</span>   </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(POPNUM <span class="sc">==</span> <span class="dv">250</span>, year <span class="sc">==</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span> <span class="co"># Filtrar la población # 250, el periodo (año=year) 5</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">stage =</span> <span class="fu">case_when</span>(stage <span class="sc">==</span> <span class="st">"p"</span> <span class="sc">~</span> <span class="st">"s"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                           <span class="cn">TRUE</span> <span class="sc">~</span> stage),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">next_stage =</span> <span class="fu">case_when</span>(next_stage <span class="sc">==</span> <span class="st">"p"</span><span class="sc">~</span> <span class="st">"s"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                           <span class="cn">TRUE</span> <span class="sc">~</span> next_stage))  <span class="co"># redefine "p" por plantula a "s" para seedling</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># popbio::projection.matrix no funciona con el formato *tibbles*, por consecuencia se convierte en data.frame</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(onepop) <span class="co"># Ahora tenemos solamente datos de la población #250 del periodo 5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 13
+  POPNUM  year seedlings adults fertility IND_NUM stage next_stage first_year
+   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt;
+1    250     5         8     34     0         167 j     a                   1
+2    250     5         8     34     0         168 j     a                   1
+3    250     5         8     34     0         169 j     a                   1
+4    250     5         8     34     0.118     170 a     a                   1
+5    250     5         8     34     0         172 j     j                   1
+6    250     5         8     34     0         173 j     a                   1
+# ℹ 4 more variables: last_year &lt;dbl&gt;, recruited &lt;lgl&gt;, died &lt;dbl&gt;,
+#   lifespan &lt;int&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear TF = TRUE, añadir para formatear correctamente.</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>TF <span class="ot">&lt;-</span> popbio<span class="sc">::</span><span class="fu">projection.matrix</span>(<span class="fu">as.data.frame</span>(onepop), </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">stage =</span> stage, <span class="at">fate =</span> next_stage, </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">fertility=</span><span class="st">"fertility"</span>, <span class="at">sort=</span><span class="fu">c</span>(<span class="st">"s"</span>,<span class="st">"j"</span>,<span class="st">"a"</span>), <span class="at">TF =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>TF <span class="co"># Este es la estructura de etapas de vida para esa población.  Nota que tenemos dos matrices, una de transiciones **T** y otra de fertilidad **F**. </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$T
+   
+             s          j          a
+  s 0.09090909 0.00000000 0.00000000
+  j 0.63636364 0.57446809 0.00000000
+  a 0.00000000 0.29787234 0.85294118
+
+$F
+   
+            s         j         a
+  s 0.0000000 0.0000000 0.1176471
+  j 0.0000000 0.0000000 0.0000000
+  a 0.0000000 0.0000000 0.0000000</code></pre>
+</div>
+</div>
+</section>
+<section id="nota" class="level2">
+<h2 class="anchored" data-anchor-id="nota">Nota:</h2>
+<p>A partir de este punto los análisis se llevan a cabo considerando <strong>s</strong> (plántula), <strong>j</strong> (juvenil) y <strong>a</strong> (adulto), y ahora tenemos dos matrices: <strong>T</strong> (transición de estadios) y <strong>F</strong> (fertilidad). La tasa de crecimiento asintótica de la población observada es <span class="math inline">\(\lambda =\)</span> 0.93. Las transiciones raras que faltan en nuestra primera matriz de transición ‘TF$T’, pero que sabemos que ocurren, son la transición de plántula (<em>s</em>) a adulto (<em>a</em>) y la transición de <em>j</em> a <em>s</em>.</p>
+</section>
+<section id="paso-2-obtener-el-número-inicial-de-individuos-por-etapa" class="level2">
+<h2 class="anchored" data-anchor-id="paso-2-obtener-el-número-inicial-de-individuos-por-etapa">Paso 2: Obtener el número inicial de individuos por etapa</h2>
+<p>Dado que nuestros conteos (número de individuos, <em>N</em>) y el tamaño de <em>muestra equivalente</em> <em>a priori</em> se expresa como múltiplo del número de individuos observados, necesitamos obtener el número de individuos en cada etapa (<span class="math inline">\(N\)</span>) en el primer periodo de tiempo. Para esto Utilizamos la función <code>raretrans::get_state_vector()</code>. Se observa que la cantidad de individuos inciales por etapa es el número de individuos en el primer muestreo es muy limitada, con 11 plántulas, 47 juveniles y 34 adultos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fu">get_state_vector</span>(onepop, <span class="at">stage =</span> stage, <span class="at">sort=</span><span class="fu">c</span>(<span class="st">"s"</span>,<span class="st">"j"</span>,<span class="st">"a"</span>)) </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>N <span class="co"># Un vector # de individuos iniciales para cada etapa, nota que la cantidad por etapa, "stage", son los individuos en el primer muestreo</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 11 47 34</code></pre>
+</div>
+</div>
+</section>
+<section id="método-alterno-para-calcular-transiciones-fertilidades-y-el-número-de-individuos-por-etapas." class="level2">
+<h2 class="anchored" data-anchor-id="método-alterno-para-calcular-transiciones-fertilidades-y-el-número-de-individuos-por-etapas.">Método alterno para calcular transiciones, fertilidades y el número de individuos por etapas.</h2>
+<p>La lista de matrices y el vector de conteos de individuos no tienen por qué proceder de un data.frame como hemos hecho anteriormente. Mientras tengan el formato esperado, pueden crearse a mano. Usemos la población 231 en el periodo 2 como ejemplo para dividir la matriz poblacional en la submatrices de transición <strong>T</strong> y de fertilidad <strong>F</strong>. En el siguiente código, <em>m</em> denota mortalidad, es decir, plantas que están muertas. Note que aquí las transiciones están estimada con un tamaño de muestra todavía más pequeño, solamente 2 plántulas, 6 juveniles y 16 adultos. Ninguna de las 2 plántulas pasaron a la etapa de juveniles. En consecuencia esta transición es de cero. Además, una de estas plántulas murió, por lo que la supervivencia es del 50%. Sin embargo, si hubieran muerto las dos plántulas la mortalidad sería del 100% y si hubieran sobrevivido las dos plántulas sería del 100% ¡No hay valores intermedios!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>TF2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$Tmat
+    stage
+fate         p         j         a
+   p 0.5000000 0.0000000 0.0000000
+   j 0.0000000 0.8333333 0.0000000
+   a 0.0000000 0.1666667 0.8750000
+
+$Fmat
+     [,1] [,2]  [,3]
+[1,]    0    0 0.125
+[2,]    0    0 0.000
+[3,]    0    0 0.000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>N2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> p  j  a 
+ 2  6 16 </code></pre>
+</div>
+</div>
+<p>¿Cómo se ve el ciclo de vida de la población en ese periodo?</p>
+<p>A la matriz mostrada le falta la transición de plántula a juvenil. Ademas dado que ninguno de los 6 juveniles murió hay una sobrestimación de su supervivencia. La tasa de crecimiento asintótica de la población observada es <span class="math inline">\(\lambda =\)</span> 0.88. La matriz no es ergódica (no se puede llegar a cualquier otro estado desde uno o más estados), y es reducible, lo que significa que una o más columnas y filas se pueden descartar y tienen las mismas propiedades en términos de sus eigenvalores y eigenvectores.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>stages2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"plantulas"</span>, <span class="st">"juveniles"</span>, <span class="st">"adultos"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(Tmat, <span class="at">stages=</span>stages2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="grViz html-widget html-fill-item" id="htmlwidget-d2996bb781eddbaf941d" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-d2996bb781eddbaf941d">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plantulas\" -> \"juveniles\" -> \"adultos\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plantulas\" -> \"juveniles\" -> \"adultos\" [style=invis] } [style=invis] \"plantulas\" -> \"plantulas\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.5\"]\n\"juveniles\" -> \"juveniles\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.833\"]\n\"juveniles\" -> \"adultos\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.167\"]\n\"adultos\" -> \"adultos\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.875\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Lo que vimos anteriormente fueron algunos de los problemas reales que nos encontramos cuando usamos datos de campo y hay tamaños de muestra pequeños o transiciones raras. A continuación veremos cómo resolverlos.</p>
+</section>
+<section id="uso-de-priors-para-incorporar-transiciones-raras" class="level2">
+<h2 class="anchored" data-anchor-id="uso-de-priors-para-incorporar-transiciones-raras">Uso de priors para incorporar transiciones raras</h2>
+<section id="uso-priors-no-informativos" class="level3">
+<h3 class="anchored" data-anchor-id="uso-priors-no-informativos">Uso priors no informativos</h3>
+<ul>
+<li>El paso siguiente solamente nos permite entender por qué no se calcula y por qué no es recomendable usar <em>priors</em> uniformes. Si se entiende el concepto de valores <em>a priori</em> y <em>a posteriori</em> puede saltarse este bloque e ir directo a la sección de <em>Añadiendo realidad a los análisis</em>. Tremblay (<span class="citation" data-cites="tremblay2021population">Tremblay et al. (<a href="#ref-tremblay2021population" role="doc-biblioref">2021</a>)</span>) muestran que un <em>prior</em> determinado por una distribución Dirichlet funciona para estimar las transiciones de una matriz (<strong>T</strong>) y que usar como <em>prior</em> una distribución gamma funciona para estimar los parámetros de fertilidad de la submatriz (<strong>F</strong>).</li>
+</ul>
+</section>
+<section id="matriz-de-transición" class="level3">
+<h3 class="anchored" data-anchor-id="matriz-de-transición">Matriz de transición</h3>
+<p>A continuación vamos a añadir una distribución Dirichlet uniforme como prior con un peso = <span class="math inline">\(1\)</span> a la matriz de transición, <span class="math inline">\(T\)</span>. En este caso, tenemos 4 destinos (3 + muerte), por lo que cada destino añade 0,25 a la matriz de destinos <em>observados</em> (¡no a la matriz de transición!). Cuando especificamos una matriz con valores <em>a priori</em> para las transiciones, hay una fila más que columnas. Esta fila extra representa la mortalidad por etapa.</p>
+<p>Note que un prior uniforme no es recomendado, aquí se utiliza sólo para mostrar el concepto. Un prior uniforme probablemente no refleja el ciclo de vida de la especie. Por ejemplo, un prior unifome podría hacer que las plántulas pasen a adulto de un tiempo a otro o que los adultos regresen a ser plántulas, lo cual no tiene mucho sentido biológico en muchas especies.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Tprior <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fl">0.25</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">nrow=</span><span class="dv">4</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fill_transitions</span>(TF, N, <span class="at">P =</span> Tprior) <span class="co"># resultado de la matriz de transición básica</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           [,1]        [,2]        [,3]
+[1,] 0.10416667 0.005208333 0.007142857
+[2,] 0.60416667 0.567708333 0.007142857
+[3,] 0.02083333 0.296875000 0.835714286</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Para entender las diferencias del impacto de las matriz compara los resultados con *$T* del objeto *TF*</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>TF</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$T
+   
+             s          j          a
+  s 0.09090909 0.00000000 0.00000000
+  j 0.63636364 0.57446809 0.00000000
+  a 0.00000000 0.29787234 0.85294118
+
+$F
+   
+            s         j         a
+  s 0.0000000 0.0000000 0.1176471
+  j 0.0000000 0.0000000 0.0000000
+  a 0.0000000 0.0000000 0.0000000</code></pre>
+</div>
+</div>
+</section>
+<section id="cómo-calcular-a-mano-las-transiciones-de-estado" class="level3">
+<h3 class="anchored" data-anchor-id="cómo-calcular-a-mano-las-transiciones-de-estado">¿Cómo calcular a mano las transiciones de estado ?</h3>
+<p>Podemos obtener el mismo resultado ‘a mano’. Lo primero que necesitamos es el vector de observaciones porque la distribución posterior se calcula a partir de las observaciones de transiciones, no de la matriz de transiciones.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Tobs <span class="ot">&lt;-</span> <span class="fu">sweep</span>(TF<span class="sc">$</span>T, <span class="dv">2</span>, N, <span class="st">"*"</span>) <span class="co"># obtener las observaciones de transiciones </span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>Tobs <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Tobs, N <span class="sc">-</span> <span class="fu">colSums</span>(Tobs)) <span class="co"># añadir la fila de muerte </span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>Tobs <span class="ot">&lt;-</span> Tobs <span class="sc">+</span> <span class="fl">0.25</span> <span class="co"># añadir los valores a priori</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sweep</span>(Tobs, <span class="dv">2</span>, <span class="fu">colSums</span>(Tobs), <span class="st">"/"</span>)[<span class="sc">-</span><span class="dv">4</span>,] <span class="co"># dividir por la suma de la columna y descarta la fila de muerte </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           s           j           a
+s 0.10416667 0.005208333 0.007142857
+j 0.60416667 0.567708333 0.007142857
+a 0.02083333 0.296875000 0.835714286</code></pre>
+</div>
+</div>
+<p>El <em>prior</em> uniforme rellena las transiciones faltantes, pero también crea problemas porque algunos de los valores de transición que asigna son biológicamente imposibles en muchas especies. Por ejemplo, para la transición de adulto a plántula se asigna un valor, sin embargo, este valor sólo es posible en la matriz de fertilidad <span class="math inline">\(F\)</span> en las especies de <em>Lepanthes</em>. Debido a esto, no es recomendable el uso de priors uniformes ya que NO toma en cuenta el ciclo de vida de nuestra especie.</p>
+</section>
+<section id="matriz-de-fertilidad" class="level3">
+<h3 class="anchored" data-anchor-id="matriz-de-fertilidad">Matriz de fertilidad</h3>
+<p>Siguiendo el marco bayesiano que hemos venido trabajando en este capítulo es necesario especificar los <em>priors</em> de la fertilidad como una matriz. Las celdas de la matriz de los estados en los que que no hay reproducción deben ser <code>NA</code>, usando <em>NA_real_</em> el cual es un valor que no está presente pero podría aceptar valores con puntos decimales. Nota que el valor <em>a priori</em> de la fertilidad es 0.0001.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="fl">1e-5</span>,</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                  <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                  <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>), <span class="at">nrow=</span><span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="fl">1e-5</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                  <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                  <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>), <span class="at">nrow=</span><span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">fill_fertility</span>(TF, N, <span class="at">alpha =</span> alpha, <span class="at">beta =</span> beta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   
+            s         j         a
+  s 0.0000000 0.0000000 0.1176473
+  j 0.0000000 0.0000000 0.0000000
+  a 0.0000000 0.0000000 0.0000000</code></pre>
+</div>
+</div>
+<p>El cambio en la fertilidad es &lt; 0,0001 en comparación con el valor observado.</p>
+</section>
+<section id="calculando-los-valores-a-priori-de-fertilidad-a-mano" class="level3">
+<h3 class="anchored" data-anchor-id="calculando-los-valores-a-priori-de-fertilidad-a-mano">Calculando los valores <em>a priori</em> de fertilidad a mano</h3>
+<p>En el siguiente caso <em>alfa prior</em> es el número de descendientes observadois y <em>beta prior</em> es el número de adultos observados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>obs_offspring <span class="ot">&lt;-</span> N[<span class="dv">3</span>]<span class="sc">*</span>TF<span class="sc">$</span>F[<span class="dv">1</span>,<span class="dv">3</span>] </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>prior_alpha <span class="ot">&lt;-</span> <span class="fl">1e-05</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>prior_beta <span class="ot">&lt;-</span> <span class="fl">1e-05</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>posterior_alpha <span class="ot">&lt;-</span> obs_offspring <span class="sc">+</span> prior_alpha</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>posterior_beta <span class="ot">&lt;-</span> N[<span class="dv">3</span>] <span class="sc">+</span> prior_beta</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>posterior_alpha <span class="sc">/</span> posterior_beta <span class="co"># valores esperados de la fertilidad</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1176473</code></pre>
+</div>
+</div>
+<p>Esto demuestra por qué la estimación puntual posterior de la fertilidad no cambia mucho; los valores no informativos de <span class="math inline">\(\alpha\)</span> y <span class="math inline">\(\beta\)</span> cambian muy ligeramente los valores observados.</p>
+<p>Ahora podemos juntar todos los valores <em>a priori</em>. NOTE que en este caso tampoco se recomienda usar un prior uniforme.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>unif <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">T =</span> <span class="fu">fill_transitions</span>(TF, N), </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">F =</span> <span class="fu">fill_fertility</span>(TF, N, </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">alpha =</span> alpha,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">beta =</span> beta))</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>unif</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$T
+           [,1]        [,2]        [,3]
+[1,] 0.10416667 0.005208333 0.007142857
+[2,] 0.60416667 0.567708333 0.007142857
+[3,] 0.02083333 0.296875000 0.835714286
+
+$F
+   
+            s         j         a
+  s 0.0000000 0.0000000 0.1176473
+  j 0.0000000 0.0000000 0.0000000
+  a 0.0000000 0.0000000 0.0000000</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="el-crecimiento-poblacional" class="level2">
+<h2 class="anchored" data-anchor-id="el-crecimiento-poblacional">El crecimiento poblacional</h2>
+<p>La tasa de crecimiento asintótico de la población es <span class="math inline">\(\lambda =\)</span> 0.92. Esta tasa de crecimiento se reduce ligeramente cuando usamos un <em>prior</em> uniforme ya que las probabilidades de transición observadas de crecimiento y supervivencia se reducen ligeramente en comparación con las transiciones no observadas de crecimiento y supervivencia.</p>
+<section id="otras-opciones-para-el-argumento-returntype" class="level3">
+<h3 class="anchored" data-anchor-id="otras-opciones-para-el-argumento-returntype">Otras opciones para el argumento `returnType</h3>
+<p>Por defecto, <code>fill_transitions()</code> devuelve la matriz de transición <span class="math inline">\(T\)</span>, y <code>fill_fertility()</code> devuelve la matriz de fertilidad <span class="math inline">\(F\)</span>. En ambas funciones existen tres valores que puede tomar el argumento <code>returnType</code>:</p>
+<ol type="1">
+<li><code>fill_transitions(... returnType = "TN")</code> puede devolver una matriz aumentada en destinos, que es útil para la simulación. La cuarta fila de este resultado (véase más adelante) es el estado de mortalidad.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fill_transitions</span>(TF, N, <span class="at">returnType =</span> <span class="st">"TN"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1]  [,2]  [,3]
+[1,] 1.25  0.25  0.25
+[2,] 7.25 27.25  0.25
+[3,] 0.25 14.25 29.25
+[4,] 3.25  6.25  5.25</code></pre>
+</div>
+</div>
+<ol start="2" type="1">
+<li><code>fill_fertility(... returnType = "ab")</code> devuelve los vectores alfa y beta de los vectores posteriores.<br>
+</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fill_fertility</span>(TF, N, </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">alpha =</span> alpha,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">beta =</span> beta,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">returnType =</span> <span class="st">"ab"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$alpha
+   
+    s j       a
+  s     4.00001
+  j            
+  a            
+
+$beta
+     [,1] [,2]     [,3]
+[1,]   NA   NA 34.00001
+[2,]   NA   NA       NA
+[3,]   NA   NA       NA</code></pre>
+</div>
+</div>
+<ol start="3" type="1">
+<li>Ambas funciones también pueden devolver la matriz completa, la suma de <span class="math inline">\(T\)</span> y <span class="math inline">\(F\)</span>.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fill_transitions</span>(TF, N, <span class="at">returnType =</span> <span class="st">"A"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   
+              s           j           a
+  s 0.104166667 0.005208333 0.124789916
+  j 0.604166667 0.567708333 0.007142857
+  a 0.020833333 0.296875000 0.835714286</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="añadiendo-realidad-a-los-análisis" class="level2">
+<h2 class="anchored" data-anchor-id="añadiendo-realidad-a-los-análisis">Añadiendo realidad a los análisis</h2>
+<p>Hasta este punto, el objetivo era entender las funciones y su aplicaciones, ahora vamos a añadir realidad biológica a los análisis. Como se ha mencionado no debemos usar <em>priors</em> uniformes, debemos usar valores que reflejen el ciclo de vida de la especie de interés.</p>
+<section id="incorporar-priores-informativos" class="level3">
+<h3 class="anchored" data-anchor-id="incorporar-priores-informativos">Incorporar priores informativos</h3>
+<p>Para solucionar el problema de la creación de transiciones imposibles, especificamos <em>priors</em> informativos obtenidos del conocimiento de un experto en orquídeas epífitas de <em>Lepanthes</em> (RLT). La información tiene que tener la misma forma que la matriz de transiciones, i.e., con una fila más que columnas. Esta última fila representa los individuos que se mueren para cada etapa. Además, estos valores deberían ser especificados ANTES de colectar los datos de campo, para no sesgar los resultados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>RLT_Tprior <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.025</span>, <span class="fl">0.0</span>,</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>                       <span class="fl">0.05</span>, <span class="fl">0.9</span>,   <span class="fl">0.025</span>,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                       <span class="fl">0.01</span>, <span class="fl">0.025</span>, <span class="fl">0.95</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>                       <span class="fl">0.69</span>, <span class="fl">0.05</span>,  <span class="fl">0.025</span>), </span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">ncol =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note que la matriz tiene la 1ª fila, 3ª columna es 0,0, porque esta transición es imposible. El <em>prior</em> se construye de manera que las columnas sumen 1, lo que crea mayor flexibilidad para la ponderación de los valores <em>a priori</em>. Por defecto, la suma es 1, interpretado como un <em>tamaño de muestra a priori</em> de 1.</p>
+<p>A hora usando la función de <strong>fill_transitions</strong> donde se agregan los valores del campo <strong>TF</strong>, el tamaño de muestra en el tiempo inicial <strong>N</strong>, la matriz de valores con <em>priors</em> informativos, y se calcula la matriz de transición <em>a posteriori</em>. Compare <strong>TF</strong> con esta matriz para ver los cambios.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fill_transitions</span>(TF, N, <span class="at">P =</span> RLT_Tprior)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             [,1]         [,2]         [,3]
+[1,] 0.1041666667 0.0005208333 0.0000000000
+[2,] 0.5875000000 0.5812500000 0.0007142857
+[3,] 0.0008333333 0.2921875000 0.8557142857</code></pre>
+</div>
+</div>
+</section>
+<section id="modificar-el-peso-de-los-valores-a-priori" class="level3">
+<h3 class="anchored" data-anchor-id="modificar-el-peso-de-los-valores-a-priori">Modificar el peso de los valores <em>a priori</em></h3>
+<p>Podemos especificar el peso de los valores <strong>a priori</strong> modificando el tamaño de muestra de cada etapa. Si tenemos poca confianza en los valores <strong>a priori</strong> le damos un peso pequeño para que los datos del campo dominen en los resultados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fill_transitions</span>(TF, N, <span class="at">P =</span> RLT_Tprior, <span class="at">priorweight =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            [,1]        [,2]        [,3]
+[1,] 0.143939394 0.008333333 0.000000000
+[2,] 0.440909091 0.682978723 0.008333333
+[3,] 0.003333333 0.206914894 0.885294118</code></pre>
+</div>
+</div>
+<p>En este caso, el prior se pondera con la mitad del número observado de transiciones. En este caso, con sólo 2 transiciones, el tamaño efectivo de la muestra <strong>a priori</strong> sigue siendo 1. Si el número de transiciones observadas fuera mayor, una ponderación <strong>a priori</strong> de 0,5N sería mayor que 1, pero permitiría que los datos dominen. Siempre se debería asignar al los <em>priors</em> un peso que sea menor que el tamaño de muestra observado ya que entre más pequeño sea valor de este peso mayor peso tendrán los datos del campo.</p>
+<p>Note que ahora tenemos una matriz de transición que es ergódica y reducible. En adición la tasa de mortandad y la tasa de transiciones son más realista.</p>
+</section>
+</section>
+<section id="intervalos-de-credibilidad-de-los-parámetros" class="level2">
+<h2 class="anchored" data-anchor-id="intervalos-de-credibilidad-de-los-parámetros">Intervalos de credibilidad de los parámetros</h2>
+<p>A continuación obtendremos los intervalos de creibilidad (ICr) para cada entrada de la matriz. Como la distribución posterior marginal de un elemento en una multinomial es una distribución beta es posible utilizar estas distribuciones beta para calcular los intervalos de credibilidad de las tasas de transición. Para esto podemos usar el tipo de retorno <strong>TN</strong> para obtener los parámetros deseados. Esas son las estimaciones puntuales (comparar con la primera columna anterior), inferior y superior <span class="math inline">\(95\%\)</span> de los intervalos de credibilidad simétricos para transiciones de la etapa de plántula. Sin embargo, existe un alto grado de incertidumbre debido a la tamaño de muestra pequeño (<span class="math inline">\(2\)</span>) y al bajo peso que tienen los <em>priors</em> (<span class="math inline">\(1\)</span>), lo que implica a un tamaño de muestra efectivo de 3.</p>
+<p>Ahora tenemos sobre la credibilidad de los parámetros. Por ejemplo la tasa de mortandad puntual es de 0.31 pero el intervalo de 95% de credibilidad es entre 0.096 y 0.585 demostrando que el mejor estimado de este parámetro es muy incierto.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>TN <span class="ot">&lt;-</span> <span class="fu">fill_transitions</span>(TF, N, <span class="at">P =</span> RLT_Tprior, <span class="at">priorweight =</span> <span class="fl">0.1</span>, <span class="at">returnType =</span> <span class="st">"TN"</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> TN[,<span class="dv">1</span>] <span class="co"># cambie 1 a 2, 3 etc para obtener la distribución beta marginal de cada columna. </span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">sum</span>(TN[,<span class="dv">1</span>]) <span class="sc">-</span> TN[,<span class="dv">1</span>]<span class="co"># cambie 1 a 2, 3 etc para obtener la distribución beta marginal de cada columna. </span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> a <span class="sc">/</span> (a <span class="sc">+</span> b)</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>lcl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.025</span>, a, b) <span class="co"># el valor 0.025 de la distribución beta</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>ucl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.975</span>, a, b) <span class="co"># el valor 0.975 de la distribución beta</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">sprintf</span>(<span class="st">"%.3f (%.3f, %.3f)"</span>, p, lcl, ucl))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">0.105 (0.006, 0.321)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0.583 (0.309, 0.831)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">0.001 (0.000, 0.005)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0.311 (0.096, 0.585)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<section id="el-efecto-del-tamaño-de-muestra-sobre-los-intervalos-de-credibilidad" class="level3">
+<h3 class="anchored" data-anchor-id="el-efecto-del-tamaño-de-muestra-sobre-los-intervalos-de-credibilidad">El efecto del tamaño de muestra sobre los intervalos de credibilidad</h3>
+<p>¿Qué pasa si aumentamos el tamaño de muestra efectivo? Aumentar el tamaño de muestra efectivo a <span class="math inline">\(20\)</span> especificando: <code>priorweight</code><span class="math inline">\(= 9 (9*2 = 18 + 2 = 20)\)</span> hace que los intervalos de credibilidad se reduzcan bastante. Entonces, es importante enfatizar en que el tamaño de muestra tiene gran impacto sobre la confianza que se tiene sobre el estimador puntual (el promedio) de las transiciones, permanencias y mortalidad. Note como el tamaño del intervalo de credibilidad cambia drásticamente cuando se aumenta el número de datos.</p>
+<p>La tasa de transición de plántula a juvenil se reduce cuando el tamaño de la muestra es demasiado grande.</p>
+<p>IMPORTANTE: En general, el tamaño de la muestra <strong>a priori</strong> debe ser menor que el tamaño de muestra observado. Este es sólamente un ejemplo para demostrar el concepto y ser cuaidadoso en la seclecieon de los priors.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>TN <span class="ot">&lt;-</span> <span class="fu">fill_transitions</span>(TF, N, <span class="at">P =</span> RLT_Tprior, <span class="at">priorweight =</span> <span class="dv">9</span>, <span class="at">returnType =</span> <span class="st">"TN"</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> TN[,<span class="dv">1</span>]</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">sum</span>(TN[,<span class="dv">1</span>]) <span class="sc">-</span> TN[,<span class="dv">1</span>] <span class="co"># El parámetro beta es la suma de todos los demás parámetros de Dirichlet.</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> a <span class="sc">/</span> (a <span class="sc">+</span> b)</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>lcl2 <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.025</span>, a, b)</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>ucl2 <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.975</span>, a, b)</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>alltogethernow <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">priorweight =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">9</span>),<span class="at">each =</span> <span class="dv">4</span>)),</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">fate =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"s"</span>,<span class="st">"j"</span>,<span class="st">"a"</span>,<span class="st">"dead"</span>), <span class="at">times =</span> <span class="dv">2</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"s"</span>,<span class="st">"j"</span>,<span class="st">"a"</span>,<span class="st">"dead"</span>)),</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">p =</span> <span class="fu">c</span>(p, p2),</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">lcl =</span> <span class="fu">c</span>(lcl, lcl2),</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">ucl =</span> <span class="fu">c</span>(ucl, ucl2))</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> alltogethernow,</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> fate, <span class="at">y =</span> p, <span class="at">group=</span> priorweight)) <span class="sc">+</span> </span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">shape =</span> priorweight), </span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span><span class="fl">0.5</span>)) <span class="sc">+</span> </span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">ymin =</span> lcl, <span class="at">ymax =</span> ucl),</span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.5</span>)) <span class="sc">+</span> </span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>  rlt_theme</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="108-Bayesian_PPM_files/figure-html/bayes24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="intervalo-de-credibilidad-de-lambda" class="level2">
+<h2 class="anchored" data-anchor-id="intervalo-de-credibilidad-de-lambda">Intervalo de credibilidad de <span class="math inline">\(\lambda\)</span></h2>
+<p>Obtener intervalos de credibilidad para la tasa de crecimiento asintótica, <span class="math inline">\(\lambda\)</span>, requiere simular matrices a partir de las distribuciones posteriores. Estas simulaciones usualmente son complicadas de hacer, por lo que hemos incorporado en el paquete la función <code>raretrans::sim_transitions()</code> para generar una lista de matrices simuladas dada la matriz observada y las especificaciones previas. En otras palabras, esta función se calcula múltiples veces la matriz de transición y fertilidad basándose en los datos observados y en los valores <em>a priori</em> especificados pero variando los valores de los parámetros de las distribuciones beta y gamma.</p>
+<p>En este ejemplo, simulamos 5000 matrices y calculamos el valor <span class="math inline">\(\lambda\)</span> de cada matriz. Después, creamos un histograma de la distribución de <span class="math inline">\(\lambda\)</span>.</p>
+<p>Corra el script múltiples veces, y verá que los valores cambian a cada simulación. En este script se simula solamente una vez.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sim_transitions</span>(TF, N, <span class="at">P =</span> RLT_Tprior, <span class="at">alpha =</span> alpha, <span class="at">beta =</span> beta,</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">priorweight =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+             [,1]       [,2]         [,3]
+[1,] 6.303162e-02 0.00225919 3.776695e-01
+[2,] 5.818297e-01 0.69957524 8.887124e-05
+[3,] 2.430375e-10 0.19784834 9.031226e-01</code></pre>
+</div>
+</div>
+<p>Ahora simulamos 5000 veces, calculamos el valor <span class="math inline">\(\lambda\)</span> de cada matriz y creamos un histograma de su distribución. Se añade el valor de lambda en un objeto llamado RLT_0.5. Posteriormente se crea un histograma de la distribución de <span class="math inline">\(\lambda\)</span>. Note que el valor de <span class="math inline">\(\lambda\)</span> = 1 queda dentro de la distribución, en otras palabras el histograma muestra que la mayoría de los valores de <span class="math inline">\(\lambda\)</span> están cerca de 1.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">#set.seed(8390278) # make this part reproducible</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>alpha2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="fl">0.025</span>,</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>                  <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>,</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>                  <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>), <span class="at">nrow=</span><span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>beta2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="dv">1</span>,</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>                  <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>,</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>                  <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>), <span class="at">nrow=</span><span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="co"># generar 5000 matrices basado en las previas de transciones y de fertilidades, el tamaño de muestra, en adición de los datos</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>RLT_0<span class="fl">.5</span> <span class="ot">&lt;-</span> <span class="fu">sim_transitions</span>(TF, N, <span class="at">P =</span> RLT_Tprior, <span class="at">alpha =</span> alpha2, <span class="at">beta =</span> beta2,</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">priorweight =</span> <span class="fl">0.5</span>, <span class="at">samples =</span> <span class="dv">5000</span>)</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="co"># extract the lambdas for each matrix</span></span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>RLT_0<span class="fl">.5</span> <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">lposterior =</span> <span class="fu">map_dbl</span>(RLT_0<span class="fl">.5</span>, lambda)) <span class="co"># convertir la lista en un tibble</span></span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> RLT_0<span class="fl">.5</span>,</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> lposterior)) <span class="sc">+</span> </span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.01</span>, <span class="at">colour=</span><span class="st">"white"</span>) <span class="sc">+</span> </span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>  rlt_theme<span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1</span>, </span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>                <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">linewidth=</span><span class="fl">1.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="108-Bayesian_PPM_files/figure-html/bayes26-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="determinar-si-el-lambda-es-significativamente-diferente-de-1" class="level2">
+<h2 class="anchored" data-anchor-id="determinar-si-el-lambda-es-significativamente-diferente-de-1">Determinar si el <span class="math inline">\(\lambda\)</span> es significativamente diferente de 1</h2>
+<p>Esta prueba está basada en la simulación de la distribución posterior.</p>
+<p>Se calcula la distribución de las <span class="math inline">\(\lambda\)</span> y se determina si <span class="math inline">\(\lambda\)</span> observada es significativamente más grande que 1. También podemos calcular algunas estadísticas descriptivos, donde <code>pincrease</code> es el probabilidad de que <span class="math inline">\(\lambda &gt; 1\)</span>. En este caso el valor de <span class="math inline">\(\lambda\)</span> no es significativamente más grande que 1 ya que se obtuvo un valor de 0.13.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>RLT_0<span class="fl">.5</span>_summary <span class="ot">&lt;-</span> <span class="fu">summarize</span>(RLT_0<span class="fl">.5</span>,</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">medianL =</span> <span class="fu">median</span>(lposterior),</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">meanL =</span> <span class="fu">mean</span>(lposterior),</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">lcl =</span> <span class="fu">quantile</span>(lposterior, <span class="at">probs =</span> <span class="fl">0.025</span>),</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">ucl =</span> <span class="fu">quantile</span>(lposterior, <span class="at">probs =</span> <span class="fl">0.975</span>),</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">pincrease =</span> <span class="fu">sum</span>(lposterior <span class="sc">&gt;</span> <span class="fl">1.</span>)<span class="sc">/</span><span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="tabla-de-resultado-de-lambda" class="level3">
+<h3 class="anchored" data-anchor-id="tabla-de-resultado-de-lambda">Tabla de resultado de lambda</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>gt<span class="sc">::</span><span class="fu">gt</span>(<span class="fu">signif</span>(RLT_0<span class="fl">.5</span>_summary, <span class="at">digits =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="dmhdwkelfv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dmhdwkelfv table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#dmhdwkelfv thead, #dmhdwkelfv tbody, #dmhdwkelfv tfoot, #dmhdwkelfv tr, #dmhdwkelfv td, #dmhdwkelfv th {
+  border-style: none;
+}
+
+#dmhdwkelfv p {
+  margin: 0;
+  padding: 0;
+}
+
+#dmhdwkelfv .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#dmhdwkelfv .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#dmhdwkelfv .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#dmhdwkelfv .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#dmhdwkelfv .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#dmhdwkelfv .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dmhdwkelfv .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#dmhdwkelfv .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#dmhdwkelfv .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#dmhdwkelfv .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#dmhdwkelfv .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#dmhdwkelfv .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#dmhdwkelfv .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#dmhdwkelfv .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#dmhdwkelfv .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#dmhdwkelfv .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#dmhdwkelfv .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#dmhdwkelfv .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#dmhdwkelfv .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dmhdwkelfv .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#dmhdwkelfv .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#dmhdwkelfv .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#dmhdwkelfv .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dmhdwkelfv .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#dmhdwkelfv .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#dmhdwkelfv .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dmhdwkelfv .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dmhdwkelfv .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#dmhdwkelfv .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dmhdwkelfv .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#dmhdwkelfv .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dmhdwkelfv .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#dmhdwkelfv .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dmhdwkelfv .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#dmhdwkelfv .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dmhdwkelfv .gt_left {
+  text-align: left;
+}
+
+#dmhdwkelfv .gt_center {
+  text-align: center;
+}
+
+#dmhdwkelfv .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#dmhdwkelfv .gt_font_normal {
+  font-weight: normal;
+}
+
+#dmhdwkelfv .gt_font_bold {
+  font-weight: bold;
+}
+
+#dmhdwkelfv .gt_font_italic {
+  font-style: italic;
+}
+
+#dmhdwkelfv .gt_super {
+  font-size: 65%;
+}
+
+#dmhdwkelfv .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#dmhdwkelfv .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#dmhdwkelfv .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#dmhdwkelfv .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#dmhdwkelfv .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#dmhdwkelfv .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#dmhdwkelfv .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#dmhdwkelfv .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#dmhdwkelfv div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="medianL" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">medianL</th>
+<th id="meanL" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">meanL</th>
+<th id="lcl" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">lcl</th>
+<th id="ucl" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">ucl</th>
+<th id="pincrease" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">pincrease</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="medianL">0.96</td>
+<td class="gt_row gt_right" headers="meanL">0.96</td>
+<td class="gt_row gt_right" headers="lcl">0.87</td>
+<td class="gt_row gt_right" headers="ucl">1</td>
+<td class="gt_row gt_right" headers="pincrease">0.14</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Revisión RLT:</p>
+<p>Sept 15, 2024</p>
+<p>RLT: Oct 8, 2024</p>
+<p>Paola: Apr 25, 2025</p>
+
+
+
+</section>
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-tremblay2021population" class="csl-entry" role="listitem">
+Tremblay, Raymond L, Andrew J Tyre, Maria-Eglée Pérez, and James D Ackerman. 2021. <span>“Population Projections from Holey Matrices: Using Prior Information to Estimate Rare Transition Events.”</span> <em>Ecological Modelling</em> 447: 109526.
+</div>
+<div id="ref-raretrans2024" class="csl-entry" role="listitem">
+Tyre, A, Tremblay RL, and ME Perez. 2024. <em>Raretrans: Bayesian Priors for Matrix Population Models</em>. <a href="https://github.com/atyre2/raretrans">https://github.com/atyre2/raretrans</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./107-matU_matF_matC.html" class="pagination-link" aria-label="Suma de matrices">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Suma de matrices</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2025, Raymond L. Tremblay</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>This page is built with ❤️ and <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
