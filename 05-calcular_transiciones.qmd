@@ -1,0 +1,280 @@
+# Transiciones {#MatricesT}
+
+Por: Aucencia Emeterio-Lara, Ernesto Mujíca y Elaine González y Raymond L. Tremblay
+
+```{r Trans1, message=FALSE}
+library(tidyverse)
+```
+
+## Introducción
+
+En el siguiente capítulo estaremos viendo como calcular las transiciones para la matriz de Lefkovitch. En la primera parte veremos como calcular las transiciones de manera tradicional y a mano y en la segunda parte veremos como calcular las transiciones de manera más eficiente usando funciones que estén disponibles en algunos paquetes de R. Los métodos presentado aquí son una adaptación de los métodos presentados en [@caswell2000matrix] y pueden ver también una aplicación de estos métodos aplicado a las orquídeas [@tremblay2003population]. Si ha hecho análisis de matrices de transición antes, probablemente ha usado el método tradicional de calcular las transiciones y pueden obviar leer este capítulo. Este método consiste en calcular la proporciones de individuos que transitan de una clase de edad a otra. Este método es tedioso y propenso a errores cuando se hacen a mano.
+
+## Métodos tradicional de calcular las transiciones
+
+El primer paso es la tabla de datos de la orquídea y sus estados en dos periodos de tiempo, digamos un año de intervalo. Aquí adjunto un ejemplo de una tabla de datos de 20 individuos. Tenemos 3 estados en esta planta, "A", "B", "C" y "Muerto". En la tabla de datos, tenemos 19 individuos que fueron muestreados en dos periodos de tiempo. En el primer periodo de tiempo, 7 individuos estaban en el estado "A", 6 en el estado "B" y 6 en el estado "C". Para calcular las transiciones, necesitamos calcular la proporción de individuos que transitaron de un estado a otro. Por ejemplo, de los 7 individuos que estaban en el estado "A" en el primer periodo de tiempo, 1 individuos estaba en el estado "A" en el segundo periodo de tiempo, 2 individuos estaban en el estado "B", 3 individuos estaban en el estado "C", y un individuo que murió, dando las siguientes proporciones
+
+De A a otras clases
+
+-   1/7 = 0.1428, transitaron de "plantas pequeñas" a "plantas pequeñas"
+-   2/7 = 0.2857, transitaron de "plantas pequeñas" a "juveniles"
+-   3/7 = 0.4285 transitaron de "plantas pequeñas" a "adultos"
+-   1/7 = 0.1428 fallecieron o sea que las "plantas pequeñas" en el primer periodo de tiempo fallecieron antes de llegar al segundo muestreo
+
+```{r Trans2}
+library(tidyverse)
+a=2/6
+b=1/6
+c=1/6
+d=2/6
+
+sum=a+b+c+d
+sum
+
+sum2=0.1428+0.1428+0.2857+0.4285
+sum2
+
+```
+
+Nota que la suma de todas estas transiciones tienen que sumar a 1.000. NO pueden ser mayor que 1 o menor que 1. Si la suma de las transiciones es mayor que 1, significa que hay un error en los datos. Si la suma de las transiciones es menor que 1, significa que hay un error en los datos. Esto ocurre cuando se redondea excesivamente o incorrectamente. En este caso, nota que la suma da un total de 0.9998, que es suficiente cerca de 1.0.
+
+Ahora calculamos las otras transiciones de juveniles a otras clases - 2/6 = 0.3333, transitaron de "juveniles" a "plantas pequeñas" - 1/6 = 0.1666, transitaron de "juveniles" a "juveniles" - 2/6 = 0.3333, transitaron de "juveniles" a "adultos" - 1/6 = 0.1666, fallecieron de las "juveniles" en el primer periodo de tiempo fallecieron en el segundo periodo de tiempo
+
+De C a otras clases
+
+-   1/6 = 0.1666, transitaron de "adulto" a "plantas pequeñas"
+-   2/6 = 0.3333, transitaron de "adulto" a "juveniles"
+-   1/6 = 0.1666, transitaron de "adulto" a "adulto"
+-   2/6 = 0.3333, fallecieron de las "adulto" en el primer periodo de tiempo fallecieron antes del segundo periodo de tiempo
+
+```{r Trans3, message=FALSE, echo=FALSE}
+
+library(gt)
+Orchis_ficticia=tribble(~Num_ind, ~anio_1, ~anio_2,
+                        1,  "plantas_pequeñas", "Muerto",
+                        2,  "plantas_pequeñas", "juvenil",
+                        3,  "plantas_pequeñas", "adulto",
+                        4,  "juvenil", "plantas_pequeñas",
+                        5,  "juvenil", "juvenil",
+                        6,  "juvenil", "adulto",
+                        7,  "adulto", "plantas_pequeñas",
+                        8,  "adulto", "juvenil",
+                        9,  "adulto", "adulto",
+                        10,  "plantas_pequeñas", "plantas_pequeñas",
+                        11,  "plantas_pequeñas", "juvenil",
+                        12,  "plantas_pequeñas", "adulto",
+                        13,  "plantas_pequeñas", "adulto",
+                        14,  "juvenil", "plantas_pequeñas",
+                        15,  "juvenil", "Muerto",
+                        16,  "juvenil", "adulto",
+                        17,  "adulto", "Muerto",
+                        18,  "adulto", "juvenil",
+                        19,  "adulto", "Muerto",
+                        20,  "", "plantas_pequeñas"
+                        )
+gt(Orchis_ficticia)                        
+```
+
+### Construyendo la matriz de transiciones
+
+Ahora usamos los valores calculados arriba para construir la matriz de transiciones.
+
+Nota que en las columnas representa el estado en el tiempo 1 y las filas los estados en el periodo 2. Importante la transiciones a Muerto no se pone en la matriz, automáticamente los análisis reconoce que 1 menos la suma las transiciones en la matriz, sera la proporciones de fallecimiento.
+
+```{r Trans4}
+ficticia_matrix=matrix(c(0.1428, 0.3333, 0.1666,
+                         0.2857, 0.1666, 0.3333,
+                         0.4285, 0.3333, 0.1666), 
+                            nrow=3, byrow=TRUE)
+
+ficticia_matrix
+```
+
+### Añadiendo los nombres de las etapas
+
+Es buena práctica añadir el nombre de las etapas a la matriz ya que ayuda a encontrar incosistencia y posible errores. Las dos funciones necesarias son **rownames** y **colnames**.
+
+```{r Trans5}
+rownames(ficticia_matrix)<-c("plantas_pequeñas", "juvenil", "adulto")
+colnames(ficticia_matrix)<-c("plantas_pequeñas", "juvenil", "adulto")
+
+ficticia_matrix
+
+```
+
+------------------------------------------------------------------------
+
+### Construcción de matriz con funciones en R
+
+En la próxima sección veremos como calcular las transiciones de manera más eficiente usando funciones disponibles en un paquete de R. La función principal que usaremos es la función **projection.matrix** del paquete **popbio**. Sin duda esta función es más eficiente y menos propensa a errores que hacerlo a mano.
+
+Los argumentos de la función **projection.matrix** son los siguientes:
+
+```         
+projection.matrix(
+  transitions, # el nombre de la tabla de datos
+  stage = NULL, # el nombre de la columna con los estados en el primer tiempo
+  fate = NULL, # el nombre de la column con los estados en el segundo tiempo
+  fertility = NULL, la información sobre la fertilidad
+  sort = NULL, # si se quiere ordenar los estados de la historia de vida
+  add = NULL,
+  TF = FALSE # si quiere que la matriz de transiciones y de fertilidad sean separados usa = TRUE 
+   )
+```
+
+Nota que el "output" de la función **projection.matrix** es una lista con dos elementos, en dos matrices, una con las transiciones $T$ y otra con la fertilidad $F$. La primera tiene solamente los valores de transiciones y la segunda solamente los valores que corresponde a la fertilidad, o sea la cantidad de individuos que se añaden a cada clase de edad.
+
+Antes de comenzar hacer los análisis es importante que los nombres de las columnas se cambian a nombres que causan menos problemas para la función **projection.matrix**. En este caso, cambiamos los nombres de las columnas de la tabla de datos de "anio_1" a "stage" y de "anio_2" a "fate". Esos nombres corresponde a las etapas en el primer y segundo periodo de tiempo, *fate* se traduce como "destino" en español.
+
+```{r Trans6}
+library(tidyverse)
+Orchis_ficticia=Orchis_ficticia %>% rename(stage=anio_1, fate=anio_2)
+head(Orchis_ficticia)
+```
+
+```{r Trans7}
+library(popbio)
+
+Orchis_ficticia_df=as.data.frame(Orchis_ficticia) # Nota que es importante convertir la tabla de datos a un data frame si es en formato de tibble. 
+stages=c("plantas_pequeñas", "juvenil", "adulto")
+Orchis_ficticia_df$fertilidad<-1/6
+projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=TRUE)
+
+
+```
+
+Si quiere la matriz con la unión de ambas matrices, puede usar el argumento **TF=FALSE**.
+
+Nota que esta matriz se llama matA = matT + matF (la suma de las matrices de transiciones y de fertilidad)
+
+```{r Trans8}
+projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=FALSE)
+
+
+```
+
+## Matriz con Clonaje
+
+**THIS NEEDS TO BE REWORKED AND FOCUSED ON how to evaluate and code cloning**. Half the script here is in chapter 7
+
+Muchas orquídeas se reproducen por clonaje, o sea que los individuos son genéticamente idénticos pero se separan de la planta madre. En algunas ocasiones estos clones se pueden separar de la planta madre por medio de un **keiki**. Este un método de reproducción asexual. En este caso, la matriz de transiciones se puede modificar para incluir el clonaje. Hay pocos ejemplos en las orquídeas de matriz que incluyen una sub-matriz de clonaje **matC**. Evolutivamente es solamente un individuo que crece y no hay fecundidad. Este concepto de crecimiento es diferente a la fecundidad y tiene importancia en los análisis de selección natural y deriva genética (los dos procesos evolutivos). El crecimiento poblacional por medio asexual puede impactar el creicimiento intrinsico de la población y la dinámica poblacional.
+
+Vemos un ejemplo del trabajo de *Cypripedium calceolus* en Europa [@garcia2010living]. En este trabajo los autores querían explorar la dinámica de especies que viven a la periferia de su distribución geográfica. La poblaciones se encuentran en los Pirineos y en el norte de Europa. Aprovechamos para demostrar como se extrae las expecies que tienen una matriz de clonaje, **matC**.
+
+```{r Trans9}
+library(Rcompadre)
+
+```
+
+```{r Trans10, message=FALSE}
+compadre <- cdb_fetch("compadre") # Usar este código para bajar los datos del repositorio de COMPADRE. Tiene que haber activado la librería de Rcompadre.
+
+
+```
+
+### Extraer de COMPADRE las matrices *Cypripedium calceolus*.
+
+Extraer de la base de datos de COMPADRE las matrices de transiciones de *Cypripedium calceolus* del articulo mencionado arriba.
+
+Los pasos son los siguientes - Filtrar la base de datos para *Cypripedium calceolus* - Filtrar la base de datos para el DOI del articulo - Filtrar la base de datos para la dimensión de la matriz de transiciones (6x6) - Filtrar la base base de datos para una matriz en particular (242623)
+
+NOTA que se podría haber filtrado parte la MatrixID solamente.
+
+```{r Trans11}
+
+
+Cyp_cal_matC=compadre %>% select(MatrixID, SpeciesAccepted, mat, Authors, DOI_ISBN, MatrixDimension) %>% 
+  filter(SpeciesAccepted %in% c("Cypripedium calceolus"),
+         DOI_ISBN %in% c("10.1111/j.1523-1739.2010.01466.x"),
+         MatrixDimension %in% c(6),
+         MatrixID %in% c(242623)) #
+  
+
+#Cyp_cal_matC$mat # para el año 2000 a 2001
+
+```
+
+### matA de *Cypripedium calceolus*, MatrixID = 242623
+
+Las matriz de transiciones de *Cypripedium calceolus* tiene una matriz de transiciones de fecundidad y clonaje, matA=matU+matF+matC
+
+```{r Trans12}
+
+
+matA <- matA(Cyp_cal_matC) # extraer la matriz a partir de la base de datos de COMPADRE
+matcc=as.matrix(as.data.frame(matA)) # convertir la matriz a un data frame y luego a un objeto en forma de matriz 
+matcc
+```
+
+## Extraer la matriz de Clonaje
+
+NOTE que la matriz de clonaje es la siguiente.
+
+Lo que se observa es que hay NUEVOS individuos en el tiempo t+1, que provienen de los individuos en el tiempo t. En este caso, son individuos de que crecen a las etapas 4, 5 y 6 que producen individuos nuevos en la etapa 3 y 4.
+
+```{r Trans13}
+matC <- matC(Cyp_cal_matC) # extraer la matriz de clonaje a partir de la base de datos de COMPADRE
+matC
+```
+
+Ahora vemos el ciclo de vida de *Cypripedium calceolus* en este estudio donde las lineas azules son las transiciones de una etapa las transiciones por clonaje.
+
+```{r Trans14}
+library(DiagrammeR)
+
+
+#etapas <- c("A1", "A2", "A3", "A4", "A5", "A6")
+etapas <- c("Dormant", "Smallest", "Small", "Intermediate", "Large", "Extra Large") # Etapas del articulo
+
+etapas <- factor(etapas, levels =  c("Dormant", "Smallest", "Small", "Intermediate", "Large", "Extra Large"))
+title <- NULL
+graph <- expand.grid(to = etapas, from = etapas)
+graph$trans <- round(c(matcc), 2)
+graph <- graph[graph$trans > 0, ]
+nodes <- paste(paste0("'", etapas, "'"), collapse = "; ")
+graph$min_len <- (as.numeric(graph$to) - as.numeric(graph$from)) * 3
+graph$col <- c(
+  "red", "black", "black", "black","black",
+  "black", "red", "black", "black",
+  "black",  "black", "red", "black", "black",
+  "black",  "black", "blue", "black", "black",
+  "black",  "black", "blue", "black", "black", 
+  "black",   "black", "blue", "blue","black", "black"
+)
+edges <- paste0("'", graph$from, "'", " -> ", "'", graph$to, "'",
+  "[minlen=", graph$min_len,
+  ",fontsize=", 10,
+  ",color=", graph$col,
+  ",xlabel=", paste("\"", graph$trans),
+  "\"]\n",
+  collapse = ""
+)
+grViz(
+  paste(
+    "
+digraph {
+  {
+    graph[overlap=false];
+    rank=etapas;
+    node [shape=", "egg", ", fontsize=", 12, "];",
+    nodes, "
+  }",
+    "ordering=out
+  x [style=invis]
+  x -> {", nodes, "} [style=invis]", edges,
+    "labelloc=\"t\";
+  label=\"", title, "\"
+}"
+  )
+) 
+```
+
+------------------------------------------------------------------------
+
+### Problema con el uso tradicional de calcular las transiciones
+
+El uso de estos métodos tradicionales aun que sean calculado a mano o usar la función **projection.matrix** del paquete **popbio** pudiese ser problemático. Los problemas ocurren por condiciones de muestreo, especialmente cuando trabajan con especies raras y los tamaños de muestra están pequeños o que las transiciones son raras de forma natural [@tremblay2021population; @gascoigne2023standard]. En el capitulo XX: **Impacto de datos sin sentidos** se discute los problemas posibles cuando hay datos sin sentidos y como construir matrices más confiable y cuando se debería usar el método Bayesiano para los análisis. En el capitulo XX se discute como resolver asuntos de matrices para que sean más compatible con la biología de la especies estudiada y por consecuencia.
+
+Revisión:
+
+RLT: Apr 19, 2025 Demetria:
