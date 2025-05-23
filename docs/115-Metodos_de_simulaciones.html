@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>metodos_de_simulaciones – Diagnostico Poblacional</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b53751a350365c71b6c909e95f209ed1.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-0309b8b1721542f374478695392ebb2d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-083d847ecde08941f1699ed9c8914ce7.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta property="og:title" content="Diagnostico Poblacional">
+<meta property="og:description" content="">
+<meta property="og:image" content="115-Metodos_de_simulaciones_files/figure-html/sim4-1.png">
+<meta property="og:site_name" content="Diagnostico Poblacional">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./images/logo.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Capítulos</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./102-Intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introducción</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./103-Ciclos_de_Vida.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ciclos de Vida</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./104-Recopilacion_datos_en_el_campo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Recopilación de datos en el campo</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./105-Transiciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Calcular transiciones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./106-calcular_fecundidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Calcular fecundidad</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./107-matU_matF_matC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Suma de matrices</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./108-Bayesian_PPM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Estimados bayesianos de PPM</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./109-Crecimiento_poblacional.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Crecimiento poblacional</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./110-Indices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Índices demográficos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./111-Elasticidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Elasticidad</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./112-Dinamica_de_Transiciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dinámica de Transiciones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./113-Funciones_de_Transferencia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Funciones de Transferencia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./114-LTRE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Experimento de Respuesta de Tabla de Vida</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./115-Metodod_de_simulaciones.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Método de Simulaciones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./116-Estudio_evolutivos.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Estudios evolutivos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./117-Historia_breve.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Historia breve de la demografía en orquidea</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./118-Carl_Olaf_Tamm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Carl Olaf Tamm</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./119-COMPADRE_ORCHIDS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">COMPADRE y Orquídeas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./120-Traduccion_protocolo_informacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Traducción del protocolo de información</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./121-Impacto_de_Datos_sin_Sentido.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Impacto de Datos sin Sentido Biológico</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./122-Nhora_Dracula.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dinámica de Dracula</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./131-Dinamica_de_Transiciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dinámica de Transiciones2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./132-Capitulos_Asignados.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capítulos Asignados</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#variación-temporal-y-espacial-vartempesp" id="toc-variación-temporal-y-espacial-vartempesp" class="nav-link active" data-scroll-target="#variación-temporal-y-espacial-vartempesp">Variación Temporal y Espacial {##VarTempEsp}</a>
+  <ul class="collapse">
+  <li><a href="#componentes-de-variación" id="toc-componentes-de-variación" class="nav-link" data-scroll-target="#componentes-de-variación">Componentes de Variación</a></li>
+  <li><a href="#introducción-a-los-métodos-de-simulaciones" id="toc-introducción-a-los-métodos-de-simulaciones" class="nav-link" data-scroll-target="#introducción-a-los-métodos-de-simulaciones">Introducción a los métodos de simulaciones</a></li>
+  <li><a href="#estocasticidad-espacial" id="toc-estocasticidad-espacial" class="nav-link" data-scroll-target="#estocasticidad-espacial">Estocasticidad espacial</a>
+  <ul class="collapse">
+  <li><a href="#entrada-de-datos" id="toc-entrada-de-datos" class="nav-link" data-scroll-target="#entrada-de-datos">Entrada de datos</a></li>
+  <li><a href="#cual-es-la-distribución-de-la-cantidad-de-individuos-esperado." id="toc-cual-es-la-distribución-de-la-cantidad-de-individuos-esperado." class="nav-link" data-scroll-target="#cual-es-la-distribución-de-la-cantidad-de-individuos-esperado.">Cual es la distribución de la cantidad de individuos esperado.</a></li>
+  <li><a href="#simulaciones-con-diferente-probabilidad-de-selección" id="toc-simulaciones-con-diferente-probabilidad-de-selección" class="nav-link" data-scroll-target="#simulaciones-con-diferente-probabilidad-de-selección">Simulaciones con diferente probabilidad de selección</a></li>
+  <li><a href="#comparar-la-distribución-de-cantidad-de-individuos-esperado-por-simulaciones" id="toc-comparar-la-distribución-de-cantidad-de-individuos-esperado-por-simulaciones" class="nav-link" data-scroll-target="#comparar-la-distribución-de-cantidad-de-individuos-esperado-por-simulaciones">Comparar la distribución de cantidad de individuos esperado por simulaciones</a></li>
+  <li><a href="#impacto-antropogénico-vs-poblaciones-naturales" id="toc-impacto-antropogénico-vs-poblaciones-naturales" class="nav-link" data-scroll-target="#impacto-antropogénico-vs-poblaciones-naturales">Impacto antropogénico vs poblaciones naturales</a></li>
+  </ul></li>
+  <li><a href="#estocasticidad-temporal" id="toc-estocasticidad-temporal" class="nav-link" data-scroll-target="#estocasticidad-temporal">Estocasticidad temporal</a>
+  <ul class="collapse">
+  <li><a href="#comparación-de-la-variación-temporal-y-espacial-en-un-gráfico" id="toc-comparación-de-la-variación-temporal-y-espacial-en-un-gráfico" class="nav-link" data-scroll-target="#comparación-de-la-variación-temporal-y-espacial-en-un-gráfico">Comparación de la variación temporal y espacial en un gráfico</a></li>
+  </ul></li>
+  <li><a href="#estocasticidad-demográfica" id="toc-estocasticidad-demográfica" class="nav-link" data-scroll-target="#estocasticidad-demográfica">Estocasticidad demográfica</a>
+  <ul class="collapse">
+  <li><a href="#obtener-los-inertvalos-de-confianza-ic-para-entradas-de-matriz-individuales" id="toc-obtener-los-inertvalos-de-confianza-ic-para-entradas-de-matriz-individuales" class="nav-link" data-scroll-target="#obtener-los-inertvalos-de-confianza-ic-para-entradas-de-matriz-individuales">Obtener los inertvalos de confianza (IC) para entradas de matriz individuales</a></li>
+  </ul></li>
+  <li><a href="#ventaja-de-usar-simulaciones" id="toc-ventaja-de-usar-simulaciones" class="nav-link" data-scroll-target="#ventaja-de-usar-simulaciones">Ventaja de usar simulaciones</a></li>
+  <li><a href="#métodos-más-recientes" id="toc-métodos-más-recientes" class="nav-link" data-scroll-target="#métodos-más-recientes">Métodos más recientes</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="variación-temporal-y-espacial-vartempesp" class="level1">
+<h1>Variación Temporal y Espacial {##VarTempEsp}</h1>
+<p>Por: Raymond L. Tremblay</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtext)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popbio)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>El termino <strong>biología</strong> pudiese ser un sinónimo de variación biológica. No hay dos organismos iguales, ni siquiera gemelos que sean completamente idénticos. La variación biológica es una característica fundamental de la vida y es la base de la evolución, no puede haber evolución sin variación. Cuando se considera los individuos, por ejemplos humanos, fácilmente reconocemos variación, en tamaño, color de ojos, susceptibilidad a cáncer o infección y efecto que tiene el ambiente (por ejemplo la dieta o acceso a la educación) entre muchos factores que impacta la supervivencia o crecimiento y reproducción. Pero desafortunadamente cuando se considera los animales y plantas de una misma especie frecuentemente se obvia la variación en los análisis. Podemos observar variación a múltiples niveles en una misma especie</p>
+<ul>
+<li>Variación sub-individual (dentro de un individuo), un concepto bien desarollado por Carlos Herrera de la Universidad de Sevilla <span class="citation" data-cites="herrera2009multiplicity">(<a href="#ref-herrera2009multiplicity" role="doc-biblioref">Herrera 2009</a>)</span>.</li>
+<li>Variación entre individuos (dentro de una población).</li>
+<li>Variación entre poblaciones (entre poblaciones).</li>
+<li>Variación entre tiempo (entre periodos de tiempo).</li>
+</ul>
+<p>Todos estos componentes de variación tendrán impacto en la dispersión de los estimados de los parámetros de la matriz de transición y el crecimiento poblacional en adición del comportamiento de la población en tiempo. Hay un componente que frecuentemente se deja por olvido es el efecto de la variación en tamaño de muestra pequeña en los estimados de los parámetros de la matriz de transición y el crecimiento poblacional, este es el efecto demográfico por tamaño de muestra. En este capítulo se discute el efecto de la variación en tiempo y espacio en los estimados de los parámetros de la matriz de transición y el crecimiento poblacional.</p>
+<section id="componentes-de-variación" class="level3">
+<h3 class="anchored" data-anchor-id="componentes-de-variación">Componentes de Variación</h3>
+<section id="la-variación-sub-individual" class="level4">
+<h4 class="anchored" data-anchor-id="la-variación-sub-individual">La variación sub-individual</h4>
+<p>La variación sub-individual es la variación que se observa en un individuo. Por ejemplo, la variación en el <strong>tamaño</strong> o la <strong>cantidad</strong> de hojas, flores, frutos, semillas dentro del mismo individuo. Este tipo de variación es común en plantas y es un componente importante de la variación total pero raramente se considera en los análisis. Carlos Herrera ha demostrado claramente que este componente no solamente es parte de la variación total de las especies pero es importante para entender los procesos ecológicos y evolutivos <span class="citation" data-cites="herrera2009multiplicity">(<a href="#ref-herrera2009multiplicity" role="doc-biblioref">Herrera 2009</a>)</span>. En adición cuando uno compara la variación total por la variación sub-individual, la variación sub-individual es mucho más grande que la variación entre individuos y poblaciones. Esta variación al conocimiento de los presentes autores nunca ha sido incluido en análisis de dinámica poblacional y integrado dentro un PPM. En un estudio del tamaño d e las flores en <em>Lepanthes rupestris</em> se observó que la variación en el tamaño de flores disminuye a largo de la inflorescencia y que la probabilidad de remoción de pollinia y de deposición de estas sobre el estigma no siguen el mismo patrón, la probabilidades de remoción de pollinia aumenta con flores más pequeñas pero la probabilidad de frutos disminuye <span class="citation" data-cites="tremblay2006effect">(<a href="#ref-tremblay2006effect" role="doc-biblioref">Tremblay 2006</a>)</span>.</p>
+</section>
+<section id="la-variación-entre-individuos" class="level4">
+<h4 class="anchored" data-anchor-id="la-variación-entre-individuos">La variación entre individuos</h4>
+<p>La variación entre individuos es la diferencias que se observa entre individuos de una misma población o en diferentes poblaciones. Por ejemplo, la variación en el tamaño de los individuos, cantidad de hojas, cantidad de flores, cantidad de frutos entre individuos de una misma población influye en la probabilidad de sobrevivir, crecer y reproducirse. La variación entre individuos de diferentes tamaños o etapas impacta grandemente la supervivencia, crecimiento y reproducción de los individuos. Los trabajos de Harper y otros han demostrado que esa variación es común en las plantas <span class="citation" data-cites="harper1977population">(<a href="#ref-harper1977population" role="doc-biblioref">Harper et al. 1977</a>)</span> y típicamente es más importante que la edad de los individuos en la mayoría de las plantas.</p>
+</section>
+<section id="la-variación-entre-poblaciones" class="level4">
+<h4 class="anchored" data-anchor-id="la-variación-entre-poblaciones">La variación entre poblaciones</h4>
+<p>La variación entre poblaciones es la variación que se observa entre grupos de individuos de una misma especie. Poblaciones distintas pudiese ser influenciada por las diferencias abióticas y interacciones biótica única a cada población. Esa variación pudiese influenciar la dinámica de cada población y la dinámica de la especie en general. La diferencias entre poblaciones pudiese ser influenciado por condiciones especificas como la variación genéticas entre poblaciones, variación en el ambiente, variación en la interacción biótica, variación en la historia de la población (procesos de sucessión), entre otros factores, en adición que plasticidad fenotípica que se define como la interacción del ambiente sobre la expresión genética. Sin duda las variables abióticas y bióticas pueden influenciar las transiciones, estasis y reproducción de forma diferencial entre las diferentes etapas del ciclo de vida de la especie.</p>
+</section>
+<section id="la-variación-entre-tiempo" class="level4">
+<h4 class="anchored" data-anchor-id="la-variación-entre-tiempo">La variación entre tiempo</h4>
+<p>Este componente de variación incluye la variación típicamente relacionado a la variación <em>abiótica</em> que cambia de un periodo de tiempo a otro, por ejemplo el efecto de la cantidad de lluvia, números de días sin lluvia, temperatura entre muchos otras variables. Pero no se debería limitar a considerar solamente la variación abiótica en tiempo ya que la variación <em>biótica</em> también puede cambiar de un periodo de tiempo a otro. Por ejemplo la densidad y/o composición de especies en una comunidad cambia de un periodo de tiempo incluso la variación de patógenos y otras interacciones bióticas alrededor de la especie de interés. Todo las anteriores pudiese influenciar la dinámica y las estimado de la parámetros de la matriz. Por ejemplo considera la variación en presencia de herbívoros o patógenos que cambia de un periodo de tiempo resultando en variación en la competencia inter-especifica. Por consecuencia la variación en tiempo es mucho más que la variación <em>abiótica</em> en tiempo. Allí uno también tiene que incluir el efecto de bonanza (eventos raros positivos, ejemplo: reclutamiento excepcional en unos años)<span class="citation" data-cites="antonini2020protected">(<a href="#ref-antonini2020protected" role="doc-biblioref">Antonini, Dirzo, and Cassia Quitete-Portela 2020</a>)</span> y catástrofes (eventos raros negativos, ejemplo: huracanes, mortandad de un hospedero)<span class="citation" data-cites="hiernaux2009woody">(<a href="#ref-hiernaux2009woody" role="doc-biblioref">Hiernaux et al. 2009</a>)</span> que pudiese influenciar la dinámica de la especie de interés.</p>
+</section>
+<section id="variación-en-tamaño-de-muestra-pequeña" class="level4">
+<h4 class="anchored" data-anchor-id="variación-en-tamaño-de-muestra-pequeña">Variación en tamaño de muestra pequeña</h4>
+<p>La gran mayoría de los estudios usando MPP son para evaluar la probabilidad de supervivencia en una especies en peligro de extinción. La razón principal de estos estudios es que queda muy pocos individuos en la población o pocas poblaciones y esas poblaciones son considerando a riesgos.</p>
+<p>Por ejemplo si tuviésemos en una población solamente de un adulto y este adulto sobrevive de un año a otro entonces la probabilidad de supervivencia es 1.0. Pero si tuviésemos solamente un adulto y este adulto muere entonces la probabilidad de supervivencia es 0.0. Las probabilidad de supervivencia pueden ser solamente 1.0 o 0.0 respectivamente y otros valores no son posibles, pero la interpretación biológica es sesgada, porque ya hay solamente dos alternativas. Pero si tuviésemos 1,000 o 10,000 individuos es muy poco probable que todos se mueren o todos sobreviven, y hay muchas alternativas posibles. Este es un ejemplo extremo pero ilustra claramente el problema de estimar la probabilidad de supervivencia y transiciones en una población con un tamaño de muestra pequeña y puede resultar en estimados sesgados.</p>
+<p>En las próximas secciones vemos métodos de simulaciones y estimaciones de intervalos de confianza para abordar la variación biológica en tiempo y espacio y la variación por el tamaño de muestra pequeña.</p>
+</section>
+</section>
+<section id="introducción-a-los-métodos-de-simulaciones" class="level2">
+<h2 class="anchored" data-anchor-id="introducción-a-los-métodos-de-simulaciones">Introducción a los métodos de simulaciones</h2>
+<p>Los métodos de simulaciones para estimar la variación en los parámetros tanto de la matriz como el crecimiento poblacional varia mucho. Lo que es consistente es que se utiliza dados disponible para hacer simulaciones y estimar la variación en los parámetros. En otra palabra se usa la variación entre los elementos de múltiples matrices de transición en tiempo o espacio o el tamaño de muestra para hacer simulaciones y estimar la dispersión en los parámetros. La manera de expresar la variación puede asumir diferentes formas, por ejemplo, la variación en los parámetros de la matriz de transición puede ser expresado como una distribución normal (distribución en forma de campana), una distribución de Poisson (Datos con valores discretos, 0, 1, 2…ect), una distribución binomial (distribución donde hay solamente dos alternativas) o beta (distribución donde la distribución es limitada a los valores entre y inclusivo 0 a 1), entre otras distribuciones. Reconociendo el tipo de variación en los parámetros de la matriz de transición es importante para escoger el método de simulaciones y estimaciones de intervalos de confianza y reconocer sus limitación y su interpretación.</p>
+</section>
+<section id="estocasticidad-espacial" class="level2">
+<h2 class="anchored" data-anchor-id="estocasticidad-espacial">Estocasticidad espacial</h2>
+<p>En este caso vemos el efecto de la variación espacial en la probabilidad en los estimados. Aquí nos interesa descubrir y cuantificar cuan variable son las poblaciones una del otro. El objetivo es determinar si las poblaciones se comporta similar una del otro o varía mucho de un sitio al otro.</p>
+<section id="entrada-de-datos" class="level3">
+<h3 class="anchored" data-anchor-id="entrada-de-datos">Entrada de datos</h3>
+<p>El primer paso es definir la diferentes matriz, una por cada periodo de tiempo. En el siguiente script se enseña como entrar los datos para múltiples matrices en un solo objeto. Nota que es una lista de matriz.</p>
+<p>Los datos provienen de un estudio de la dinámica de una población de <em>Serapia cordigera</em> de 1999 al 2012 evaluando el impacto antropogénico sobre la dinámica de la población <span class="citation" data-cites="pellegrino2014effects">(<a href="#ref-pellegrino2014effects" role="doc-biblioref">Pellegrino and Bellusci 2014</a>)</span>. En este caso se emplea solamente 6 matrices de transición de la población de <em>Serapia cordigera</em> en 1999, tres de estas son poblaciones que tienen impacto antropogénico (A1, A2 y A3) y tres poblaciones naturales, sin impacto antropogénico (N1, N2, N3). Nota que se contruye una lista (list()) de matriz de transición, una por cada periodo de tiempo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Serapia<span class="ot">&lt;-</span><span class="fu">list</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">A1_1999=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fl">0.745</span>,  <span class="fl">0.152</span>,  <span class="fl">0.452</span>,  <span class="fl">0.564</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fl">0.125</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.321</span>,  <span class="fl">0.205</span>,  <span class="fl">0.342</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fl">0.200</span>,  <span class="fl">0.365</span>,  <span class="fl">0.205</span>,  <span class="fl">0.185</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="at">A2_1999=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fl">0.648</span>,  <span class="fl">0.203</span>,  <span class="fl">0.414</span>,  <span class="fl">0.604</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fl">0.188</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.342</span>,  <span class="fl">0.198</span>,  <span class="fl">0.377</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fl">0.242</span>,  <span class="fl">0.264</span>,  <span class="fl">0.225</span>,  <span class="fl">0.191</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a> <span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="at">A3_1999=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="fl">0.544</span>,  <span class="fl">0.223</span>,  <span class="fl">0.364</span>,  <span class="fl">0.498</span>,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="fl">0.148</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.249</span>,  <span class="fl">0.243</span>,  <span class="fl">0.287</span>,</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="fl">0.242</span>,  <span class="fl">0.303</span>,  <span class="fl">0.210</span>,  <span class="fl">0.101</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="at">N1_1999=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="fl">0.287</span>,  <span class="fl">0.271</span>,  <span class="fl">0.054</span>,  <span class="fl">0.107</span>,</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="fl">0.318</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.438</span>,  <span class="fl">0.228</span>,  <span class="fl">0.273</span>,</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="fl">0.111</span>,  <span class="fl">0.512</span>,  <span class="fl">0.585</span>,  <span class="fl">0.542</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="at">N2_1999=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="fl">0.299</span>,  <span class="fl">0.253</span>,  <span class="fl">0.066</span>,  <span class="fl">0.182</span>,</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="fl">0.324</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.461</span>,  <span class="fl">0.222</span>,  <span class="fl">0.264</span>,</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="fl">0.339</span>,  <span class="fl">0.568</span>,  <span class="fl">0.554</span>,  <span class="fl">0.547</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a><span class="at">N3_1999=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.245</span>,    <span class="fl">0.156</span>,  <span class="fl">0.052</span>,  <span class="fl">0.147</span>,</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="fl">0.325</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.422</span>,  <span class="fl">0.305</span>,  <span class="fl">0.252</span>,</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="fl">0.210</span>,  <span class="fl">0.465</span>,  <span class="fl">0.498</span>,  <span class="fl">0.485</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>Serapia</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$A1_1999
+         latente plantula rosetta con flor
+latente    0.745    0.152   0.452    0.564
+plantula   0.125    0.000   0.000    0.000
+rosetta    0.000    0.321   0.205    0.342
+con flor   0.200    0.365   0.205    0.185
+
+$A2_1999
+         latente plantula rosetta con flor
+latente    0.648    0.203   0.414    0.604
+plantula   0.188    0.000   0.000    0.000
+rosetta    0.000    0.342   0.198    0.377
+con flor   0.242    0.264   0.225    0.191
+
+$A3_1999
+         latente plantula rosetta con flor
+latente    0.544    0.223   0.364    0.498
+plantula   0.148    0.000   0.000    0.000
+rosetta    0.000    0.249   0.243    0.287
+con flor   0.242    0.303   0.210    0.101
+
+$N1_1999
+         latente plantula rosetta con flor
+latente    0.287    0.271   0.054    0.107
+plantula   0.318    0.000   0.000    0.000
+rosetta    0.000    0.438   0.228    0.273
+con flor   0.111    0.512   0.585    0.542
+
+$N2_1999
+         latente plantula rosetta con flor
+latente    0.299    0.253   0.066    0.182
+plantula   0.324    0.000   0.000    0.000
+rosetta    0.000    0.461   0.222    0.264
+con flor   0.339    0.568   0.554    0.547
+
+$N3_1999
+         latente plantula rosetta con flor
+latente    0.245    0.156   0.052    0.147
+plantula   0.325    0.000   0.000    0.000
+rosetta    0.000    0.422   0.305    0.252
+con flor   0.210    0.465   0.498    0.485</code></pre>
+</div>
+</div>
+<section id="simulaciones-con-igual-probabilidad-de-selección" class="level4">
+<h4 class="anchored" data-anchor-id="simulaciones-con-igual-probabilidad-de-selección">Simulaciones con igual probabilidad de selección</h4>
+<p>Si uno asume que hay igual cantidad de poblaciones afectada de forma antropogénicas y naturales entonces se puede hacer un análisis de la variación espacial en la probabilidad de supervivencia. Se puede simular el crecimiento con igual probabilidad de selección de las matrices de transición. En otra palabra cada matriz sera seleccionado al azar 1/6 de las veces. Este supuesto es razonable si uno asume que hay igual cantidad de poblaciones afectada de forma antropogénicas y naturales. El objetivo es ver la variación en la probabilidad de supervivencia en la población de <em>Serapia cordigera</em> en 1999 o mejor cual seria el tamaño de la poblacional típica de la especies si la especie se comporta como la siguientes matrices <span class="citation" data-cites="pellegrino2014effects">(<a href="#ref-pellegrino2014effects" role="doc-biblioref">Pellegrino and Bellusci 2014</a>)</span>.</p>
+<p>La función <code>stoch.projection</code> del paquete <code>popbio</code> permite hacer simulaciones de la dinámica de una población y da una lista de la cantidad de individuos esperado por cada etapa de la vida. Comenzamos por definir el tamaño de la población inicial por etapa de la vida, <strong>n</strong>, el nombre de las etapas de la vida y luego usamos la función <code>stoch.projection</code> para hacer las simulaciones.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">99</span>) <span class="co"># corresponde a la cantidad de individuos por etapa en la publicación del año 2000 del articulo Pellegrino et al. 2014</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(n) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>Serapia.eq   <span class="ot">&lt;-</span> <span class="fu">stoch.projection</span>(Serapia, n, <span class="at">nreps=</span><span class="dv">1000</span>) <span class="co"># simulación con igual probabilidad de selección</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Serapia.eq) <span class="co"># vemos las primeras 6 simulaciones de los tamaños de muestra esperada por etapa</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       latente  plantula   rosetta  con flor
+[1,] 2.3556123 0.8391034 2.7640964 5.8451492
+[2,] 1.6582610 0.1346718 0.7841697 0.7381385
+[3,] 1.7555824 0.7287897 2.8712250 6.0705385
+[4,] 4.2457916 0.2787458 2.0085111 1.5731287
+[5,] 3.0183890 0.1306303 1.3592922 1.1310050
+[6,] 0.4611466 0.4610463 0.2879778 0.7693450</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="cual-es-la-distribución-de-la-cantidad-de-individuos-esperado." class="level3">
+<h3 class="anchored" data-anchor-id="cual-es-la-distribución-de-la-cantidad-de-individuos-esperado.">Cual es la distribución de la cantidad de individuos esperado.</h3>
+<p>Para observar cuantos individuos hubiese en el futuro de la población de <em>Serapia cordigera</em> si la especie se comporta como las matrices de transición. Se observa que en la poblaciones tendrían pocos individuos típicamente menor de 2-3 individuo todas las etapas irrelevante si fuesen latente, plántula, rosetta o con flores.</p>
+<p>Order the variable names “plantula”, “latente”, “rosetta”, “con flores”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Serapia.eq<span class="ot">=</span><span class="fu">clean_names</span>(<span class="fu">as.data.frame</span>(Serapia.eq)) </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>Serapia.eq <span class="sc">%&gt;%</span> </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(<span class="at">key=</span><span class="st">"etapa"</span>, <span class="at">value=</span><span class="st">"individuos"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">etapa=</span><span class="fu">factor</span>(etapa, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">"plantula"</span>, <span class="st">"latente"</span>, <span class="st">"rosetta"</span>, <span class="st">"con_flor"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>individuos))<span class="sc">+</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">30</span>, <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>)<span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>etapa, <span class="at">scales=</span><span class="st">"free"</span>)<span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Distribución de número de individuos esperado de *Serapia cordigera*"</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Número de individuos"</span>, <span class="at">y=</span><span class="st">"Frecuencia"</span>)<span class="sc">+</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">title =</span> <span class="fu">element_markdown</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="115-Metodos_de_simulaciones_files/figure-html/sim4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La suma total de individuos por simulación es una medida de la cantidad de individuos esperado en el futuro. En el siguiente gráfico se muestra la distribución de la cantidad de individuos esperado en el futuro de la población de <em>Serapia cordigera</em> si la especie se comporta como las matrices de transiciones arriba y seleccionado al azar por la misma probabilidades. Se observa que la mayoría de las simulaciones tienen menos de 10 individuos en el futuro.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Serapia_eq_T<span class="ot">=</span>Serapia.eq <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total=</span><span class="fu">rowSums</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric)))) </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(Serapia_eq_T,<span class="fu">aes</span>(<span class="at">x=</span>total))<span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">30</span>, <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>)<span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Distribución de total de individuos esperado de *Serapia cordigera*"</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Número Total de individuos por simulación"</span>, <span class="at">y=</span><span class="st">"Frecuencia"</span>)<span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">title =</span> <span class="fu">element_markdown</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="115-Metodos_de_simulaciones_files/figure-html/sim5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="simulaciones-con-diferente-probabilidad-de-selección" class="level3">
+<h3 class="anchored" data-anchor-id="simulaciones-con-diferente-probabilidad-de-selección">Simulaciones con diferente probabilidad de selección</h3>
+<p>La probabilidad de selección de las matrices de transición no tiene que ser igual. En el siguiente script se muestra como hacer simulaciones con diferente probabilidad de selección de las matrices de transición. En este caso se asume que hay las 3 poblaciones afectada de forma antropogénicas y que estas son más común (poblaciones afectada antropogenicamente) que las poblaciones naturales. Las 3 poblaciones naturales son poblaciones raras. En la sección del script vemos que ahora las poblaciones afectada de forma antropogénicas son seleccionadas con una probabilidad de 0.85 (.30 + .30 + .25) y las poblaciones naturales con una probabilidad de 0.15. En otra palabra las poblaciones naturales son muy raras, y la especies es dominada por sitio donde la especies es afectada de forma antropogénicas. <strong>Importante este es una simulación y no refleja la realidad de la especies ni la publicación</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">99</span>) <span class="co"># población inicial por etapa</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(n) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>Serapia.uneq   <span class="ot">&lt;-</span> <span class="fu">stoch.projection</span>(Serapia, n, <span class="at">nreps=</span><span class="dv">1000</span>, <span class="at">prob=</span><span class="fu">c</span>(.<span class="dv">3</span>, .<span class="dv">3</span>, .<span class="dv">25</span>, .<span class="dv">05</span>, .<span class="dv">05</span>, .<span class="dv">05</span>)) <span class="co"># simulación con igual probabilidad de selección</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Serapia.uneq) <span class="co"># vemos las primeras 6 simulaciones de tamaño de muestra</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       latente plantula  rosetta  con flor
+[1,]  6.104166 5.732830 4.537569 10.936137
+[2,] 20.777254 2.505834 3.817822  6.886626
+[3,] 16.850095 3.247854 3.714394  6.717541
+[4,] 13.238683 2.615232 2.827835  5.279831
+[5,]  2.855285 2.886999 1.678371  4.582679
+[6,]  6.248096 5.842968 4.663939 11.188458</code></pre>
+</div>
+</div>
+</section>
+<section id="comparar-la-distribución-de-cantidad-de-individuos-esperado-por-simulaciones" class="level3">
+<h3 class="anchored" data-anchor-id="comparar-la-distribución-de-cantidad-de-individuos-esperado-por-simulaciones">Comparar la distribución de cantidad de individuos esperado por simulaciones</h3>
+<p>Ahora vamos a solapar las dos distribuciones (la de selección por igual y por poblaciones mayormente impactado por humanos) para ver si hay una diferencia en la distribución de tamaño de muestra entre las dos simulaciones. Los resultados de la simulaciones siguiere que las poblaciones afectada de forma antropogénicas (rojo) tienen una mayor cantidad de individuos en el futuro que las poblaciones naturales (azul).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Serapia.uneq<span class="ot">=</span><span class="fu">clean_names</span>(<span class="fu">as.data.frame</span>(Serapia.uneq))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>Serapia.uneq_T<span class="ot">=</span>Serapia.uneq <span class="sc">%&gt;%</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total=</span><span class="fu">rowSums</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric)))) </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Serapia.uneq_T, <span class="fu">aes</span>(total))<span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">bins=</span><span class="dv">30</span>, <span class="at">fill=</span><span class="st">"red"</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">alpha=</span>.<span class="dv">5</span>)<span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">data=</span>Serapia_eq_T, <span class="fu">aes</span>(<span class="at">x=</span>total), <span class="at">bins=</span><span class="dv">30</span>, <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">alpha=</span>.<span class="dv">5</span>)<span class="sc">+</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Distribución de total de individuos esperado de *Serapia cordigera*"</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Número total de individuos por simulación"</span>, <span class="at">y=</span><span class="st">"Frecuencia"</span>)<span class="sc">+</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">title =</span> <span class="fu">element_markdown</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="115-Metodos_de_simulaciones_files/figure-html/sim7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+<section id="simulación-de-crecimiento-poblaciónal-de-serapia-cordigera" class="level4">
+<h4 class="anchored" data-anchor-id="simulación-de-crecimiento-poblaciónal-de-serapia-cordigera">Simulación de crecimiento poblaciónal de <em>Serapia cordigera</em></h4>
+<p>En el siguiente script podemos evaluar el crecimiento poblacional y su variación en el espacio.</p>
+<p>Nota aquí se calcula el log(crecimiento poblacional estocástica) de la especies de <em>Serapia cordigera</em> por aproximación y simulaciones siguiendo la formula de Tuljapukar <span class="citation" data-cites="tuljapurkar2013population">(<a href="#ref-tuljapurkar2013population" role="doc-biblioref">Tuljapurkar 2013</a>)</span>. Se puede ver que la especies tiene un crecimiento poblacional negativo en la mayoría de las simulaciones. Esto sugiere que la especies esta en declive. Pero también se puede ver que hay una variación en el crecimiento poblacional de la especies. El script incluye un parámetro para indicar por cuanto tiempo queremos que la simulación ocurre, <strong>maxt=</strong>, en esta caso se simula por 50 periodos de tiempo, si no se añade nada la simulación dura por 50000 periodos de tiempo. Nota que <strong>maxt</strong> es en el tiempo de periodo de la matrix de transición, si esta fue construida en un periodo de meses, entonces la simulación es ese intervalo de tiempo.</p>
+<p>Cuando se usa el log de crecimiento poblacional estocástica se calcula <span class="math display">\[r\]</span>, ese valor es <span class="math inline">\(r=ln(\lambda)\)</span> y <span class="math inline">\(r\)</span> se interpretación de forma diferentes que los valores de lambda,</p>
+<ul>
+<li><span class="math inline">\(r\)</span> = log(crecimiento poblacional estocástica) &gt; 0 la población crece</li>
+<li><span class="math inline">\(r\)</span> = log(crecimiento poblacional estocástica) &lt; 0 la población decrece</li>
+<li><span class="math inline">\(r\)</span> = log(crecimiento poblacional estocástica) = 0 la población es estable</li>
+</ul>
+<p>El crecimiento estocástico de las poblaciones de <em>Serapia cordigera</em> en 1999 es negativo, sugiere que la especies esta en declive. Pero también se puede ver que hay una variación en el crecimiento poblacional de la especies. Se usa la función <em>stoch.growth.rate</em></p>
+<p>Simulaciones por selección de matriz con igual probabilidad</p>
+<ul>
+<li>el crecimiento es negativo y los intervalos de confianza también, dando confianza que la especies esta en declive.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>SGR_eq<span class="ot">=</span><span class="fu">stoch.growth.rate</span>(Serapia, <span class="at">maxt=</span><span class="dv">50</span>, <span class="at">verbose=</span><span class="cn">TRUE</span>) <span class="co"># matrices seleccionado con igual probabilidad</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Calculating stochastic growth at time 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>SGR_eq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$approx
+[1] -0.06760619
+
+$sim
+[1] -0.04794424
+
+$sim.CI
+[1] -0.07825959 -0.01762889</code></pre>
+</div>
+</div>
+<p>Simulaciones por selección de matriz con diferente probabilidad</p>
+<ul>
+<li>el crecimiento es negativo y los intervalos de confianza solapa el cero, sugiere que hay variación en el crecimiento poblacional de la especies y que no hay evidencia que la especie esta en declive ni aumentando (es estable). La interpretaciones aquí es que si la especie es dominada por poblaciones con impacto antropogénico tienen un crecimiento poblacional no negativo.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>SGR_uneq<span class="ot">=</span><span class="fu">stoch.growth.rate</span>(Serapia, <span class="at">maxt=</span><span class="dv">50</span>, <span class="at">prob=</span><span class="fu">c</span>(.<span class="dv">3</span>, .<span class="dv">3</span>, .<span class="dv">25</span>, .<span class="dv">05</span>, .<span class="dv">05</span>, .<span class="dv">05</span>), <span class="at">verbose=</span><span class="cn">FALSE</span>) <span class="co"># matrices seleccionado con diferente probabilidades</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>SGR_uneq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$approx
+[1] -0.02988694
+
+$sim
+[1] -0.04459272
+
+$sim.CI
+[1] -0.07765783 -0.01152762</code></pre>
+</div>
+</div>
+<p>Para convertir el log(crecimiento poblacional estocástica) a lambda se usa la siguiente formula <span class="math inline">\(e^r\)</span> donde <span class="math inline">\(r\)</span> es el log(crecimiento poblacional estocástica). Como ejemplo se muestra la metodología con las simulaciones con probabilidad desigual de selección de las matrices de transición.</p>
+</section>
+<section id="conversión-de-r-a-lambda" class="level4">
+<h4 class="anchored" data-anchor-id="conversión-de-r-a-lambda">Conversión de <span class="math inline">\(r\)</span> a <span class="math inline">\(\lambda\)</span></h4>
+<p>Lambda Igual de probabilidades</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_uneq<span class="sc">$</span>sim) <span class="co"># matrices seleccionado con igual probabilidad</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9563869</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_uneq<span class="sc">$</span>sim.CI[<span class="dv">1</span>]) <span class="co">#El intervalo de confianza inferior</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.925281</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_uneq<span class="sc">$</span>sim.CI[<span class="dv">2</span>]) <span class="co">#El intervalo de confianza superior</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9885386</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="impacto-antropogénico-vs-poblaciones-naturales" class="level3">
+<h3 class="anchored" data-anchor-id="impacto-antropogénico-vs-poblaciones-naturales">Impacto antropogénico vs poblaciones naturales</h3>
+<p>Los análisis anteriores no separan las matrices de transición por el impacto antropogenico vs.&nbsp;los naturales. En el siguiente script se muestra como hacer simulaciones y estimar el crecimiento poblacional de las poblaciones afectada de forma antropogénicas y naturales.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Serapia_A <span class="ot">=</span> Serapia[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] <span class="co"># poblaciones afectada de forma antropogénicas</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>Serapia_N<span class="ot">=</span>  Serapia[<span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>] <span class="co"># poblaciones naturales</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Asumimos una probabilidad igual de selección por cada población. Simulación de tamaño de poblacional por etapa de la vida para las poblaciones afectada de forma antropogénicas y naturales.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">99</span>) <span class="co"># corresponde a los datos de la especies en la publicación del año 2000</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(n) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>Serapia.eq_A   <span class="ot">&lt;-</span> <span class="fu">stoch.projection</span>(Serapia_A, n, <span class="at">nreps=</span><span class="dv">1000</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>Serapia.eq_N   <span class="ot">&lt;-</span> <span class="fu">stoch.projection</span>(Serapia_N, n, <span class="at">nreps=</span><span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>El efecto de las poblaciones con impacto antropogenico tienden a tener tamaño de poblacional más grande que las poblaciones naturales.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Serapia.eq_A<span class="ot">=</span><span class="fu">clean_names</span>(<span class="fu">as.data.frame</span>(Serapia.eq_A)) <span class="co"># limpiar los nombres de las columnas y convertir en un data frame</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>Serapia.eq_N<span class="ot">=</span><span class="fu">clean_names</span>(<span class="fu">as.data.frame</span>(Serapia.eq_N)) </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>Serapia_eq_A<span class="ot">=</span>Serapia.eq_A <span class="sc">%&gt;%</span> </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total=</span><span class="fu">rowSums</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric)))) <span class="co"># sumar la cantidad de individuos en una columna</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>Serapia_eq_N<span class="ot">=</span>Serapia.eq_N <span class="sc">%&gt;%</span> </span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total=</span><span class="fu">rowSums</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Serapia_eq_N, <span class="fu">aes</span>(total))<span class="sc">+</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">bins=</span><span class="dv">30</span>, <span class="at">fill=</span><span class="st">"red"</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">alpha=</span>.<span class="dv">5</span>)<span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">data=</span>Serapia_eq_A, <span class="fu">aes</span>(<span class="at">x=</span>total), </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">bins=</span><span class="dv">30</span>, <span class="at">fill=</span><span class="st">"blue"</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">alpha=</span>.<span class="dv">5</span>)<span class="sc">+</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Distribución de total de individuos esperado de *Serapia cordigera*"</span>,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Número total de individuos por simulación"</span>, <span class="at">y=</span><span class="st">"Frecuencia"</span>)<span class="sc">+</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">title =</span> <span class="fu">element_markdown</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="115-Metodos_de_simulaciones_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="estocasticidad-temporal" class="level2">
+<h2 class="anchored" data-anchor-id="estocasticidad-temporal">Estocasticidad temporal</h2>
+<p>El objetivo de evaluar la variación en tiempo es para determinar si los cambios temporales son importante en predecir los cambios en el crecimiento o estabilidad poblacional.</p>
+<p>Seguimos con los datos <em>Serapias cordigera</em>, pero ahora evaluamos cual es el efecto de la variación en los parámetros de la matriz usando múltiple censos. Vemos el efecto de una esas población, por impacto antropogenico, <strong>A1</strong> en los años de 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 y 2012.</p>
+<p>El primer paso en entrar los datos en una lista de matrices de transición.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Serapia_tiempo<span class="ot">&lt;-</span><span class="fu">list</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">A1_1999=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fl">0.745</span>,  <span class="fl">0.152</span>,  <span class="fl">0.452</span>,  <span class="fl">0.564</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fl">0.125</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.321</span>,  <span class="fl">0.205</span>,  <span class="fl">0.342</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fl">0.200</span>,  <span class="fl">0.365</span>,  <span class="fl">0.205</span>,  <span class="fl">0.185</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="at">A1_2000=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="fl">0.578</span>,  <span class="fl">0.222</span>,  <span class="fl">0.394</span>,  <span class="fl">0.394</span>,</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="fl">0.188</span>   ,<span class="fl">0.000</span>, <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>   ,<span class="fl">0.322</span>, <span class="fl">0.254</span>,  <span class="fl">0.357</span>,</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="fl">0.244</span>   ,<span class="fl">0.314</span>, <span class="fl">0.125</span>,  <span class="fl">0.302</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a><span class="at">A1_2001=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.668</span>,    <span class="fl">0.122</span>,  <span class="fl">0.294</span>,  <span class="fl">0.401</span>,</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a><span class="fl">0.128</span>,  <span class="fl">0.000</span>   ,<span class="fl">0.000</span>, <span class="fl">0.000</span>,</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.302</span>   ,<span class="fl">0.453</span>, <span class="fl">0.366</span>,</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a><span class="fl">0.214</span>,  <span class="fl">0.364</span>,  <span class="fl">0.185</span>,  <span class="fl">0.207</span></span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a><span class="at">A1_2002=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a><span class="fl">0.645</span>,  <span class="fl">0.222</span>,  <span class="fl">0.682</span>,  <span class="fl">0.504</span>,</span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a><span class="fl">0.177</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.421</span>,  <span class="fl">0.305</span>,  <span class="fl">0.382</span>,</span>
+<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a><span class="fl">0.102</span>,  <span class="fl">0.355</span>,  <span class="fl">0.208</span>,  <span class="fl">0.208</span></span>
+<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb27-44"><a href="#cb27-44" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-45"><a href="#cb27-45" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a><span class="at">A1_2003=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.545</span>,    <span class="fl">0.113</span>,  <span class="fl">0.424</span>,  <span class="fl">0.424</span>,</span>
+<span id="cb27-48"><a href="#cb27-48" aria-hidden="true" tabindex="-1"></a><span class="fl">0.247</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb27-49"><a href="#cb27-49" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.166</span>,  <span class="fl">0.233</span>,  <span class="fl">0.277</span>,</span>
+<span id="cb27-50"><a href="#cb27-50" aria-hidden="true" tabindex="-1"></a><span class="fl">0.192</span>,  <span class="fl">0.253</span>,  <span class="fl">0.209</span>,  <span class="fl">0.212</span></span>
+<span id="cb27-51"><a href="#cb27-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-52"><a href="#cb27-52" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-53"><a href="#cb27-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb27-54"><a href="#cb27-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb27-55"><a href="#cb27-55" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb27-56"><a href="#cb27-56" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-57"><a href="#cb27-57" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-58"><a href="#cb27-58" aria-hidden="true" tabindex="-1"></a><span class="at">A1_2004=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb27-59"><a href="#cb27-59" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.548</span>,    <span class="fl">0.191</span>,  <span class="fl">0.402</span>,  <span class="fl">0.527</span>,</span>
+<span id="cb27-60"><a href="#cb27-60" aria-hidden="true" tabindex="-1"></a><span class="fl">0.327</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb27-61"><a href="#cb27-61" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.338</span>,  <span class="fl">0.127</span>,  <span class="fl">0.394</span>,</span>
+<span id="cb27-62"><a href="#cb27-62" aria-hidden="true" tabindex="-1"></a><span class="fl">0.211</span>,  <span class="fl">0.262</span>,  <span class="fl">0.296</span>,  <span class="fl">0.142</span></span>
+<span id="cb27-63"><a href="#cb27-63" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-64"><a href="#cb27-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb27-65"><a href="#cb27-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb27-66"><a href="#cb27-66" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb27-67"><a href="#cb27-67" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-68"><a href="#cb27-68" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-69"><a href="#cb27-69" aria-hidden="true" tabindex="-1"></a><span class="at">A1_2005=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb27-70"><a href="#cb27-70" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.602</span>,    <span class="fl">0.153</span>,  <span class="fl">0.486</span>,  <span class="fl">0.562</span>,</span>
+<span id="cb27-71"><a href="#cb27-71" aria-hidden="true" tabindex="-1"></a><span class="fl">0.224</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb27-72"><a href="#cb27-72" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.491</span>,  <span class="fl">0.324</span>,  <span class="fl">0.304</span>,</span>
+<span id="cb27-73"><a href="#cb27-73" aria-hidden="true" tabindex="-1"></a><span class="fl">0.139</span>,  <span class="fl">0.268</span>,  <span class="fl">0.294</span>,  <span class="fl">0.277</span></span>
+<span id="cb27-74"><a href="#cb27-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-75"><a href="#cb27-75" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-76"><a href="#cb27-76" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb27-77"><a href="#cb27-77" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb27-78"><a href="#cb27-78" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb27-79"><a href="#cb27-79" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-80"><a href="#cb27-80" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-81"><a href="#cb27-81" aria-hidden="true" tabindex="-1"></a><span class="at">A1_2006=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb27-82"><a href="#cb27-82" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.487</span>,    <span class="fl">0.471</span>,  <span class="fl">0.425</span>,  <span class="fl">0.607</span>,</span>
+<span id="cb27-83"><a href="#cb27-83" aria-hidden="true" tabindex="-1"></a><span class="fl">0.318</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb27-84"><a href="#cb27-84" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.438</span>,  <span class="fl">0.328</span>,  <span class="fl">0.373</span>,</span>
+<span id="cb27-85"><a href="#cb27-85" aria-hidden="true" tabindex="-1"></a><span class="fl">0.211</span>,  <span class="fl">0.212</span>,  <span class="fl">0.285</span>,  <span class="fl">0.142</span></span>
+<span id="cb27-86"><a href="#cb27-86" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-87"><a href="#cb27-87" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb27-88"><a href="#cb27-88" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb27-89"><a href="#cb27-89" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb27-90"><a href="#cb27-90" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-91"><a href="#cb27-91" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-92"><a href="#cb27-92" aria-hidden="true" tabindex="-1"></a><span class="at">A1_2007=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb27-93"><a href="#cb27-93" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.544</span>,    <span class="fl">0.423</span>,  <span class="fl">0.374</span>,  <span class="fl">0.578</span>,</span>
+<span id="cb27-94"><a href="#cb27-94" aria-hidden="true" tabindex="-1"></a><span class="fl">0.348</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb27-95"><a href="#cb27-95" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.441</span>,  <span class="fl">0.248</span>,  <span class="fl">0.288</span>,</span>
+<span id="cb27-96"><a href="#cb27-96" aria-hidden="true" tabindex="-1"></a><span class="fl">0.145</span>,  <span class="fl">0.203</span>,  <span class="fl">0.311</span>,  <span class="fl">0.201</span></span>
+<span id="cb27-97"><a href="#cb27-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-98"><a href="#cb27-98" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-99"><a href="#cb27-99" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb27-100"><a href="#cb27-100" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb27-101"><a href="#cb27-101" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb27-102"><a href="#cb27-102" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-103"><a href="#cb27-103" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-104"><a href="#cb27-104" aria-hidden="true" tabindex="-1"></a><span class="at">A1_2008=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb27-105"><a href="#cb27-105" aria-hidden="true" tabindex="-1"></a> <span class="fl">0.568</span>, <span class="fl">0.325</span>,  <span class="fl">0.294</span>,  <span class="fl">0.607</span>,</span>
+<span id="cb27-106"><a href="#cb27-106" aria-hidden="true" tabindex="-1"></a><span class="fl">0.227</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb27-107"><a href="#cb27-107" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.402</span>,  <span class="fl">0.553</span>,  <span class="fl">0.256</span>,</span>
+<span id="cb27-108"><a href="#cb27-108" aria-hidden="true" tabindex="-1"></a><span class="fl">0.194</span>,  <span class="fl">0.364</span>,  <span class="fl">0.275</span>,  <span class="fl">0.217</span></span>
+<span id="cb27-109"><a href="#cb27-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-110"><a href="#cb27-110" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-111"><a href="#cb27-111" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb27-112"><a href="#cb27-112" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb27-113"><a href="#cb27-113" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb27-114"><a href="#cb27-114" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-115"><a href="#cb27-115" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-116"><a href="#cb27-116" aria-hidden="true" tabindex="-1"></a><span class="at">A1_2009=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb27-117"><a href="#cb27-117" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.545</span>,    <span class="fl">0.356</span>,  <span class="fl">0.472</span>,  <span class="fl">0.398</span>,</span>
+<span id="cb27-118"><a href="#cb27-118" aria-hidden="true" tabindex="-1"></a><span class="fl">0.225</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb27-119"><a href="#cb27-119" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.322</span>,  <span class="fl">0.304</span>,  <span class="fl">0.452</span>,</span>
+<span id="cb27-120"><a href="#cb27-120" aria-hidden="true" tabindex="-1"></a><span class="fl">0.110</span>,  <span class="fl">0.225</span>,  <span class="fl">0.298</span>,  <span class="fl">0.185</span></span>
+<span id="cb27-121"><a href="#cb27-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-122"><a href="#cb27-122" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-123"><a href="#cb27-123" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb27-124"><a href="#cb27-124" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb27-125"><a href="#cb27-125" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb27-126"><a href="#cb27-126" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-127"><a href="#cb27-127" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-128"><a href="#cb27-128" aria-hidden="true" tabindex="-1"></a><span class="at">A1_2010=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb27-129"><a href="#cb27-129" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.399</span>,    <span class="fl">0.352</span>,  <span class="fl">0.486</span>,  <span class="fl">0.580</span>,</span>
+<span id="cb27-130"><a href="#cb27-130" aria-hidden="true" tabindex="-1"></a><span class="fl">0.424</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb27-131"><a href="#cb27-131" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.561</span>,  <span class="fl">0.312</span>,  <span class="fl">0.264</span>,</span>
+<span id="cb27-132"><a href="#cb27-132" aria-hidden="true" tabindex="-1"></a><span class="fl">0.239</span>,  <span class="fl">0.168</span>,  <span class="fl">0.354</span>,  <span class="fl">0.247</span></span>
+<span id="cb27-133"><a href="#cb27-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-134"><a href="#cb27-134" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-135"><a href="#cb27-135" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb27-136"><a href="#cb27-136" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb27-137"><a href="#cb27-137" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb27-138"><a href="#cb27-138" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-139"><a href="#cb27-139" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-140"><a href="#cb27-140" aria-hidden="true" tabindex="-1"></a><span class="at">A1_2011=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb27-141"><a href="#cb27-141" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.497</span>,    <span class="fl">0.352</span>,  <span class="fl">0.465</span>,  <span class="fl">0.622</span>,</span>
+<span id="cb27-142"><a href="#cb27-142" aria-hidden="true" tabindex="-1"></a><span class="fl">0.324</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,  <span class="fl">0.000</span>,</span>
+<span id="cb27-143"><a href="#cb27-143" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>,  <span class="fl">0.361</span>,  <span class="fl">0.321</span>,  <span class="fl">0.264</span>,</span>
+<span id="cb27-144"><a href="#cb27-144" aria-hidden="true" tabindex="-1"></a><span class="fl">0.139</span>,  <span class="fl">0.368</span>,  <span class="fl">0.367</span>,  <span class="fl">0.177</span></span>
+<span id="cb27-145"><a href="#cb27-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-146"><a href="#cb27-146" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-147"><a href="#cb27-147" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow=</span><span class="dv">4</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>,</span>
+<span id="cb27-148"><a href="#cb27-148" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>),</span>
+<span id="cb27-149"><a href="#cb27-149" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb27-150"><a href="#cb27-150" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-151"><a href="#cb27-151" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-152"><a href="#cb27-152" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-153"><a href="#cb27-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-154"><a href="#cb27-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-155"><a href="#cb27-155" aria-hidden="true" tabindex="-1"></a> Serapia_tiempo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$A1_1999
+         latente plantula rosetta con flor
+latente    0.745    0.152   0.452    0.564
+plantula   0.125    0.000   0.000    0.000
+rosetta    0.000    0.321   0.205    0.342
+con flor   0.200    0.365   0.205    0.185
+
+$A1_2000
+         latente plantula rosetta con flor
+latente    0.578    0.222   0.394    0.394
+plantula   0.188    0.000   0.000    0.000
+rosetta    0.000    0.322   0.254    0.357
+con flor   0.244    0.314   0.125    0.302
+
+$A1_2001
+         latente plantula rosetta con flor
+latente    0.668    0.122   0.294    0.401
+plantula   0.128    0.000   0.000    0.000
+rosetta    0.000    0.302   0.453    0.366
+con flor   0.214    0.364   0.185    0.207
+
+$A1_2002
+         latente plantula rosetta con flor
+latente    0.645    0.222   0.682    0.504
+plantula   0.177    0.000   0.000    0.000
+rosetta    0.000    0.421   0.305    0.382
+con flor   0.102    0.355   0.208    0.208
+
+$A1_2003
+         latente plantula rosetta con flor
+latente    0.545    0.113   0.424    0.424
+plantula   0.247    0.000   0.000    0.000
+rosetta    0.000    0.166   0.233    0.277
+con flor   0.192    0.253   0.209    0.212
+
+$A1_2004
+         latente plantula rosetta con flor
+latente    0.548    0.191   0.402    0.527
+plantula   0.327    0.000   0.000    0.000
+rosetta    0.000    0.338   0.127    0.394
+con flor   0.211    0.262   0.296    0.142
+
+$A1_2005
+         latente plantula rosetta con flor
+latente    0.602    0.153   0.486    0.562
+plantula   0.224    0.000   0.000    0.000
+rosetta    0.000    0.491   0.324    0.304
+con flor   0.139    0.268   0.294    0.277
+
+$A1_2006
+         latente plantula rosetta con flor
+latente    0.487    0.471   0.425    0.607
+plantula   0.318    0.000   0.000    0.000
+rosetta    0.000    0.438   0.328    0.373
+con flor   0.211    0.212   0.285    0.142
+
+$A1_2007
+         latente plantula rosetta con flor
+latente    0.544    0.423   0.374    0.578
+plantula   0.348    0.000   0.000    0.000
+rosetta    0.000    0.441   0.248    0.288
+con flor   0.145    0.203   0.311    0.201
+
+$A1_2008
+         latente plantula rosetta con flor
+latente    0.568    0.325   0.294    0.607
+plantula   0.227    0.000   0.000    0.000
+rosetta    0.000    0.402   0.553    0.256
+con flor   0.194    0.364   0.275    0.217
+
+$A1_2009
+         latente plantula rosetta con flor
+latente    0.545    0.356   0.472    0.398
+plantula   0.225    0.000   0.000    0.000
+rosetta    0.000    0.322   0.304    0.452
+con flor   0.110    0.225   0.298    0.185
+
+$A1_2010
+         latente plantula rosetta con flor
+latente    0.399    0.352   0.486    0.580
+plantula   0.424    0.000   0.000    0.000
+rosetta    0.000    0.561   0.312    0.264
+con flor   0.239    0.168   0.354    0.247
+
+$A1_2011
+         latente plantula rosetta con flor
+latente    0.497    0.352   0.465    0.622
+plantula   0.324    0.000   0.000    0.000
+rosetta    0.000    0.361   0.321    0.264
+con flor   0.139    0.368   0.367    0.177</code></pre>
+</div>
+</div>
+<section id="simulaciones-con-igual-probabilidad-de-selección." class="level4">
+<h4 class="anchored" data-anchor-id="simulaciones-con-igual-probabilidad-de-selección.">Simulaciones con igual probabilidad de selección.</h4>
+<p>El análisis evalúa la variación temporal en el crecimiento poblacional de la especies de <em>Serapia cordigera</em> en 1999 a 2012. Usando la función <em>stoch.projection</em> se observa la variación en cantidad de individuos por etapa.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">99</span>) <span class="co"># población inicial por etapa</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(n) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>Serapia_tiempo_eq   <span class="ot">&lt;-</span> <span class="fu">stoch.projection</span>(Serapia_tiempo, n, <span class="at">nreps=</span><span class="dv">1000</span>) <span class="co"># simulación con igual probabilidad de selección</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Serapia_tiempo_eq) <span class="co"># vemos las primeras 6 simulaciones de tamaño de muestra</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      latente  plantula   rosetta con flor
+[1,] 43.29036  8.750970 14.199848 22.13362
+[2,] 85.07626  9.484189 20.127316 32.13487
+[3,] 95.52931 19.146304 44.911207 37.13691
+[4,] 91.45284 30.884259 25.834991 40.09542
+[5,] 85.14786 25.525520 33.028031 34.64294
+[6,] 32.44222  9.353142  8.027103 14.85228</code></pre>
+</div>
+</div>
+<p>Para evaluar el cambio de crecimiento poblacional en la especies de <em>Serapia cordigera</em> en 1999 a 2012 se usa la función <em>stoch.growth.rate</em>.</p>
+<p>Se observa que el crecimiento poblacional es cerca de cero en la mayoría de las simulaciones, sugiere que la especie no esta en declive ni creciendo. Los intervalos de confianza solapa el cero sugiriendo que no hay evidencia que el crecimiento temporal de la población es diferentes de estable.</p>
+<p>Nota que se puede cambiar la probabilidades de selección de las matrices de transición, en este caso se asume que hay igual cantidad de poblaciones afectada de forma antropogénicas y naturales. Pero considera por ejemplo que hay eventos abióticos como temperatura o lluvia fuera de lo común en un año, entonces se puede cambiar la probabilidad de selección de las matrices de transición para evaluar el efecto de estos eventos de cambio climatológico en el crecimiento poblacional de la especies. Si por ejemplo en el área donde este estas especies hay predicción que un factor abiótico, por ejemplo reducción en lluvia (aumento en sequía) en las próximas décadas se pudiese cambiar la probabilidad de selección para de las matrices que son en periodos de sequía y que sean seleccionado más frecuentemente en la simulaciones. El objetivo es de similar los efectos de cambio en tiempo sobre el crecimiento poblacional de la especies.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>SGR_Temp_eq<span class="ot">=</span><span class="fu">stoch.growth.rate</span>(Serapia_tiempo, <span class="at">maxt=</span><span class="dv">50</span>) <span class="co"># matrices seleccionado con igual probabilidad por 50 años</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Calculating stochastic growth at time 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>SGR_Temp_eq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$approx
+[1] 0.002712947
+
+$sim
+[1] 0.009671606
+
+$sim.CI
+[1] -0.01611296  0.03545617</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversión a valores de Lambda</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim) <span class="co"># Lambda de matrices seleccionado con igual probabilidad</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.009719</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim.CI[<span class="dv">1</span>]) <span class="co">#Lambda del intervalo de confianza inferior</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9840162</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim.CI[<span class="dv">2</span>]) <span class="co"># Lambda del intervalo de confianza superior</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.036092</code></pre>
+</div>
+</div>
+</section>
+<section id="comparación-entre-la-variaciones-espacial-y-temporal" class="level4">
+<h4 class="anchored" data-anchor-id="comparación-entre-la-variaciones-espacial-y-temporal">Comparación entre la variaciones espacial y temporal</h4>
+<p>Comparar la variación temporal en el crecimiento poblacional de la especies de <em>Serapia cordigera</em> en 1999 a 2012 con la variación espacial.</p>
+<p>Lo que se observa es que la variación temporal y la variación espacial es más o menos igual (el rango de variación), pero que hay menos variación temporal que espacial. Por lo menos para los datos seleccionado de <span class="citation" data-cites="pellegrino2014effects">(<a href="#ref-pellegrino2014effects" role="doc-biblioref">Pellegrino and Bellusci 2014</a>)</span> la variación temporal no es tan grande como la variación espacial y solapa el lambda de 1, al contrario la variación espacial no solapa el lambda de 1 (ambos CI son menores de 1, sugiriendo una reducción posible de las poblaciones). Note que no usamos todos los datos del articulo pero un sub-grupo y por consecuencia el análisis es sesgado.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>Tabla_resultado<span class="ot">=</span><span class="fu">tribble</span>(</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>tipo, <span class="sc">~</span>valor, <span class="sc">~</span>CI_inf, <span class="sc">~</span>CI_sup,<span class="sc">~</span>diff_ci,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Espacial"</span>, <span class="fu">exp</span>(SGR_eq<span class="sc">$</span>sim), <span class="fu">exp</span>(SGR_eq<span class="sc">$</span>sim.CI[<span class="dv">1</span>]), <span class="fu">exp</span>(SGR_eq<span class="sc">$</span>sim.CI[<span class="dv">2</span>]), <span class="fu">exp</span>(SGR_eq<span class="sc">$</span>sim.CI[<span class="dv">2</span>])<span class="sc">-</span><span class="fu">exp</span>(SGR_eq<span class="sc">$</span>sim.CI[<span class="dv">1</span>]),</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Temporal"</span>, <span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim), <span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim.CI[<span class="dv">1</span>]), <span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim.CI[<span class="dv">2</span>]), <span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim.CI[<span class="dv">2</span>])<span class="sc">-</span><span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim.CI[<span class="dv">1</span>])</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>Tabla_resultado</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  tipo     valor CI_inf CI_sup diff_ci
+  &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+1 Espacial 0.953  0.925  0.983  0.0578
+2 Temporal 1.01   0.984  1.04   0.0521</code></pre>
+</div>
+</div>
+</section>
+<section id="comparación-de-la-variación-temporal-y-espacial-en-un-gráfico" class="level3">
+<h3 class="anchored" data-anchor-id="comparación-de-la-variación-temporal-y-espacial-en-un-gráfico">Comparación de la variación temporal y espacial en un gráfico</h3>
+<p>Observación de la variación temporal y espacial en el crecimiento poblacional de la especies de <em>Serapia cordigera</em> en un gráfico.</p>
+<p>Se nota que el crecimiento poblacional intrínsico de la especies de <em>Serapia cordigera</em> es negativo en la mayoría de las simulaciones cuando se evalúa múltiple poblaciones, pero la población <strong>A1</strong> en general tiene un crecimiento positivo o es estable cuando se evalúa tomando en cuanta la variación temporal. La linea horizontal representa el crecimiento poblacional de 1, si el crecimiento poblacional es mayor de 1 la población crece, si es menor de 1 la población decrece. En el análisis temporal vemos que el intervalo de confianza solapa el 1, sugiere que no hay evidencia que el crecimiento poblacional es diferente de estable.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(Tabla_resultado, <span class="fu">aes</span>(<span class="at">x=</span>tipo, <span class="at">y=</span>valor))<span class="sc">+</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">stat=</span><span class="st">"identity"</span>, <span class="at">fill=</span><span class="st">"blue"</span>)<span class="sc">+</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>CI_inf, <span class="at">ymax=</span>CI_sup), <span class="at">width=</span>.<span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="dv">1</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)<span class="sc">+</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Comparación de crecimiento poblacional de *Serapia cordigera*"</span>,</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Tipo de variación"</span>, <span class="at">y=</span><span class="st">"Crecimiento poblacional"</span>)<span class="sc">+</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">title =</span> <span class="fu">element_markdown</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="115-Metodos_de_simulaciones_files/figure-html/sim18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="estocasticidad-demográfica" class="level2">
+<h2 class="anchored" data-anchor-id="estocasticidad-demográfica">Estocasticidad demográfica</h2>
+<p>En esta sección vemos el efecto del tamaño de muestra sobre los parámetros de la matriz de transición.</p>
+<p>Este método usa un acercamiento Bayesiano y una distribución de probabilidad beta para estimar los parámetros de la matriz de transición conocida como la distribución Dirichlet múltiples para grupos discretos. Primero vemos a que se refiere un análisis Bayesiano y la función Dirichlet. A lo que corresponde al presenta análisis Bayesiano, incluimos una previa al análisis, en otra palabra, se usa información previa para incluirlos en los cálculos para estimar los parámetros, se llaman los estimados posteriores. En nuestro caso haremos una previa con poco peso, en otra palabra, no influirá mucho (o casi nada) en los resultados. El concepto de previa es importante en el análisis Bayesiano, es inherente a la filosofía de la estadística Bayesiana. Se asume que información anterior al estudio ayuda a tomar decisión en los cálculos los datos actuales. Como biólogos, siempre tenemos información previa, por ejemplo, sabemos que la probabilidad de que un individuo muera no es cero, aunque esto es evidente es una información adquirido por nuestra experiencia previa. Ahora cual es la probabilidad exacta de la muerte de un individuo, eso es lo que se estima en el análisis Bayesiano tomando en cuanta tanto la información previa y la información recolectado de un estudio.</p>
+<p>La función Dirichlet es una expansión de una función bien básica de probabilidad, usando una distribución beta. La función beta es una distribución de probabilidad continua en el intervalo de [0,1] y se usa para modelar la probabilidad de un evento binario. La función Dirichlet es una generalización de la función beta y se usa para modelar la probabilidad de un evento multinomial (múltiples grupos) donde la suma de cada probabilidades es igual a 1 y las probabilidades tienen que estar dentro del intervalo de [0,1]. En otra palabra no puede haber valores menores de 0 o mayores de 1, incluyendo la suma de estos.</p>
+<p>Comenzamos con lo más básico, probabilidades de dos grupos. Consideramos un grupo de 10 individuos, si 6 de estos individuos sobreviven, cual es la proporción que no sobreviven. La probabilidad de sobrevivir es <span class="math inline">\(p=6/10\)</span>, entonces la probabilidad de no sobre vivir <span class="math inline">\(\hat{p}=1-p\)</span>, porque siempre la suma de <span class="math inline">\(p + \hat{p}= 1\)</span>.</p>
+<p>Si tenemos tres grupos, digamos, plántulas que se quedan como plántula, que crecen a juveniles o que mueren. En este caso tenemos tres grupos (multinomial) y la probabilidad de que un individuo de las proporciones tiene que sumar a 1. En este caso la probabilidad de que un individuo se queda como plántula es <span class="math inline">\(p_1=0.5\)</span>, la probabilidad de que un individuo crece a juvenil es <span class="math inline">\(p_2=0.3\)</span> y la probabilidad de que un individuo muere es <span class="math inline">\(p_3=0.2\)</span>. La suma de estas probabilidades tiene que ser igual a 1, en otra palabra <span class="math inline">\(p_1 + p_2 + p_3 = 1\)</span>.</p>
+<p>La otra ventaja de usar la función Dirichlet es que se basa en la distribución beta. Este es una distribución donde tanto los parámetros como el promedio, y los intervalo de confianza son limitado a 0 y 1. Otra manera de decir lo mismo es que no se puede tener intervalos de confianza menos 0 o mayor de 1. Hagan el ejercicio mental de tratar de entender un intervalo de confianza con una probabilidad de -0.10. Nota que si uno usa una distribución normal, los intervalos de confianza pueden ser negativos o mayores de 1, lo que no tiene sentido en el contexto de probabilidad. De allí viene la ventaja de usar la distribución beta para calcular los parámetros y tener claro cual distribuciones se usa para estimar los parametros.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popbio)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">99</span>) <span class="co"># población inicial por etapa</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(n) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>Serapia_A3   <span class="ot">&lt;-</span> <span class="fu">splitA</span>(Serapia<span class="sc">$</span>A3) <span class="co"># simulación solamente la matriz A1 de la lista de matriz</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>En el siguiente paso vamos a asignar una previa a los datos. Estas previas proviene de Tremblay, no representa la visión de los autores del articulo. Se añade una previa también para la proporción de plantas que fallece en cada etapa (la quita fila). Nota que es importante que la suma de cada columna sea igual a 1. Típicamente uno debería tratar de obtener la previa de la literatura, pero en este caso no se tiene información previa.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>RLT_Serapia_previa <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.1</span>,   <span class="fl">0.4</span>,   <span class="fl">0.4</span>,</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>                        <span class="fl">0.2</span>,  <span class="fl">0.</span>,    <span class="fl">0.0</span>,   <span class="fl">0.0</span>,</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                        <span class="fl">0.0</span>,  <span class="fl">0.025</span>, <span class="fl">0.25</span>,  <span class="fl">0.3</span>,</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>                        <span class="fl">0.15</span>,  <span class="fl">0.05</span>,  <span class="fl">0.25</span>,  <span class="fl">0.2</span>,</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>                        <span class="fl">0.05</span>,  <span class="fl">0.025</span>, <span class="fl">0.1</span>,   <span class="fl">0.1</span>), </span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">nrow =</span> <span class="dv">5</span>, <span class="at">ncol =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raretrans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="obtener-los-inertvalos-de-confianza-ic-para-entradas-de-matriz-individuales" class="level3">
+<h3 class="anchored" data-anchor-id="obtener-los-inertvalos-de-confianza-ic-para-entradas-de-matriz-individuales">Obtener los inertvalos de confianza (IC) para entradas de matriz individuales</h3>
+<p>La distribución posterior marginal de un elemento en un multinomio es una distribución beta, y usamos esto para obtener intervalos creíbles en nuestro tasas de transición. Podemos usar el tipo de retorno TN para obtener los parámetros de el multinomio deseado.</p>
+<p>Nota que:</p>
+<p>-TF tiene que ser una matriz divido entre la transición y de fecundidad (matT + matF), - N es el tamaño de muestra de cada etapa de la vida, - P es la previa de la matriz de transición, - priorweight es el peso de la previo (en este caso estamod dando muy poca importancia a la previa, como si fuese una décima de un individuo), lo que resulta en que los datos del campo domina el análisis. - Regresa el análisis posterior de la matriz de transición.</p>
+<p>En el script vemos los intervalos de confianza de la matriz de transición de <em>Serapia cordigera</em> en 1999 para la población A3.</p>
+<p>Lo más dramático de ese primer análisis que que los intervalos de credibilidad son bien grandes, casi todos los intervalos de credibilidad <strong>lcl</strong> y <strong>ucl</strong> an de muy cerca de cero a valores muy grande. Esto sugiere que hay mucha incertidumbre en los datos. Este resultado es esperado, porque la muestra es muy pequeña, solamente 2 individuos fueron muestreado en el campo de esta etapa.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>TN <span class="ot">&lt;-</span> <span class="fu">fill_transitions</span>(Serapia_A3, <span class="at">N=</span>n, <span class="at">P =</span> RLT_Serapia_previa, <span class="at">priorweight =</span> .<span class="dv">01</span>, <span class="at">returnType =</span> <span class="st">"TN"</span>)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> TN[,<span class="dv">1</span>] <span class="co"># cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. </span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">sum</span>(TN[,<span class="dv">1</span>]) <span class="sc">-</span> TN[,<span class="dv">1</span>]<span class="co"># cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. </span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> a <span class="sc">/</span> (a <span class="sc">+</span> b)</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>lcl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.025</span>, a, b)</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>ucl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.975</span>, a, b)</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>A3<span class="ot">=</span>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">sprintf</span>(<span class="st">"%.3f, %.3f, %.3f"</span>, p, lcl, ucl))</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>A3df_lat<span class="ot">=</span><span class="fu">round</span>(<span class="fu">data.frame</span>(p, lcl, ucl), <span class="at">digits=</span><span class="dv">3</span>)</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>A3df_lat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      p   lcl   ucl
+1 0.544 0.038 0.984
+2 0.149 0.000 0.735
+3 0.000 0.000 0.000
+4 0.241 0.000 0.844
+5 0.066 0.000 0.544</code></pre>
+</div>
+</div>
+<p>Ahora vemos que pasa con la etapa que tenemos más datos, los adultos con flores. En este caso vemos que los intervalos de credibilidad son más pequeños, pero todavía son grandes, ya que el tamaño de muestra es de 99 para esta etapa.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>TN <span class="ot">&lt;-</span> <span class="fu">fill_transitions</span>(Serapia_A3, <span class="at">N=</span>n, <span class="at">P =</span> RLT_Serapia_previa, <span class="at">priorweight =</span> <span class="fl">0.01</span>, <span class="at">returnType =</span> <span class="st">"TN"</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> TN[,<span class="dv">4</span>] <span class="co"># cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. </span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">sum</span>(TN[,<span class="dv">4</span>]) <span class="sc">-</span> TN[,<span class="dv">4</span>]<span class="co"># cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. </span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> a <span class="sc">/</span> (a <span class="sc">+</span> b)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>lcl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.025</span>, a, b)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>ucl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.975</span>, a, b)</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a> A3<span class="ot">=</span>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">sprintf</span>(<span class="st">"%.3f, %.3f, %.3f"</span>, p, lcl, ucl))</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>A3df<span class="ot">=</span><span class="fu">round</span>(<span class="fu">data.frame</span>(p, lcl, ucl), <span class="at">digits=</span><span class="dv">3</span>)</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>A3df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      p   lcl   ucl
+1 0.004 0.000 0.022
+2 0.000 0.000 0.000
+3 0.287 0.203 0.379
+4 0.102 0.051 0.168
+5 0.607 0.510 0.700</code></pre>
+</div>
+</div>
+<p>Como ejercicio, vemos que tipo de intervalos si tuviesemos tamaño de muestra de 500 individuos en la etapa de adulto. Nota que aun que los intervalos de credibilidad son más pequeños, no se debería asumir que no hay variación demográfica en la etapa de adulto, por procesos estocasticos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>n500 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">500</span>) <span class="co"># población inicial por etapa</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>TN <span class="ot">&lt;-</span> <span class="fu">fill_transitions</span>(Serapia_A3, <span class="at">N=</span>n500, <span class="at">P =</span> RLT_Serapia_previa, <span class="at">priorweight =</span> <span class="fl">0.01</span>, <span class="at">returnType =</span> <span class="st">"TN"</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>a500 <span class="ot">&lt;-</span> TN[,<span class="dv">4</span>] <span class="co"># cambie 1 a 2, 3 o 4 ect. para obtener la distribución beta marginal de cada columna (etapas). </span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>b500 <span class="ot">&lt;-</span> <span class="fu">sum</span>(TN[,<span class="dv">4</span>]) <span class="sc">-</span> TN[,<span class="dv">4</span>]<span class="co"># cambie 1 a 2, 3 ect. para obtener la distribución beta marginal de cada columna. </span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>p500 <span class="ot">&lt;-</span> a500 <span class="sc">/</span> (a500 <span class="sc">+</span> b500)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>lcl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.025</span>, a500, b500)</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>ucl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.975</span>, a500, b500)</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a> A3<span class="ot">=</span>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">sprintf</span>(<span class="st">"%.3f, %.3f, %.3f"</span>, p, lcl, ucl))</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>A3df<span class="ot">=</span><span class="fu">round</span>(<span class="fu">data.frame</span>(p, lcl, ucl), <span class="at">digits=</span><span class="dv">3</span>)</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>A3df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      p   lcl   ucl
+1 0.004 0.000 0.011
+2 0.000 0.000 0.000
+3 0.287 0.249 0.327
+4 0.102 0.077 0.130
+5 0.607 0.564 0.649</code></pre>
+</div>
+</div>
+<p>Ahora vemos como se distribuye una distribución beta.</p>
+<p>Usamos los datos de la etapa de adulto con flores con 99 individuos. Ninguna de la transiciones o estasis tiene una distribución normal. La distribución que demuestra bien este patrón son los adultos con flores que pasan a latente. La linea reja vertical representa el promedio, o sea el valor en la matriz de transición.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>a <span class="co"># los valores del shape alpha </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  0.396  0.000 28.710 10.197 60.687</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>b <span class="co"># los valores del shape beta</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 99.594 99.990 71.280 89.793 39.303</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Función para visualizar la distribution beta</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>plot_beta <span class="ot">&lt;-</span> <span class="cf">function</span>(alpha, beta) {</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, alpha, beta)</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>()</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Distirbuciones beta</span></span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>Latentes<span class="ot">=</span><span class="fu">plot_beta</span>(<span class="fl">0.396</span>, <span class="fl">99.594</span>)<span class="sc">+</span></span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, .<span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Distribución de latentes </span><span class="sc">\n</span><span class="st"> (alpha ="</span>, <span class="fl">0.396</span>, <span class="st">", beta ="</span>, <span class="fl">99.594</span>, <span class="st">")"</span>),</span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"Probabilidad"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)<span class="sc">+</span></span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))<span class="sc">+</span></span>
+<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.004</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
+<span id="cb57-17"><a href="#cb57-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a>Plantulas<span class="ot">=</span><span class="fu">plot_beta</span>(<span class="fl">0.000</span>, <span class="fl">99.990</span>)<span class="sc">+</span></span>
+<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, .<span class="dv">025</span>)<span class="sc">+</span><span class="fu">ylim</span>(<span class="dv">0</span>, .<span class="dv">05</span>)<span class="sc">+</span></span>
+<span id="cb57-20"><a href="#cb57-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Distribución de plántulas </span><span class="sc">\n</span><span class="st"> (alpha ="</span>, <span class="fl">0.000</span>, <span class="st">", beta ="</span>, <span class="fl">99.90</span>, <span class="st">")"</span>),</span>
+<span id="cb57-21"><a href="#cb57-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"probabilidad"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)<span class="sc">+</span></span>
+<span id="cb57-22"><a href="#cb57-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))<span class="sc">+</span></span>
+<span id="cb57-23"><a href="#cb57-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.000</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
+<span id="cb57-24"><a href="#cb57-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-25"><a href="#cb57-25" aria-hidden="true" tabindex="-1"></a>Rosetta<span class="ot">=</span><span class="fu">plot_beta</span>(<span class="fl">28.710</span>, <span class="fl">71.280</span>)<span class="sc">+</span></span>
+<span id="cb57-26"><a href="#cb57-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, .<span class="dv">5</span>)<span class="sc">+</span></span>
+<span id="cb57-27"><a href="#cb57-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Distribución de rosettas </span><span class="sc">\n</span><span class="st"> (alpha ="</span>, <span class="fl">28.710</span>, <span class="st">", beta ="</span>, <span class="fl">71.280</span>, <span class="st">")"</span>),</span>
+<span id="cb57-28"><a href="#cb57-28" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"probabilidad"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)<span class="sc">+</span></span>
+<span id="cb57-29"><a href="#cb57-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))<span class="sc">+</span></span>
+<span id="cb57-30"><a href="#cb57-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.287</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
+<span id="cb57-31"><a href="#cb57-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-32"><a href="#cb57-32" aria-hidden="true" tabindex="-1"></a>Adultos<span class="ot">=</span><span class="fu">plot_beta</span>(<span class="fl">10.197</span>, <span class="fl">89.793</span>)<span class="sc">+</span></span>
+<span id="cb57-33"><a href="#cb57-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, .<span class="dv">27</span>)<span class="sc">+</span></span>
+<span id="cb57-34"><a href="#cb57-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Distribución de Ind. con flores </span><span class="sc">\n</span><span class="st"> (alpha ="</span>, <span class="fl">10.197</span>, <span class="st">", beta ="</span>, <span class="fl">89.793</span>, <span class="st">")"</span>),</span>
+<span id="cb57-35"><a href="#cb57-35" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"probabilidad"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)<span class="sc">+</span></span>
+<span id="cb57-36"><a href="#cb57-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))<span class="sc">+</span></span>
+<span id="cb57-37"><a href="#cb57-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.102</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
+<span id="cb57-38"><a href="#cb57-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-39"><a href="#cb57-39" aria-hidden="true" tabindex="-1"></a>Fallecidos<span class="ot">=</span><span class="fu">plot_beta</span>(<span class="fl">60.687</span>, <span class="fl">39.303</span>)<span class="sc">+</span></span>
+<span id="cb57-40"><a href="#cb57-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(.<span class="dv">40</span>, .<span class="dv">8</span>)<span class="sc">+</span></span>
+<span id="cb57-41"><a href="#cb57-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Distribución de fallecidos </span><span class="sc">\n</span><span class="st"> (alpha ="</span>, <span class="fl">60.687</span>, <span class="st">", beta ="</span>, <span class="fl">39.303</span>, <span class="st">")"</span>),</span>
+<span id="cb57-42"><a href="#cb57-42" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"probabilidad"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)<span class="sc">+</span></span>
+<span id="cb57-43"><a href="#cb57-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))<span class="sc">+</span></span>
+<span id="cb57-44"><a href="#cb57-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.607</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
+<span id="cb57-45"><a href="#cb57-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-46"><a href="#cb57-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-47"><a href="#cb57-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-48"><a href="#cb57-48" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb57-49"><a href="#cb57-49" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(Latentes, Plantulas, Rosetta, Adultos, Fallecidos, <span class="at">ncol=</span><span class="dv">3</span>, <span class="at">nrow=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="115-Metodos_de_simulaciones_files/figure-html/sim25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="ventaja-de-usar-simulaciones" class="level2">
+<h2 class="anchored" data-anchor-id="ventaja-de-usar-simulaciones">Ventaja de usar simulaciones</h2>
+<p>La primera ventaja de usar métodos de análisis por simulaciones es que se puede calcula intervalos de confianza. Si los intervalos de confianza de lambda solapa el uno (1) (si solapa el 0 para log(lambda)) entonces no hay evidencia de que el crecimiento poblacional es diferente de estable.</p>
+<p>La segunda ventaja de usar simulaciones es que hay que recordar que los análisis están basado en datos limitados y que si hubiese más o menos datos para estimar los elementos de la matriz la parámetros de la matriz pudiese ser diferentes. Entonces hay un componente de incertidumbre en los estimados de los parámetros de la matriz, los valores de promedio no recolectan esa variación entre individuos, tiempo y espacio.</p>
+<p>La incertidumbre por causas intrínsicas (el individuos, genética, tamaño de muestra) y extrínsicas (hábitat, tiempo, variación en polinizadores, herbívoros, ect.) se evalúa usando análisis de variación espacial, temporal y demográficos. La incertidumbre en los parámetros de la matriz de transición se puede cuantificar con intervalos de confianza o el intervalo de credibilidad (concepto Bayesiano). Es de suma importancia que se evalué la incertidumbre en los parámetros de la matriz de transición para tener un mejor entendimiento de donde proviene la variación y la incertidumbre en el crecimiento poblacional de una especies y saber si hay suficiente evidencia para tener confianza que la especies esta en declive, crece o no.</p>
+</section>
+<section id="métodos-más-recientes" class="level2">
+<h2 class="anchored" data-anchor-id="métodos-más-recientes">Métodos más recientes</h2>
+<p>Revisión:</p>
+<p>RLT 2024-09-30</p>
+
+
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-antonini2020protected" class="csl-entry" role="listitem">
+Antonini, Yasmine, Rodolfo Dirzo, and Rita de Cassia Quitete-Portela. 2020. <span>“Are Protected Populations of Two Globular Cactus Species Facing a Demographic Explosion or Just a <span>‘Bonanza’</span> Year?”</span> <em>Journal of Arid Environments</em> 179: 104192.
+</div>
+<div id="ref-harper1977population" class="csl-entry" role="listitem">
+Harper, John L et al. 1977. <span>“Population Biology of Plants.”</span> <em>Population Biology of Plants.</em>
+</div>
+<div id="ref-herrera2009multiplicity" class="csl-entry" role="listitem">
+Herrera, Carlos M. 2009. <em>Multiplicity in Unity: Plant Subindividual Variation and Interactions with Animals</em>. University of Chicago Press.
+</div>
+<div id="ref-hiernaux2009woody" class="csl-entry" role="listitem">
+Hiernaux, Pierre, Lassine Diarra, Valérie Trichon, Eric Mougin, Nogmana Soumaguel, and Frédéric Baup. 2009. <span>“Woody Plant Population Dynamics in Response to Climate Changes from 1984 to 2006 in Sahel (Gourma, Mali).”</span> <em>Journal of Hydrology</em> 375 (1-2): 103–13.
+</div>
+<div id="ref-pellegrino2014effects" class="csl-entry" role="listitem">
+Pellegrino, Giuseppe, and Francesca Bellusci. 2014. <span>“Effects of Human Disturbance on Reproductive Success and Population Viability of <em>Serapias <span class="nocase">c</span>ordigera</em> (Orchidaceae).”</span> <em>Botanical Journal of the Linnean Society</em> 176 (3): 408–20.
+</div>
+<div id="ref-tremblay2006effect" class="csl-entry" role="listitem">
+Tremblay, Raymond L. 2006. <span>“The Effect of Flower Position on Male and Female Reproductive Success in a Deceptively Pollinated Tropical Orchid.”</span> <em>Botanical Journal of the Linnean Society</em> 151 (3): 405–10.
+</div>
+<div id="ref-tuljapurkar2013population" class="csl-entry" role="listitem">
+Tuljapurkar, Shripad. 2013. <em>Population Dynamics in Variable Environments</em>. Vol. 85. Springer Science &amp; Business Media.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2025, Raymond L. Tremblay</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>This page is built with ❤️ and <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
