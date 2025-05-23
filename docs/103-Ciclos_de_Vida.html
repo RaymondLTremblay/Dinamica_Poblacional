@@ -159,7 +159,7 @@ div.csl-indent {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
       <a href="./index.html" class="sidebar-logo-link">
-      <img src="./images/logo.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <img src="./images/MPP_Hex.jpeg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
       <div class="sidebar-tools-main">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
@@ -425,54 +425,60 @@ div.csl-indent {
 <p>El primer ejemplo comenzamos con un ejemplo de un ciclo de vida sencillo con tres estadios: semillas, plántulas y adultos. Vamos a sumir que es una planta que se reproduce sexualmente, y que las semillas no tienen banco de semilla (latencia de germinación entre periodos). En este caso, las semillas germinan y se convierten en plántulas o se mueren. Las plántulas crecen y se convierten en adultos o se mueren. Los adultos se reproducen y mueren. Por consecuencia el ciclo de vida dura 3 años. El primer año es el año de la semilla, el segundo año es el año de la plántula y el tercer año es el año del adulto y reproducción. Nota que este es un ciclo de vida hipotético y que no todos los organismos tienen un ciclo de vida de 3 años y raramente tan sencillo.</p>
 <p>El la matriz de transición de este ciclo de vida es la siguiente: 50% de la semillas germinan y se convierten en plántulas, 40% de las plántulas se convierten en adultos y cada adultos en promedio deja 3.2 semillas. Las lineas verde representan crecimiento y la linea amarilla representan reproducción.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hidden code to produce figures</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>matA <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">3.2</span>),</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.4</span>, <span class="fl">0.0</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"semillas"</span>, <span class="st">"plantulas"</span>, <span class="st">"adultos"</span>)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> etapas, <span class="at">from =</span> etapas)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matA), <span class="dv">3</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, etapas, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">3</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"Goldenrod1"</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">""</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-c8ec464f4089dcd826bb" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-c8ec464f4089dcd826bb">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"semillas\"; \"plantulas\"; \"adultos\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"semillas\"; \"plantulas\"; \"adultos\" } [style=invis] \"semillas\" -> \"plantulas\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.5\"]\n\"plantulas\" -> \"adultos\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.4\"]\n\"adultos\" -> \"semillas\"[minlen=-6,fontsize=10,color=Goldenrod1,xlabel=\" 3.2\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeRsvg) <span class="co"># paquete para salvar la figura</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rsvg) <span class="co"># paquete para salvar la figura</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Linking to librsvg 2.56.3</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hidden code to produce figures</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>matA <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">3.2</span>),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.4</span>, <span class="fl">0.0</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"semillas"</span>, <span class="st">"plantulas"</span>, <span class="st">"adultos"</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> etapas, <span class="at">from =</span> etapas)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matA), <span class="dv">3</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, etapas, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">3</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"Goldenrod1"</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">""</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>)  <span class="co">#%&gt;%</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="grViz html-widget html-fill-item" id="htmlwidget-e476ac67fcbfc54517ac" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-e476ac67fcbfc54517ac">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"semillas\"; \"plantulas\"; \"adultos\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"semillas\"; \"plantulas\"; \"adultos\" } [style=invis] \"semillas\" -> \"plantulas\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.5\"]\n\"plantulas\" -> \"adultos\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.4\"]\n\"adultos\" -> \"semillas\"[minlen=-6,fontsize=10,color=Goldenrod1,xlabel=\" 3.2\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>   <span class="co"># export_svg %&gt;% charToRaw %&gt;% rsvg_png("graph.png")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="ejemplo-de-una-orquídea-hipotética" class="level2">
@@ -481,58 +487,58 @@ div.csl-indent {
 <p>Las lineas en verde representa crecimiento, las lineas en rojas representan quedarse en la misma etapa y las lineas en amarillo representan reproducción.</p>
 <p>Nota aquí es que si este diagrama representa la recolección de datos en el campo uno debería de recolectar datos de la etapa de semilla, plántula, juvenil y adulto. En nuestra búsqueda de literatura no encontramos ni una publicación que recolectara datos de todas las etapas de vida de una orquídea. En parte por la dificultad de encontrar semillas y plántulas en el campo. Especialmente por la dificultad de encontrar semillas en un árbol por ser tan diminutas y seguir su desarrollo de un año a otro.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hidden code to produce figures</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>matA <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">3.2</span>),</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.3</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.4</span>, <span class="fl">0.20</span>, <span class="fl">0.0</span>),</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.40</span>, <span class="fl">0.80</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"semillas"</span>, <span class="st">"plantulas"</span>, <span class="st">"juvenil"</span>, <span class="st">"adultos"</span>)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> etapas, <span class="at">from =</span> etapas)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matA), <span class="dv">3</span>)</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, etapas, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">3</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>, </span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>, </span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>, </span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Goldenrod1"</span>, <span class="st">"red"</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">""</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hidden code to produce figures</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>matA <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">3.2</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.3</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.4</span>, <span class="fl">0.20</span>, <span class="fl">0.0</span>),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.40</span>, <span class="fl">0.80</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"semillas"</span>, <span class="st">"plantulas"</span>, <span class="st">"juvenil"</span>, <span class="st">"adultos"</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> etapas, <span class="at">from =</span> etapas)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matA), <span class="dv">3</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, etapas, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">3</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>, </span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>, </span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>, </span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Goldenrod1"</span>, <span class="st">"red"</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">""</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-f5ad40103dc297d752c3" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-f5ad40103dc297d752c3">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"semillas\"; \"plantulas\"; \"juvenil\"; \"adultos\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"semillas\"; \"plantulas\"; \"juvenil\"; \"adultos\" } [style=invis] \"semillas\" -> \"plantulas\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.5\"]\n\"plantulas\" -> \"plantulas\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.3\"]\n\"plantulas\" -> \"juvenil\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.4\"]\n\"juvenil\" -> \"juvenil\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.2\"]\n\"juvenil\" -> \"adultos\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.4\"]\n\"adultos\" -> \"semillas\"[minlen=-9,fontsize=10,color=Goldenrod1,xlabel=\" 3.2\"]\n\"adultos\" -> \"adultos\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.8\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-52c81e5d804e9af15cd6" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-52c81e5d804e9af15cd6">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"semillas\"; \"plantulas\"; \"juvenil\"; \"adultos\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"semillas\"; \"plantulas\"; \"juvenil\"; \"adultos\" } [style=invis] \"semillas\" -> \"plantulas\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.5\"]\n\"plantulas\" -> \"plantulas\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.3\"]\n\"plantulas\" -> \"juvenil\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.4\"]\n\"juvenil\" -> \"juvenil\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.2\"]\n\"juvenil\" -> \"adultos\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.4\"]\n\"adultos\" -> \"semillas\"[minlen=-9,fontsize=10,color=Goldenrod1,xlabel=\" 3.2\"]\n\"adultos\" -> \"adultos\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.8\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -552,60 +558,60 @@ div.csl-indent {
 </ul>
 <p>Nota aquí que se hizo un estimado de la cantidad de semillas producidas y la proporciones de semillas que germinan y se convierten en plántulas el siguiente año.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hidden code to produce figures</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>matA <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>,     <span class="fl">0.0</span>,  <span class="fl">0.00</span>, <span class="dv">52686</span>, <span class="dv">127324</span>),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.00022</span>, <span class="fl">0.0</span>,  <span class="fl">0.00</span>, <span class="fl">0.0</span>,   <span class="fl">0.0</span>),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>,     <span class="fl">0.71</span>, <span class="fl">0.93</span>, <span class="fl">0.0</span>,   <span class="fl">0.0</span>),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>,     <span class="fl">0.0</span>,  <span class="fl">0.07</span>, <span class="fl">0.76</span>,   <span class="fl">0.0</span>),</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>,     <span class="fl">0.0</span>,  <span class="fl">0.00</span>, <span class="fl">0.24</span>,   <span class="fl">0.75</span>)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"semillas"</span>, <span class="st">"plántulas"</span>, <span class="st">"adulto 1"</span>, <span class="st">"adulto 2"</span>, <span class="st">"adulto 3"</span>)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> etapas, <span class="at">from =</span> etapas)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matA), <span class="dv">5</span>)</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, etapas, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">3</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>, </span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>, </span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>, </span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Goldenrod1"</span>, <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>,</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Goldenrod1"</span>, <span class="st">"red"</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">""</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hidden code to produce figures</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>matA <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>,     <span class="fl">0.0</span>,  <span class="fl">0.00</span>, <span class="dv">52686</span>, <span class="dv">127324</span>),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.00022</span>, <span class="fl">0.0</span>,  <span class="fl">0.00</span>, <span class="fl">0.0</span>,   <span class="fl">0.0</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>,     <span class="fl">0.71</span>, <span class="fl">0.93</span>, <span class="fl">0.0</span>,   <span class="fl">0.0</span>),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>,     <span class="fl">0.0</span>,  <span class="fl">0.07</span>, <span class="fl">0.76</span>,   <span class="fl">0.0</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>,     <span class="fl">0.0</span>,  <span class="fl">0.00</span>, <span class="fl">0.24</span>,   <span class="fl">0.75</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"semillas"</span>, <span class="st">"plántulas"</span>, <span class="st">"adulto 1"</span>, <span class="st">"adulto 2"</span>, <span class="st">"adulto 3"</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> etapas, <span class="at">from =</span> etapas)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matA), <span class="dv">5</span>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, etapas, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">3</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>, </span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>, </span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>, </span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Goldenrod1"</span>, <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>,</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Goldenrod1"</span>, <span class="st">"red"</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">""</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-5c874c9f25a5a3ac13b2" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-5c874c9f25a5a3ac13b2">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"semillas\"; \"plántulas\"; \"adulto 1\"; \"adulto 2\"; \"adulto 3\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"semillas\"; \"plántulas\"; \"adulto 1\"; \"adulto 2\"; \"adulto 3\" } [style=invis] \"semillas\" -> \"plántulas\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.00022\"]\n\"plántulas\" -> \"adulto 1\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.71\"]\n\"adulto 1\" -> \"adulto 1\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.93\"]\n\"adulto 1\" -> \"adulto 2\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.07\"]\n\"adulto 2\" -> \"semillas\"[minlen=-9,fontsize=10,color=Goldenrod1,xlabel=\" 52686\"]\n\"adulto 2\" -> \"adulto 2\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.76\"]\n\"adulto 2\" -> \"adulto 3\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.24\"]\n\"adulto 3\" -> \"semillas\"[minlen=-12,fontsize=10,color=Goldenrod1,xlabel=\" 127324\"]\n\"adulto 3\" -> \"adulto 3\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.75\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-10173149df8a3e5a91c8" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-10173149df8a3e5a91c8">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"semillas\"; \"plántulas\"; \"adulto 1\"; \"adulto 2\"; \"adulto 3\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"semillas\"; \"plántulas\"; \"adulto 1\"; \"adulto 2\"; \"adulto 3\" } [style=invis] \"semillas\" -> \"plántulas\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.00022\"]\n\"plántulas\" -> \"adulto 1\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.71\"]\n\"adulto 1\" -> \"adulto 1\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.93\"]\n\"adulto 1\" -> \"adulto 2\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.07\"]\n\"adulto 2\" -> \"semillas\"[minlen=-9,fontsize=10,color=Goldenrod1,xlabel=\" 52686\"]\n\"adulto 2\" -> \"adulto 2\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.76\"]\n\"adulto 2\" -> \"adulto 3\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.24\"]\n\"adulto 3\" -> \"semillas\"[minlen=-12,fontsize=10,color=Goldenrod1,xlabel=\" 127324\"]\n\"adulto 3\" -> \"adulto 3\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.75\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -614,59 +620,59 @@ div.csl-indent {
 <p>En el trabajo de <span class="citation" data-cites="raventos2018comparison">(<a href="#ref-raventos2018comparison" role="doc-biblioref">Raventós et al. 2018</a>)</span> se recolectaron datos de la etapa de inmaduros, reproductivo pequeños y reproductivo grandes. El ciclo de vida es representada por 3 etapas. Los datos provienen de la figura 1 de la publicación de <span class="citation" data-cites="raventos2018comparison">(<a href="#ref-raventos2018comparison" role="doc-biblioref">Raventós et al. 2018</a>)</span>. En este caso, los autores le interesa el efecto de perturbaciones sobre el crecimiento poblacional evaluando el efecto de perturbaciones con análisis de dinámica transitoria.</p>
 <p>Los autores observaron tres tipos de transiciones en la historia de vida de la orquídea <em>Telipogon helleri</em>. Las etapas que pasen una tamaño/etapa pequeña a más grande el próximo año son de color verde, los que se quedan en la misma etapa son de color roja, los individuos que se ponen más pequeños son de color violeta y amarillo es la reproducción de las etapas adultas. Nota que los individuos grandes tienen una mayor contribución (0.5359) a la producción que los individuos adultos pequeños (0.1573).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>matA_Th<span class="ot">=</span><span class="fu">matrix</span>(<span class="fu">c</span>(                  </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="fl">0.1548</span>, <span class="fl">0.1573</span>, <span class="fl">0.5309</span>,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a> <span class="fl">0.2738</span>, <span class="fl">0.4425</span>, <span class="fl">0.1606</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a> <span class="fl">0.0238</span>, <span class="fl">0.4060</span>, <span class="fl">0.7368</span>), <span class="at">byrow=</span><span class="cn">TRUE</span>,<span class="at">ncol=</span><span class="dv">3</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>matA_Th</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>matA_Th<span class="ot">=</span><span class="fu">matrix</span>(<span class="fu">c</span>(                  </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a> <span class="fl">0.1548</span>, <span class="fl">0.1573</span>, <span class="fl">0.5309</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a> <span class="fl">0.2738</span>, <span class="fl">0.4425</span>, <span class="fl">0.1606</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a> <span class="fl">0.0238</span>, <span class="fl">0.4060</span>, <span class="fl">0.7368</span>), <span class="at">byrow=</span><span class="cn">TRUE</span>,<span class="at">ncol=</span><span class="dv">3</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>matA_Th</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       [,1]   [,2]   [,3]
 [1,] 0.1548 0.1573 0.5309
 [2,] 0.2738 0.4425 0.1606
 [3,] 0.0238 0.4060 0.7368</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"inmaduros"</span>, <span class="st">"reproductivo_pequeños"</span>, <span class="st">"reproductivo_grandes"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> etapas, <span class="at">from =</span> etapas)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matA_Th), <span class="dv">3</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, etapas, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">3</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"PaleGreen4"</span>, </span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Goldenrod1"</span>, <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>, </span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Goldenrod1"</span>, <span class="st">"MediumOrchid4"</span>, <span class="st">"red"</span> </span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">""</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"inmaduros"</span>, <span class="st">"reproductivo_pequeños"</span>, <span class="st">"reproductivo_grandes"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> etapas, <span class="at">from =</span> etapas)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matA_Th), <span class="dv">3</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, etapas, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">3</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"PaleGreen4"</span>, </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Goldenrod1"</span>, <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>, </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Goldenrod1"</span>, <span class="st">"MediumOrchid4"</span>, <span class="st">"red"</span> </span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">""</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-670656ded1d94964deb7" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-670656ded1d94964deb7">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"inmaduros\"; \"reproductivo_pequeños\"; \"reproductivo_grandes\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"inmaduros\"; \"reproductivo_pequeños\"; \"reproductivo_grandes\" } [style=invis] \"inmaduros\" -> \"inmaduros\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.155\"]\n\"inmaduros\" -> \"reproductivo_pequeños\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.274\"]\n\"inmaduros\" -> \"reproductivo_grandes\"[minlen=6,fontsize=10,color=PaleGreen4,xlabel=\" 0.024\"]\n\"reproductivo_pequeños\" -> \"inmaduros\"[minlen=-3,fontsize=10,color=Goldenrod1,xlabel=\" 0.157\"]\n\"reproductivo_pequeños\" -> \"reproductivo_pequeños\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.442\"]\n\"reproductivo_pequeños\" -> \"reproductivo_grandes\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.406\"]\n\"reproductivo_grandes\" -> \"inmaduros\"[minlen=-6,fontsize=10,color=Goldenrod1,xlabel=\" 0.531\"]\n\"reproductivo_grandes\" -> \"reproductivo_pequeños\"[minlen=-3,fontsize=10,color=MediumOrchid4,xlabel=\" 0.161\"]\n\"reproductivo_grandes\" -> \"reproductivo_grandes\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.737\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-38139365c3b0ec04b7f8" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-38139365c3b0ec04b7f8">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"inmaduros\"; \"reproductivo_pequeños\"; \"reproductivo_grandes\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"inmaduros\"; \"reproductivo_pequeños\"; \"reproductivo_grandes\" } [style=invis] \"inmaduros\" -> \"inmaduros\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.155\"]\n\"inmaduros\" -> \"reproductivo_pequeños\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.274\"]\n\"inmaduros\" -> \"reproductivo_grandes\"[minlen=6,fontsize=10,color=PaleGreen4,xlabel=\" 0.024\"]\n\"reproductivo_pequeños\" -> \"inmaduros\"[minlen=-3,fontsize=10,color=Goldenrod1,xlabel=\" 0.157\"]\n\"reproductivo_pequeños\" -> \"reproductivo_pequeños\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.442\"]\n\"reproductivo_pequeños\" -> \"reproductivo_grandes\"[minlen=3,fontsize=10,color=PaleGreen4,xlabel=\" 0.406\"]\n\"reproductivo_grandes\" -> \"inmaduros\"[minlen=-6,fontsize=10,color=Goldenrod1,xlabel=\" 0.531\"]\n\"reproductivo_grandes\" -> \"reproductivo_pequeños\"[minlen=-3,fontsize=10,color=MediumOrchid4,xlabel=\" 0.161\"]\n\"reproductivo_grandes\" -> \"reproductivo_grandes\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.737\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -678,58 +684,58 @@ div.csl-indent {
 <p>Es este trabajo se recolectaron datos de la etapa de plántula, juvenil, adulto y latencia de los individuos. La historia de vida es representada por 4 etapas. Los datos provienen de la figura 4 de la publicación de <span class="citation" data-cites="coates2006effects">(<a href="#ref-coates2006effects" role="doc-biblioref">Coates, Lunt, and Tremblay 2006</a>)</span>, donde hay un periodo de 3 o más años entre los periodos de régimen de fuegos. Una de la etapas distintivas de esta especie es la latencia, en otra palabra plantas que no emergen de un año a otro. Muchas especies de orquídeas terrestres tienen latencia en las etapas de plántulas, juvenil y adultos . En estas especies la única etapa que podemos estimar la mortandad es después de la latencia. Esto típicamente es un problema de muestreo y no la biología de la especie, ya que frecuentemente las especies muestreadas son en peligro de extinción y no se pueden recolectar datos de todas las etapas de vida para determinar cuando no se ven la planta es viva (debajo el suelo) o muerta. Como son en peligro de extinción no permite y realmente no es ético modificar el hábitat para determinar si la planta esta viva o muerta. En este caso, se hace unos análisis para determinar cual es la probabilidad que un individuo con latencia de múltiples años este vivo.</p>
 <p>Las etapas que pasen a latente el próximo año son de color azul, los que se quedan en la misma etapa son de color roja (incluyendo de latente a latente), verde es crecimiento y amarillo es reproducción.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hidden code to produce figures</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>matA <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>,     <span class="fl">0.0125</span>, <span class="fl">0.0</span>),</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.2874</span>,  <span class="fl">0.375</span>,  <span class="fl">0.1364</span>),</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0230</span>,  <span class="fl">0.15</span>,   <span class="fl">0.0303</span>),</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">1.000</span>, <span class="fl">0.6897</span>,  <span class="fl">0.475</span>,  <span class="fl">0.7475</span>)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"plántulas"</span>, <span class="st">"adultos vegetativos"</span>, <span class="st">"adultos reproductivos"</span>, <span class="st">"latencia"</span>)</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> etapas, <span class="at">from =</span> etapas)</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matA), <span class="dv">4</span>)</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, etapas, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">2</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"blue"</span>, </span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"blue"</span>,</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Goldenrod1"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"red"</span>, <span class="st">"blue"</span>,</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"red"</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">""</span></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
-<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
-<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
-<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
-<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
-<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
-<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hidden code to produce figures</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>matA <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>,     <span class="fl">0.0125</span>, <span class="fl">0.0</span>),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.2874</span>,  <span class="fl">0.375</span>,  <span class="fl">0.1364</span>),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0230</span>,  <span class="fl">0.15</span>,   <span class="fl">0.0303</span>),</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">1.000</span>, <span class="fl">0.6897</span>,  <span class="fl">0.475</span>,  <span class="fl">0.7475</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"plántulas"</span>, <span class="st">"adultos vegetativos"</span>, <span class="st">"adultos reproductivos"</span>, <span class="st">"latencia"</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> etapas, <span class="at">from =</span> etapas)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matA), <span class="dv">4</span>)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, etapas, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"blue"</span>, </span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"blue"</span>,</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Goldenrod1"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"red"</span>, <span class="st">"blue"</span>,</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"red"</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">""</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-308d7ebdbc7f7f8f75a9" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-308d7ebdbc7f7f8f75a9">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántulas\"; \"adultos vegetativos\"; \"adultos reproductivos\"; \"latencia\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántulas\"; \"adultos vegetativos\"; \"adultos reproductivos\"; \"latencia\" } [style=invis] \"plántulas\" -> \"latencia\"[minlen=6,fontsize=10,color=blue,xlabel=\" 1\"]\n\"adultos vegetativos\" -> \"adultos vegetativos\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.2874\"]\n\"adultos vegetativos\" -> \"adultos reproductivos\"[minlen=2,fontsize=10,color=PaleGreen4,xlabel=\" 0.023\"]\n\"adultos vegetativos\" -> \"latencia\"[minlen=4,fontsize=10,color=blue,xlabel=\" 0.6897\"]\n\"adultos reproductivos\" -> \"plántulas\"[minlen=-4,fontsize=10,color=Goldenrod1,xlabel=\" 0.0125\"]\n\"adultos reproductivos\" -> \"adultos vegetativos\"[minlen=-2,fontsize=10,color=PaleGreen4,xlabel=\" 0.375\"]\n\"adultos reproductivos\" -> \"adultos reproductivos\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.15\"]\n\"adultos reproductivos\" -> \"latencia\"[minlen=2,fontsize=10,color=blue,xlabel=\" 0.475\"]\n\"latencia\" -> \"adultos vegetativos\"[minlen=-4,fontsize=10,color=PaleGreen4,xlabel=\" 0.1364\"]\n\"latencia\" -> \"adultos reproductivos\"[minlen=-2,fontsize=10,color=PaleGreen4,xlabel=\" 0.0303\"]\n\"latencia\" -> \"latencia\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.7475\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-a30dc226b4407f0b352f" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-a30dc226b4407f0b352f">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántulas\"; \"adultos vegetativos\"; \"adultos reproductivos\"; \"latencia\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántulas\"; \"adultos vegetativos\"; \"adultos reproductivos\"; \"latencia\" } [style=invis] \"plántulas\" -> \"latencia\"[minlen=6,fontsize=10,color=blue,xlabel=\" 1\"]\n\"adultos vegetativos\" -> \"adultos vegetativos\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.2874\"]\n\"adultos vegetativos\" -> \"adultos reproductivos\"[minlen=2,fontsize=10,color=PaleGreen4,xlabel=\" 0.023\"]\n\"adultos vegetativos\" -> \"latencia\"[minlen=4,fontsize=10,color=blue,xlabel=\" 0.6897\"]\n\"adultos reproductivos\" -> \"plántulas\"[minlen=-4,fontsize=10,color=Goldenrod1,xlabel=\" 0.0125\"]\n\"adultos reproductivos\" -> \"adultos vegetativos\"[minlen=-2,fontsize=10,color=PaleGreen4,xlabel=\" 0.375\"]\n\"adultos reproductivos\" -> \"adultos reproductivos\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.15\"]\n\"adultos reproductivos\" -> \"latencia\"[minlen=2,fontsize=10,color=blue,xlabel=\" 0.475\"]\n\"latencia\" -> \"adultos vegetativos\"[minlen=-4,fontsize=10,color=PaleGreen4,xlabel=\" 0.1364\"]\n\"latencia\" -> \"adultos reproductivos\"[minlen=-2,fontsize=10,color=PaleGreen4,xlabel=\" 0.0303\"]\n\"latencia\" -> \"latencia\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.7475\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -738,56 +744,56 @@ div.csl-indent {
 <p>En el trabajo de Waite y Hutchings 1991, se recolectaron datos de la etapas vegetativa, plantas con flores y latencia de un año y dos años, por consecuencia la historia de vida es representada por 4 etapas. Los datos provienen de la figura 1 y la tabla 3b (periodo de herbivoría por oveja) de la publicación de <span class="citation" data-cites="waite1991effects">(<a href="#ref-waite1991effects" role="doc-biblioref">Waite and Hutchings 1991</a>)</span>. En este caso, se hace análisis para determinar cual es la probabilidad que un individuo con latencia de múltiples de un o dos años este vivo comparando periodos de herbivoría por ganados versus ovejas.</p>
 <p>El objetivo de la publicación era determinar la probabilidad de que un individuo con latencia de múltiples años (uno o dos) este vivo. Por consecuencia no incluye reproducción (nota que no hay linea amarilla). Las etapas que pasen a latente el próximo año son de color azul, los que se quedan en la misma etapa son de color roja, verde es de una etapa no latente.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hidden code to produce figures</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>G1<span class="ot">=</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.0080</span>, <span class="fl">0.0184</span>,   <span class="fl">0.0149</span>, <span class="fl">0.0148</span>,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>            <span class="fl">0.0180</span>,  <span class="fl">0.4249</span>,  <span class="fl">0.1214</span>, <span class="fl">0.1214</span>,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>            <span class="fl">0.1853</span>,  <span class="fl">0.2770</span>,  <span class="dv">0</span>,      <span class="dv">0</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>            <span class="dv">0</span>,       <span class="dv">0</span>,       <span class="fl">0.3050</span>, <span class="dv">0</span>), <span class="at">byrow=</span><span class="cn">TRUE</span>,<span class="at">ncol=</span><span class="dv">4</span>)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Vegetativa"</span>, <span class="st">"Ind. con Flores"</span>, <span class="st">"Latencia año 1"</span>, <span class="st">"Latencia año 2"</span>)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> etapas, <span class="at">from =</span> etapas)</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(G1), <span class="dv">4</span>)</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, etapas, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">2</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"blue"</span>,</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>, <span class="st">"red"</span>, <span class="st">"blue"</span>,</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>, <span class="st">"PaleGreen4"</span>,  <span class="st">"blue"</span>,</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>, <span class="st">"PaleGreen4"</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">""</span></span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
-<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
-<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
-<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
-<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hidden code to produce figures</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>G1<span class="ot">=</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.0080</span>, <span class="fl">0.0184</span>,   <span class="fl">0.0149</span>, <span class="fl">0.0148</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>            <span class="fl">0.0180</span>,  <span class="fl">0.4249</span>,  <span class="fl">0.1214</span>, <span class="fl">0.1214</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>            <span class="fl">0.1853</span>,  <span class="fl">0.2770</span>,  <span class="dv">0</span>,      <span class="dv">0</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>            <span class="dv">0</span>,       <span class="dv">0</span>,       <span class="fl">0.3050</span>, <span class="dv">0</span>), <span class="at">byrow=</span><span class="cn">TRUE</span>,<span class="at">ncol=</span><span class="dv">4</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Vegetativa"</span>, <span class="st">"Ind. con Flores"</span>, <span class="st">"Latencia año 1"</span>, <span class="st">"Latencia año 2"</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> etapas, <span class="at">from =</span> etapas)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(G1), <span class="dv">4</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, etapas, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"blue"</span>,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>, <span class="st">"red"</span>, <span class="st">"blue"</span>,</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>, <span class="st">"PaleGreen4"</span>,  <span class="st">"blue"</span>,</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>, <span class="st">"PaleGreen4"</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">""</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-7af93fe34599b8fe9f3b" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-7af93fe34599b8fe9f3b">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Vegetativa\"; \"Ind. con Flores\"; \"Latencia año 1\"; \"Latencia año 2\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"Vegetativa\"; \"Ind. con Flores\"; \"Latencia año 1\"; \"Latencia año 2\" } [style=invis] \"Vegetativa\" -> \"Vegetativa\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.008\"]\n\"Vegetativa\" -> \"Ind. con Flores\"[minlen=2,fontsize=10,color=PaleGreen4,xlabel=\" 0.018\"]\n\"Vegetativa\" -> \"Latencia año 1\"[minlen=4,fontsize=10,color=blue,xlabel=\" 0.1853\"]\n\"Ind. con Flores\" -> \"Vegetativa\"[minlen=-2,fontsize=10,color=PaleGreen4,xlabel=\" 0.0184\"]\n\"Ind. con Flores\" -> \"Ind. con Flores\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.4249\"]\n\"Ind. con Flores\" -> \"Latencia año 1\"[minlen=2,fontsize=10,color=blue,xlabel=\" 0.277\"]\n\"Latencia año 1\" -> \"Vegetativa\"[minlen=-4,fontsize=10,color=PaleGreen4,xlabel=\" 0.0149\"]\n\"Latencia año 1\" -> \"Ind. con Flores\"[minlen=-2,fontsize=10,color=PaleGreen4,xlabel=\" 0.1214\"]\n\"Latencia año 1\" -> \"Latencia año 2\"[minlen=2,fontsize=10,color=blue,xlabel=\" 0.305\"]\n\"Latencia año 2\" -> \"Vegetativa\"[minlen=-6,fontsize=10,color=PaleGreen4,xlabel=\" 0.0148\"]\n\"Latencia año 2\" -> \"Ind. con Flores\"[minlen=-4,fontsize=10,color=PaleGreen4,xlabel=\" 0.1214\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-19d930845d7f242e7614" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-19d930845d7f242e7614">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Vegetativa\"; \"Ind. con Flores\"; \"Latencia año 1\"; \"Latencia año 2\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"Vegetativa\"; \"Ind. con Flores\"; \"Latencia año 1\"; \"Latencia año 2\" } [style=invis] \"Vegetativa\" -> \"Vegetativa\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.008\"]\n\"Vegetativa\" -> \"Ind. con Flores\"[minlen=2,fontsize=10,color=PaleGreen4,xlabel=\" 0.018\"]\n\"Vegetativa\" -> \"Latencia año 1\"[minlen=4,fontsize=10,color=blue,xlabel=\" 0.1853\"]\n\"Ind. con Flores\" -> \"Vegetativa\"[minlen=-2,fontsize=10,color=PaleGreen4,xlabel=\" 0.0184\"]\n\"Ind. con Flores\" -> \"Ind. con Flores\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.4249\"]\n\"Ind. con Flores\" -> \"Latencia año 1\"[minlen=2,fontsize=10,color=blue,xlabel=\" 0.277\"]\n\"Latencia año 1\" -> \"Vegetativa\"[minlen=-4,fontsize=10,color=PaleGreen4,xlabel=\" 0.0149\"]\n\"Latencia año 1\" -> \"Ind. con Flores\"[minlen=-2,fontsize=10,color=PaleGreen4,xlabel=\" 0.1214\"]\n\"Latencia año 1\" -> \"Latencia año 2\"[minlen=2,fontsize=10,color=blue,xlabel=\" 0.305\"]\n\"Latencia año 2\" -> \"Vegetativa\"[minlen=-6,fontsize=10,color=PaleGreen4,xlabel=\" 0.0148\"]\n\"Latencia año 2\" -> \"Ind. con Flores\"[minlen=-4,fontsize=10,color=PaleGreen4,xlabel=\" 0.1214\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -798,15 +804,15 @@ div.csl-indent {
 <section id="section" class="level5">
 <h5 class="anchored" data-anchor-id="section"></h5>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>matA_Os<span class="ot">=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>, <span class="fl">0.000</span>, <span class="dv">0</span>, <span class="fl">0.00</span>, <span class="fl">0.000</span>, <span class="fl">84.88725</span>,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fl">0.012</span>, <span class="fl">0.000</span>, <span class="dv">0</span>, <span class="fl">0.00</span>, <span class="fl">0.000</span>,  <span class="fl">0.00000</span>,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>, <span class="fl">0.041</span>, <span class="dv">0</span>, <span class="fl">0.00</span>, <span class="fl">0.000</span>,  <span class="fl">0.00000</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>, <span class="fl">0.000</span>, <span class="dv">1</span>, <span class="fl">0.75</span>, <span class="fl">0.000</span>,  <span class="fl">0.00000</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>, <span class="fl">0.000</span>, <span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.615</span>,  <span class="fl">0.62500</span>,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>, <span class="fl">0.000</span>, <span class="dv">0</span>, <span class="fl">0.00</span>, <span class="fl">0.385</span>,  <span class="fl">0.37500</span>), <span class="at">byrow=</span><span class="cn">TRUE</span>,<span class="at">ncol=</span><span class="dv">6</span>)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>matA_Os  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>matA_Os<span class="ot">=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>, <span class="fl">0.000</span>, <span class="dv">0</span>, <span class="fl">0.00</span>, <span class="fl">0.000</span>, <span class="fl">84.88725</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fl">0.012</span>, <span class="fl">0.000</span>, <span class="dv">0</span>, <span class="fl">0.00</span>, <span class="fl">0.000</span>,  <span class="fl">0.00000</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>, <span class="fl">0.041</span>, <span class="dv">0</span>, <span class="fl">0.00</span>, <span class="fl">0.000</span>,  <span class="fl">0.00000</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>, <span class="fl">0.000</span>, <span class="dv">1</span>, <span class="fl">0.75</span>, <span class="fl">0.000</span>,  <span class="fl">0.00000</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>, <span class="fl">0.000</span>, <span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.615</span>,  <span class="fl">0.62500</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000</span>, <span class="fl">0.000</span>, <span class="dv">0</span>, <span class="fl">0.00</span>, <span class="fl">0.385</span>,  <span class="fl">0.37500</span>), <span class="at">byrow=</span><span class="cn">TRUE</span>,<span class="at">ncol=</span><span class="dv">6</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>matA_Os  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      [,1]  [,2] [,3] [,4]  [,5]     [,6]
 [1,] 0.000 0.000    0 0.00 0.000 84.88725
@@ -816,50 +822,50 @@ div.csl-indent {
 [5,] 0.000 0.000    0 0.25 0.615  0.62500
 [6,] 0.000 0.000    0 0.00 0.385  0.37500</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Protocormos"</span>, <span class="st">"tuberculos"</span>, <span class="st">"Plantulas"</span>, <span class="st">"Juveniles"</span>, <span class="st">"Sin Flores"</span>, <span class="st">"Con Flores"</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> etapas, <span class="at">from =</span> etapas)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matA_Os), <span class="dv">3</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, etapas, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">2</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>   <span class="st">"PaleGreen4"</span>,</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>,</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>,</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>,  </span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>, </span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Goldenrod1"</span>,<span class="st">"MediumOrchid4"</span>, <span class="st">"red"</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">""</span></span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
-<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
-<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
-<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Protocormos"</span>, <span class="st">"tuberculos"</span>, <span class="st">"Plantulas"</span>, <span class="st">"Juveniles"</span>, <span class="st">"Sin Flores"</span>, <span class="st">"Con Flores"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> etapas, <span class="at">from =</span> etapas)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matA_Os), <span class="dv">3</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, etapas, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>   <span class="st">"PaleGreen4"</span>,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PaleGreen4"</span>,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>,  </span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"PaleGreen4"</span>, </span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Goldenrod1"</span>,<span class="st">"MediumOrchid4"</span>, <span class="st">"red"</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">""</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-1443000196b31baef652" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-1443000196b31baef652">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Protocormos\"; \"tuberculos\"; \"Plantulas\"; \"Juveniles\"; \"Sin Flores\"; \"Con Flores\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"Protocormos\"; \"tuberculos\"; \"Plantulas\"; \"Juveniles\"; \"Sin Flores\"; \"Con Flores\" } [style=invis] \"Protocormos\" -> \"tuberculos\"[minlen=2,fontsize=10,color=PaleGreen4,xlabel=\" 0.012\"]\n\"tuberculos\" -> \"Plantulas\"[minlen=2,fontsize=10,color=PaleGreen4,xlabel=\" 0.041\"]\n\"Plantulas\" -> \"Juveniles\"[minlen=2,fontsize=10,color=PaleGreen4,xlabel=\" 1\"]\n\"Juveniles\" -> \"Juveniles\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.75\"]\n\"Juveniles\" -> \"Sin Flores\"[minlen=2,fontsize=10,color=PaleGreen4,xlabel=\" 0.25\"]\n\"Sin Flores\" -> \"Sin Flores\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.615\"]\n\"Sin Flores\" -> \"Con Flores\"[minlen=2,fontsize=10,color=PaleGreen4,xlabel=\" 0.385\"]\n\"Con Flores\" -> \"Protocormos\"[minlen=-10,fontsize=10,color=Goldenrod1,xlabel=\" 84.887\"]\n\"Con Flores\" -> \"Sin Flores\"[minlen=-2,fontsize=10,color=MediumOrchid4,xlabel=\" 0.625\"]\n\"Con Flores\" -> \"Con Flores\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.375\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-7237761893b58c6e55a6" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-7237761893b58c6e55a6">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Protocormos\"; \"tuberculos\"; \"Plantulas\"; \"Juveniles\"; \"Sin Flores\"; \"Con Flores\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"Protocormos\"; \"tuberculos\"; \"Plantulas\"; \"Juveniles\"; \"Sin Flores\"; \"Con Flores\" } [style=invis] \"Protocormos\" -> \"tuberculos\"[minlen=2,fontsize=10,color=PaleGreen4,xlabel=\" 0.012\"]\n\"tuberculos\" -> \"Plantulas\"[minlen=2,fontsize=10,color=PaleGreen4,xlabel=\" 0.041\"]\n\"Plantulas\" -> \"Juveniles\"[minlen=2,fontsize=10,color=PaleGreen4,xlabel=\" 1\"]\n\"Juveniles\" -> \"Juveniles\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.75\"]\n\"Juveniles\" -> \"Sin Flores\"[minlen=2,fontsize=10,color=PaleGreen4,xlabel=\" 0.25\"]\n\"Sin Flores\" -> \"Sin Flores\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.615\"]\n\"Sin Flores\" -> \"Con Flores\"[minlen=2,fontsize=10,color=PaleGreen4,xlabel=\" 0.385\"]\n\"Con Flores\" -> \"Protocormos\"[minlen=-10,fontsize=10,color=Goldenrod1,xlabel=\" 84.887\"]\n\"Con Flores\" -> \"Sin Flores\"[minlen=-2,fontsize=10,color=MediumOrchid4,xlabel=\" 0.625\"]\n\"Con Flores\" -> \"Con Flores\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.375\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -871,8 +877,8 @@ div.csl-indent {
 <p>Pero eso no son los únicos problemas. La recolección de datos en el campo puede ser irreal dentro de un contexto de historia de vida general y la matemática que le corresponde. Aquí vemos un ejemplo de lo siguiente. Para mucho más detalles ver el capitulo “Impacto de datos sin sentidos”. En la siguiente figura aparece tres errores comunes cuando se recolectan datos de la historia de vida de una especie. El primero es que no hay mortandad en una de las etapas (los juveniles), y el otro es que todos los individuos se mueren (las plántulas) o se quedan en la misma etapa (los adultos), resultando en un ciclo de vida donde no es posible pasar de una etapa a otra. Estos errores ocurren típicamente cuando el tamaño de muestra es pequeña o la probabilidad de transiciones es rara (por ejemplos los arboles grandes no fallecen). Nota que no hay flecha que va de plántulas a otros estados. Esos son tres errores típicos que se enfrenta cuando se usa análisis de dinámica poblacional en especies con transiciones poco comunes.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-909dba3b4776da802969" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-909dba3b4776da802969">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\"; \"juvenil\"; \"adulto\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\"; \"juvenil\"; \"adulto\" } [style=invis] \"juvenil\" -> \"juvenil\"[minlen=0,fontsize=10,color=red,xlabel=\" 1\"]\n\"adulto\" -> \"plántula\"[minlen=-6,fontsize=10,color=Goldenrod1,xlabel=\" 3.2\"]\n\"adulto\" -> \"juvenil\"[minlen=-3,fontsize=10,color=MediumOrchid4,xlabel=\" 0.1\"]\n\"adulto\" -> \"adulto\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.9\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-6dbebdea22797c507139" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-6dbebdea22797c507139">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\"; \"juvenil\"; \"adulto\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\"; \"juvenil\"; \"adulto\" } [style=invis] \"juvenil\" -> \"juvenil\"[minlen=0,fontsize=10,color=red,xlabel=\" 1\"]\n\"adulto\" -> \"plántula\"[minlen=-6,fontsize=10,color=Goldenrod1,xlabel=\" 3.2\"]\n\"adulto\" -> \"juvenil\"[minlen=-3,fontsize=10,color=MediumOrchid4,xlabel=\" 0.1\"]\n\"adulto\" -> \"adulto\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.9\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -881,11 +887,11 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="ejemplo-de-un-diagrama-de-un-ciclo-de-vida-usando-el-paquete-ggplot">Ejemplo de un diagrama de un ciclo de vida usando el paquete ggplot</h2>
 <p>Nota aquí podemos usar otro paquete de R (Rage). La diferencia es que no se puede cambiar los colores de las lineas y los nodos. Es una opción más sencilla para crear diagramas de ciclo de vida. Y practico para publicaciones donde no se necesita cambiar los colores de las lineas y los nodos.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(matA, <span class="at">stages=</span>etapas, <span class="at">fontsize =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(matA, <span class="at">stages=</span>etapas, <span class="at">fontsize =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-fa7da0d9353442bd93fb" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-fa7da0d9353442bd93fb">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] } [style=invis] \"juvenil\" -> \"juvenil\"[minlen=0,fontsize=0,color=grey,xlabel=\" 1\"]\n\"adulto\" -> \"plántula\"[minlen=-6,fontsize=0,color=grey,xlabel=\" 3.2\"]\n\"adulto\" -> \"juvenil\"[minlen=-3,fontsize=0,color=grey,xlabel=\" 0.1\"]\n\"adulto\" -> \"adulto\"[minlen=0,fontsize=0,color=grey,xlabel=\" 0.9\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-122a759c969dc100d094" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-122a759c969dc100d094">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] } [style=invis] \"juvenil\" -> \"juvenil\"[minlen=0,fontsize=0,color=grey,xlabel=\" 1\"]\n\"adulto\" -> \"plántula\"[minlen=-6,fontsize=0,color=grey,xlabel=\" 3.2\"]\n\"adulto\" -> \"juvenil\"[minlen=-3,fontsize=0,color=grey,xlabel=\" 0.1\"]\n\"adulto\" -> \"adulto\"[minlen=0,fontsize=0,color=grey,xlabel=\" 0.9\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>

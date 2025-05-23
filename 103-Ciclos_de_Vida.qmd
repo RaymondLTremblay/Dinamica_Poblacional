@@ -26,6 +26,9 @@ El primer ejemplo comenzamos con un ejemplo de un ciclo de vida sencillo con tre
 El la matriz de transición de este ciclo de vida es la siguiente: 50% de la semillas germinan y se convierten en plántulas, 40% de las plántulas se convierten en adultos y cada adultos en promedio deja 3.2 semillas. Las lineas verde representan crecimiento y la linea amarilla representan reproducción.
 
 ```{r CV_2}
+
+library(DiagrammeRsvg) # paquete para salvar la figura
+library(rsvg) # paquete para salvar la figura
 # hidden code to produce figures
 matA <- rbind(
   c(0.0, 0.0, 3.2),
@@ -69,7 +72,10 @@ digraph {
   label=\"", title, "\"
 }"
   )
-) 
+)  #%>%
+   # export_svg %>% charToRaw %>% rsvg_png("graph.png")
+
+
 
 ```
 
@@ -520,6 +526,8 @@ Nota aquí podemos usar otro paquete de R (Rage). La diferencia es que no se pue
 ```{r CV11}
 library(Rage)
 plot_life_cycle(matA, stages=etapas, fontsize = 0)
+
+
 
 ```
 
