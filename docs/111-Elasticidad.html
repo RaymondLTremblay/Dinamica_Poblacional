@@ -123,6 +123,8 @@ div.csl-indent {
     "search-label": "Search"
   }
 }</script>
+<link href="site_libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+<script src="site_libs/tabwid-1.1.3/tabwid.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -436,9 +438,11 @@ window.Quarto = {
 <section id="Elasticidad" class="level1">
 <h1>Elasticidad</h1>
 <p>Autores: “Demetria Mondragón, Ernesto Mujica y Elaine González”</p>
-<section id="librerías-de-r-requeridas-para-el-siguiente-modulo" class="level2">
-<h2 class="anchored" data-anchor-id="librerías-de-r-requeridas-para-el-siguiente-modulo">Librerías de R requeridas para el siguiente modulo</h2>
+<section id="librerías-de-r-requeridas-para-el-siguiente-modulo" class="level3">
+<h3 class="anchored" data-anchor-id="librerías-de-r-requeridas-para-el-siguiente-modulo">Librerías de R requeridas para el siguiente modulo</h3>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popdemo)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popbio)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
@@ -446,28 +450,35 @@ window.Quarto = {
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr) </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flextable)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ftExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 <section id="qué-es-la-elasticidad" class="level2">
 <h2 class="anchored" data-anchor-id="qué-es-la-elasticidad">Qué es la Elasticidad</h2>
-<p>Las matrices de elasticidad son un complemento de las matrices de transición, que nos permiten evaluar el efecto de “pequeños cambios” en los parámetros de la matriz de transición sobre la tasa de crecimiento de la población (<span class="math inline">\(\lambda\)</span>); así, las entradas de la matriz de elasticidad que presenten los valores más altos, serán aquellas que más impacto tendrán sobre el comportamiento de lambda (<span class="math inline">\(\lambda\)</span>) <span class="citation" data-cites="caswell2001matrix de1986elasticity">(<a href="#ref-caswell2001matrix" role="doc-biblioref">Caswell 2001</a>; <a href="#ref-de1986elasticity" role="doc-biblioref">Kroon et al. 1986</a>)</span>. Esos cambios pueden tener un efecto positivo o negativo sobre el crecimiento poblacional <span class="citation" data-cites="caswell2001matrix">(<a href="#ref-caswell2001matrix" role="doc-biblioref">Caswell 2001</a>)</span>. El uso de las elasticidades en ecología de plantas se remonta a 1974 cuando Sarukan y Gadgil trataron de evaluar la importancia relativa de la reproducción sexual vsv la reproducción vegetativa de tres especies de <em>Ranunculus</em> <span class="citation" data-cites="sarukhan1974studies de1986elasticity">(<a href="#ref-sarukhan1974studies" role="doc-biblioref">Sarukhan and Gadgil 1974</a>; <a href="#ref-de1986elasticity" role="doc-biblioref">Kroon et al. 1986</a>)</span>.</p>
-<p>El concepto de elasticidad en biología es un método orientado a evaluar el cambio proporcional en una variable en respuesta a un cambio proporcional en otra variable. En términos de matrices de transición, la elasticidad es una medida de la sensibilidad de la tasa de crecimiento poblacional a cambios. En otra palabra si uno cambia uno de los parámetros de la matriz de transición, la elasticidad mide cuánto cambiaría la tasa de crecimiento poblacional <span class="citation" data-cites="de1986elasticity">(<a href="#ref-de1986elasticity" role="doc-biblioref">Kroon et al. 1986</a>)</span>. En biología, la elasticidad es una herramienta para entender la importancia <em>del cambio</em> de cada etapa de la historia de vida sobre la tasa de crecimiento poblacional ya que permite identificar las etapas que más contribuyen a la tasa de crecimiento poblacional. Esa herramienta es muy útil para la conservación de especies y para la gestión de recursos naturales por que en parte nos indica cuan sensitiva esta el crecimiento poblacional cuando se cambia los parámetros de la historia de vida (las transiciones, supervivencia y fecundidad) de una especie.</p>
-<p>La elasticidad en la Biología de la Conservación no solo se basa en la observación de su matriz, que con sus valores podemos interpretar la vulnerabilidad de la población a las transiciones. La elasticidad predice el efecto futuro de las probabilidades medias de hechos pasados, respondiendo a la pregunta: ¿cuál de los cambios en las tasas vitales, tomados de uno en uno y manteniendo constante los demás, produciría el mayor efecto en la tasa de crecimiento de la población? En otras palabras, la elasticidad nos dará los efectos de pequeños cambios en las tasas vitales. Las tasas vitales con una baja elasticidad suelen tener una alta variabilidad, mientras que las de elevada suelen variar poco. La variabilidad de los parámetros vitales suele estar negativamente correlacionada con su elasticidad media [ehrlen1998direct]. Por ello no solamente se debe tener en cuenta cuan sensible es lambda (<span class="math inline">\(\lambda\)</span>) a una transición, sino también, cuanta variación en esa transición puede ocurrir, o de hecho ocurre, y cómo covaría con otras transiciones [ehrlen1998direct].</p>
+<p>Las matrices de elasticidad son un complemento de las matrices de transición, que nos permiten evaluar el efecto de “pequeños cambios” en los parámetros de la matriz de transición sobre la tasa de crecimiento de la población (<span class="math inline">\(\lambda\)</span>); así, las entradas de la matriz de elasticidad que presenten los valores más altos, serán aquellas que más impacto tendrán sobre el comportamiento de lambda (<span class="math inline">\(\lambda\)</span>) <span class="citation" data-cites="caswell2001matrix de1986elasticity">(<a href="#ref-caswell2001matrix" role="doc-biblioref">Caswell 2001</a>; <a href="#ref-de1986elasticity" role="doc-biblioref">Kroon et al. 1986</a>)</span>. Esos cambios pueden tener un efecto positivo o negativo sobre el crecimiento poblacional <span class="citation" data-cites="caswell2001matrix">(<a href="#ref-caswell2001matrix" role="doc-biblioref">Caswell 2001</a>)</span>. El uso de las elasticidades en ecología de plantas se remonta a 1974 cuando Sarukan y Gadgil trataron de evaluar la importancia relativa de la reproducción sexual versus la reproducción vegetativa de tres especies de <em>Ranunculus</em> <span class="citation" data-cites="sarukhan1974studies de1986elasticity">(<a href="#ref-sarukhan1974studies" role="doc-biblioref">Sarukhan and Gadgil 1974</a>; <a href="#ref-de1986elasticity" role="doc-biblioref">Kroon et al. 1986</a>)</span>.</p>
+<p>El concepto de elasticidad en biología es un método orientado a evaluar el cambio proporcional en una variable en respuesta a un cambio proporcional en otra variable. En términos de matrices de transición, la elasticidad es una medida de la sensibilidad de la tasa de crecimiento poblacional a cambios. En otra palabra si uno cambia uno de los parámetros de la matriz de transición, la elasticidad mide cuánto cambiaría la tasa de crecimiento poblacional <span class="citation" data-cites="de1986elasticity">(<a href="#ref-de1986elasticity" role="doc-biblioref">Kroon et al. 1986</a>)</span>. En biología, la elasticidad es una herramienta para entender la importancia <em>del cambio</em> de cada etapa de la historia de vida sobre la tasa de crecimiento poblacional ya que permite identificar las etapas que más contribuyen a la tasa de crecimiento poblacional. Esa herramienta es muy útil para la conservación de especies y para la gestión de recursos naturales por que en parte nos indica cuan sensitiva esta el crecimiento poblacional cuando se cambia los parámetros de la historia de vida (las transiciones, supervivencia y fecundidad) de una especie. Un cambio proporcional se refiere a que, por ejemplo, si se cambio una de las transiciones de 1% que efecto tiene sobre el crecimiento intrínseco de la población, versus si se cambio de 1% en fertilidad. De esta forma uno tiene una herramienta de comparación del impacto que tuviese hipotéticamente los cambios si se podría lograr hacer estos cambios.</p>
+<p>La elasticidad en la Biología de la Conservación no solo se basa en la observación de su matriz, que con sus valores podemos interpretar la vulnerabilidad de la población a las transiciones. La elasticidad predice el efecto futuro de las probabilidades medias de hechos pasados, respondiendo a la pregunta: ¿cuál de los cambios en las tasas vitales, tomados de uno en uno y manteniendo constante los demás, produciría el mayor efecto en la tasa de crecimiento de la población? En otras palabras, la elasticidad nos dará los efectos de pequeños cambios en las tasas vitales. Las tasas vitales con una baja elasticidad suelen tener una alta variabilidad, mientras que las de elevada suelen variar poco. La variabilidad de los parámetros vitales suele estar negativamente correlacionada con su elasticidad media [<span class="citation" data-cites="ehrlen1998direct">Ehrlén and Van Groenendael (<a href="#ref-ehrlen1998direct" role="doc-biblioref">1998</a>)</span>]. Por ello no solamente se debe tener en cuenta cuan sensible es lambda (<span class="math inline">\(\lambda\)</span>) a una transición, sino también, cuanta variación en esa transición puede ocurrir, o de hecho ocurre, y cómo covaría con otras transiciones [<span class="citation" data-cites="ehrlen1998direct">Ehrlén and Van Groenendael (<a href="#ref-ehrlen1998direct" role="doc-biblioref">1998</a>)</span>].</p>
 <p>En términos matemáticos la elasticidad es el cambio proporcional de <span class="math inline">\(\lambda\)</span> con cambios proporcionales en los parámetros de la matriz. En otras palabras, por cada unidad de cambio en un parámetro se reflejará en un cambio en <span class="math inline">\(\lambda\)</span> <span class="citation" data-cites="de1986elasticity">(<a href="#ref-de1986elasticity" role="doc-biblioref">Kroon et al. 1986</a>)</span>. La elasticidad <span class="math inline">\(e_{ij}\)</span> de <span class="math inline">\(\lambda\)</span> con respecto <span class="math inline">\(a_{ij}\)</span> (es el elemento i, j de la matriz) es definida como:</p>
 <p><span class="math display">\[e_{ij}=\frac{a_{ij}}{\lambda}\frac{\alpha}{\alpha_{ij}}\]</span></p>
 <p><span class="math display">\[=\frac{\alpha log \lambda}{\alpha log a_{ij}}\]</span></p>
 <p>La elasticidad <span class="math inline">\(e_{ij}\)</span> es solamente la pendiente del log de <span class="math inline">\(\lambda\)</span> gráficado contra log <span class="math inline">\(e_{ij}\)</span>. Debido a que los incrementos sobre una escala logarítmica corresponden a cambios similares proporcionales en una escala aritmética, por consecuencia la elasticidad mide la sensibilidad proporcional. Las elasticidades pueden ser calculadas y mostradas de manera conveniente como una matriz de elasticidad.</p>
 <p><span class="math display">\[E=\frac{a_{ij}}{\lambda}\frac{\alpha}{\alpha_{ij}}\]</span> <span class="math display">\[=\frac{1}{\lambda}{S}\circ A\]</span> Donde <strong>S</strong> es la matriz de sensibilidad y <span class="math inline">\(\circ\)</span> el producto de Hadamard <span class="citation" data-cites="caswell2001matrix">(<a href="#ref-caswell2001matrix" role="doc-biblioref">Caswell 2001</a>)</span>.</p>
-<p>Las matrices de elasticidad tienen la ventaja de que la suma de las entradas suman a uno, por lo que permite sumar diferentes entradas de la matriz, para evaluar la importancia de procesos (crecimiento, decrecimiento, permanencia o reproducción) o estadios sobre la <span class="math inline">\(\lambda\)</span> <span class="citation" data-cites="silvertown1996interpretation">(<a href="#ref-silvertown1996interpretation" role="doc-biblioref">Silvertown, Franco, and Menges 1996</a>)</span>, por lo que ha sido una herramienta ampliamente utilizada para el desarrollo de planes de manejo y conservación de especies ya que permite identificar a que estadios o procesos se deben enfocar los esfuerzos de conservación [<span class="citation" data-cites="mondragon2009population">Mondragón (<a href="#ref-mondragon2009population" role="doc-biblioref">2009</a>)</span>; tremblay1997lepanthes; <span class="citation" data-cites="berry2021population">Berry and Cleavitt (<a href="#ref-berry2021population" role="doc-biblioref">2021</a>)</span>; timsina2021six] o en caso opuesto para determinar que estadios pueden ser utilizados sin impactar fuertemente a la población <span class="citation" data-cites="mondragon2009population">(<a href="#ref-mondragon2009population" role="doc-biblioref">Mondragón 2009</a>)</span>. En el último concepto si tuviésemos que remover individuos de la población, cuál de los estados tuviese el menos impacto sobre la supervivencia de la población si fuesen removido.</p>
+<p>Las matrices de elasticidad tienen la ventaja de que la suma de las entradas suman a uno, por lo que permite sumar diferentes entradas de la matriz, para evaluar la importancia de procesos (crecimiento, decrecimiento, permanencia o reproducción) o estadios sobre la <span class="math inline">\(\lambda\)</span> <span class="citation" data-cites="silvertown1996interpretation">(<a href="#ref-silvertown1996interpretation" role="doc-biblioref">Silvertown, Franco, and Menges 1996</a>)</span>, por lo que ha sido una herramienta ampliamente utilizada para el desarrollo de planes de manejo y conservación de especies ya que permite identificar a que estadios o procesos se deben enfocar los esfuerzos de conservación <span class="citation" data-cites="mondragon2009population tremblay1997lepanthes berry2021population timsina2021six">(<a href="#ref-mondragon2009population" role="doc-biblioref">Mondragón 2009</a>; <a href="#ref-tremblay1997lepanthes" role="doc-biblioref">R. L. Tremblay 1997</a>; <a href="#ref-berry2021population" role="doc-biblioref">Berry and Cleavitt 2021</a>; <a href="#ref-timsina2021six" role="doc-biblioref">Timsina et al. 2021</a>)</span> o en caso opuesto para determinar que estadios pueden ser utilizados sin impactar fuertemente a la población <span class="citation" data-cites="mondragon2009population">(<a href="#ref-mondragon2009population" role="doc-biblioref">Mondragón 2009</a>)</span>. En el último concepto si tuviésemos que remover individuos de la población, cuál de los estados tuviese el menos impacto sobre la supervivencia de la población si fuesen removido.</p>
+<hr>
 <section id="sensibilidad-y-elasticidad" class="level3">
 <h3 class="anchored" data-anchor-id="sensibilidad-y-elasticidad">Sensibilidad y Elasticidad</h3>
-<p>La diferencia entre sensibilidad y elasticidad es que la sensibilidad mide el impacto en λ de cambiar la magnitud absoluta de una tasa vital particular en relación con el cambio de otras tasas vitales <span class="citation" data-cites="caswell1989analysis">(<a href="#ref-caswell1989analysis" role="doc-biblioref">Caswell 1989</a>)</span>, lo que implica que los cambios en las tasas de crecimiento, permanencia tendrán un valor de uno (ya que se estas tasas son proporciones), en tanto que los cambios en fecundidad podrán ser desde uno hasta cientos o miles, ya que se la fecundidad se calcula con en base a otra escala (tal como número de semillas o plántulas). La elasticidad por su parte, calcula la sensibilidad proporcional de λ a los cambios en una tasa vital <span class="citation" data-cites="de1986elasticity">(<a href="#ref-de1986elasticity" role="doc-biblioref">Kroon et al. 1986</a>)</span> evitando de esta forma el efecto de la magnitud del cambio. Cuanto mayor sea el valor de la elasticidad de la tasa vital, mayor será la contribución relativa de esa tasa vital a <span class="math inline">\(\lambda\)</span>.</p>
+<p>La diferencia entre sensibilidad y elasticidad es que la sensibilidad mide el impacto en λ de cambiar la magnitud absoluta de una tasa vital particular en relación con el cambio de otras tasas vitales <span class="citation" data-cites="caswell1989analysis">(<a href="#ref-caswell1989analysis" role="doc-biblioref">Caswell 1989</a>)</span>, lo que implica que los cambios en las tasas de crecimiento, permanencia tendrán un valor de uno (ya que se estas tasas son proporciones), en tanto que los cambios en fecundidad podrán ser desde uno hasta cientos o miles, ya que se la fecundidad se calcula con en base a otra escala biológica (tal como número de semillas o plántulas). La elasticidad por su parte, calcula la sensibilidad proporcional de λ a los cambios en una tasa vital <span class="citation" data-cites="de1986elasticity">(<a href="#ref-de1986elasticity" role="doc-biblioref">Kroon et al. 1986</a>)</span> evitando de esta forma el efecto de la magnitud del cambio. Cuanto mayor sea el valor de la elasticidad de la tasa vital, mayor será la contribución relativa de esa tasa vital a <span class="math inline">\(\lambda\)</span>.</p>
+<hr>
 </section>
 <section id="el-impacto-de-cambio-en-las-etapas" class="level3">
 <h3 class="anchored" data-anchor-id="el-impacto-de-cambio-en-las-etapas">El impacto de cambio en las etapas</h3>
 <p>Tomando como ejemplo la matriz de elasticidad de <em>Erycina crista-galli</em> una orquídea de ramilla <span class="citation" data-cites="mondragon2007life">(<a href="#ref-mondragon2007life" role="doc-biblioref">Mondragón, Maldonado, and Aguilar-Santelises 2007</a>)</span>, podremos recapitular todo lo previamente dicho (Tabla 1), así, lo <strong>primero</strong> que hay que recalcar es que el valor más alto de elasticidad para esta orquídea corresponde a la permanencia de los individuos adultos 2, es decir que cualquier pequeño cambio en el valor de dicha entrada (en la matriz de transición), tendrá el mayor impacto en el valor de * al comparar con otras estados de vida; <strong>segundo</strong>, es importante observar que al sumar todas las entradas de la matriz se obtiene un valor de uno. Lo mismo se mantiene cuando se suman todos los valores de elasticidad por estadio o por proceso. Es decir, si sumamos todos los valores de cada columna, tendremos el valor de elasticidad de cada estadio, para este caso el valor más alto lo ostenta el estadio de adultos 2 (0.818), lo que implica que el destino de la población de E. crista-galli* depende mayormente de lo que les pase a los individuos adultos.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span> (<span class="st">"plántula"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto1"</span>, <span class="st">"adulto2"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -477,69 +488,28 @@ window.Quarto = {
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                <span class="fl">0.073</span>, <span class="fl">0.10</span>, <span class="fl">0.435</span>, <span class="fl">0.447</span>), </span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">ncol=</span><span class="dv">4</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">dimnames =</span> <span class="fu">list</span>(etapas, etapas))</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>ec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>         plántula juvenil adulto1 adulto2
-plántula    0.000    0.00   0.004   0.062
-juvenil     0.195    0.00   0.000   0.000
-adulto1     0.171    0.12   0.053   0.040
-adulto2     0.073    0.10   0.435   0.447</code></pre>
-</div>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ec</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">elas</span>(ec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>           plántula     juvenil      adulto1    adulto2
-plántula 0.00000000 0.000000000 0.0005286107 0.05824146
-juvenil  0.01493867 0.000000000 0.0000000000 0.00000000
-adulto1  0.03007910 0.007893670 0.0109312556 0.05864336
-adulto2  0.01375230 0.007045004 0.0960875206 0.70185904</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertir la matriz de elasticidad en un data frame</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ec_df<span class="ot">=</span><span class="fu">as.data.frame</span>(<span class="fu">elas</span>(ec)) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Sumar las elasticidades por etapas y añadir una fila con las sumas</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>ec_df<span class="ot">=</span>ec_df <span class="sc">%&gt;%</span> <span class="fu">bind_rows</span>(<span class="fu">summarise_all</span>(., <span class="sc">~</span><span class="cf">if</span>(<span class="fu">is.numeric</span>(.)) <span class="fu">sum</span>(.) <span class="cf">else</span> <span class="st">"Total"</span>))</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>ec_df <span class="sc">%&gt;%</span> </span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data_color</span>(</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(adulto2),</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">colors =</span>  <span class="fu">c</span>(<span class="st">"blue"</span>),</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">domain =</span> <span class="cn">NULL</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_style</span>(</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">cell_fill</span>(<span class="at">color =</span> <span class="st">'black'</span>),</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_body</span>(</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">columns =</span> <span class="fu">c</span>(adulto2), </span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">rows =</span> <span class="dv">5</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Since gt v0.9.0, the `colors` argument has been deprecated.
-• Please use the `palette` argument to define a color palette.
-This warning is displayed once every 8 hours.</code></pre>
-</div>
 <div class="cell-output-display">
-<div id="jvsrhtyctu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#jvsrhtyctu table {
+<div id="jnzgbxydnb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#jnzgbxydnb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#jvsrhtyctu thead, #jvsrhtyctu tbody, #jvsrhtyctu tfoot, #jvsrhtyctu tr, #jvsrhtyctu td, #jvsrhtyctu th {
+#jnzgbxydnb thead, #jnzgbxydnb tbody, #jnzgbxydnb tfoot, #jnzgbxydnb tr, #jnzgbxydnb td, #jnzgbxydnb th {
   border-style: none;
 }
 
-#jvsrhtyctu p {
+#jnzgbxydnb p {
   margin: 0;
   padding: 0;
 }
 
-#jvsrhtyctu .gt_table {
+#jnzgbxydnb .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -565,12 +535,12 @@ This warning is displayed once every 8 hours.</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#jvsrhtyctu .gt_caption {
+#jnzgbxydnb .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#jvsrhtyctu .gt_title {
+#jnzgbxydnb .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -582,7 +552,7 @@ This warning is displayed once every 8 hours.</code></pre>
   border-bottom-width: 0;
 }
 
-#jvsrhtyctu .gt_subtitle {
+#jnzgbxydnb .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -594,7 +564,7 @@ This warning is displayed once every 8 hours.</code></pre>
   border-top-width: 0;
 }
 
-#jvsrhtyctu .gt_heading {
+#jnzgbxydnb .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -606,13 +576,13 @@ This warning is displayed once every 8 hours.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#jvsrhtyctu .gt_bottom_border {
+#jnzgbxydnb .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#jvsrhtyctu .gt_col_headings {
+#jnzgbxydnb .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -627,7 +597,7 @@ This warning is displayed once every 8 hours.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#jvsrhtyctu .gt_col_heading {
+#jnzgbxydnb .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -647,7 +617,7 @@ This warning is displayed once every 8 hours.</code></pre>
   overflow-x: hidden;
 }
 
-#jvsrhtyctu .gt_column_spanner_outer {
+#jnzgbxydnb .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -659,15 +629,15 @@ This warning is displayed once every 8 hours.</code></pre>
   padding-right: 4px;
 }
 
-#jvsrhtyctu .gt_column_spanner_outer:first-child {
+#jnzgbxydnb .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#jvsrhtyctu .gt_column_spanner_outer:last-child {
+#jnzgbxydnb .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#jvsrhtyctu .gt_column_spanner {
+#jnzgbxydnb .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -679,11 +649,11 @@ This warning is displayed once every 8 hours.</code></pre>
   width: 100%;
 }
 
-#jvsrhtyctu .gt_spanner_row {
+#jnzgbxydnb .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#jvsrhtyctu .gt_group_heading {
+#jnzgbxydnb .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -709,7 +679,7 @@ This warning is displayed once every 8 hours.</code></pre>
   text-align: left;
 }
 
-#jvsrhtyctu .gt_empty_group_heading {
+#jnzgbxydnb .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -724,15 +694,15 @@ This warning is displayed once every 8 hours.</code></pre>
   vertical-align: middle;
 }
 
-#jvsrhtyctu .gt_from_md > :first-child {
+#jnzgbxydnb .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#jvsrhtyctu .gt_from_md > :last-child {
+#jnzgbxydnb .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#jvsrhtyctu .gt_row {
+#jnzgbxydnb .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -751,7 +721,7 @@ This warning is displayed once every 8 hours.</code></pre>
   overflow-x: hidden;
 }
 
-#jvsrhtyctu .gt_stub {
+#jnzgbxydnb .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -764,7 +734,7 @@ This warning is displayed once every 8 hours.</code></pre>
   padding-right: 5px;
 }
 
-#jvsrhtyctu .gt_stub_row_group {
+#jnzgbxydnb .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -778,15 +748,15 @@ This warning is displayed once every 8 hours.</code></pre>
   vertical-align: top;
 }
 
-#jvsrhtyctu .gt_row_group_first td {
+#jnzgbxydnb .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#jvsrhtyctu .gt_row_group_first th {
+#jnzgbxydnb .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#jvsrhtyctu .gt_summary_row {
+#jnzgbxydnb .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -796,16 +766,16 @@ This warning is displayed once every 8 hours.</code></pre>
   padding-right: 5px;
 }
 
-#jvsrhtyctu .gt_first_summary_row {
+#jnzgbxydnb .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#jvsrhtyctu .gt_first_summary_row.thick {
+#jnzgbxydnb .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#jvsrhtyctu .gt_last_summary_row {
+#jnzgbxydnb .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -815,7 +785,7 @@ This warning is displayed once every 8 hours.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#jvsrhtyctu .gt_grand_summary_row {
+#jnzgbxydnb .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -825,7 +795,7 @@ This warning is displayed once every 8 hours.</code></pre>
   padding-right: 5px;
 }
 
-#jvsrhtyctu .gt_first_grand_summary_row {
+#jnzgbxydnb .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -835,7 +805,7 @@ This warning is displayed once every 8 hours.</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#jvsrhtyctu .gt_last_grand_summary_row_top {
+#jnzgbxydnb .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -845,11 +815,11 @@ This warning is displayed once every 8 hours.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#jvsrhtyctu .gt_striped {
+#jnzgbxydnb .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#jvsrhtyctu .gt_table_body {
+#jnzgbxydnb .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -858,7 +828,7 @@ This warning is displayed once every 8 hours.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#jvsrhtyctu .gt_footnotes {
+#jnzgbxydnb .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -872,7 +842,7 @@ This warning is displayed once every 8 hours.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#jvsrhtyctu .gt_footnote {
+#jnzgbxydnb .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -881,7 +851,7 @@ This warning is displayed once every 8 hours.</code></pre>
   padding-right: 5px;
 }
 
-#jvsrhtyctu .gt_sourcenotes {
+#jnzgbxydnb .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -895,7 +865,7 @@ This warning is displayed once every 8 hours.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#jvsrhtyctu .gt_sourcenote {
+#jnzgbxydnb .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -903,72 +873,72 @@ This warning is displayed once every 8 hours.</code></pre>
   padding-right: 5px;
 }
 
-#jvsrhtyctu .gt_left {
+#jnzgbxydnb .gt_left {
   text-align: left;
 }
 
-#jvsrhtyctu .gt_center {
+#jnzgbxydnb .gt_center {
   text-align: center;
 }
 
-#jvsrhtyctu .gt_right {
+#jnzgbxydnb .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#jvsrhtyctu .gt_font_normal {
+#jnzgbxydnb .gt_font_normal {
   font-weight: normal;
 }
 
-#jvsrhtyctu .gt_font_bold {
+#jnzgbxydnb .gt_font_bold {
   font-weight: bold;
 }
 
-#jvsrhtyctu .gt_font_italic {
+#jnzgbxydnb .gt_font_italic {
   font-style: italic;
 }
 
-#jvsrhtyctu .gt_super {
+#jnzgbxydnb .gt_super {
   font-size: 65%;
 }
 
-#jvsrhtyctu .gt_footnote_marks {
+#jnzgbxydnb .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#jvsrhtyctu .gt_asterisk {
+#jnzgbxydnb .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#jvsrhtyctu .gt_indent_1 {
+#jnzgbxydnb .gt_indent_1 {
   text-indent: 5px;
 }
 
-#jvsrhtyctu .gt_indent_2 {
+#jnzgbxydnb .gt_indent_2 {
   text-indent: 10px;
 }
 
-#jvsrhtyctu .gt_indent_3 {
+#jnzgbxydnb .gt_indent_3 {
   text-indent: 15px;
 }
 
-#jvsrhtyctu .gt_indent_4 {
+#jnzgbxydnb .gt_indent_4 {
   text-indent: 20px;
 }
 
-#jvsrhtyctu .gt_indent_5 {
+#jnzgbxydnb .gt_indent_5 {
   text-indent: 25px;
 }
 
-#jvsrhtyctu .katex-display {
+#jnzgbxydnb .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#jvsrhtyctu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#jnzgbxydnb div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1019,10 +989,11 @@ This warning is displayed once every 8 hours.</code></pre>
 </div>
 </div>
 </div>
+<hr>
 </section>
 <section id="efecto-de-cambio-en-las-tansiciones-de-crecimiento-permanencia-y-fecundidad" class="level3">
 <h3 class="anchored" data-anchor-id="efecto-de-cambio-en-las-tansiciones-de-crecimiento-permanencia-y-fecundidad">Efecto de cambio en las tansiciones, de crecimiento, permanencia y fecundidad</h3>
-<p>En la tabla se ve los diferentes valores de elasticidad por procesos en <em>Erycina crista-galli</em> <span class="citation" data-cites="mondragon2007life">(<a href="#ref-mondragon2007life" role="doc-biblioref">Mondragón, Maldonado, and Aguilar-Santelises 2007</a>)</span> y el impacto por diferentes procesos de la historia de vida de la población. Ahora, si lo que quisiéramos saber es que proceso o tasa vital es lo que rige el comportamiento de la población, lo que se hace es sumar las entradas de la matriz que lo representan, en este caso hemos puesto en diferentes colores las estradas que manifiestan cada tasa, en rojo es la permanencia, en azul el crecimiento, en amarillo el decrecimiento o retrogresión y en verde la fecundidad. Eso nos permite determinar que es el impacto de elasticidad por procesos y tasas vitales, sumando cada uno de los valores en cada categoría. Es claro que el impacto principal de la población de <em>E. crista-galli</em> depende de la permanencia de los individuos, seguido por el crecimiento, en tanto que la fecundidad y la retrogresión tienen un impacto menor.</p>
+<p>En la tabla se ve los diferentes valores de elasticidad por procesos en <em>Erycina crista-galli</em> <span class="citation" data-cites="mondragon2007life">(<a href="#ref-mondragon2007life" role="doc-biblioref">Mondragón, Maldonado, and Aguilar-Santelises 2007</a>)</span> y el impacto por diferentes procesos de la historia de vida de la población. Ahora, si lo que quisiéramos saber es que proceso o tasa vital es lo que rige el comportamiento de la población, lo que se hace es sumar las entradas de la matriz que lo representan, en este caso hemos puesto en diferentes colores las entradas que manifiestan cada tasa, en rojo es la permanencia, en azul el crecimiento, en amarillo el decrecimiento o retrogresión y en verde la fecundidad. Eso nos permite determinar que es el impacto de elasticidad por procesos y tasas vitales, sumando cada uno de los valores en cada categoría. Es claro que el impacto principal de la población de <em>E. crista-galli</em> depende de la permanencia de los individuos, seguido por el crecimiento, en tanto que la fecundidad y la retrogresión tienen un impacto menor.</p>
 <p>La suma de cada grupo:</p>
 <ul>
 <li>Permanencia: 0.713</li>
@@ -1046,23 +1017,23 @@ adulto1     0.030   0.008   0.011   0.059
 adulto2     0.014   0.007   0.096   0.702</code></pre>
 </div>
 <div class="cell-output-display">
-<div id="vudtsltawx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#vudtsltawx table {
+<div id="jwgfrcpbqz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#jwgfrcpbqz table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#vudtsltawx thead, #vudtsltawx tbody, #vudtsltawx tfoot, #vudtsltawx tr, #vudtsltawx td, #vudtsltawx th {
+#jwgfrcpbqz thead, #jwgfrcpbqz tbody, #jwgfrcpbqz tfoot, #jwgfrcpbqz tr, #jwgfrcpbqz td, #jwgfrcpbqz th {
   border-style: none;
 }
 
-#vudtsltawx p {
+#jwgfrcpbqz p {
   margin: 0;
   padding: 0;
 }
 
-#vudtsltawx .gt_table {
+#jwgfrcpbqz .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1088,12 +1059,12 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#vudtsltawx .gt_caption {
+#jwgfrcpbqz .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#vudtsltawx .gt_title {
+#jwgfrcpbqz .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1105,7 +1076,7 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   border-bottom-width: 0;
 }
 
-#vudtsltawx .gt_subtitle {
+#jwgfrcpbqz .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1117,7 +1088,7 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   border-top-width: 0;
 }
 
-#vudtsltawx .gt_heading {
+#jwgfrcpbqz .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1129,13 +1100,13 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#vudtsltawx .gt_bottom_border {
+#jwgfrcpbqz .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#vudtsltawx .gt_col_headings {
+#jwgfrcpbqz .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1150,7 +1121,7 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#vudtsltawx .gt_col_heading {
+#jwgfrcpbqz .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1170,7 +1141,7 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   overflow-x: hidden;
 }
 
-#vudtsltawx .gt_column_spanner_outer {
+#jwgfrcpbqz .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1182,15 +1153,15 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   padding-right: 4px;
 }
 
-#vudtsltawx .gt_column_spanner_outer:first-child {
+#jwgfrcpbqz .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#vudtsltawx .gt_column_spanner_outer:last-child {
+#jwgfrcpbqz .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#vudtsltawx .gt_column_spanner {
+#jwgfrcpbqz .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1202,11 +1173,11 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   width: 100%;
 }
 
-#vudtsltawx .gt_spanner_row {
+#jwgfrcpbqz .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#vudtsltawx .gt_group_heading {
+#jwgfrcpbqz .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1232,7 +1203,7 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   text-align: left;
 }
 
-#vudtsltawx .gt_empty_group_heading {
+#jwgfrcpbqz .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1247,15 +1218,15 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   vertical-align: middle;
 }
 
-#vudtsltawx .gt_from_md > :first-child {
+#jwgfrcpbqz .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#vudtsltawx .gt_from_md > :last-child {
+#jwgfrcpbqz .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#vudtsltawx .gt_row {
+#jwgfrcpbqz .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1274,7 +1245,7 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   overflow-x: hidden;
 }
 
-#vudtsltawx .gt_stub {
+#jwgfrcpbqz .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1287,7 +1258,7 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   padding-right: 5px;
 }
 
-#vudtsltawx .gt_stub_row_group {
+#jwgfrcpbqz .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1301,15 +1272,15 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   vertical-align: top;
 }
 
-#vudtsltawx .gt_row_group_first td {
+#jwgfrcpbqz .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#vudtsltawx .gt_row_group_first th {
+#jwgfrcpbqz .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#vudtsltawx .gt_summary_row {
+#jwgfrcpbqz .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1319,16 +1290,16 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   padding-right: 5px;
 }
 
-#vudtsltawx .gt_first_summary_row {
+#jwgfrcpbqz .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#vudtsltawx .gt_first_summary_row.thick {
+#jwgfrcpbqz .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#vudtsltawx .gt_last_summary_row {
+#jwgfrcpbqz .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1338,7 +1309,7 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#vudtsltawx .gt_grand_summary_row {
+#jwgfrcpbqz .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1348,7 +1319,7 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   padding-right: 5px;
 }
 
-#vudtsltawx .gt_first_grand_summary_row {
+#jwgfrcpbqz .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1358,7 +1329,7 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#vudtsltawx .gt_last_grand_summary_row_top {
+#jwgfrcpbqz .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1368,11 +1339,11 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#vudtsltawx .gt_striped {
+#jwgfrcpbqz .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#vudtsltawx .gt_table_body {
+#jwgfrcpbqz .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1381,7 +1352,7 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#vudtsltawx .gt_footnotes {
+#jwgfrcpbqz .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1395,7 +1366,7 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#vudtsltawx .gt_footnote {
+#jwgfrcpbqz .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1404,7 +1375,7 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   padding-right: 5px;
 }
 
-#vudtsltawx .gt_sourcenotes {
+#jwgfrcpbqz .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1418,7 +1389,7 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#vudtsltawx .gt_sourcenote {
+#jwgfrcpbqz .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1426,72 +1397,72 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
   padding-right: 5px;
 }
 
-#vudtsltawx .gt_left {
+#jwgfrcpbqz .gt_left {
   text-align: left;
 }
 
-#vudtsltawx .gt_center {
+#jwgfrcpbqz .gt_center {
   text-align: center;
 }
 
-#vudtsltawx .gt_right {
+#jwgfrcpbqz .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#vudtsltawx .gt_font_normal {
+#jwgfrcpbqz .gt_font_normal {
   font-weight: normal;
 }
 
-#vudtsltawx .gt_font_bold {
+#jwgfrcpbqz .gt_font_bold {
   font-weight: bold;
 }
 
-#vudtsltawx .gt_font_italic {
+#jwgfrcpbqz .gt_font_italic {
   font-style: italic;
 }
 
-#vudtsltawx .gt_super {
+#jwgfrcpbqz .gt_super {
   font-size: 65%;
 }
 
-#vudtsltawx .gt_footnote_marks {
+#jwgfrcpbqz .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#vudtsltawx .gt_asterisk {
+#jwgfrcpbqz .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#vudtsltawx .gt_indent_1 {
+#jwgfrcpbqz .gt_indent_1 {
   text-indent: 5px;
 }
 
-#vudtsltawx .gt_indent_2 {
+#jwgfrcpbqz .gt_indent_2 {
   text-indent: 10px;
 }
 
-#vudtsltawx .gt_indent_3 {
+#jwgfrcpbqz .gt_indent_3 {
   text-indent: 15px;
 }
 
-#vudtsltawx .gt_indent_4 {
+#jwgfrcpbqz .gt_indent_4 {
   text-indent: 20px;
 }
 
-#vudtsltawx .gt_indent_5 {
+#jwgfrcpbqz .gt_indent_5 {
   text-indent: 25px;
 }
 
-#vudtsltawx .katex-display {
+#jwgfrcpbqz .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#vudtsltawx div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#jwgfrcpbqz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1536,14 +1507,16 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
 </div>
 </div>
 </div>
+<hr>
 </section>
 <section id="como-se-usa-los-análisis-de-elasticidad-en-un-plan-de-conservación" class="level3">
 <h3 class="anchored" data-anchor-id="como-se-usa-los-análisis-de-elasticidad-en-un-plan-de-conservación">Como se usa los análisis de elasticidad en un plan de conservación</h3>
 <p>Por lo que, de manera simplista, pudiéramos decir que, si quisiéramos desarrollar un plan de conservación para esta especie, nuestros esfuerzos debieran enfocarse a asegurar la supervivencia de los individuos adultos, ya que remover o la mortandad de los individuos adultos tiene el mayor impacto sobre la persistencia de la población. En tanto que si quisiéramos hacer un uso sustentable de esta orquídea lo recomendable sería recolectar individuos juveniles, cuyos valores de elasticidad son menores a la de los estadios adultos. El impacto de remover plántulas o juveniles de la población tendría menos impacto a largo plazo sobre la supervivencia de la población.</p>
+<hr>
 </section>
 <section id="comparación-entre-especies" class="level3">
 <h3 class="anchored" data-anchor-id="comparación-entre-especies">Comparación entre especies</h3>
-<p>Las elasticidades también han sido utilizadas para establecer el comportamiento demográfico de las especies, lo que ha permitido generar patrones entre formas de vida, así como comparaciones tanto entre formas de vida como entre especies <span class="citation" data-cites="mondragon2015population silvertown1996interpretation">(<a href="#ref-mondragon2015population" role="doc-biblioref">Mondragón Chaparro et al. 2015</a>; <a href="#ref-silvertown1996interpretation" role="doc-biblioref">Silvertown, Franco, and Menges 1996</a>)</span>. Así, por ejemplo, si quisiéramos comparar el comportamiento demográfico de las orquídeas de ramillas vs las orquídeas epífitas convencionales (reconstruido de <span class="citation" data-cites="mondragon2007life">(<a href="#ref-mondragon2007life" role="doc-biblioref">Mondragón, Maldonado, and Aguilar-Santelises 2007</a>)</span>), veríamos que para ambos tipos de orquídeas en general lo más importante es la permanencia (supervivencia) de los individuos, en tanto que se puede observar que una diferencia entre la orquídea de ramilla y las otras en la contribución de los estadios al comportamiento de *, ya que para la primera los individuos reproductivos presentan mayores valores de elasticidad (al igual que para Lepanthes eltoroensis*), en tanto que para las otras orquídea los valores más altos los tienen los individuos no reproductivos <span class="citation" data-cites="mondragon2007life">(<a href="#ref-mondragon2007life" role="doc-biblioref">Mondragón, Maldonado, and Aguilar-Santelises 2007</a>)</span>.</p>
+<p>Las elasticidades también han sido utilizadas para establecer el comportamiento demográfico de las especies, lo que ha permitido generar patrones entre formas de vida, así como comparaciones tanto entre formas de vida como entre especies <span class="citation" data-cites="mondragon2015population silvertown1996interpretation">(<a href="#ref-mondragon2015population" role="doc-biblioref">Mondragón Chaparro et al. 2015</a>; <a href="#ref-silvertown1996interpretation" role="doc-biblioref">Silvertown, Franco, and Menges 1996</a>)</span>. Así, por ejemplo, si quisiéramos comparar el comportamiento demográfico de las orquídeas de ramillas versus las orquídeas epífitas convencionales (reconstruido de <span class="citation" data-cites="mondragon2007life">(<a href="#ref-mondragon2007life" role="doc-biblioref">Mondragón, Maldonado, and Aguilar-Santelises 2007</a>)</span>), veríamos que para ambos tipos de orquídeas en general lo más importante es la permanencia (supervivencia) de los individuos, en tanto que se puede observar que una diferencia entre la orquídea de ramilla y las otras en la contribución de los estadios al comportamiento de *, ya que para la primera los individuos reproductivos presentan mayores valores de elasticidad (al igual que para <em>Lepanthes eltoroensis</em>), en tanto que para las otras orquídea los valores más altos los tienen los individuos no reproductivos <span class="citation" data-cites="mondragon2007life">(<a href="#ref-mondragon2007life" role="doc-biblioref">Mondragón, Maldonado, and Aguilar-Santelises 2007</a>)</span>.</p>
 <p>En la Figura 1a y b se observa los valores de elasticidad añadidos por proceso de historia de vida para</p>
 <ul>
 <li><em>Artorima erubescens</em> <span class="citation" data-cites="garcia2003demografia">(<a href="#ref-garcia2003demografia" role="doc-biblioref">Garcı́a-Soriano 2003</a>)</span> -rojo-,</li>
@@ -1555,45 +1528,31 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
 <p>en la figura 1a, la suma por la historia de vida, F: fecundidad, P: permenancia y C: crecimiento y en la figura 1b los valores de elasticidad sumados por estadios (b), P: plántulas, NR; individuos no reproductivos, R: individuos reproductivos o adultos.</p>
 <p>Se observa que en los valores de elasticidad estan más altos en los procesos de permanencia seguido por el crecimiento. En la figura 1b se observa que los valores de elasticidad son más altos en los estadios de no reproductivo y reproductivos (adultos activos) al comparar que individuos en la etapa de plántulas.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Elasticidad_estadios <span class="ot">=</span><span class="fu">tribble</span>(<span class="sc">~</span>Especie, <span class="sc">~</span>Fecundidad, <span class="sc">~</span>Estasis, <span class="sc">~</span>Crecimiento, <span class="sc">~</span>Plántulas, <span class="sc">~</span>No_reproductivos, <span class="sc">~</span>Reproductivos,</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"Erycina crista-galli"</span>,  <span class="fl">0.035</span>, <span class="fl">0.718</span>, <span class="fl">0.247</span>, <span class="fl">0.0345</span>, <span class="fl">0.0456</span>, <span class="fl">0.9197</span>,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"Artorima erubescens"</span>,   <span class="fl">0.000</span>, <span class="fl">0.646</span>, <span class="fl">0.354</span>, <span class="fl">0.0023</span>, <span class="fl">0.7207</span>, <span class="fl">0.277</span>,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"Laelia speciosa"</span>,       <span class="fl">0.116</span>, <span class="fl">0.651</span>, <span class="fl">0.328</span>, <span class="fl">0.120</span>, <span class="fl">0.669</span>, <span class="fl">0.216</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"Lepanthes eltoroensis"</span>, <span class="fl">0.005</span>, <span class="fl">0.880</span>, <span class="fl">0.115</span>, <span class="fl">0.1133</span>, <span class="fl">0.0784</span>, <span class="fl">0.8083</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"Lepanthes caritensis"</span>,  <span class="fl">0.002</span>, <span class="fl">0.885</span>, <span class="fl">0.114</span>, <span class="fl">0.018</span>, <span class="fl">0.648</span>, <span class="fl">0.335</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Elasticidad_estadios</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5 × 7
-  Especie              Fecundidad Estasis Crecimiento Plántulas No_reproductivos
-  &lt;chr&gt;                     &lt;dbl&gt;   &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;            &lt;dbl&gt;
-1 Erycina crista-galli      0.035   0.718       0.247    0.0345           0.0456
-2 Artorima erubescens       0       0.646       0.354    0.0023           0.721 
-3 Laelia speciosa           0.116   0.651       0.328    0.12             0.669 
-4 Lepanthes eltoroens…      0.005   0.88        0.115    0.113            0.0784
-5 Lepanthes caritensis      0.002   0.885       0.114    0.018            0.648 
-# ℹ 1 more variable: Reproductivos &lt;dbl&gt;</code></pre>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-77c8a96e{table-layout:auto;}.cl-77c4da50{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-77c4da64{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-77c4da65{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-77c67b62{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-77c67b6c{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-77c68a4e{background-color:rgba(207, 207, 207, 1.00);vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0.75pt solid rgba(102, 102, 102, 1.00);border-right: 0.75pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c68a4f{background-color:rgba(207, 207, 207, 1.00);vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0.75pt solid rgba(102, 102, 102, 1.00);border-right: 0.75pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c68a58{background-color:rgba(239, 239, 239, 1.00);vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0.75pt solid rgba(102, 102, 102, 1.00);border-right: 0.75pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c68a59{background-color:rgba(239, 239, 239, 1.00);vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0.75pt solid rgba(102, 102, 102, 1.00);border-right: 0.75pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c68a5a{background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0.75pt solid rgba(102, 102, 102, 1.00);border-right: 0.75pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c68a5b{background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0.75pt solid rgba(102, 102, 102, 1.00);border-right: 0.75pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c68a62{background-color:rgba(239, 239, 239, 1.00);vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0.75pt solid rgba(102, 102, 102, 1.00);border-right: 0.75pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c68a63{background-color:rgba(239, 239, 239, 1.00);vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0.75pt solid rgba(102, 102, 102, 1.00);border-right: 0.75pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-77c8a96e"><thead><tr style="overflow-wrap:break-word;"><th class="cl-77c68a4e"><p class="cl-77c67b62"><span class="cl-77c4da50">Especie</span></p></th><th class="cl-77c68a4f"><p class="cl-77c67b6c"><span class="cl-77c4da50">Fecundidad</span></p></th><th class="cl-77c68a4f"><p class="cl-77c67b6c"><span class="cl-77c4da50">Estasis</span></p></th><th class="cl-77c68a4f"><p class="cl-77c67b6c"><span class="cl-77c4da50">Crecimiento</span></p></th><th class="cl-77c68a4f"><p class="cl-77c67b6c"><span class="cl-77c4da50">Plántulas</span></p></th><th class="cl-77c68a4f"><p class="cl-77c67b6c"><span class="cl-77c4da50">No_reproductivos</span></p></th><th class="cl-77c68a4f"><p class="cl-77c67b6c"><span class="cl-77c4da50">Reproductivos</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-77c68a58"><p class="cl-77c67b62"><span class="cl-77c4da64">Erycina</span><span class="cl-77c4da64"> </span><span class="cl-77c4da64">crista-galli</span></p></td><td class="cl-77c68a59"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.035</span></p></td><td class="cl-77c68a59"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.718</span></p></td><td class="cl-77c68a59"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.247</span></p></td><td class="cl-77c68a59"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.0345</span></p></td><td class="cl-77c68a59"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.0456</span></p></td><td class="cl-77c68a59"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.9197</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-77c68a5a"><p class="cl-77c67b62"><span class="cl-77c4da64">Artorima</span><span class="cl-77c4da64"> </span><span class="cl-77c4da64">erubescens</span></p></td><td class="cl-77c68a5b"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.000</span></p></td><td class="cl-77c68a5b"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.646</span></p></td><td class="cl-77c68a5b"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.354</span></p></td><td class="cl-77c68a5b"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.0023</span></p></td><td class="cl-77c68a5b"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.7207</span></p></td><td class="cl-77c68a5b"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.2770</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-77c68a62"><p class="cl-77c67b62"><span class="cl-77c4da64">Laelia</span><span class="cl-77c4da64"> </span><span class="cl-77c4da64">speciosa</span></p></td><td class="cl-77c68a63"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.116</span></p></td><td class="cl-77c68a63"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.651</span></p></td><td class="cl-77c68a63"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.328</span></p></td><td class="cl-77c68a63"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.1200</span></p></td><td class="cl-77c68a63"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.6690</span></p></td><td class="cl-77c68a63"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.2160</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-77c68a5a"><p class="cl-77c67b62"><span class="cl-77c4da64">Lepanthes</span><span class="cl-77c4da64"> </span><span class="cl-77c4da64">eltoroensis</span></p></td><td class="cl-77c68a5b"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.005</span></p></td><td class="cl-77c68a5b"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.880</span></p></td><td class="cl-77c68a5b"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.115</span></p></td><td class="cl-77c68a5b"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.1133</span></p></td><td class="cl-77c68a5b"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.0784</span></p></td><td class="cl-77c68a5b"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.8083</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-77c68a62"><p class="cl-77c67b62"><span class="cl-77c4da64">Lepanthes</span><span class="cl-77c4da64"> </span><span class="cl-77c4da64">caritensis</span></p></td><td class="cl-77c68a63"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.002</span></p></td><td class="cl-77c68a63"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.885</span></p></td><td class="cl-77c68a63"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.114</span></p></td><td class="cl-77c68a63"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.0180</span></p></td><td class="cl-77c68a63"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.6480</span></p></td><td class="cl-77c68a63"><p class="cl-77c67b6c"><span class="cl-77c4da65">0.3350</span></p></td></tr></tbody></table></div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>EE<span class="ot">=</span>Elasticidad_estadios <span class="sc">%&gt;%</span> </span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Especie, Fecundidad, Estasis, Crecimiento) <span class="sc">%&gt;%</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Especie, <span class="at">names_to =</span> <span class="st">"Estadios"</span>, <span class="at">values_to =</span> <span class="st">"Elasticidad"</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>EE<span class="sc">$</span>Estadios<span class="ot">=</span><span class="fu">factor</span>(EE<span class="sc">$</span>Estadios, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Fecundidad"</span>, <span class="st">"Estasis"</span>, <span class="st">"Crecimiento"</span>))</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(EE, <span class="fu">aes</span>(<span class="at">x =</span> Estadios, <span class="at">y =</span> Elasticidad, <span class="at">fill =</span> Especie)) <span class="sc">+</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">color=</span><span class="st">"white"</span>) <span class="sc">+</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Elasticidad por proceso demográfico"</span>,</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Estadios"</span>,</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Elasticidad"</span>)<span class="sc">+</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">guide =</span></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">guide_legend</span>(<span class="at">label.theme =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>, <span class="at">face =</span> <span class="st">"italic"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>EE<span class="ot">=</span>Elasticidad_estadios <span class="sc">%&gt;%</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Especie, Fecundidad, Estasis, Crecimiento) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Especie, <span class="at">names_to =</span> <span class="st">"Estadios"</span>, <span class="at">values_to =</span> <span class="st">"Elasticidad"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>EE<span class="sc">$</span>Estadios<span class="ot">=</span><span class="fu">factor</span>(EE<span class="sc">$</span>Estadios, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Fecundidad"</span>, <span class="st">"Estasis"</span>, <span class="st">"Crecimiento"</span>))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(EE, <span class="fu">aes</span>(<span class="at">x =</span> Estadios, <span class="at">y =</span> Elasticidad, <span class="at">fill =</span> Especie)) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">color=</span><span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Elasticidad por proceso demográfico"</span>,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Estadios"</span>,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Elasticidad"</span>)<span class="sc">+</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">guide =</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">guide_legend</span>(<span class="at">label.theme =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>, <span class="at">face =</span> <span class="st">"italic"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1603,22 +1562,25 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>EE1<span class="ot">=</span>Elasticidad_estadios <span class="sc">%&gt;%</span> </span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Especie, Plántulas, No_reproductivos, Reproductivos) <span class="sc">%&gt;%</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Especie, <span class="at">names_to =</span> <span class="st">"Estadios"</span>, <span class="at">values_to =</span> <span class="st">"Elasticidad"</span>)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>EE1<span class="sc">$</span>Estadios<span class="ot">=</span><span class="fu">factor</span>(EE1<span class="sc">$</span>Estadios, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Plántulas"</span>, <span class="st">"No_reproductivos"</span>, <span class="st">"Reproductivos"</span>))</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(EE, <span class="fu">aes</span>(<span class="at">x =</span> Estadios, <span class="at">y =</span> Elasticidad, <span class="at">fill =</span> Especie)) <span class="sc">+</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">color=</span><span class="st">"white"</span>) <span class="sc">+</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Elasticidad por proceso demográfico"</span>,</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Etapas"</span>,</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Elasticidad"</span>)<span class="sc">+</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">guide =</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">guide_legend</span>(<span class="at">label.theme =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>, <span class="at">face =</span> <span class="st">"italic"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>EE1<span class="ot">=</span>Elasticidad_estadios <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Especie, Plántulas, No_reproductivos, Reproductivos) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Especie, <span class="at">names_to =</span> <span class="st">"Estadios"</span>, <span class="at">values_to =</span> <span class="st">"Elasticidad"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>EE1<span class="sc">$</span>Estadios<span class="ot">=</span><span class="fu">factor</span>(EE1<span class="sc">$</span>Estadios, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Plántulas"</span>, <span class="st">"No_reproductivos"</span>, <span class="st">"Reproductivos"</span>))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(EE, <span class="fu">aes</span>(<span class="at">x =</span> Estadios, <span class="at">y =</span> Elasticidad, <span class="at">fill =</span> Especie)) <span class="sc">+</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">color=</span><span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Elasticidad por proceso demográfico"</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Etapas"</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Elasticidad"</span>)<span class="sc">+</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">guide =</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">guide_legend</span>(<span class="at">label.theme =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>, <span class="at">face =</span> <span class="st">"italic"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1627,6 +1589,7 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
 </div>
 </div>
 </div>
+<hr>
 </section>
 </section>
 <section id="limitaciones" class="level2">
@@ -1641,16 +1604,19 @@ adulto2     0.014   0.007   0.096   0.702</code></pre>
 <section id="capturar-los-datos-de-la-matriz-para-erycina-crita-galli-mondragon2007life-tabla-4-del-artículo" class="level2">
 <h2 class="anchored" data-anchor-id="capturar-los-datos-de-la-matriz-para-erycina-crita-galli-mondragon2007life-tabla-4-del-artículo">Capturar los datos de la matriz para Erycina crita-galli <span class="citation" data-cites="mondragon2007life">(<a href="#ref-mondragon2007life" role="doc-biblioref">Mondragón, Maldonado, and Aguilar-Santelises 2007</a>)</span> (tabla 4 del artículo)</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span> (<span class="st">"plántula"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto1"</span>, <span class="st">"adulto2"</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>ec <span class="ot">&lt;-</span> <span class="fu">matrix</span> (<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.004</span>, <span class="fl">0.062</span>,</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                <span class="fl">0.195</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, </span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                <span class="fl">0.171</span>, <span class="fl">0.120</span>, <span class="fl">0.053</span>, <span class="fl">0.04</span>,</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>                <span class="fl">0.073</span>, <span class="fl">0.10</span>, <span class="fl">0.435</span>, <span class="fl">0.447</span>), </span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">ncol=</span><span class="dv">4</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">dimnames =</span> <span class="fu">list</span>(etapas, etapas))</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>ec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span> (<span class="st">"plántula"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto1"</span>, <span class="st">"adulto2"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>ec <span class="ot">&lt;-</span> <span class="fu">matrix</span> (<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.004</span>, <span class="fl">0.062</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                <span class="fl">0.195</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                <span class="fl">0.171</span>, <span class="fl">0.120</span>, <span class="fl">0.053</span>, <span class="fl">0.04</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                <span class="fl">0.073</span>, <span class="fl">0.10</span>, <span class="fl">0.435</span>, <span class="fl">0.447</span>), </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">ncol=</span><span class="dv">4</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">dimnames =</span> <span class="fu">list</span>(etapas, etapas))</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>ec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>         plántula juvenil adulto1 adulto2
 plántula    0.000    0.00   0.004   0.062
@@ -1658,11 +1624,14 @@ juvenil     0.195    0.00   0.000   0.000
 adulto1     0.171    0.12   0.053   0.040
 adulto2     0.073    0.10   0.435   0.447</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Introducir los valores iniciales por estadío (vector N)</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>N0_ec<span class="ot">&lt;-</span> <span class="fu">matrix</span> (<span class="fu">c</span>(<span class="dv">41</span>,<span class="dv">50</span>,<span class="dv">246</span>,<span class="dv">226</span>), <span class="at">ncol =</span> <span class="dv">1</span>)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>N0_ec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Introducir los valores iniciales por estadío (vector N)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>N0_ec<span class="ot">&lt;-</span> <span class="fu">matrix</span> (<span class="fu">c</span>(<span class="dv">41</span>,<span class="dv">50</span>,<span class="dv">246</span>,<span class="dv">226</span>), <span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>N0_ec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>     [,1]
 [1,]   41
@@ -1675,7 +1644,10 @@ adulto2     0.073    0.10   0.435   0.447</code></pre>
 <section id="para-calcular-los-autovalores-y-autovectores-de-la-matriz" class="level2">
 <h2 class="anchored" data-anchor-id="para-calcular-los-autovalores-y-autovectores-de-la-matriz">Para calcular los autovalores y autovectores de la matriz</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eigen.analysis</span>(ec, <span class="at">zero=</span><span class="cn">FALSE</span>) <span class="co"># la función es del paquete popbio</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eigen.analysis</span>(ec, <span class="at">zero=</span><span class="cn">FALSE</span>) <span class="co"># la función es del paquete popbio</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$lambda1
 [1] 0.5214416
@@ -1723,6 +1695,9 @@ Caswell, Hal. 1989. <span>“Analysis of Life Table Response Experiments i. Deco
 <div id="ref-caswell2001matrix" class="csl-entry" role="listitem">
 ———. 2001. <em>Matrix Population Models: Construction, Analysis, and Interpretation</em>. 2nd ed. Sunderland, Massachusetts, USA: Sinauer Associates.
 </div>
+<div id="ref-ehrlen1998direct" class="csl-entry" role="listitem">
+Ehrlén, Johan, and Jan Van Groenendael. 1998. <span>“Direct Perturbation Analysis for Better Conservation.”</span> <em>Conservation Biology</em> 12 (2): 470–74.
+</div>
 <div id="ref-franco2004comparative" class="csl-entry" role="listitem">
 Franco, Miguel, and Jonathan Silvertown. 2004. <span>“A Comparative Demography of Plants Based Upon Elasticities of Vital Rates.”</span> <em>Ecology</em> 85 (2): 531–38.
 </div>
@@ -1752,6 +1727,9 @@ Silvertown, Jonathan, Miguel Franco, and Eric Menges. 1996. <span>“Interpretat
 </div>
 <div id="ref-stott2012beyond" class="csl-entry" role="listitem">
 Stott, Iain, David James Hodgson, and Stuart Townley. 2012. <span>“Beyond Sensitivity: Nonlinear Perturbation Analysis of Transient Dynamics.”</span> <em>Methods in Ecology and Evolution</em> 3 (4): 673–84.
+</div>
+<div id="ref-timsina2021six" class="csl-entry" role="listitem">
+Timsina, Binu, Pavel Kindlmann, Zuzana Münzbergová, and Maan B Rokaya. 2021. <span>“Six-Year Demographic Study of the Terrestrial Orchid, <em>Crepidium <span class="nocase">a</span>cuminatum</em>: Implications for Conservation.”</span> <em>Frontiers in Ecology and Evolution</em> 9: 676993.
 </div>
 <div id="ref-tremblay1997lepanthes" class="csl-entry" role="listitem">
 Tremblay, Raymond L. 1997. <span>“<em>Lepanthes <span class="nocase">c</span>aritensis</em>, an Endangered Orchid: No Sex, No Future?”</span> <em>Selbyana</em>, 160–66.

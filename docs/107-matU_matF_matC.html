@@ -435,6 +435,8 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="matu-matriz-de-transiciones">MatU: Matriz de transiciones</h2>
 <p>En la matriz de transiciones, <strong>matU</strong> se encuentra solamente entradas que representan transiciones: crecimiento, permanencia (estasis) o retrogresión (decrecimiento). Por consecuencia toda información sobre reproducción y clonación está excluida. Por ejemplo, tomemos un modelo que asume tres etapas de vida (Script 1), plántulas, juvenil y adultos, en donde podemos observar todas las transiciones posibles. Note que en este modelo los juveniles no pueden regresar a ser plántulas, ya que fisiológicamente las plántulas se comportan diferente de individuos que ya hayan desarrollado raíces y hojas (recuerde que los individuos incluido en un estadio deben presentar probabilidades similares de crecimiento, sobrevivencia y fecundidad). En tanto que los adultos si pudieran regresar a ser juveniles (por lo menos individuos no reproductivos), quizá como resultado de daño por herbivoría que reduciría su tamaño.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>matU <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
@@ -444,9 +446,10 @@ div.csl-indent {
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>stages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Plantulas"</span>, <span class="st">"Juvenil"</span>, <span class="st">"Adulto"</span>)</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(matU, <span class="at">stages=</span>stages)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-577dd1692869f36c3c5f" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-577dd1692869f36c3c5f">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Plantulas\" -> \"Juvenil\" -> \"Adulto\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"Plantulas\" -> \"Juvenil\" -> \"Adulto\" [style=invis] } [style=invis] \"Plantulas\" -> \"Plantulas\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.1\"]\n\"Plantulas\" -> \"Juvenil\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.5\"]\n\"Plantulas\" -> \"Adulto\"[minlen=6,fontsize=10,color=grey,xlabel=\" 0.001\"]\n\"Juvenil\" -> \"Juvenil\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.3\"]\n\"Juvenil\" -> \"Adulto\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.4\"]\n\"Adulto\" -> \"Juvenil\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.05\"]\n\"Adulto\" -> \"Adulto\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.8\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-e7c15880d279e10e69bd" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-e7c15880d279e10e69bd">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Plantulas\" -> \"Juvenil\" -> \"Adulto\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"Plantulas\" -> \"Juvenil\" -> \"Adulto\" [style=invis] } [style=invis] \"Plantulas\" -> \"Plantulas\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.1\"]\n\"Plantulas\" -> \"Juvenil\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.5\"]\n\"Plantulas\" -> \"Adulto\"[minlen=6,fontsize=10,color=grey,xlabel=\" 0.001\"]\n\"Juvenil\" -> \"Juvenil\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.3\"]\n\"Juvenil\" -> \"Adulto\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.4\"]\n\"Adulto\" -> \"Juvenil\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.05\"]\n\"Adulto\" -> \"Adulto\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.8\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -454,6 +457,8 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="matf-matriz-de-fecundidad">MatF: Matriz de fecundidad</h2>
 <p>Si uno sigue la figura resultante del Script 2. puede observar que algunos de los individuos en la segunda etapa pueden producir plántulas. Por consecuencia seria probablemente más adecuado cambiar de nombre para la segunda etapa de “juvenil” a “adultos pequeños”; debido que el concepto de juvenil pudiese ser confundido con individuos no reproductivos. Lo que se observa en el ciclo de vida son las aportaciones de plántulas que provienen de adultos pequeños y grandes. Esta separación de categorías de adultos (en este caso pequeños y grandes) es recomendables cuando las probabilidades de fecundidad son muy diferentes entre clases de tamaño, por ejemplo, en el caso de <em>Guariante aurantica</em> <span class="citation" data-cites="mondragon2009population">(<a href="#ref-mondragon2009population" role="doc-biblioref">Mondragón 2009</a>)</span> en donde al estudiar su demografía se decidió crear dos categorías de reproductivos r1 (altura del pseudobulbo entre 7 y 15 cm) y r2( pseudobulbo &gt; 15 cm) en donde la producción de plántulas fue de 0.007, en tanto que la de los individuos r2 fue de 0.121.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>matF <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
@@ -463,9 +468,10 @@ div.csl-indent {
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>stages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Plantulas"</span>, <span class="st">"Ind Pequeños"</span>, <span class="st">"Ind Grande"</span>)</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(matF, <span class="at">stages=</span>stages)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-817ec5d46832b562c021" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-817ec5d46832b562c021">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Plantulas\" -> \"Ind Pequeños\" -> \"Ind Grande\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"Plantulas\" -> \"Ind Pequeños\" -> \"Ind Grande\" [style=invis] } [style=invis] \"Ind Pequeños\" -> \"Plantulas\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.4\"]\n\"Ind Grande\" -> \"Plantulas\"[minlen=-6,fontsize=10,color=grey,xlabel=\" 1.8\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-8a80b30d931d9912f06b" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-8a80b30d931d9912f06b">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Plantulas\" -> \"Ind Pequeños\" -> \"Ind Grande\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"Plantulas\" -> \"Ind Pequeños\" -> \"Ind Grande\" [style=invis] } [style=invis] \"Ind Pequeños\" -> \"Plantulas\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.4\"]\n\"Ind Grande\" -> \"Plantulas\"[minlen=-6,fontsize=10,color=grey,xlabel=\" 1.8\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -480,15 +486,21 @@ div.csl-indent {
 <p>A continuación vemos un ejemplo de una matriz de clonación. El único ejemplo en la base de datos de COMPADRE es el de <em>Cypripedium calceolus</em> <span class="citation" data-cites="garcia2010living">(<a href="#ref-garcia2010living" role="doc-biblioref">Garcı́a, Goni, and Guzmán 2010</a>)</span>. Aprovechamos para demostrar como extraer matrix caracteristica especifica de la base de datos de COMPADRE.</p>
 <p>Activar paquetes</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rcompadre)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 <section id="decargar-la-base-de-datos-de-compradre" class="level3">
 <h3 class="anchored" data-anchor-id="decargar-la-base-de-datos-de-compradre">Decargar la base de datos de compradre</h3>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>compadre <span class="ot">&lt;-</span> <span class="fu">cdb_fetch</span>(<span class="st">"compadre"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 </section>
@@ -496,6 +508,8 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="extraer-mpms-con-matriz-de-clonaje">Extraer MPMs con matriz de clonaje</h2>
 <p>Nota que se suma todos los valores de la matriz de clonaje (matC). Toda especie que tenga un valor mayor a 0 en la matriz de clonaje se considera que tiene clonaje en por lo menos una de las etapas de su ciclo de vida.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Finding MPMs with clonality</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>compadre<span class="sc">$</span>clonality <span class="ot">&lt;-</span> <span class="dv">0</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -506,6 +520,7 @@ div.csl-indent {
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># table(compadre$clonality) # Remover el "#" para ver los resultados, </span></span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">table</span>(compadre<span class="sc">$</span>clonality)) <span class="co">#Se observa la suma de las matrices de clonaje, hay 8162 especies que no tiene información en matC, una población con un matC que su suma es 0.001, etc.    </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
        0    0.001   0.0075 0.008006 0.008513    0.009 
@@ -516,7 +531,10 @@ div.csl-indent {
 <h4 class="anchored" data-anchor-id="control-de-calidad">Control de Calidad</h4>
 <p>Añade control de calidad a la base de datos (por ejemplo, para entradas faltantes en matA).</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>compadre_flagged <span class="ot">&lt;-</span> <span class="fu">cdb_flag</span>(compadre, <span class="at">checks =</span> <span class="st">"check_NA_A"</span>) <span class="co"># Evaluar que la matA no es nula</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 </section>
@@ -524,17 +542,23 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="orquídeas-con-clonaje">Orquídeas con clonaje</h2>
 <p>Ahora filtar para orquídeas solamente y para aquellos con matC no nulo (clonality &gt;0). Se observa que solamente dos poblaciones tienen información de clonación.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>orchid_clonal <span class="ot">&lt;-</span> compadre_flagged <span class="sc">%&gt;%</span> </span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Family <span class="sc">==</span> <span class="st">"Orchidaceae"</span>) <span class="sc">%&gt;%</span> <span class="co"># filtrar para orquideas</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(clonality <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="co"># filtrar para aquellos con matC no nulo</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizar la base de datos de orquídea, se observa solamente dos matrices de clonaje</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(orchid_clonal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>    Length      Class       Mode 
          1 CompadreDB         S4 </code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(orchid_clonal<span class="sc">$</span>SpeciesAuthor) <span class="co"># hay dos poblaciones solamente en toda la base de datos</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Cypripedium_calceolus_2" "Cypripedium_calceolus_3"</code></pre>
 </div>
@@ -544,10 +568,13 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="el-estudio-de-cypripedium-calceolus">El estudio de <em>Cypripedium calceolus</em></h2>
 <p>Selecionamos solamente un ejemplo la Matriz de <em>Cypripedium calceolus</em>, #242621 <span class="citation" data-cites="garcia2010living">(<a href="#ref-garcia2010living" role="doc-biblioref">Garcı́a, Goni, and Guzmán 2010</a>)</span>, que es la matrz promedio de la tercera población.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Cyp_cal_2 <span class="ot">&lt;-</span> orchid_clonal <span class="sc">%&gt;%</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(MatrixID <span class="sc">==</span> <span class="dv">242621</span>)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>Cyp_cal_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A COM(P)ADRE database ('CompadreDB') object with 1 SPECIES and 1 MATRICES.
 
@@ -566,12 +593,15 @@ div.csl-indent {
 </div>
 <p>Buscar la población que tiene <strong>matC</strong> máxima.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(orchid_clonal)[<span class="dv">1</span>]){</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  orchid_clonal<span class="sc">$</span>clonality[i] <span class="ot">&lt;-</span> <span class="fu">sum</span>(orchid_clonal<span class="sc">$</span>mat[[i]]<span class="sc">@</span>matC) <span class="co"># suma de todos los valores de la matriz de clonación</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>orchid_clonal <span class="sc">%&gt;%</span> </span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(clonality <span class="sc">==</span> <span class="fu">max</span>(clonality)) <span class="co"># filtrar para la suma de matC máximo</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A COM(P)ADRE database ('CompadreDB') object with 1 SPECIES and 1 MATRICES.
 
@@ -593,10 +623,13 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="el-estudio-de-cypripedium-calceolus-1">El estudio de <em>Cypripedium calceolus</em></h2>
 <p>Selecionamos solamente un ejemplo la Matriz de <em>Cypripedium calceolus</em>, #242624 <span class="citation" data-cites="garcia2010living">(<a href="#ref-garcia2010living" role="doc-biblioref">Garcı́a, Goni, and Guzmán 2010</a>)</span>. Este estudio tiene como objetivo evaluar la hipótesis de que las poblaciones que viven al margen de su distribución son más susceptible que las poblaciones que viven en el centro de la distribución, el modelo de central-marginal. La especie fue modelado basado en 6 etapas, “muy pqueñas”, “pequeñas”, “intermedias”, “grandes”, “muy grandes” y “extra grandes” en adición de una etapa de “latencia”. García et al.&nbsp;reconoce que en <em>Cypripedium calceolus</em> es difícil diferenciar entre reclutamiento sexual y asexual y que la percepción de reclutamiento asexual es probablemente mucho más común que el reclutamiento sexual <span class="citation" data-cites="garcia2010living">Kull (<a href="#ref-kull1995genet" role="doc-biblioref">1995</a>)</span>.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>Cyp_cal_2 <span class="ot">&lt;-</span> orchid_clonal <span class="sc">%&gt;%</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(MatrixID <span class="sc">==</span> <span class="dv">242624</span>)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>Cyp_cal_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A COM(P)ADRE database ('CompadreDB') object with 1 SPECIES and 1 MATRICES.
 
@@ -615,7 +648,10 @@ div.csl-indent {
 </div>
 <p>Las etapas del ciclo de vida de <em>Cypripedium calceolus</em> son:</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Cyp_cal_2<span class="sc">$</span>mat <span class="co">#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
   MatrixClassOrganized MatrixClassAuthor
@@ -665,7 +701,10 @@ matC:
 </div>
 <p>Vizualizar matU, matF y matC</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Cyp_cal_2<span class="sc">$</span>mat[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  MatrixClassOrganized MatrixClassAuthor
 1                 dorm           Dormant
@@ -714,6 +753,8 @@ matC:
 </div>
 <p>Visualizar la transición de las diferentes etapas por clonación</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#remotes::install_github("jonesor/Rage") # Instalar de Github para la más reciente versión</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -721,21 +762,25 @@ matC:
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(matC[[<span class="dv">1</span>]], <span class="at">stages =</span> <span class="fu">c</span>(<span class="st">"Dormant"</span>, <span class="st">"Smallest"</span>, <span class="st">"Small"</span>, <span class="st">"Inter"</span>, <span class="st">"Large"</span>, <span class="st">"ExtraLarge"</span>), <span class="at">node_order =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>, <span class="dv">6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-e0005bcbc7878c35ba9d" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-e0005bcbc7878c35ba9d">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Smallest\" -> \"Dormant\" -> \"Small\" -> \"Inter\" -> \"Large\" -> \"ExtraLarge\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"Smallest\" -> \"Dormant\" -> \"Small\" -> \"Inter\" -> \"Large\" -> \"ExtraLarge\" [style=invis] } [style=invis] \"Inter\" -> \"Small\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.17\"]\n\"Large\" -> \"Small\"[minlen=-6,fontsize=10,color=grey,xlabel=\" 0.06\"]\n\"ExtraLarge\" -> \"Small\"[minlen=-9,fontsize=10,color=grey,xlabel=\" 0.09\"]\n\"ExtraLarge\" -> \"Inter\"[minlen=-6,fontsize=10,color=grey,xlabel=\" 0.15\"]\n\"ExtraLarge\" -> \"Large\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.06\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-2e894b8b527bbb251ea6" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-2e894b8b527bbb251ea6">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Smallest\" -> \"Dormant\" -> \"Small\" -> \"Inter\" -> \"Large\" -> \"ExtraLarge\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"Smallest\" -> \"Dormant\" -> \"Small\" -> \"Inter\" -> \"Large\" -> \"ExtraLarge\" [style=invis] } [style=invis] \"Inter\" -> \"Small\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.17\"]\n\"Large\" -> \"Small\"[minlen=-6,fontsize=10,color=grey,xlabel=\" 0.06\"]\n\"ExtraLarge\" -> \"Small\"[minlen=-9,fontsize=10,color=grey,xlabel=\" 0.09\"]\n\"ExtraLarge\" -> \"Inter\"[minlen=-6,fontsize=10,color=grey,xlabel=\" 0.15\"]\n\"ExtraLarge\" -> \"Large\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.06\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <section id="ejemplo-de-inclusión-de-matc-en-otras-familias" class="level3">
 <h3 class="anchored" data-anchor-id="ejemplo-de-inclusión-de-matc-en-otras-familias">Ejemplo de inclusión de matC en otras familias</h3>
 <p>Ver cual las lista especie tienen incluido la matriz de clonación, <strong>matC</strong>. En esta lista vemos 825 filas, donde esto incluye las poblaciones muestreadas donde matC &gt; 0.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Clonal_Species<span class="ot">=</span>compadre <span class="sc">%&gt;%</span> </span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(clonality <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="co"># filtrar para aquellos con matC no nulo</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(mat, SpeciesAuthor, Family, clonality) <span class="sc">%&gt;%</span> <span class="co"># seleccionar las columnas de interes</span></span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(clonality)) <span class="co"># ordenar por la columna de clonación</span></span>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Clonal_Species) <span class="co"># ver las primeras 6 poblaciones</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A COM(P)ADRE database ('CompadreDB') object with ?? SPECIES and 6 MATRICES.
 
@@ -752,14 +797,20 @@ matC:
 </div>
 <p>Hay 108 especies únicas donde la <strong>matC</strong> esta incluida en la dinámica de la población.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Species<span class="ot">=</span>(<span class="fu">as.data.frame</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(Clonal_Species<span class="sc">$</span>SpeciesAuthor))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>Hay 44 familias de plantas donde la matC esta incluida en la dinámica.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver la lista de familias únicas con clonación</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>Families<span class="ot">=</span>(<span class="fu">as.data.frame</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(Clonal_Species<span class="sc">$</span>Family))))</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Families) <span class="co"># ver las primeras 6 familias</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  sort(unique(Clonal_Species$Family))
 1                           Adoxaceae
@@ -772,12 +823,15 @@ matC:
 </div>
 <p>Extraemos las especies de la Bromeliaceae</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>Bromeliaceae<span class="ot">=</span>Clonal_Species <span class="sc">%&gt;%</span> </span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Family <span class="sc">==</span> <span class="st">"Bromeliaceae"</span>) <span class="sc">%&gt;%</span> <span class="co"># fpara la familia de bromelias</span></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(mat, SpeciesAuthor, Family, clonality) <span class="sc">%&gt;%</span> <span class="co"># seleccionar las columnas de interés</span></span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(clonality)) <span class="co"># ordenar por la columna de clonación</span></span>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>Bromeliaceae</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A COM(P)ADRE database ('CompadreDB') object with ?? SPECIES and 49 MATRICES.
 
@@ -799,10 +853,13 @@ matC:
 </div>
 <p>*** FINISH THIS SECTION**</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>compadre <span class="sc">%&gt;%</span> </span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(clonality <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="co"># filtrar para aquellos con matC no nulo</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(SpeciesAuthor <span class="sc">==</span> <span class="st">"Aechmea_nudicaulis"</span>) <span class="sc">%&gt;%</span>  <span class="co"># para </span></span>
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(clonality))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A COM(P)ADRE database ('CompadreDB') object with 1 SPECIES and 36 MATRICES.
 

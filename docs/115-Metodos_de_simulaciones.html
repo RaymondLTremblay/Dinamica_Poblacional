@@ -442,10 +442,13 @@ window.Quarto = {
 <h1>Variación Temporal y Espacial {##VarTempEsp}</h1>
 <p>Por: Raymond L. Tremblay</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtext)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popbio)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>El termino <strong>biología</strong> pudiese ser un sinónimo de variación biológica. No hay dos organismos iguales, ni siquiera gemelos que sean completamente idénticos. La variación biológica es una característica fundamental de la vida y es la base de la evolución, no puede haber evolución sin variación. Cuando se considera los individuos, por ejemplos humanos, fácilmente reconocemos variación, en tamaño, color de ojos, susceptibilidad a cáncer o infección y efecto que tiene el ambiente (por ejemplo la dieta o acceso a la educación) entre muchos factores que impacta la supervivencia o crecimiento y reproducción. Pero desafortunadamente cuando se considera los animales y plantas de una misma especie frecuentemente se obvia la variación en los análisis. Podemos observar variación a múltiples niveles en una misma especie</p>
 <ul>
@@ -492,6 +495,8 @@ window.Quarto = {
 <p>El primer paso es definir la diferentes matriz, una por cada periodo de tiempo. En el siguiente script se enseña como entrar los datos para múltiples matrices en un solo objeto. Nota que es una lista de matriz.</p>
 <p>Los datos provienen de un estudio de la dinámica de una población de <em>Serapia cordigera</em> de 1999 al 2012 evaluando el impacto antropogénico sobre la dinámica de la población <span class="citation" data-cites="pellegrino2014effects">(<a href="#ref-pellegrino2014effects" role="doc-biblioref">Pellegrino and Bellusci 2014</a>)</span>. En este caso se emplea solamente 6 matrices de transición de la población de <em>Serapia cordigera</em> en 1999, tres de estas son poblaciones que tienen impacto antropogénico (A1, A2 y A3) y tres poblaciones naturales, sin impacto antropogénico (N1, N2, N3). Nota que se contruye una lista (list()) de matriz de transición, una por cada periodo de tiempo.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Serapia<span class="ot">&lt;-</span><span class="fu">list</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">A1_1999=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fl">0.745</span>,  <span class="fl">0.152</span>,  <span class="fl">0.452</span>,  <span class="fl">0.564</span>,</span>
@@ -564,6 +569,7 @@ window.Quarto = {
 <span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>Serapia</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$A1_1999
          latente plantula rosetta con flor
@@ -613,19 +619,22 @@ con flor   0.210    0.465   0.498    0.485</code></pre>
 <p>Si uno asume que hay igual cantidad de poblaciones afectada de forma antropogénicas y naturales entonces se puede hacer un análisis de la variación espacial en la probabilidad de supervivencia. Se puede simular el crecimiento con igual probabilidad de selección de las matrices de transición. En otra palabra cada matriz sera seleccionado al azar 1/6 de las veces. Este supuesto es razonable si uno asume que hay igual cantidad de poblaciones afectada de forma antropogénicas y naturales. El objetivo es ver la variación en la probabilidad de supervivencia en la población de <em>Serapia cordigera</em> en 1999 o mejor cual seria el tamaño de la poblacional típica de la especies si la especie se comporta como la siguientes matrices <span class="citation" data-cites="pellegrino2014effects">(<a href="#ref-pellegrino2014effects" role="doc-biblioref">Pellegrino and Bellusci 2014</a>)</span>.</p>
 <p>La función <code>stoch.projection</code> del paquete <code>popbio</code> permite hacer simulaciones de la dinámica de una población y da una lista de la cantidad de individuos esperado por cada etapa de la vida. Comenzamos por definir el tamaño de la población inicial por etapa de la vida, <strong>n</strong>, el nombre de las etapas de la vida y luego usamos la función <code>stoch.projection</code> para hacer las simulaciones.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">99</span>) <span class="co"># corresponde a la cantidad de individuos por etapa en la publicación del año 2000 del articulo Pellegrino et al. 2014</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(n) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>Serapia.eq   <span class="ot">&lt;-</span> <span class="fu">stoch.projection</span>(Serapia, n, <span class="at">nreps=</span><span class="dv">1000</span>) <span class="co"># simulación con igual probabilidad de selección</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Serapia.eq) <span class="co"># vemos las primeras 6 simulaciones de los tamaños de muestra esperada por etapa</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>       latente   plantula   rosetta  con flor
-[1,] 1.8866928 1.41555127 1.0538136 3.4928936
-[2,] 1.2373157 0.99617166 0.7653389 1.7327035
-[3,] 3.5243584 0.58679957 0.8975466 1.5422464
-[4,] 0.7073074 0.67475550 0.5817758 1.4184161
-[5,] 1.7067602 0.09801714 0.8501070 0.6835445
-[6,] 0.7934005 0.61013218 0.4613757 1.6323666</code></pre>
+[1,] 2.2043127 0.14379038 1.0828990 0.9034078
+[2,] 0.7355888 0.64487294 0.4594102 1.2373230
+[3,] 1.8613812 1.57843439 1.2361714 3.1887375
+[4,] 1.0601554 0.05568675 0.5311122 0.3875013
+[5,] 0.9597855 0.76752616 0.4553980 1.6929325
+[6,] 1.5424048 1.33913572 0.8196376 2.0542518</code></pre>
 </div>
 </div>
 </section>
@@ -635,6 +644,8 @@ con flor   0.210    0.465   0.498    0.485</code></pre>
 <p>Para observar cuantos individuos hubiese en el futuro de la población de <em>Serapia cordigera</em> si la especie se comporta como las matrices de transición. Se observa que en la poblaciones tendrían pocos individuos típicamente menor de 2-3 individuo todas las etapas irrelevante si fuesen latente, plántula, rosetta o con flores.</p>
 <p>Order the variable names “plantula”, “latente”, “rosetta”, “con flores”</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Serapia.eq<span class="ot">=</span><span class="fu">clean_names</span>(<span class="fu">as.data.frame</span>(Serapia.eq)) </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -649,6 +660,7 @@ con flor   0.210    0.465   0.498    0.485</code></pre>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Distribución de número de individuos esperado de *Serapia cordigera*"</span>,</span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Número de individuos"</span>, <span class="at">y=</span><span class="st">"Frecuencia"</span>)<span class="sc">+</span></span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">title =</span> <span class="fu">element_markdown</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -659,6 +671,8 @@ con flor   0.210    0.465   0.498    0.485</code></pre>
 </div>
 <p>La suma total de individuos por simulación es una medida de la cantidad de individuos esperado en el futuro. En el siguiente gráfico se muestra la distribución de la cantidad de individuos esperado en el futuro de la población de <em>Serapia cordigera</em> si la especie se comporta como las matrices de transiciones arriba y seleccionado al azar por la misma probabilidades. Se observa que la mayoría de las simulaciones tienen menos de 10 individuos en el futuro.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Serapia_eq_T<span class="ot">=</span>Serapia.eq <span class="sc">%&gt;%</span> </span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total=</span><span class="fu">rowSums</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric)))) </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -669,6 +683,7 @@ con flor   0.210    0.465   0.498    0.485</code></pre>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Distribución de total de individuos esperado de *Serapia cordigera*"</span>,</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Número Total de individuos por simulación"</span>, <span class="at">y=</span><span class="st">"Frecuencia"</span>)<span class="sc">+</span></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">title =</span> <span class="fu">element_markdown</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -682,19 +697,22 @@ con flor   0.210    0.465   0.498    0.485</code></pre>
 <h3 class="anchored" data-anchor-id="simulaciones-con-diferente-probabilidad-de-selección">Simulaciones con diferente probabilidad de selección</h3>
 <p>La probabilidad de selección de las matrices de transición no tiene que ser igual. En el siguiente script se muestra como hacer simulaciones con diferente probabilidad de selección de las matrices de transición. En este caso se asume que hay las 3 poblaciones afectada de forma antropogénicas y que estas son más común (poblaciones afectada antropogenicamente) que las poblaciones naturales. Las 3 poblaciones naturales son poblaciones raras. En la sección del script vemos que ahora las poblaciones afectada de forma antropogénicas son seleccionadas con una probabilidad de 0.85 (.30 + .30 + .25) y las poblaciones naturales con una probabilidad de 0.15. En otra palabra las poblaciones naturales son muy raras, y la especies es dominada por sitio donde la especies es afectada de forma antropogénicas. <strong>Importante este es una simulación y no refleja la realidad de la especies ni la publicación</strong>.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">99</span>) <span class="co"># población inicial por etapa</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(n) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>Serapia.uneq   <span class="ot">&lt;-</span> <span class="fu">stoch.projection</span>(Serapia, n, <span class="at">nreps=</span><span class="dv">1000</span>, <span class="at">prob=</span><span class="fu">c</span>(.<span class="dv">3</span>, .<span class="dv">3</span>, .<span class="dv">25</span>, .<span class="dv">05</span>, .<span class="dv">05</span>, .<span class="dv">05</span>)) <span class="co"># simulación con igual probabilidad de selección</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Serapia.uneq) <span class="co"># vemos las primeras 6 simulaciones de tamaño de muestra</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>       latente  plantula  rosetta  con flor
-[1,] 42.381152  4.988065 8.073065 14.042171
-[2,]  8.853824  7.149775 5.613260 12.945469
-[3,] 16.340610  1.823858 3.676047  5.771750
-[4,]  3.253195  2.626769 2.062729  4.756288
-[5,] 12.434800 12.551114 7.385229 20.090667
-[6,] 14.874640  2.498281 3.789040  6.615873</code></pre>
+[1,] 42.497782 4.3833330 9.260611 14.094396
+[2,]  3.551201 1.5214342 5.796165 10.859528
+[3,]  8.255778 0.9955606 1.517313  2.736407
+[4,] 19.620490 2.1715580 4.347209  6.785428
+[5,] 12.527577 2.4111372 2.774660  4.996042
+[6,] 10.929027 1.9852955 2.793280  4.478411</code></pre>
 </div>
 </div>
 </section>
@@ -702,6 +720,8 @@ con flor   0.210    0.465   0.498    0.485</code></pre>
 <h3 class="anchored" data-anchor-id="comparar-la-distribución-de-cantidad-de-individuos-esperado-por-simulaciones">Comparar la distribución de cantidad de individuos esperado por simulaciones</h3>
 <p>Ahora vamos a solapar las dos distribuciones (la de selección por igual y por poblaciones mayormente impactado por humanos) para ver si hay una diferencia en la distribución de tamaño de muestra entre las dos simulaciones. Los resultados de la simulaciones siguiere que las poblaciones afectada de forma antropogénicas (rojo) tienen una mayor cantidad de individuos en el futuro que las poblaciones naturales (azul).</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Serapia.uneq<span class="ot">=</span><span class="fu">clean_names</span>(<span class="fu">as.data.frame</span>(Serapia.uneq))</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>Serapia.uneq_T<span class="ot">=</span>Serapia.uneq <span class="sc">%&gt;%</span> </span>
@@ -715,6 +735,7 @@ con flor   0.210    0.465   0.498    0.485</code></pre>
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Distribución de total de individuos esperado de *Serapia cordigera*"</span>,</span>
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Número total de individuos por simulación"</span>, <span class="at">y=</span><span class="st">"Frecuencia"</span>)<span class="sc">+</span></span>
 <span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">title =</span> <span class="fu">element_markdown</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -740,20 +761,26 @@ con flor   0.210    0.465   0.498    0.485</code></pre>
 <li>el crecimiento es negativo y los intervalos de confianza también, dando confianza que la especies esta en declive.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>SGR_eq<span class="ot">=</span><span class="fu">stoch.growth.rate</span>(Serapia, <span class="at">maxt=</span><span class="dv">50</span>, <span class="at">verbose=</span><span class="cn">TRUE</span>) <span class="co"># matrices seleccionado con igual probabilidad</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Calculating stochastic growth at time 1</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>SGR_eq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$approx
 [1] -0.06760619
 
 $sim
-[1] -0.04798352
+[1] -0.04355517
 
 $sim.CI
-[1] -0.08163520 -0.01433183</code></pre>
+[1] -0.07341741 -0.01369294</code></pre>
 </div>
 </div>
 <p>Simulaciones por selección de matriz con diferente probabilidad</p>
@@ -761,18 +788,21 @@ $sim.CI
 <li>el crecimiento es negativo y los intervalos de confianza solapa el cero, sugiere que hay variación en el crecimiento poblacional de la especies y que no hay evidencia que la especie esta en declive ni aumentando (es estable). La interpretaciones aquí es que si la especie es dominada por poblaciones con impacto antropogénico tienen un crecimiento poblacional no negativo.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>SGR_uneq<span class="ot">=</span><span class="fu">stoch.growth.rate</span>(Serapia, <span class="at">maxt=</span><span class="dv">50</span>, <span class="at">prob=</span><span class="fu">c</span>(.<span class="dv">3</span>, .<span class="dv">3</span>, .<span class="dv">25</span>, .<span class="dv">05</span>, .<span class="dv">05</span>, .<span class="dv">05</span>), <span class="at">verbose=</span><span class="cn">FALSE</span>) <span class="co"># matrices seleccionado con diferente probabilidades</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>SGR_uneq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$approx
 [1] -0.02988694
 
 $sim
-[1] -0.02576631
+[1] -0.001502866
 
 $sim.CI
-[1] -0.058110430  0.006577816</code></pre>
+[1] -0.02700164  0.02399591</code></pre>
 </div>
 </div>
 <p>Para convertir el log(crecimiento poblacional estocástica) a lambda se usa la siguiente formula <span class="math inline">\(e^r\)</span> donde <span class="math inline">\(r\)</span> es el log(crecimiento poblacional estocástica). Como ejemplo se muestra la metodología con las simulaciones con probabilidad desigual de selección de las matrices de transición.</p>
@@ -781,17 +811,26 @@ $sim.CI
 <h4 class="anchored" data-anchor-id="conversión-de-r-a-lambda">Conversión de <span class="math inline">\(r\)</span> a <span class="math inline">\(\lambda\)</span></h4>
 <p>Lambda Igual de probabilidades</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_uneq<span class="sc">$</span>sim) <span class="co"># matrices seleccionado con igual probabilidad</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9745628</code></pre>
+<pre><code>[1] 0.9984983</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_uneq<span class="sc">$</span>sim.CI[<span class="dv">1</span>]) <span class="co">#El intervalo de confianza inferior</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9435457</code></pre>
+<pre><code>[1] 0.9733596</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_uneq<span class="sc">$</span>sim.CI[<span class="dv">2</span>]) <span class="co">#El intervalo de confianza superior</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.006599</code></pre>
+<pre><code>[1] 1.024286</code></pre>
 </div>
 </div>
 </section>
@@ -800,19 +839,27 @@ $sim.CI
 <h3 class="anchored" data-anchor-id="impacto-antropogénico-vs-poblaciones-naturales">Impacto antropogénico vs poblaciones naturales</h3>
 <p>Los análisis anteriores no separan las matrices de transición por el impacto antropogenico vs.&nbsp;los naturales. En el siguiente script se muestra como hacer simulaciones y estimar el crecimiento poblacional de las poblaciones afectada de forma antropogénicas y naturales.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Serapia_A <span class="ot">=</span> Serapia[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] <span class="co"># poblaciones afectada de forma antropogénicas</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>Serapia_N<span class="ot">=</span>  Serapia[<span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>] <span class="co"># poblaciones naturales</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>Asumimos una probabilidad igual de selección por cada población. Simulación de tamaño de poblacional por etapa de la vida para las poblaciones afectada de forma antropogénicas y naturales.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">99</span>) <span class="co"># corresponde a los datos de la especies en la publicación del año 2000</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(n) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>Serapia.eq_A   <span class="ot">&lt;-</span> <span class="fu">stoch.projection</span>(Serapia_A, n, <span class="at">nreps=</span><span class="dv">1000</span>)</span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>Serapia.eq_N   <span class="ot">&lt;-</span> <span class="fu">stoch.projection</span>(Serapia_N, n, <span class="at">nreps=</span><span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>El efecto de las poblaciones con impacto antropogenico tienden a tener tamaño de poblacional más grande que las poblaciones naturales.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Serapia.eq_A<span class="ot">=</span><span class="fu">clean_names</span>(<span class="fu">as.data.frame</span>(Serapia.eq_A)) <span class="co"># limpiar los nombres de las columnas y convertir en un data frame</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>Serapia.eq_N<span class="ot">=</span><span class="fu">clean_names</span>(<span class="fu">as.data.frame</span>(Serapia.eq_N)) </span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -821,8 +868,11 @@ $sim.CI
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>Serapia_eq_N<span class="ot">=</span>Serapia.eq_N <span class="sc">%&gt;%</span> </span>
 <span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total=</span><span class="fu">rowSums</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Serapia_eq_N, <span class="fu">aes</span>(total))<span class="sc">+</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>( <span class="at">bins=</span><span class="dv">30</span>, <span class="at">fill=</span><span class="st">"red"</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">alpha=</span>.<span class="dv">5</span>)<span class="sc">+</span></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">data=</span>Serapia_eq_A, <span class="fu">aes</span>(<span class="at">x=</span>total), </span>
@@ -831,6 +881,7 @@ $sim.CI
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Distribución de total de individuos esperado de *Serapia cordigera*"</span>,</span>
 <span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Número total de individuos por simulación"</span>, <span class="at">y=</span><span class="st">"Frecuencia"</span>)<span class="sc">+</span></span>
 <span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">title =</span> <span class="fu">element_markdown</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -848,6 +899,8 @@ $sim.CI
 <p>Seguimos con los datos <em>Serapias cordigera</em>, pero ahora evaluamos cual es el efecto de la variación en los parámetros de la matriz usando múltiple censos. Vemos el efecto de una esas población, por impacto antropogenico, <strong>A1</strong> en los años de 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 y 2012.</p>
 <p>El primer paso en entrar los datos en una lista de matrices de transición.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Serapia_tiempo<span class="ot">&lt;-</span><span class="fu">list</span>(</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">A1_1999=</span><span class="fu">matrix</span>(<span class="fu">c</span>(</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fl">0.745</span>,  <span class="fl">0.152</span>,  <span class="fl">0.452</span>,  <span class="fl">0.564</span>,</span>
@@ -1003,6 +1056,7 @@ $sim.CI
 <span id="cb27-153"><a href="#cb27-153" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-154"><a href="#cb27-154" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-155"><a href="#cb27-155" aria-hidden="true" tabindex="-1"></a> Serapia_tiempo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$A1_1999
          latente plantula rosetta con flor
@@ -1100,53 +1154,71 @@ con flor   0.139    0.368   0.367    0.177</code></pre>
 <h4 class="anchored" data-anchor-id="simulaciones-con-igual-probabilidad-de-selección.">Simulaciones con igual probabilidad de selección.</h4>
 <p>El análisis evalúa la variación temporal en el crecimiento poblacional de la especies de <em>Serapia cordigera</em> en 1999 a 2012. Usando la función <em>stoch.projection</em> se observa la variación en cantidad de individuos por etapa.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">99</span>) <span class="co"># población inicial por etapa</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(n) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>Serapia_tiempo_eq   <span class="ot">&lt;-</span> <span class="fu">stoch.projection</span>(Serapia_tiempo, n, <span class="at">nreps=</span><span class="dv">1000</span>) <span class="co"># simulación con igual probabilidad de selección</span></span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Serapia_tiempo_eq) <span class="co"># vemos las primeras 6 simulaciones de tamaño de muestra</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
-<pre><code>       latente  plantula  rosetta con flor
-[1,]  69.21233 38.240510 20.78392 39.36695
-[2,]  66.70504 21.090278 22.12162 29.90861
-[3,]  64.65200  7.652290 32.37294 33.48999
-[4,]  55.05128  6.857204 24.05988 25.33615
-[5,]  92.04827 18.096303 31.82643 48.04070
-[6,] 105.11465 18.457047 44.49661 59.43170</code></pre>
+<pre><code>      latente  plantula  rosetta con flor
+[1,] 66.49757  7.891623 12.53986 22.01271
+[2,] 50.27460  4.686242 15.62010 20.51327
+[3,] 73.52772 24.571458 21.41282 28.23418
+[4,] 74.67971 24.164387 22.58505 31.14530
+[5,] 92.84366 22.633287 35.40128 42.13017
+[6,] 46.36930  9.969213 13.37867 22.97553</code></pre>
 </div>
 </div>
 <p>Para evaluar el cambio de crecimiento poblacional en la especies de <em>Serapia cordigera</em> en 1999 a 2012 se usa la función <em>stoch.growth.rate</em>.</p>
 <p>Se observa que el crecimiento poblacional es cerca de cero en la mayoría de las simulaciones, sugiere que la especie no esta en declive ni creciendo. Los intervalos de confianza solapa el cero sugiriendo que no hay evidencia que el crecimiento temporal de la población es diferentes de estable.</p>
 <p>Nota que se puede cambiar la probabilidades de selección de las matrices de transición, en este caso se asume que hay igual cantidad de poblaciones afectada de forma antropogénicas y naturales. Pero considera por ejemplo que hay eventos abióticos como temperatura o lluvia fuera de lo común en un año, entonces se puede cambiar la probabilidad de selección de las matrices de transición para evaluar el efecto de estos eventos de cambio climatológico en el crecimiento poblacional de la especies. Si por ejemplo en el área donde este estas especies hay predicción que un factor abiótico, por ejemplo reducción en lluvia (aumento en sequía) en las próximas décadas se pudiese cambiar la probabilidad de selección para de las matrices que son en periodos de sequía y que sean seleccionado más frecuentemente en la simulaciones. El objetivo es de similar los efectos de cambio en tiempo sobre el crecimiento poblacional de la especies.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>SGR_Temp_eq<span class="ot">=</span><span class="fu">stoch.growth.rate</span>(Serapia_tiempo, <span class="at">maxt=</span><span class="dv">50</span>) <span class="co"># matrices seleccionado con igual probabilidad por 50 años</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Calculating stochastic growth at time 1</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>SGR_Temp_eq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$approx
 [1] 0.002712947
 
 $sim
-[1] 0.02050218
+[1] 0.0124335
 
 $sim.CI
-[1] -0.003363685  0.044368053</code></pre>
+[1] -0.01479270  0.03965971</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversión a valores de Lambda</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim) <span class="co"># Lambda de matrices seleccionado con igual probabilidad</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.020714</code></pre>
+<pre><code>[1] 1.012511</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim.CI[<span class="dv">1</span>]) <span class="co">#Lambda del intervalo de confianza inferior</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.996642</code></pre>
+<pre><code>[1] 0.9853162</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim.CI[<span class="dv">2</span>]) <span class="co"># Lambda del intervalo de confianza superior</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.045367</code></pre>
+<pre><code>[1] 1.040457</code></pre>
 </div>
 </div>
 </section>
@@ -1155,18 +1227,21 @@ $sim.CI
 <p>Comparar la variación temporal en el crecimiento poblacional de la especies de <em>Serapia cordigera</em> en 1999 a 2012 con la variación espacial.</p>
 <p>Lo que se observa es que la variación temporal y la variación espacial es más o menos igual (el rango de variación), pero que hay menos variación temporal que espacial. Por lo menos para los datos seleccionado de <span class="citation" data-cites="pellegrino2014effects">(<a href="#ref-pellegrino2014effects" role="doc-biblioref">Pellegrino and Bellusci 2014</a>)</span> la variación temporal no es tan grande como la variación espacial y solapa el lambda de 1, al contrario la variación espacial no solapa el lambda de 1 (ambos CI son menores de 1, sugiriendo una reducción posible de las poblaciones). Note que no usamos todos los datos del articulo pero un sub-grupo y por consecuencia el análisis es sesgado.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>Tabla_resultado<span class="ot">=</span><span class="fu">tribble</span>(</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>tipo, <span class="sc">~</span>valor, <span class="sc">~</span>CI_inf, <span class="sc">~</span>CI_sup,<span class="sc">~</span>diff_ci,</span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Espacial"</span>, <span class="fu">exp</span>(SGR_eq<span class="sc">$</span>sim), <span class="fu">exp</span>(SGR_eq<span class="sc">$</span>sim.CI[<span class="dv">1</span>]), <span class="fu">exp</span>(SGR_eq<span class="sc">$</span>sim.CI[<span class="dv">2</span>]), <span class="fu">exp</span>(SGR_eq<span class="sc">$</span>sim.CI[<span class="dv">2</span>])<span class="sc">-</span><span class="fu">exp</span>(SGR_eq<span class="sc">$</span>sim.CI[<span class="dv">1</span>]),</span>
 <span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Temporal"</span>, <span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim), <span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim.CI[<span class="dv">1</span>]), <span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim.CI[<span class="dv">2</span>]), <span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim.CI[<span class="dv">2</span>])<span class="sc">-</span><span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim.CI[<span class="dv">1</span>])</span>
 <span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>) </span>
 <span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>Tabla_resultado</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 5
   tipo     valor CI_inf CI_sup diff_ci
   &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
-1 Espacial 0.953  0.922  0.986  0.0642
-2 Temporal 1.02   0.997  1.05   0.0487</code></pre>
+1 Espacial 0.957  0.929  0.986  0.0572
+2 Temporal 1.01   0.985  1.04   0.0551</code></pre>
 </div>
 </div>
 </section>
@@ -1175,6 +1250,8 @@ $sim.CI
 <p>Observación de la variación temporal y espacial en el crecimiento poblacional de la especies de <em>Serapia cordigera</em> en un gráfico.</p>
 <p>Se nota que el crecimiento poblacional intrínsico de la especies de <em>Serapia cordigera</em> es negativo en la mayoría de las simulaciones cuando se evalúa múltiple poblaciones, pero la población <strong>A1</strong> en general tiene un crecimiento positivo o es estable cuando se evalúa tomando en cuanta la variación temporal. La linea horizontal representa el crecimiento poblacional de 1, si el crecimiento poblacional es mayor de 1 la población crece, si es menor de 1 la población decrece. En el análisis temporal vemos que el intervalo de confianza solapa el 1, sugiere que no hay evidencia que el crecimiento poblacional es diferente de estable.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(Tabla_resultado, <span class="fu">aes</span>(<span class="at">x=</span>tipo, <span class="at">y=</span>valor))<span class="sc">+</span></span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">stat=</span><span class="st">"identity"</span>, <span class="at">fill=</span><span class="st">"blue"</span>)<span class="sc">+</span></span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>CI_inf, <span class="at">ymax=</span>CI_sup), <span class="at">width=</span>.<span class="dv">2</span>)<span class="sc">+</span></span>
@@ -1183,6 +1260,7 @@ $sim.CI
 <span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Comparación de crecimiento poblacional de *Serapia cordigera*"</span>,</span>
 <span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Tipo de variación"</span>, <span class="at">y=</span><span class="st">"Crecimiento poblacional"</span>)<span class="sc">+</span></span>
 <span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">title =</span> <span class="fu">element_markdown</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1202,22 +1280,31 @@ $sim.CI
 <p>Si tenemos tres grupos, digamos, plántulas que se quedan como plántula, que crecen a juveniles o que mueren. En este caso tenemos tres grupos (multinomial) y la probabilidad de que un individuo de las proporciones tiene que sumar a 1. En este caso la probabilidad de que un individuo se queda como plántula es <span class="math inline">\(p_1=0.5\)</span>, la probabilidad de que un individuo crece a juvenil es <span class="math inline">\(p_2=0.3\)</span> y la probabilidad de que un individuo muere es <span class="math inline">\(p_3=0.2\)</span>. La suma de estas probabilidades tiene que ser igual a 1, en otra palabra <span class="math inline">\(p_1 + p_2 + p_3 = 1\)</span>.</p>
 <p>La otra ventaja de usar la función Dirichlet es que se basa en la distribución beta. Este es una distribución donde tanto los parámetros como el promedio, y los intervalo de confianza son limitado a 0 y 1. Otra manera de decir lo mismo es que no se puede tener intervalos de confianza menos 0 o mayor de 1. Hagan el ejercicio mental de tratar de entender un intervalo de confianza con una probabilidad de -0.10. Nota que si uno usa una distribución normal, los intervalos de confianza pueden ser negativos o mayores de 1, lo que no tiene sentido en el contexto de probabilidad. De allí viene la ventaja de usar la distribución beta para calcular los parámetros y tener claro cual distribuciones se usa para estimar los parametros.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popbio)</span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">99</span>) <span class="co"># población inicial por etapa</span></span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(n) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
 <span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>Serapia_A3   <span class="ot">&lt;-</span> <span class="fu">splitA</span>(Serapia<span class="sc">$</span>A3) <span class="co"># simulación solamente la matriz A1 de la lista de matriz</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>En el siguiente paso vamos a asignar una previa a los datos. Estas previas proviene de Tremblay, no representa la visión de los autores del articulo. Se añade una previa también para la proporción de plantas que fallece en cada etapa (la quita fila). Nota que es importante que la suma de cada columna sea igual a 1. Típicamente uno debería tratar de obtener la previa de la literatura, pero en este caso no se tiene información previa.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>RLT_Serapia_previa <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.1</span>,   <span class="fl">0.4</span>,   <span class="fl">0.4</span>,</span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>                        <span class="fl">0.2</span>,  <span class="fl">0.</span>,    <span class="fl">0.0</span>,   <span class="fl">0.0</span>,</span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                        <span class="fl">0.0</span>,  <span class="fl">0.025</span>, <span class="fl">0.25</span>,  <span class="fl">0.3</span>,</span>
 <span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>                        <span class="fl">0.15</span>,  <span class="fl">0.05</span>,  <span class="fl">0.25</span>,  <span class="fl">0.2</span>,</span>
 <span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>                        <span class="fl">0.05</span>,  <span class="fl">0.025</span>, <span class="fl">0.1</span>,   <span class="fl">0.1</span>), </span>
 <span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">nrow =</span> <span class="dv">5</span>, <span class="at">ncol =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raretrans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <section id="obtener-los-inertvalos-de-confianza-ic-para-entradas-de-matriz-individuales" class="level3">
 <h3 class="anchored" data-anchor-id="obtener-los-inertvalos-de-confianza-ic-para-entradas-de-matriz-individuales">Obtener los inertvalos de confianza (IC) para entradas de matriz individuales</h3>
@@ -1227,6 +1314,8 @@ $sim.CI
 <p>En el script vemos los intervalos de confianza de la matriz de transición de <em>Serapia cordigera</em> en 1999 para la población A3.</p>
 <p>Lo más dramático de ese primer análisis que que los intervalos de credibilidad son bien grandes, casi todos los intervalos de credibilidad <strong>lcl</strong> y <strong>ucl</strong> an de muy cerca de cero a valores muy grande. Esto sugiere que hay mucha incertidumbre en los datos. Este resultado es esperado, porque la muestra es muy pequeña, solamente 2 individuos fueron muestreado en el campo de esta etapa.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>TN <span class="ot">&lt;-</span> <span class="fu">fill_transitions</span>(Serapia_A3, <span class="at">N=</span>n, <span class="at">P =</span> RLT_Serapia_previa, <span class="at">priorweight =</span> .<span class="dv">01</span>, <span class="at">returnType =</span> <span class="st">"TN"</span>)</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> TN[,<span class="dv">1</span>] <span class="co"># cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. </span></span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">sum</span>(TN[,<span class="dv">1</span>]) <span class="sc">-</span> TN[,<span class="dv">1</span>]<span class="co"># cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. </span></span>
@@ -1237,6 +1326,7 @@ $sim.CI
 <span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>A3df_lat<span class="ot">=</span><span class="fu">round</span>(<span class="fu">data.frame</span>(p, lcl, ucl), <span class="at">digits=</span><span class="dv">3</span>)</span>
 <span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>A3df_lat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      p   lcl   ucl
 1 0.544 0.038 0.984
@@ -1248,6 +1338,8 @@ $sim.CI
 </div>
 <p>Ahora vemos que pasa con la etapa que tenemos más datos, los adultos con flores. En este caso vemos que los intervalos de credibilidad son más pequeños, pero todavía son grandes, ya que el tamaño de muestra es de 99 para esta etapa.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>TN <span class="ot">&lt;-</span> <span class="fu">fill_transitions</span>(Serapia_A3, <span class="at">N=</span>n, <span class="at">P =</span> RLT_Serapia_previa, <span class="at">priorweight =</span> <span class="fl">0.01</span>, <span class="at">returnType =</span> <span class="st">"TN"</span>)</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> TN[,<span class="dv">4</span>] <span class="co"># cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. </span></span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">sum</span>(TN[,<span class="dv">4</span>]) <span class="sc">-</span> TN[,<span class="dv">4</span>]<span class="co"># cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. </span></span>
@@ -1259,6 +1351,7 @@ $sim.CI
 <span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>A3df<span class="ot">=</span><span class="fu">round</span>(<span class="fu">data.frame</span>(p, lcl, ucl), <span class="at">digits=</span><span class="dv">3</span>)</span>
 <span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>A3df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      p   lcl   ucl
 1 0.004 0.000 0.022
@@ -1270,6 +1363,8 @@ $sim.CI
 </div>
 <p>Como ejercicio, vemos que tipo de intervalos si tuviesemos tamaño de muestra de 500 individuos en la etapa de adulto. Nota que aun que los intervalos de credibilidad son más pequeños, no se debería asumir que no hay variación demográfica en la etapa de adulto, por procesos estocasticos.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>n500 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">500</span>) <span class="co"># población inicial por etapa</span></span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>TN <span class="ot">&lt;-</span> <span class="fu">fill_transitions</span>(Serapia_A3, <span class="at">N=</span>n500, <span class="at">P =</span> RLT_Serapia_previa, <span class="at">priorweight =</span> <span class="fl">0.01</span>, <span class="at">returnType =</span> <span class="st">"TN"</span>)</span>
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>a500 <span class="ot">&lt;-</span> TN[,<span class="dv">4</span>] <span class="co"># cambie 1 a 2, 3 o 4 ect. para obtener la distribución beta marginal de cada columna (etapas). </span></span>
@@ -1282,6 +1377,7 @@ $sim.CI
 <span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>A3df<span class="ot">=</span><span class="fu">round</span>(<span class="fu">data.frame</span>(p, lcl, ucl), <span class="at">digits=</span><span class="dv">3</span>)</span>
 <span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>A3df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      p   lcl   ucl
 1 0.004 0.000 0.011
@@ -1294,14 +1390,22 @@ $sim.CI
 <p>Ahora vemos como se distribuye una distribución beta.</p>
 <p>Usamos los datos de la etapa de adulto con flores con 99 individuos. Ninguna de la transiciones o estasis tiene una distribución normal. La distribución que demuestra bien este patrón son los adultos con flores que pasan a latente. La linea reja vertical representa el promedio, o sea el valor en la matriz de transición.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>a <span class="co"># los valores del shape alpha </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]  0.396  0.000 28.710 10.197 60.687</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>b <span class="co"># los valores del shape beta</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 99.594 99.990 71.280 89.793 39.303</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Función para visualizar la distribution beta</span></span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>plot_beta <span class="ot">&lt;-</span> <span class="cf">function</span>(alpha, beta) {</span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
@@ -1351,6 +1455,7 @@ $sim.CI
 <span id="cb57-47"><a href="#cb57-47" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb57-48"><a href="#cb57-48" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
 <span id="cb57-49"><a href="#cb57-49" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(Latentes, Plantulas, Rosetta, Adultos, Fallecidos, <span class="at">ncol=</span><span class="dv">3</span>, <span class="at">nrow=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

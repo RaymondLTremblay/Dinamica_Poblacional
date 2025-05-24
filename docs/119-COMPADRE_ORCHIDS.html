@@ -476,10 +476,13 @@ window.Quarto = {
 <section id="activar-los-siguiente-paquetes" class="level2">
 <h2 class="anchored" data-anchor-id="activar-los-siguiente-paquetes">Activar los siguiente paquetes</h2>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rcompadre) <span class="co"># Paquete para trabajar con la base de datos de COMPADRE y COMADRE</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Paquete para activar multiples paquetes</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt) <span class="co"># Paquete para formatear tablas</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra) <span class="co"># Paquete para formatear tablas</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <hr>
 <section id="acceso-a-los-datos-de-compadre." class="level3">
@@ -503,7 +506,10 @@ window.Quarto = {
 <li>Usando la función <em>cdb_fetch()</em> se puede bajar los datos directamente de la pagina de web de COMPADRE. Esta función se encuentra en el paquete de <strong>Rcompadre</strong>.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>compadre <span class="ot">&lt;-</span> <span class="fu">cdb_fetch</span>(<span class="st">"compadre"</span>) <span class="co"># Usar este código para bajar los datos del repositorio de COMPADRE.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>This is COMPADRE version 6.23.5.0 (release date May_06_2023)
 See user agreement at https://compadre-db.org/Help/UserAgreement
@@ -521,10 +527,13 @@ See how to cite with `citation(Rcompadre)`</code></pre>
 </ul></li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#TodasSp=as_cdb(compadre)  # Un paso critico: Convertir la base de datos anterior COM(P)ADRE (de clase 'list') en la base en un objeto CompadreDB (COMPADRE Database)</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>TodasSp<span class="ot">=</span>compadre</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(TodasSp) <span class="co"># La lista de los nombres de las variables en el archivo COMPADRE, Nota que 59 variables en la base de datos de COMPADRE.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "mat"                    "MatrixID"               "SpeciesAuthor"         
  [4] "SpeciesAccepted"        "CommonName"             "Kingdom"               
@@ -547,7 +556,10 @@ See how to cite with `citation(Rcompadre)`</code></pre>
 [55] "MatrixDimension"        "SurvivalIssue"          "_Database"             
 [58] "_PopulationStatus"      "_PublicationStatus"    </code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(TodasSp) <span class="co"># La base de datos de COMPADRE tiene 8994 filas y 59 columnas (variables)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 8994   59</code></pre>
 </div>
@@ -565,9 +577,12 @@ See how to cite with `citation(Rcompadre)`</code></pre>
 </ul>
 <p><strong>This shows that the species added <em>Epidendrum xanthinum</em> is not yet included in the data base</strong></p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Epi <span class="ot">=</span> TodasSp <span class="sc">%&gt;%</span> </span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Genus <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Epipactis"</span>)) <span class="co"># Filtrar la información de *Epipactis* en la base de datos.</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>Epi <span class="co"># Nota que en el genero *Epipactis*, tenemos 51 fila, pero todas son de la misma especie de dos estudios distintos. </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A COM(P)ADRE database ('CompadreDB') object with 1 SPECIES and 51 MATRICES.
 
@@ -602,10 +617,13 @@ See how to cite with `citation(Rcompadre)`</code></pre>
 <li>Extraer (filter) solamente las especies de la familia <strong>Orchidaceae</strong> de la base completa de datos de COMPADRE.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>index_O<span class="ot">=</span>TodasSp <span class="sc">%&gt;%</span> </span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">filter</span>(Family <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Orchidaceae"</span>)) <span class="co"># Extraer la orquídeas de la base de datos. </span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(index_O, <span class="at">n=</span><span class="dv">3</span>) <span class="co"># para visualizar las primera 3 filas de la base de datos de COMPADRE para las orquídeas.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A COM(P)ADRE database ('CompadreDB') object with 3 SPECIES and 3 MATRICES.
 
@@ -634,9 +652,12 @@ See how to cite with `citation(Rcompadre)`</code></pre>
 <li>se crea un data frame con los géneros únicos.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Genera<span class="ot">=</span>(<span class="fu">as.data.frame</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(index_O<span class="sc">$</span>Genus))))</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(Genera)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
@@ -750,9 +771,12 @@ See how to cite with `citation(Rcompadre)`</code></pre>
 </ul>
 <p>Note que al momento hay 46 especies con nombres únicos en la base de datos</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Especies_unicas<span class="ot">=</span><span class="fu">as.data.frame</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(index_O<span class="sc">$</span>SpeciesAccepted)))</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(Especies_unicas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
@@ -912,7 +936,10 @@ See how to cite with `citation(Rcompadre)`</code></pre>
 <h2 class="anchored" data-anchor-id="contabilizar-cuantas-matrices-y-variables-estan-incluidas-en-el-archivo">Contabilizar cuantas matrices y variables estan incluidas en el archivo</h2>
 <p>La base de datos de orquídea tiene un total de 647 filas con 59 variables, por consecuencia tiene 647 matrices. Esas matrices de la misma especie son de diferentes poblaciones, tiempo o un análisis teóricos. Nota que las 647 no son de diferentes especies, pero de especies que pueden haber sido muestreado en diferentes poblaciones o años.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(index_O)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 647  59</code></pre>
 </div>
@@ -922,8 +949,11 @@ See how to cite with `citation(Rcompadre)`</code></pre>
 <h3 class="anchored" data-anchor-id="la-fuente-de-la-información">La fuente de la información</h3>
 <p>Para saber cuantos especies distintas y los manuscritos asociado a los estudios. En este caso los de esas 53 fuentes de información publicada, revisada por pares, tesis o informes técnicos. Algunas especies fueron estudiada y publicada en más de un manuscrito. Nota que las 9 primeras filas corresponde a 9 especies de <em>Caladenia</em> publicado en el mismo articulo. Se termina con 53 especies/publicaciones.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>index_O <span class="sc">|&gt;</span> <span class="fu">select</span>(mat, SpeciesAccepted, DOI_ISBN) <span class="sc">|&gt;</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">duplicated</span>(<span class="fu">paste0</span>(<span class="fu">pmax</span>(SpeciesAccepted, DOI_ISBN), <span class="fu">pmin</span>(SpeciesAccepted, DOI_ISBN))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A COM(P)ADRE database ('CompadreDB') object with 44 SPECIES and 53 MATRICES.
 
@@ -953,7 +983,10 @@ See how to cite with `citation(Rcompadre)`</code></pre>
 <h2 class="anchored" data-anchor-id="roberto"><em>ROBERTO</em>:</h2>
 <p>¿HAY una manera de contabilizar los nombres específicos (únicos), no por grupo? Para saber quien más publica sobre orquídeas.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(index_O<span class="sc">$</span>Authors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "Tremblay; Pérez; Larcombe; Brown; Quarmby; Bickerton; French; Bould"  
  [2] "Hens; Pakanen; Jäkäläniemi; Tuomi; Kvist"                             
@@ -999,10 +1032,13 @@ See how to cite with `citation(Rcompadre)`</code></pre>
 <h2 class="anchored" data-anchor-id="extraer-información-de-una-especie-específica">Extraer información de una especie específica</h2>
 <p>En el siguiente script se enseña como extraer la información de una especie específica. En este caso se selecciona la especie <strong>Telipogon helleri</strong>.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Th<span class="ot">=</span>index_O <span class="sc">%&gt;%</span> <span class="fu">select</span>(SpeciesAccepted, mat, Authors, DOI_ISBN, MatrixDimension) <span class="sc">%&gt;%</span> </span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(SpeciesAccepted <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Telipogon helleri"</span>))</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>Th</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A COM(P)ADRE database ('CompadreDB') object with 1 SPECIES and 1 MATRICES.
 
@@ -1018,7 +1054,10 @@ See how to cite with `citation(Rcompadre)`</code></pre>
 <p>En el siguiente script se enseña la matrices de <strong>Telipogon helleri</strong> y las etapas de esta matrices. Nota que el objeto <strong>mat</strong> es una lista de matrices que incluye la matriz de transición (matU) de estados de una población, la matriz de fecundidad (matF), la matriz de clonaje (matC) y la suma de las tres matrices (matA=matU+MatF+matC) vea el capitulo de <a href="#MatricesTFC">Matrices de transición, fecundidad y clonal</a></p>
 <p>La información incluye la clases/etapas que los autores usaron. El ciclo de vida incluyo 3 etapas, 1 inmaduras (S1-2) y 2 etapas de adultos (S3 y S4).</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>Th<span class="sc">$</span>mat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
   MatrixClassOrganized             MatrixClassAuthor
@@ -1058,6 +1097,8 @@ matC:
 <p>NOTA: OrganismType es una variable que indica si la orquídea es un epifita o terrestre. <strong>Roberto MUCHOS están erroneos</strong>.<br>
 - Todos las <em>Lepanthes</em> son epifitas, pero hay unas que son terrestres en la base de datos. - Todas las <em>Caladenia</em> son terrestres, pero hay unas que son epifitas en la base de datos.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#names(index_O) Los nombres de las variables</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>SPECIES_O<span class="ot">=</span>index_O <span class="sc">%&gt;%</span> <span class="fu">select</span>(StudyStart, StudyEnd, SpeciesAccepted, YearPublication, Authors, DOI_ISBN, OrganismType, MatrixPopulation, mat) <span class="sc">%&gt;%</span> </span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(SpeciesAccepted, YearPublication, OrganismType, StudyStart, StudyEnd) <span class="sc">%&gt;%</span> </span>
@@ -1068,6 +1109,7 @@ matC:
 <span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(StudyStart, StudyEnd)</span>
 <span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>SPECIES_O</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 54 × 6
 # Groups:   SpeciesAccepted, YearPublication, OrganismType, StudyStart [54]
@@ -1086,7 +1128,10 @@ matC:
 # ℹ 44 more rows
 # ℹ 1 more variable: n_populations &lt;int&gt;</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#write_csv(SPECIES_O, "DATA/Species_O.csv")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <hr>
 <section id="determinar-cuantas-poblaciones-fueron-muestreadas-por-especies" class="level3">
@@ -1095,7 +1140,10 @@ matC:
 <li>Cual es la frecuencia de cantidad de poblaciones por especies en la base de datos. La mayoría de los estudios usaron una sola población, pero hay estudios que usaron hasta 18 poblaciones distintas. Estas poblaciones pudiese ser de diferentes publicaciones o de las mismas poblaciones pero de diferentes fuentes.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(<span class="fu">table</span>(SPECIES_O<span class="sc">$</span>n_populations))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Var1 Freq
 1    1   27
@@ -1117,6 +1165,8 @@ matC:
 <li>Aquí vemos cuando comenzaron los estudios comenzaron y terminaron basado si las plantas son epifitas o no.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>SPECIES_O<span class="sc">$</span>SpeciesAccepted <span class="ot">&lt;-</span> <span class="fu">fct_reorder</span>(SPECIES_O<span class="sc">$</span>SpeciesAccepted, SPECIES_O<span class="sc">$</span>StudyStart, <span class="at">.desc =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(SPECIES_O, <span class="fu">aes</span>(SpeciesAccepted, <span class="at">color=</span>OrganismType))<span class="sc">+</span></span>
@@ -1130,6 +1180,7 @@ matC:
 <span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"grey20"</span>, <span class="at">size =</span> <span class="dv">7</span>, <span class="at">angle =</span> <span class="dv">0</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">0</span>, <span class="at">face =</span> <span class="st">"plain"</span>),  </span>
 <span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"grey20"</span>, <span class="at">size =</span> <span class="dv">12</span>, <span class="at">angle =</span> <span class="dv">0</span>, <span class="at">hjust =</span> .<span class="dv">5</span>, <span class="at">vjust =</span> <span class="dv">0</span>, <span class="at">face =</span> <span class="st">"plain"</span>),</span>
 <span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"grey20"</span>, <span class="at">size =</span> <span class="dv">12</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">5</span>, <span class="at">vjust =</span> .<span class="dv">5</span>, <span class="at">face =</span> <span class="st">"plain"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: A numeric `legend.position` argument in `theme()` was deprecated in ggplot2
 3.5.0.
@@ -1142,7 +1193,10 @@ matC:
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"Figures/Lenght_survey.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Saving 7 x 5 in image</code></pre>
 </div>
@@ -1155,6 +1209,8 @@ matC:
 <li>Figura de las duración de las investigaciones en la base de datos de COMPADRE. La mayoría de los estudios de orquídeas epifitas duraron pocos años al comparar con especies terrestres.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>index_O<span class="ot">=</span>index_O <span class="sc">%&gt;%</span> </span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">StudyDuration=</span><span class="fu">as.numeric</span>(StudyDuration))</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1168,6 +1224,7 @@ matC:
 <span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Study duration"</span>)<span class="sc">+</span></span>
 <span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Frequency"</span>)<span class="sc">+</span></span>
 <span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  rlt_theme</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -1182,9 +1239,12 @@ matC:
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ggsave("Duración_Epi_Ter.pdf")</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"Figures/Duración_Epi_Ter.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Saving 7 x 5 in image
 `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
@@ -1218,12 +1278,15 @@ matC:
 <p>Usando la función cdb_flag se puede evaluar todas las opciones en la base de datos de COMPADRE.</p>
 <p>Usando la función <strong>cdb_flag</strong> se identifica problemas potenciales en las matrices de transición de estados de las poblaciones. Esa función añade una fila por opciones en la matriz. Nota que para cada prueba anterior crea una columna con <strong>TRUE</strong> o <strong>FALSE</strong> para cada matriz en la base de datos.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Orchids_New=as_cdb(index)</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co">#compadre$mat[index]</span></span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>Compadre_flagged <span class="ot">&lt;-</span> <span class="fu">cdb_flag</span>(index_O) <span class="co"># Evaluación de todas las opciones en la base de datos de COMPADRE</span></span>
 <span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>Compadre_flagged <span class="sc">%&gt;%</span> <span class="fu">select</span>(mat, SpeciesAccepted, <span class="fu">starts_with</span>(<span class="st">"check"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A COM(P)ADRE database ('CompadreDB') object with 46 SPECIES and 647 MATRICES.
 
@@ -1251,8 +1314,11 @@ matC:
 <h4 class="anchored" data-anchor-id="ergodicidad-e-irreducibilidad">Ergodicidad e Irreducibilidad</h4>
 <p>En los siguientes scripts se filtra para las matrices con ciertas condiciones para evaluar si las matrices son ergódicas e irreducibles. Notas las matrices que son ergódica son irreducibles, pero no todas las matrices irreducibles son ergódicas. Evalué la cantidad de filas en cada caso.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>Mat_ergodic <span class="ot">&lt;-</span> <span class="fu">subset</span>(Compadre_flagged, check_NA_A <span class="sc">==</span> <span class="cn">FALSE</span> <span class="sc">&amp;</span> check_ergodic <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="co"># para evaluar si las matrices son ergódicas</span></span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>Mat_ergodic </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A COM(P)ADRE database ('CompadreDB') object with 45 SPECIES and 484 MATRICES.
 
@@ -1277,8 +1343,11 @@ matC:
 #   DOI_ISBN &lt;chr&gt;, AdditionalSource &lt;chr&gt;, StudyDuration &lt;dbl&gt;,
 #   StudyStart &lt;chr&gt;, StudyEnd &lt;chr&gt;, ProjectionInterval &lt;chr&gt;, …</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>Mat_irred <span class="ot">&lt;-</span> <span class="fu">subset</span>(Compadre_flagged, check_NA_A <span class="sc">==</span> <span class="cn">FALSE</span> <span class="sc">&amp;</span> check_irreducible <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="co"># para evaluar si las matrices son irreducibles</span></span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>Mat_irred</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A COM(P)ADRE database ('CompadreDB') object with 43 SPECIES and 360 MATRICES.
 
@@ -1303,8 +1372,11 @@ matC:
 #   DOI_ISBN &lt;chr&gt;, AdditionalSource &lt;chr&gt;, StudyDuration &lt;dbl&gt;,
 #   StudyStart &lt;chr&gt;, StudyEnd &lt;chr&gt;, ProjectionInterval &lt;chr&gt;, …</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>Mat_erg_irred <span class="ot">&lt;-</span> <span class="fu">subset</span>(Compadre_flagged, check_NA_A <span class="sc">==</span> <span class="cn">FALSE</span> <span class="sc">&amp;</span> check_irreducible <span class="sc">==</span> <span class="cn">TRUE</span> <span class="sc">&amp;</span> check_ergodic <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="co"># para evaluar si las matrices son ergódicas e irreducibles al mismo tiempo</span></span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>Mat_erg_irred </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A COM(P)ADRE database ('CompadreDB') object with 43 SPECIES and 360 MATRICES.
 
@@ -1340,13 +1412,19 @@ matC:
 <li><p>Se usa la función <strong>hist</strong> para visualizar la distribución de los valores propios de lambda.</p></li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>lambdaVals <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">matA</span>(Mat_erg_irred), popdemo<span class="sc">::</span>eigs, <span class="at">what=</span><span class="st">"lambda"</span>)</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lambdaVals) <span class="co"># la distribuciones de los lambdas</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
  0.3888  0.9407  0.9993  0.9891  1.0313  1.7760 </code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(lambdaVals, <span class="at">main =</span> <span class="st">"Lambda values"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1360,6 +1438,8 @@ matC:
 <li>Las función de <strong>map_dbl</strong> transforman su entrada aplicando una función a cada elemento de una lista y devolviendo un objeto de la misma longitud que la entrada. En este caso por cada <strong>matA</strong>, habrá un lambda.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="do">## con el paquete popdemo</span></span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>lambdaVals1 <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(<span class="fu">matA</span>(Mat_erg_irred), <span class="sc">~</span>popdemo<span class="sc">::</span><span class="fu">eigs</span>(.x, <span class="at">what=</span><span class="st">"lambda"</span>))</span>
@@ -1368,6 +1448,7 @@ matC:
 <span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="do">##O con el paquete popbio, que evita algunos mensajes de advertencia</span></span>
 <span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>lambdaVals2 <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(<span class="fu">matA</span>(Mat_erg_irred), <span class="sc">~</span>popbio<span class="sc">::</span><span class="fu">lambda</span>(.x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 <section id="cambiar-el-estado-de-algunas-variables" class="level3">
@@ -1380,6 +1461,8 @@ matC:
 <section id="resolve-the-name-of-this-data-frame-give-it-a-more-reasonable-name" class="level2">
 <h2 class="anchored" data-anchor-id="resolve-the-name-of-this-data-frame-give-it-a-more-reasonable-name">Resolve the name of this data frame… Give it a more reasonable name</h2>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>New_Data<span class="ot">=</span>Mat_erg_irred <span class="sc">%&gt;%</span> </span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">OrganismType =</span> <span class="fu">case_when</span>(</span>
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    Genus <span class="sc">==</span>  <span class="st">"Caladenia"</span> <span class="sc">&amp;</span> OrganismType <span class="sc">==</span> <span class="st">"Epiphyte"</span> <span class="sc">~</span> <span class="st">"Herbaceous perennial"</span>,</span>
@@ -1391,12 +1474,15 @@ matC:
 <span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>terrestres<span class="ot">=</span>New_Data <span class="sc">%&gt;%</span> </span>
 <span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(OrganismType<span class="sc">==</span><span class="st">"Herbaceous perennial"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 <section id="variación-en-crecimiento-de-la-popblación-en-epifitas" class="level2">
 <h2 class="anchored" data-anchor-id="variación-en-crecimiento-de-la-popblación-en-epifitas">Variación en crecimiento de la popblación en <em>Epifitas</em></h2>
 <p>Aqui seleccionamos las especies de <em>Epifitas</em> con todas las poblaciones muestradas</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>Compadre_flagged_epif <span class="ot">&lt;-</span> <span class="fu">cdb_flag</span>(epifitas)</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>x_epif <span class="ot">&lt;-</span> <span class="fu">subset</span>(Compadre_flagged_epif, check_NA_A <span class="sc">==</span> <span class="cn">FALSE</span> <span class="sc">&amp;</span> check_ergodic <span class="sc">==</span> <span class="cn">TRUE</span>)</span>
@@ -1408,15 +1494,22 @@ matC:
 <span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a><span class="co">#Or with popbio, which avoids some warning messages…</span></span>
 <span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>lambda_terr <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(<span class="fu">matA</span>(terrestres), <span class="sc">~</span>popbio<span class="sc">::</span><span class="fu">lambda</span>(.x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>Con la función evaluando las especies terrestres y epifitas uno observa que las especies terrestres tienen valores propios de lambda más dispersos que las especies epifitas, y aunque los promedios son distintos la mediana es similar.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lambda_epif)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
  0.3888  0.9715  1.0003  0.9716  1.0124  1.3592 </code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(lambda_epif, <span class="at">main =</span> <span class="st">"Lambda values"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1424,12 +1517,18 @@ matC:
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lambda_terr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
  0.4089  0.9329  0.9988  0.9973  1.0516  1.7760 </code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(lambda_terr, <span class="at">main =</span> <span class="st">"Lambda values"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1440,6 +1539,8 @@ matC:
 </div>
 <p>Para visualizar loa datos en una figura de <strong>ggplot2</strong>, hay que convertir estas filas en un data.frame y añadir una columna con el tipo de habitad, renombrar la columna lambda y unir los dos data.frames en uno solo.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>df_Lamb_epif<span class="ot">=</span><span class="fu">as.data.frame</span>(lambda_epif)</span>
 <span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>df_Lamb_epi<span class="ot">=</span>df_Lamb_epif <span class="sc">%&gt;%</span> </span>
 <span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">Habit_Type =</span> <span class="st">"Epífitas"</span>) <span class="sc">%&gt;%</span> </span>
@@ -1453,12 +1554,16 @@ matC:
 <span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>ALL_Lambdas<span class="ot">=</span><span class="fu">rbind</span>(df_Lamb_epi, df_Lamb_terr) <span class="co"># unir los dos data frame en uno</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ALL_Lambdas, <span class="fu">aes</span>(lambda, <span class="at">fill=</span>Habit_Type ))<span class="sc">+</span></span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">colour=</span><span class="st">"white"</span>) <span class="sc">+</span> </span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>( <span class="sc">~</span>Habit_Type)<span class="sc">+</span></span>
 <span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  rlt_theme</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -1469,7 +1574,10 @@ matC:
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"Figures/Terr_Epi_lambda.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Saving 7 x 5 in image
 `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
@@ -1477,8 +1585,11 @@ matC:
 </div>
 <p>Para calcular los coeficientes (el promedio) y determinar si estos son significativamente diferentes entre los grupos se puede usar un modelo lineal y la función <strong>lm</strong>. En este caso se usa la variable <strong>Habit_Type</strong> para predecir el valor propio de lambda. Añadiendo un <strong>-1</strong> al modelo hace que los coeficientes para cada grupo este en la tabla de salida y no hay que hacer un calculo suplementario. Note que lo más interesante de este análisis es que las especies terrestres tienen menos dispersión cuando evaluado con el error estándar que las especies epifitas, y aunque los cuartiles son más amplios (análisis anterior).</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>model_lambda<span class="ot">=</span><span class="fu">lm</span>(lambda <span class="sc">~</span> Habit_Type<span class="dv">-1</span>, <span class="at">data=</span>ALL_Lambdas)</span>
 <span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_lambda)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1499,8 +1610,11 @@ Residual standard error: 0.1395 on 358 degrees of freedom
 Multiple R-squared:  0.9806,    Adjusted R-squared:  0.9805 
 F-statistic:  9046 on 2 and 358 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom) <span class="co"># paquete para hacer tablas de modelos</span></span>
 <span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(model_lambda) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 5
   term                estimate std.error statistic   p.value
@@ -1511,6 +1625,8 @@ F-statistic:  9046 on 2 and 358 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <p>Uno puedo visualizar estas distribuciones usando la librería <strong>ggdist</strong> y <strong>distributional</strong>, con la función <strong>stat_halfeye</strong>. Es importante notar que la función <strong>stat_halfeye</strong> requiere que se especifique la distribución de los datos y que la información proviene del modelo anterior (model_lambda). En este análisis se asume que los <span class="math inline">\(\lambda\)</span> tienen una distribución normal.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggdist)</span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(distributional)</span>
 <span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>model_lambda <span class="sc">%&gt;%</span></span>
@@ -1519,6 +1635,7 @@ F-statistic:  9046 on 2 and 358 DF,  p-value: &lt; 2.2e-16</code></pre>
 <span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_halfeye</span>(</span>
 <span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">xdist =</span> <span class="fu">dist_student_t</span>(<span class="at">df =</span> <span class="fu">df.residual</span>(model_lambda), <span class="at">mu =</span> estimate, <span class="at">sigma =</span> std.error))</span>
 <span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1529,6 +1646,8 @@ F-statistic:  9046 on 2 and 358 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <p>La gráfica anterior puede esconder la dispersión de los datos, específicamente los datos sesgados, por lo que se puede añadir los datos originales a la figura. En el siguiente caso se añade un <strong>|</strong> por cada lambda en la posición inferior de la figura. Nota ahora que la dispersión de los datos es varia si uno mira la distribución con el promedio y el error estandard versus los datos originales, los <strong>|</strong>. es claro que con esta figura uno puede apreciar la dispersión de los datos y la distribución de los datos. Esta gráfica da muy diferente al anterior con una perspectiva más completa de los datos, enfocado a en los datos fuera de datos centrado de la distribución.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>ALL_Lambdas <span class="sc">%&gt;%</span></span>
 <span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expand</span>(Habit_Type) <span class="sc">%&gt;%</span></span>
 <span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">augment</span>(model_lambda, <span class="at">newdata =</span> ., <span class="at">se_fit =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
@@ -1538,6 +1657,7 @@ F-statistic:  9046 on 2 and 358 DF,  p-value: &lt; 2.2e-16</code></pre>
 <span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">scale =</span> .<span class="dv">5</span></span>
 <span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> lambda), <span class="at">data =</span> ALL_Lambdas, <span class="at">pch =</span> <span class="st">"|"</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">y =</span> <span class="sc">-</span>.<span class="dv">15</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1556,23 +1676,32 @@ F-statistic:  9046 on 2 and 358 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>La lista presente corresponde a los datos de COMPADRE y suplementada con busqueda en los articulos para crear un mapa donde fueron hecho los estudios de dinamica poblacional.</p>
 <p>Lista de números de poblaciones únicas por especies.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
 <span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>Orchid_data_DOI_Diana_3a <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/Orchid_data_DOI_Diana_3a.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>Lat_Long<span class="ot">=</span>Orchid_data_DOI_Diana_3a <span class="sc">%&gt;%</span> </span>
 <span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(SpeciesAccepted, Lon, Lat, OrganismType) <span class="sc">|&gt;</span> </span>
 <span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(SpeciesAccepted, Lon, Lat, OrganismType)</span>
 <span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a><span class="co">#write_csv(Lat_Long, "data/Orchid_data_DOI_Diana_3a.csv")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>Usamos el paquete ggplot2 para visualizar la distribución de las orquídeas en la base de datos de COMPADRE. En este caso se usa la función <strong>borders</strong> para añadir los bordes de los países al mapa. La función <strong>borders</strong> usa funciones en el paquete <strong>maps</strong> para añadir los bordes de los países al mapa.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(Lat_Long, <span class="fu">aes</span>(Lon, Lat,<span class="at">colour=</span>OrganismType)) <span class="sc">+</span></span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">borders</span>(<span class="at">database =</span> <span class="st">"world"</span>, <span class="at">fill =</span> <span class="st">"grey80"</span>, <span class="at">col =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
 <span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">1.0</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1580,7 +1709,10 @@ F-statistic:  9046 on 2 and 358 DF,  p-value: &lt; 2.2e-16</code></pre>
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ggsave("orchid_map.jpg")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 </section>
@@ -1589,6 +1721,8 @@ F-statistic:  9046 on 2 and 358 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Aquí se usa el paquete <strong>Leaflet</strong> para mapear los sitios de muestreo de las especies donde hubo trabajo de campo, usando técnicas de marca-recaptura y análisis de dinámica poblacional.</p>
 <p>Se observa una disparidad en la cantidad de sitios de muestreo entre las especies, con algunas especies con muchos sitios de muestreo y otras con pocos. Las poblaciones en azul son plantas epifitas y las rojas son orquídeas terrestres. Note la disparidad, las especies terrestres estan mayormente en Europa y Norte América, con poca representación en Asia y ninguna en Africa. La especies epifitas están todas en el Caribe y Centro América (México) y ninguna en Africa, Asia y Australia.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1607,11 +1741,15 @@ F-statistic:  9046 on 2 and 358 DF,  p-value: &lt; 2.2e-16</code></pre>
 <span id="cb74-16"><a href="#cb74-16" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb74-17"><a href="#cb74-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb74-18"><a href="#cb74-18" aria-hidden="true" tabindex="-1"></a>Orchid_map</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-f41be93391e690edb1b6" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-f41be93391e690edb1b6">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircleMarkers","args":[[9.166667,17.621111,17.5,17.48,22,-37.105,-34.32,-37.76,-28.35,-33.05,-34.5,-37.17,-37.6716,-37,58.472222,58.559722,58.9094,59.491111,29.658701,39.279202,29.65,39.279167,34.083333,42.633333,42.659444,42.769722,53.266667,58.625,58.579444,58.625,59.483333,42.333333,42.2,42.25,42.333333,23.116667,42.3833,63.05,63.05,62.6667,62.666667,21.5,66.37417000000001,66.389444,66.367222,66.36666700000001,66.366389,66.37472200000001,66.366944,66.36750000000001,66.37388900000001,14.983333,15.03,15.064444,51.883333,50.946111,19.5,19,15.091944,18.101667,18.094167,18.3,18.0941,18.2956,18.294722,18.295,18.4,18.319167,18.321389,18.316667,18.35,20,58.5561,58.556111,58.628333,58.646389,58.614722,59.255278,15.566056,14.894806,14.989194,14.794667,15.091944,50.844444,50.75,45.483333,39.265556,39.221944,39.363333,39.343056,39.346944,39.856667,18.349444,15.091944,18.451389],[-79.84999999999999,-63.226111,-62.99,-62.959,-84.515278,145.39,138.57,142.96,114.63,119.01,137.6,143.43,146.1772,147.43,21.917222,23.552222,24.7383,25.639444,-82.277496,-79.9328,-82.283333,-79.932778,-78.3,0.083333,0.120278,0.357778,22.65,23.25,23.266389,23.27,26.341667,-123.516667,-123.5,-123.166667,-122.45,104.633333,-88.08,9.083299999999999,9.083333,11.8333,11.833333,-84.515278,29.21667,29.267778,29.313889,29.316667,29.3175,29.319444,29.322778,29.327222,29.336944,-92.166667,-92.105833,-92.08111100000001,0.583333,11.593056,-96.95,-96.95,-92.16583300000001,-66.072778,-66.0275,-65.783333,-66.0797,-65.8023,-65.8,-65.8,-65.783333,-65.825,-65.819722,-65.816667,-65.816667,-96.95,23.1811,23.181111,23.207222,23.320278,23.568056,25.722778,-92.83408300000001,-92.306389,-92.285139,-92.185778,-92.16583300000001,-0.050833,5.75,-75.84999999999999,16.098611,16.115833,16.230833,16.232778,16.233611,16.366111,-66.684444,-92.16583300000001,-66.59944400000001],2,null,null,{"interactive":true,"className":"","stroke":true,"color":["#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#0000FF","#0000FF","#FF0000","#FF0000","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#0000FF"],"weight":5,"opacity":0.5,"fill":true,"fillColor":["#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#0000FF","#0000FF","#FF0000","#FF0000","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#0000FF"],"fillOpacity":0.2},null,null,["<I>Aspasia principissa<\/I>","<I>Brassavola cucullata<\/I>","<I>Brassavola cucullata<\/I>","<I>Brassavola cucullata<\/I>","<I>Broughtonia cubensis<\/I>","<I>Caladenia amonea<\/I>","<I>Caladenia argocalla<\/I>","<I>Caladenia clavigera<\/I>","<I>Caladenia elegans<\/I>","<I>Caladenia graniticola<\/I>","<I>Caladenia macroclavia<\/I>","<I>Caladenia oenochila<\/I>","<I>Caladenia rosella<\/I>","<I>Caladenia valida<\/I>","<I>Cephalanthera longifolia<\/I>","<I>Cephalanthera longifolia<\/I>","<I>Cephalanthera longifolia<\/I>","<I>Cephalanthera longifolia<\/I>","<I>Cleistes bifaria<\/I>","<I>Cleistes bifaria<\/I>","<I>Cleistesiopsis bifaria<\/I>","<I>Cleistesiopsis bifaria<\/I>","<I>Cleistesiopsis divaricata<\/I>","<I>Corallorhiza trifida<\/I>","<I>Cypripedium calceolus<\/I>","<I>Cypripedium calceolus<\/I>","<I>Cypripedium calceolus<\/I>","<I>Cypripedium calceolus<\/I>","<I>Cypripedium calceolus<\/I>","<I>Cypripedium calceolus<\/I>","<I>Cypripedium calceolus<\/I>","<I>Cypripedium fasciculatum<\/I>","<I>Cypripedium fasciculatum<\/I>","<I>Cypripedium fasciculatum<\/I>","<I>Cypripedium fasciculatum<\/I>","<I>Cypripedium lentiginosum<\/I>","<I>Cypripedium parviflorum<\/I>","<I>Dactylorhiza lapponica<\/I>","<I>Dactylorhiza lapponica<\/I>","<I>Dactylorhiza lapponica<\/I>","<I>Dactylorhiza lapponica<\/I>","<I>Dendrophylax lindenii<\/I>","<I>Epipactis atrorubens<\/I>","<I>Epipactis atrorubens<\/I>","<I>Epipactis atrorubens<\/I>","<I>Epipactis atrorubens<\/I>","<I>Epipactis atrorubens<\/I>","<I>Epipactis atrorubens<\/I>","<I>Epipactis atrorubens<\/I>","<I>Epipactis atrorubens<\/I>","<I>Epipactis atrorubens<\/I>","<I>Erycina crista-galli<\/I>","<I>Erycina crista-galli<\/I>","<I>Guarianthe aurantiaca<\/I>","<I>Herminium monorchis<\/I>","<I>Himantoglossum hircinum<\/I>","<I>Jacquiniella leucomelana<\/I>","<I>Jacquiniella teretifolia<\/I>","<I>Lepanthes acuminata<\/I>","<I>Lepanthes caritensis<\/I>","<I>Lepanthes caritensis<\/I>","<I>Lepanthes eltoroensis<\/I>","<I>Lepanthes rubripetala<\/I>","<I>Lepanthes rubripetala<\/I>","<I>Lepanthes rubripetala<\/I>","<I>Lepanthes rubripetala<\/I>","<I>Lepanthes rubripetala<\/I>","<I>Lepanthes rupestris<\/I>","<I>Lepanthes rupestris<\/I>","<I>Lepanthes rupestris<\/I>","<I>Lepanthes rupestris<\/I>","<I>Lycaste aromatica<\/I>","<I>Neotinea ustulata<\/I>","<I>Neotinea ustulata<\/I>","<I>Neotinea ustulata<\/I>","<I>Neotinea ustulata<\/I>","<I>Neotinea ustulata<\/I>","<I>Neotinea ustulata<\/I>","<I>Oeceoclades maculata<\/I>","<I>Oeceoclades maculata<\/I>","<I>Oeceoclades maculata<\/I>","<I>Oeceoclades maculata<\/I>","<I>Oncidium poikilostalix<\/I>","<I>Ophrys sphegodes<\/I>","<I>Orchis purpurea<\/I>","<I>Platanthera hookeri<\/I>","<I>Serapias cordigera<\/I>","<I>Serapias cordigera<\/I>","<I>Serapias cordigera<\/I>","<I>Serapias cordigera<\/I>","<I>Serapias cordigera<\/I>","<I>Serapias cordigera<\/I>","<I>Spathoglottis plicata<\/I>","<I>Telipogon helleri<\/I>","<I>Tolumnia variegata<\/I>"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-37.76,66.389444],"lng":[-123.516667,147.43]}},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-39f0e5ae32777c4fbbaa" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-39f0e5ae32777c4fbbaa">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircleMarkers","args":[[9.166667,17.621111,17.5,17.48,22,-37.105,-34.32,-37.76,-28.35,-33.05,-34.5,-37.17,-37.6716,-37,58.472222,58.559722,58.9094,59.491111,29.658701,39.279202,29.65,39.279167,34.083333,42.633333,42.659444,42.769722,53.266667,58.625,58.579444,58.625,59.483333,42.333333,42.2,42.25,42.333333,23.116667,42.3833,63.05,63.05,62.6667,62.666667,21.5,66.37417000000001,66.389444,66.367222,66.36666700000001,66.366389,66.37472200000001,66.366944,66.36750000000001,66.37388900000001,14.983333,15.03,15.064444,51.883333,50.946111,19.5,19,15.091944,18.101667,18.094167,18.3,18.0941,18.2956,18.294722,18.295,18.4,18.319167,18.321389,18.316667,18.35,20,58.5561,58.556111,58.628333,58.646389,58.614722,59.255278,15.566056,14.894806,14.989194,14.794667,15.091944,50.844444,50.75,45.483333,39.265556,39.221944,39.363333,39.343056,39.346944,39.856667,18.349444,15.091944,18.451389],[-79.84999999999999,-63.226111,-62.99,-62.959,-84.515278,145.39,138.57,142.96,114.63,119.01,137.6,143.43,146.1772,147.43,21.917222,23.552222,24.7383,25.639444,-82.277496,-79.9328,-82.283333,-79.932778,-78.3,0.083333,0.120278,0.357778,22.65,23.25,23.266389,23.27,26.341667,-123.516667,-123.5,-123.166667,-122.45,104.633333,-88.08,9.083299999999999,9.083333,11.8333,11.833333,-84.515278,29.21667,29.267778,29.313889,29.316667,29.3175,29.319444,29.322778,29.327222,29.336944,-92.166667,-92.105833,-92.08111100000001,0.583333,11.593056,-96.95,-96.95,-92.16583300000001,-66.072778,-66.0275,-65.783333,-66.0797,-65.8023,-65.8,-65.8,-65.783333,-65.825,-65.819722,-65.816667,-65.816667,-96.95,23.1811,23.181111,23.207222,23.320278,23.568056,25.722778,-92.83408300000001,-92.306389,-92.285139,-92.185778,-92.16583300000001,-0.050833,5.75,-75.84999999999999,16.098611,16.115833,16.230833,16.232778,16.233611,16.366111,-66.684444,-92.16583300000001,-66.59944400000001],2,null,null,{"interactive":true,"className":"","stroke":true,"color":["#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#0000FF","#0000FF","#FF0000","#FF0000","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#0000FF"],"weight":5,"opacity":0.5,"fill":true,"fillColor":["#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#0000FF","#0000FF","#FF0000","#FF0000","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#0000FF"],"fillOpacity":0.2},null,null,["<I>Aspasia principissa<\/I>","<I>Brassavola cucullata<\/I>","<I>Brassavola cucullata<\/I>","<I>Brassavola cucullata<\/I>","<I>Broughtonia cubensis<\/I>","<I>Caladenia amonea<\/I>","<I>Caladenia argocalla<\/I>","<I>Caladenia clavigera<\/I>","<I>Caladenia elegans<\/I>","<I>Caladenia graniticola<\/I>","<I>Caladenia macroclavia<\/I>","<I>Caladenia oenochila<\/I>","<I>Caladenia rosella<\/I>","<I>Caladenia valida<\/I>","<I>Cephalanthera longifolia<\/I>","<I>Cephalanthera longifolia<\/I>","<I>Cephalanthera longifolia<\/I>","<I>Cephalanthera longifolia<\/I>","<I>Cleistes bifaria<\/I>","<I>Cleistes bifaria<\/I>","<I>Cleistesiopsis bifaria<\/I>","<I>Cleistesiopsis bifaria<\/I>","<I>Cleistesiopsis divaricata<\/I>","<I>Corallorhiza trifida<\/I>","<I>Cypripedium calceolus<\/I>","<I>Cypripedium calceolus<\/I>","<I>Cypripedium calceolus<\/I>","<I>Cypripedium calceolus<\/I>","<I>Cypripedium calceolus<\/I>","<I>Cypripedium calceolus<\/I>","<I>Cypripedium calceolus<\/I>","<I>Cypripedium fasciculatum<\/I>","<I>Cypripedium fasciculatum<\/I>","<I>Cypripedium fasciculatum<\/I>","<I>Cypripedium fasciculatum<\/I>","<I>Cypripedium lentiginosum<\/I>","<I>Cypripedium parviflorum<\/I>","<I>Dactylorhiza lapponica<\/I>","<I>Dactylorhiza lapponica<\/I>","<I>Dactylorhiza lapponica<\/I>","<I>Dactylorhiza lapponica<\/I>","<I>Dendrophylax lindenii<\/I>","<I>Epipactis atrorubens<\/I>","<I>Epipactis atrorubens<\/I>","<I>Epipactis atrorubens<\/I>","<I>Epipactis atrorubens<\/I>","<I>Epipactis atrorubens<\/I>","<I>Epipactis atrorubens<\/I>","<I>Epipactis atrorubens<\/I>","<I>Epipactis atrorubens<\/I>","<I>Epipactis atrorubens<\/I>","<I>Erycina crista-galli<\/I>","<I>Erycina crista-galli<\/I>","<I>Guarianthe aurantiaca<\/I>","<I>Herminium monorchis<\/I>","<I>Himantoglossum hircinum<\/I>","<I>Jacquiniella leucomelana<\/I>","<I>Jacquiniella teretifolia<\/I>","<I>Lepanthes acuminata<\/I>","<I>Lepanthes caritensis<\/I>","<I>Lepanthes caritensis<\/I>","<I>Lepanthes eltoroensis<\/I>","<I>Lepanthes rubripetala<\/I>","<I>Lepanthes rubripetala<\/I>","<I>Lepanthes rubripetala<\/I>","<I>Lepanthes rubripetala<\/I>","<I>Lepanthes rubripetala<\/I>","<I>Lepanthes rupestris<\/I>","<I>Lepanthes rupestris<\/I>","<I>Lepanthes rupestris<\/I>","<I>Lepanthes rupestris<\/I>","<I>Lycaste aromatica<\/I>","<I>Neotinea ustulata<\/I>","<I>Neotinea ustulata<\/I>","<I>Neotinea ustulata<\/I>","<I>Neotinea ustulata<\/I>","<I>Neotinea ustulata<\/I>","<I>Neotinea ustulata<\/I>","<I>Oeceoclades maculata<\/I>","<I>Oeceoclades maculata<\/I>","<I>Oeceoclades maculata<\/I>","<I>Oeceoclades maculata<\/I>","<I>Oncidium poikilostalix<\/I>","<I>Ophrys sphegodes<\/I>","<I>Orchis purpurea<\/I>","<I>Platanthera hookeri<\/I>","<I>Serapias cordigera<\/I>","<I>Serapias cordigera<\/I>","<I>Serapias cordigera<\/I>","<I>Serapias cordigera<\/I>","<I>Serapias cordigera<\/I>","<I>Serapias cordigera<\/I>","<I>Spathoglottis plicata<\/I>","<I>Telipogon helleri<\/I>","<I>Tolumnia variegata<\/I>"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-37.76,66.389444],"lng":[-123.516667,147.43]}},"evals":[],"jsHooks":[]}</script>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># htmltools::save_html(Orchid_map, file = "Orchid_map.html") # El script para crear un archivo aparte del mapa</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 <section id="la-esperanza-de-vida-de-las-orquídeas" class="level2">
@@ -1620,6 +1758,8 @@ F-statistic:  9046 on 2 and 358 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Para calcular y comparar los datos es importante que la matriz sea del mismo largo de tiempo, por ejemplo no se debería comparar una matriz de 1 año con una matriz de 1 mes o de 10 años. Los valores de tiempo es la unidad de los datos de la matriz.</p>
 <p>Aquí el script crea un data frame de los valores del largo de vida para cada especies con matrices de transiciones de un año.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage) <span class="co"># función para calcular el largo de vida esperada</span></span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>lifeExpectancy <span class="ot">&lt;-</span> <span class="cf">function</span>(matU, startLife) {</span>
 <span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">diag</span>(<span class="fu">nrow</span>(matU)) <span class="sc">-</span> matU)</span>
@@ -1644,6 +1784,7 @@ F-statistic:  9046 on 2 and 358 DF,  p-value: &lt; 2.2e-16</code></pre>
 <span id="cb76-22"><a href="#cb76-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">low_CI_var_LS=</span> life_expectancy<span class="fl">-1.96</span><span class="sc">*</span><span class="fu">sqrt</span>(var_life_expectancy)) <span class="sc">%&gt;%</span> <span class="co"># calcular el intervalo de confianza inferior</span></span>
 <span id="cb76-23"><a href="#cb76-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">high_CI_var_LS=</span> life_expectancy<span class="fl">+1.96</span><span class="sc">*</span><span class="fu">sqrt</span>(var_life_expectancy)) <span class="sc">%&gt;%</span>  <span class="co"># calcular el intervalo de confianza superior</span></span>
 <span id="cb76-24"><a href="#cb76-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">OrganismType =</span> <span class="fu">reorder</span>(OrganismType, life_expectancy, median)) <span class="co"># ordenar las especies por el largo de vida</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: There were 2 warnings in `mutate()`.
 The first warning was:
@@ -1654,11 +1795,16 @@ Caused by warning:
  probability &gt; 1
 ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>OrchidLS<span class="ot">=</span>compadre_life_expect <span class="sc">%&gt;%</span> </span>
 <span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(mat, SpeciesAccepted, OrganismType, SpeciesAccepted, life_expectancy, low_CI_var_LS, high_CI_var_LS) <span class="sc">%&gt;%</span> </span>
 <span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(life_expectancy)) <span class="co"># tabla de los resultados</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>New_Data <span class="sc">%&gt;%</span> </span>
 <span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ProjectionInterval <span class="sc">==</span> <span class="fl">1.0</span>) <span class="sc">|&gt;</span> <span class="co"># filtrar para matriz de un año</span></span>
 <span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(MatrixComposite <span class="sc">==</span> <span class="st">"Mean"</span>, <span class="co"># filtrar para la matriz promedia</span></span>
@@ -1669,6 +1815,7 @@ Caused by warning:
 <span id="cb79-8"><a href="#cb79-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cdb_collapse</span>(<span class="at">columns =</span> <span class="st">"StageID"</span>) <span class="sc">%&gt;%</span> <span class="co"># colapsar las etapas</span></span>
 <span id="cb79-9"><a href="#cb79-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cdb_flag</span>() <span class="sc">%&gt;%</span> <span class="co"># evaluar las matrices y crear una columna para cada evaluación</span></span>
 <span id="cb79-10"><a href="#cb79-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(check_zero_C <span class="sc">==</span> <span class="cn">FALSE</span>) <span class="co"># filtrar para matrices sin valores faltantes</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>A COM(P)ADRE database ('CompadreDB') object with 1 SPECIES and 2 MATRICES.
 
@@ -1685,15 +1832,21 @@ Caused by warning:
 #   StudyStart &lt;chr&gt;, StudyEnd &lt;chr&gt;, ProjectionInterval &lt;chr&gt;,
 #   MatrixCriteriaSize &lt;chr&gt;, MatrixCriteriaOntogeny &lt;chr&gt;, …</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>          <span class="co"># filtrar para matrices sin valores cero</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>Visualizar el largo de vida por plantas epifitas versus terrestres. Nota aquí que algunas especies están representada múltiple veces. Por consecuencia la distribución de los datos no es una buena representación de la diferencia entre las especies epifitas y terrestres, debido a lo que se llama pseudoreplicación. Este tabla representa la distribución los datos del data frame anterior.</p>
 <p>Calculando el promedio y la desviación estándar de la esperanza de vida de las orquídeas.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>OrchidLS <span class="sc">|&gt;</span> </span>
 <span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(OrganismType) <span class="sc">|&gt;</span> </span>
 <span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_LS=</span> <span class="fu">mean</span>(life_expectancy, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
 <span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_LS =</span> <span class="fu">sd</span>(life_expectancy, <span class="at">na.rm=</span><span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 3
   OrganismType         mean_LS sd_LS
@@ -1704,6 +1857,8 @@ Caused by warning:
 </div>
 <p>Haciendo una figura del largo de vida de las especies epífitas y terrestres. Nota que la escala es logarítmica.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(OrchidLS, <span class="fu">aes</span>(OrganismType, life_expectancy, <span class="at">colour=</span>OrganismType)) <span class="sc">+</span></span>
 <span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span><span class="fu">geom_point</span>()<span class="sc">+</span></span>
 <span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
@@ -1711,6 +1866,7 @@ Caused by warning:
 <span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Life expectancy (log(years))"</span>)<span class="sc">+</span></span>
 <span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a>  rlt_theme<span class="sc">+</span></span>
 <span id="cb84-7"><a href="#cb84-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1718,7 +1874,10 @@ Caused by warning:
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"Figures/Life_Span.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Saving 7 x 5 in image</code></pre>
 </div>
@@ -1728,6 +1887,8 @@ Caused by warning:
 <p><strong>How to calculate CI of life span, it is in the table above, use gamma, not normal</strong> !!!!</p>
 <p>low_CI_var_LS high_CI_var_LS</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co">#SPECIES_O$SpeciesAccepted &lt;- fct_reorder(SPECIES_O$SpeciesAccepted, SPECIES_O$StudyStart, .desc = FALSE) # Ordenar por fecha de inicio del estudio </span></span>
 <span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="co">#compadre_life_expect |&gt; select(mat, Genus, SpeciesAccepted, life_expectancy) |&gt; </span></span>
@@ -1742,6 +1903,7 @@ Caused by warning:
 <span id="cb87-12"><a href="#cb87-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
 <span id="cb87-13"><a href="#cb87-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
 <span id="cb87-14"><a href="#cb87-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Life expectancy (log(years))"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1749,14 +1911,19 @@ Caused by warning:
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co">#  rlt_theme+</span></span>
 <span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#theme(legend.position = "none")</span></span>
 <span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a><span class="co">#ggsave("Figures/Genus_Life_Span.png")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>EWl largo de vida de las Caladenia solamente</p>
 <p>Evaluando el largo de vida de las especies de <em>Caladenia</em> solamente</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co">#SPECIES_O$SpeciesAccepted &lt;- fct_reorder(SPECIES_O$SpeciesAccepted, SPECIES_O$StudyStart, .desc = FALSE)</span></span>
 <span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>compadre_life_expect <span class="sc">|&gt;</span> </span>
@@ -1764,12 +1931,15 @@ Caused by warning:
 <span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_LS=</span> <span class="fu">mean</span>(life_expectancy, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
 <span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_LS =</span> <span class="fu">sd</span>(life_expectancy, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
 <span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Genus <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Caladenia"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   Genus     mean_LS sd_LS
   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
 1 Caladenia    3.90  1.64</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>compadre_life_expect <span class="sc">|&gt;</span> </span>
 <span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Genus <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Caladenia"</span>)) <span class="sc">|&gt;</span> </span>
 <span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>( <span class="fu">aes</span>(<span class="at">x=</span><span class="fu">reorder</span>(SpeciesAccepted, life_expectancy), life_expectancy, <span class="at">colour=</span>OrganismType)) <span class="sc">+</span></span>
@@ -1779,6 +1949,7 @@ Caused by warning:
 <span id="cb91-7"><a href="#cb91-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Life expectancy (years)"</span>)<span class="sc">+</span></span>
 <span id="cb91-8"><a href="#cb91-8" aria-hidden="true" tabindex="-1"></a>  rlt_theme<span class="sc">+</span></span>
 <span id="cb91-9"><a href="#cb91-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1786,7 +1957,10 @@ Caused by warning:
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"Figures/Caladenia_Life_Span.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Saving 7 x 5 in image</code></pre>
 </div>

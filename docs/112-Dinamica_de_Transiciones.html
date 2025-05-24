@@ -466,16 +466,21 @@ window.Quarto = {
 <section id="librerías-de-r-requeridas-para-el-análisis" class="level2">
 <h2 class="anchored" data-anchor-id="librerías-de-r-requeridas-para-el-análisis">Librerías de R requeridas para el análisis</h2>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popdemo)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popbio)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <hr>
 <section id="paso-1.-matriz-de-proyección-poblacional-y-estructura-poblacional-inicial-t_0" class="level3">
 <h3 class="anchored" data-anchor-id="paso-1.-matriz-de-proyección-poblacional-y-estructura-poblacional-inicial-t_0">PASO 1. MATRIZ DE PROYECCIÓN POBLACIONAL y ESTRUCTURA POBLACIONAL INICIAL <span class="math inline">\(t_{0}\)</span></h3>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Capturar los datos de la matriz para L. rubripetala (Tremblay et al. 2015)</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>Lr1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.4324</span>, <span class="dv">0</span>,      <span class="dv">0</span>,     <span class="fl">0.15</span>,</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.3784</span>, <span class="fl">0.8459</span>, <span class="dv">0</span>,     <span class="dv">0</span>,</span>
@@ -489,6 +494,7 @@ window.Quarto = {
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#Obtener la matriz L. rubripetala </span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>Lr1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(Lr1[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, ], <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">dimnames =</span> <span class="fu">list</span>(estadios, estadios))</span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>Lr1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>       PL      J     NR    AR
 PL 0.4324 0.0000 0.0000 0.150
@@ -498,10 +504,13 @@ AR 0.0000 0.0890 0.1841 0.751</code></pre>
 </div>
 </div>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Capturar y obtener el vector inicial (datos de campo) de clases de estado población 1 (Schödelbauerová et al. 2010)</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>n0 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">46</span>, <span class="dv">38</span>, <span class="dv">82</span>) </span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>n0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]  0 46 38 82</code></pre>
 </div>
@@ -529,6 +538,8 @@ AR 0.0000 0.0890 0.1841 0.751</code></pre>
 <h3 class="anchored" data-anchor-id="crecimiento-asintótico">Crecimiento asintótico</h3>
 <p>La definición del crecimiento asintótico de la población <em>lambda</em> se basa en la tasa de crecimiento poblacional cuando la población este a su nivel estable de estructura de edades/estados. Por consecuencia se asume que la población llegue o este a un nivel estructura de edades/estados estable. Para la población de <em>Lepanthes rubripetala</em> se obtiene una tasa de crecimiento poblacional de 1.007, lo que indica que la población crece a una tasa constante de 1.007 entre <span class="math inline">\(t_{0}\)</span> y <span class="math inline">\(t_{1}\)</span>. Entonces si la población tuviese 1000 individuos en promedio hubiese 7 individuos más en <span class="math inline">\(t_{1}\)</span> o sea el siguiente mes. Nota que las poblaciones de <em>Lepanthes</em> nunca son tan grandes (<span class="citation" data-cites="tremblay1997distribution">Tremblay (<a href="#ref-tremblay1997distribution" role="doc-biblioref">1997</a>)</span>), pero es un ejemplo para ilustrar el concepto.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Análisis asintótico (i.e. largo plazo) del crecimiento poblacional de L. rubripetala</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#La orquídea florece todo el año, por lo que el seguimiento de la población fue mensual. </span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -538,6 +549,7 @@ AR 0.0000 0.0890 0.1841 0.751</code></pre>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span><span class="fu">lambda</span>(Lr1)</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>lambda</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.007206</code></pre>
 </div>
@@ -558,6 +570,8 @@ AR 0.0000 0.0890 0.1841 0.751</code></pre>
 </ol>
 <p><em>Dinámica poblacional absoluta</em>. Como consecuencia de las perturbaciones o escenarios existen cambios en el crecimiento poblacional, los cuales son evidentes si se grafican. Un aspecto a considerar es que, la gráfica que se genera incluye la influencia de la dinámica trasitoria y asintótica, por lo que se le denomina dinámica poblacional absoluta (Fig. 2A de Tremblay y colaboradores, 2015).</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">##PASO 4. DINÁMICA POBLACIONAL ABSOLUTA.    </span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Se proyecta el crecimiento poblacional ante cambios en la estructura </span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#inicial debidos a la perturbación (5 escenarios). Esta gráfica incluye la </span></span>
@@ -582,12 +596,16 @@ AR 0.0000 0.0890 0.1841 0.751</code></pre>
 <span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">#Proporción de individuos por categoría</span></span>
 <span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>nLr1 <span class="ot">&lt;-</span> nLr1<span class="sc">/</span><span class="fu">sum</span>(nLr1)</span>
 <span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>nLr1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1 0 0 0</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfica de barras del escenario 1 </span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(nLr1, <span class="at">names.arg =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">"Escenario 1"</span>, <span class="at">xlab =</span> <span class="st">"Categoría"</span>, <span class="at">ylab =</span> <span class="st">"Proporción"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -595,10 +613,13 @@ AR 0.0000 0.0890 0.1841 0.751</code></pre>
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Proyección de la dinámica escenario 1</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>pr1 <span class="ot">&lt;-</span> <span class="fu">project</span>(Lr1, <span class="at">vector =</span> nLr1, <span class="at">time =</span> <span class="dv">50</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr1, <span class="at">log =</span> <span class="st">"y"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">1.6</span>), <span class="at">ann =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">"Proyección de la dinámica (Escenario 1)"</span>, <span class="at">xlab =</span> <span class="st">"Time intervals"</span>, <span class="at">ylab =</span> <span class="st">"Population size/density"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -606,17 +627,23 @@ AR 0.0000 0.0890 0.1841 0.751</code></pre>
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Escenario 2. Inicio I</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>nLr2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">58</span>, <span class="dv">50</span>, <span class="dv">33</span>)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Proporción de individuos por categoría</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>nLr2 <span class="ot">&lt;-</span> nLr2<span class="sc">/</span><span class="fu">sum</span>(nLr2)</span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>nLr2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.1506024 0.3493976 0.3012048 0.1987952</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfica de barras del escenario 1 </span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(nLr2, <span class="at">names.arg =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>( <span class="at">main =</span> <span class="st">"Escenario 2"</span>, <span class="at">xlab =</span> <span class="st">"Categoría"</span>, <span class="at">ylab =</span> <span class="st">"Proporción"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -624,10 +651,13 @@ AR 0.0000 0.0890 0.1841 0.751</code></pre>
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Proyección de la dinámica escenario 2 </span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>pr2 <span class="ot">&lt;-</span> <span class="fu">project</span>(Lr1, <span class="at">vector =</span> nLr2, <span class="at">time =</span> <span class="dv">50</span>)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr2, <span class="at">log =</span> <span class="st">"y"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">1.6</span>), <span class="at">ann =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">"Proyección de la dinámica (Escenario 2)"</span>, <span class="at">xlab =</span> <span class="st">"Time intervals"</span>, <span class="at">ylab =</span> <span class="st">"Population size/density"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -635,6 +665,8 @@ AR 0.0000 0.0890 0.1841 0.751</code></pre>
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Escenario 3. Estructura estable</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Estructura estable de estados</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>Wmax <span class="ot">&lt;-</span> <span class="fu">stable.stage</span>(Lr1)</span>
@@ -642,6 +674,7 @@ AR 0.0000 0.0890 0.1841 0.751</code></pre>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfica de barras del escenario 3</span></span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(nLr3, <span class="at">names.arg =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>( <span class="at">main =</span> <span class="st">"Escenario 3"</span>, <span class="at">xlab =</span> <span class="st">"Categoría"</span>, <span class="at">ylab =</span> <span class="st">"Proporción"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -649,9 +682,12 @@ AR 0.0000 0.0890 0.1841 0.751</code></pre>
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Proyección de la dinámica escenario 3 </span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>Lr1st <span class="ot">&lt;-</span> (Lr1<span class="sc">/</span>lambda)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>Lr1st</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>          PL           J        NR        AR
 PL 0.4293064 0.000000000 0.0000000 0.1489268
@@ -659,7 +695,10 @@ J  0.3756927 0.839848010 0.0000000 0.0000000
 NR 0.0000000 0.003375675 0.7897093 0.2283545
 AR 0.0000000 0.088363250 0.1827829 0.7456270</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eigen</span>(Lr1st)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>eigen() decomposition
 $values
@@ -673,9 +712,12 @@ $vectors
 [3,] -0.6739307+0i -0.46400142+0i  0.1712014+0.2009688i  0.1712014-0.2009688i
 [4,] -0.6150542+0i -0.08669643+0i -0.2913524-0.2162698i -0.2913524+0.2162698i</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pr3 <span class="ot">&lt;-</span> <span class="fu">project</span>(Lr1st, <span class="at">vector =</span> Wmax, <span class="at">time =</span> <span class="dv">50</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr3, <span class="at">log =</span> <span class="st">"y"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">1.6</span>), <span class="at">ann =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">"Proyección de la dinámica (Escenario 3)"</span>, <span class="at">xlab =</span> <span class="st">"Time intervals"</span>, <span class="at">ylab =</span> <span class="st">"Population size/density"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -683,17 +725,23 @@ $vectors
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Escenario 4. Inicio II</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>nLr4 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">66</span>, <span class="dv">33</span>, <span class="dv">33</span>, <span class="dv">33</span>)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Proporción de individuos por categoría</span></span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>nLr4 <span class="ot">&lt;-</span> nLr4<span class="sc">/</span><span class="fu">sum</span>(nLr4)</span>
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>nLr4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.4 0.2 0.2 0.2</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfica de barras del escenario 4 </span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(nLr4, <span class="at">names.arg =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>( <span class="at">main =</span> <span class="st">"Escenario 4"</span>, <span class="at">xlab =</span> <span class="st">"Categoría"</span>, <span class="at">ylab =</span> <span class="st">"Proporción"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -701,10 +749,13 @@ $vectors
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Proyección de la dinámica escenario 4 </span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>pr4 <span class="ot">&lt;-</span> <span class="fu">project</span>(Lr1, <span class="at">vector =</span> nLr4, <span class="at">time =</span> <span class="dv">50</span>)</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr4, <span class="at">log =</span> <span class="st">"y"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">1.6</span>), <span class="at">ann =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">"Proyección de la dinámica (Escenario 4)"</span>, <span class="at">xlab =</span> <span class="st">"Time intervals"</span>, <span class="at">ylab =</span> <span class="st">"Population size/density"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -712,17 +763,23 @@ $vectors
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Escenario 5. Límite superior</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>nLr5 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">166</span>)</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Proporción de individuos por categoría</span></span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>nLr5 <span class="ot">&lt;-</span> nLr5<span class="sc">/</span><span class="fu">sum</span>(nLr5)</span>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>nLr5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0 0 0 1</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfica de barras del escenario 5 </span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(nLr5, <span class="at">names.arg =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>( <span class="at">main =</span> <span class="st">"Escenario 5"</span>, <span class="at">xlab =</span> <span class="st">"Categoría"</span>, <span class="at">ylab =</span> <span class="st">"Proporción"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -730,10 +787,13 @@ $vectors
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Proyección de la dinámica escenario 5 </span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>pr5 <span class="ot">&lt;-</span> <span class="fu">project</span>(Lr1, <span class="at">vector =</span> nLr5, <span class="at">time =</span> <span class="dv">50</span>)</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr5, <span class="at">log =</span> <span class="st">"y"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">1.6</span>), <span class="at">ann =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">"Proyección de la dinámica (Escenario 5)"</span>, <span class="at">xlab =</span> <span class="st">"Time intervals"</span>, <span class="at">ylab =</span> <span class="st">"Population size/density"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -741,6 +801,8 @@ $vectors
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfica de la dinámica absoluta </span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>Population_density <span class="ot">&lt;-</span> <span class="fu">stack</span>(<span class="fu">c</span>(<span class="fu">as.data.frame</span>(pr1), <span class="fu">as.data.frame</span>(pr2), <span class="fu">as.data.frame</span>(pr3), <span class="fu">as.data.frame</span>(pr4), <span class="fu">as.data.frame</span>(pr5)))</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>Population_density[, <span class="st">"time"</span>] <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(pr1), <span class="dv">1</span>), <span class="dv">5</span>)</span>
@@ -759,6 +821,7 @@ $vectors
 <span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Absolut population dynamics"</span>, <span class="at">x =</span> <span class="st">"Projection intervals"</span>, <span class="at">y =</span> <span class="st">"Population density relative to lambda max"</span>)<span class="sc">+</span> </span>
 <span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>))</span>
 <span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>abs.plot </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -782,6 +845,8 @@ $vectors
 <li><p><em>Inercia alta e Inercia baja</em> (Upper inertia y Lower inertia) que evalúan el límite más alto o el más bajo en el crecimiento de la población antes de alcanzar la tasa constante de crecimiento poblacional, respectivamente.</p></li>
 </ol>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="do">### PARTE II: DINÁMICA POBLACIONAL TRANSITORIA ESTANDARIZADA.</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Modelo de Dinámica transitoria específica de la población  </span></span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="do">## La dinámica de corto plazo se projecta a partir de la matriz de transición y el vector inicial previamente definidos</span></span>
@@ -810,6 +875,7 @@ $vectors
 <span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot the amplification projection and label it</span></span>
 <span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Se atenua (decrece)</span></span>
 <span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr2<span class="fl">.1</span>, <span class="at">log =</span> <span class="st">"y"</span>, <span class="at">main =</span> <span class="st">"Dinámica a corto plazo (Escenario 1)"</span>, <span class="at">cex.axis =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -817,11 +883,14 @@ $vectors
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Escenario 2. Inicio I</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>pr2<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">project</span>(Lr1, <span class="at">vector =</span> nLr2, <span class="at">time =</span> <span class="dv">50</span>, </span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">standard.A =</span> T, <span class="at">standard.vec =</span> T)</span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot the amplification projection and label it</span></span>
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr2<span class="fl">.2</span>, <span class="at">log =</span> <span class="st">"y"</span>, <span class="at">main =</span> <span class="st">"Dinámica a corto plazo (Escenario 2)"</span>, <span class="at">cex.axis =</span> <span class="fl">0.8</span>) <span class="co"># Se atenua (decrece)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -829,11 +898,14 @@ $vectors
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Escenario 3. Estructura estable</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>pr2<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">project</span>(Lr1, <span class="at">vector =</span> nLr3, <span class="at">time =</span> <span class="dv">50</span>, </span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">standard.A =</span> T, <span class="at">standard.vec =</span> T)</span>
 <span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot the amplification projection and label it</span></span>
 <span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr2<span class="fl">.3</span>, <span class="at">main =</span> <span class="st">"Dinámica a corto plazo (Escenario 3)"</span>, <span class="at">cex.axis =</span> <span class="fl">0.8</span>) <span class="co"># Se amplifica (crece)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -841,11 +913,14 @@ $vectors
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Escenario 4. Inicio II</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>pr2<span class="fl">.4</span> <span class="ot">&lt;-</span> <span class="fu">project</span>(Lr1, <span class="at">vector =</span> nLr4, <span class="at">time =</span> <span class="dv">50</span>, </span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">standard.A =</span> T, <span class="at">standard.vec =</span> T)</span>
 <span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot the amplification projection and label it</span></span>
 <span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr2<span class="fl">.4</span>, <span class="at">log =</span> <span class="st">"y"</span>, <span class="at">main =</span> <span class="st">"Dinámica a corto plazo (Escenario 4)"</span>, <span class="at">cex.axis =</span> <span class="fl">0.8</span>)<span class="co"># Se atenua (decrece)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -853,11 +928,14 @@ $vectors
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Escenario 5. Límite superior</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>pr2<span class="fl">.5</span> <span class="ot">&lt;-</span> <span class="fu">project</span>(Lr1, <span class="at">vector =</span> nLr5, <span class="at">time =</span> <span class="dv">50</span>, </span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">standard.A =</span> T, <span class="at">standard.vec =</span> T)</span>
 <span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot the amplification projection and label it</span></span>
 <span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr2<span class="fl">.5</span>, <span class="at">log =</span> <span class="st">"y"</span>, <span class="at">main =</span> <span class="st">"Dinámica a corto plazo (Escenario 5)"</span>, <span class="at">cex.axis =</span> <span class="fl">0.8</span>)<span class="co"># Se amplifica (crece)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -865,6 +943,8 @@ $vectors
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#2) LIMITES TRANSITORIOS POR ESCENARIO.</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Escenario 1: Límite inferior</span></span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -876,11 +956,15 @@ $vectors
 <span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>reac1<span class="ot">&lt;-</span><span class="fu">reac</span>(Lr1, <span class="at">vector =</span> nLr1)</span>
 <span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>lim.trans[<span class="dv">1</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> reac1</span>
 <span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>reac1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.8049991</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>maxatt1<span class="ot">&lt;-</span><span class="fu">maxatt</span>(Lr1, <span class="at">vector =</span> nLr1, <span class="at">return.t=</span>T)</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>maxatt1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$maxatt
 [1] 0.4643848
@@ -888,22 +972,31 @@ $vectors
 $t
 [1] 49</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>lim.trans[<span class="dv">1</span>, <span class="dv">2</span>] <span class="ot">&lt;-</span> maxatt1[<span class="dv">1</span>]</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>inertia1<span class="ot">&lt;-</span><span class="fu">inertia</span>(Lr1, <span class="at">vector =</span> nLr1)</span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>inertia1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.4643642</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>lim.trans[<span class="dv">1</span>, <span class="dv">3</span>] <span class="ot">&lt;-</span> inertia1</span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Escenario 2. Inicio I</span></span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>reac2<span class="ot">&lt;-</span><span class="fu">reac</span>(Lr1, <span class="at">vector =</span> nLr2)</span>
 <span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>reac2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.9628771</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>lim.trans[<span class="dv">2</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> reac2</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>maxatt2<span class="ot">&lt;-</span><span class="fu">maxatt</span>(Lr1, <span class="at">vector =</span> nLr2, <span class="at">return.t=</span>T)</span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>maxatt2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$maxatt
 [1] 0.8863718
@@ -911,12 +1004,17 @@ $t
 $t
 [1] 39</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>lim.trans[<span class="dv">2</span>, <span class="dv">2</span>] <span class="ot">&lt;-</span> maxatt2[<span class="dv">1</span>]</span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>inertia2<span class="ot">&lt;-</span><span class="fu">inertia</span>(Lr1, <span class="at">vector =</span> nLr2)</span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>inertia2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.8863327</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>lim.trans[<span class="dv">2</span>, <span class="dv">3</span>] <span class="ot">&lt;-</span> inertia2</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Escenario 3. Estructura estable</span></span>
@@ -934,11 +1032,15 @@ $t
 <span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>reac4<span class="ot">&lt;-</span><span class="fu">reac</span>(Lr1, <span class="at">vector =</span> nLr4)</span>
 <span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>lim.trans[<span class="dv">4</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> reac1</span>
 <span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>reac4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.9273971</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>maxatt4<span class="ot">&lt;-</span><span class="fu">maxatt</span>(Lr1, <span class="at">vector =</span> nLr4, <span class="at">return.t=</span>T)</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>maxatt4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$maxatt
 [1] 0.7894384
@@ -946,23 +1048,32 @@ $t
 $t
 [1] 42</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>lim.trans[<span class="dv">4</span>, <span class="dv">2</span>] <span class="ot">&lt;-</span> maxatt4[<span class="dv">1</span>]</span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>inertia4<span class="ot">&lt;-</span><span class="fu">inertia</span>(Lr1, <span class="at">vector =</span> nLr4)</span>
 <span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>inertia4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.7894036</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>lim.trans[<span class="dv">4</span>, <span class="dv">3</span>] <span class="ot">&lt;-</span> inertia4</span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Escenario 5. Límite superior</span></span>
 <span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>reac5<span class="ot">&lt;-</span><span class="fu">reac</span>(Lr1, <span class="at">vector =</span> nLr5)</span>
 <span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>lim.trans[<span class="dv">5</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> reac5</span>
 <span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>reac5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.122908</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>maxamp5<span class="ot">&lt;-</span><span class="fu">maxamp</span>(Lr1, <span class="at">vector =</span> nLr5, <span class="at">return.t=</span>T)</span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>maxamp5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$maxamp
 [1] 1.23733
@@ -970,12 +1081,17 @@ $t
 $t
 [1] 34</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>lim.trans[<span class="dv">5</span>, <span class="dv">2</span>] <span class="ot">&lt;-</span> maxamp5[<span class="dv">1</span>]</span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>inertia5<span class="ot">&lt;-</span><span class="fu">inertia</span>(Lr1, <span class="at">vector =</span> nLr3)</span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>inertia5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>lim.trans[<span class="dv">5</span>, <span class="dv">3</span>] <span class="ot">&lt;-</span> inertia5</span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Dinamica transitoria plot</span></span>
@@ -1002,6 +1118,7 @@ $t
 <span id="cb62-24"><a href="#cb62-24" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_text</span>(<span class="at">x =</span> <span class="dv">45</span>, <span class="at">y =</span> <span class="fl">0.74</span>, <span class="at">label =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="fu">bar</span>(rho) <span class="sc">==</span> <span class="fl">0.89</span>)), <span class="at">hjust =</span> <span class="fl">1.0</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb62-25"><a href="#cb62-25" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_text</span>(<span class="at">x =</span> <span class="dv">45</span>, <span class="at">y =</span> <span class="fl">0.64</span>, <span class="at">label =</span>  <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="fu">bar</span>(rho) <span class="sc">==</span> <span class="fl">0.70</span>)), <span class="at">hjust =</span> <span class="fl">1.0</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb62-26"><a href="#cb62-26" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_text</span>(<span class="at">x =</span> <span class="dv">45</span>, <span class="at">y =</span> <span class="fl">0.33</span>, <span class="at">label =</span>  <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="fu">bar</span>(rho) <span class="sc">==</span> <span class="dv">1</span>)), <span class="at">hjust =</span> <span class="fl">1.0</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in is.na(x): is.na() applied to non-(list or vector) of type
 'expression'

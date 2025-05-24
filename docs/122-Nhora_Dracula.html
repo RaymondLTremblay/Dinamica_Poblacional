@@ -444,6 +444,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="estructura-de-la-población">Estructura de la población</h4>
 <p>A partir de los análisis de correlación y las gráficas de dispersión, se estructuró la población en clases de tamaño. La clasificación se determinó a partir del área foliar (multiplicando el ancho y largo de la hoja bandera) de la hoja bandera y el número de hojas por individuo. Para la fertilidad se tomaron los frutos observados por cada planta adulta como una medida de aptitud reproductiva, siendo esta una medida indirecta. Para la fecundidad se obtuvo calculando la probabilidad de que una planta registrada con flor diera fruto, es decir, el número de frutos presentes en el total de plantas por etapa sobre el número total de plantas de la misma etapa (Tremblay y Hutchings, 2002). Se definieron tres cases de tamaño, plántula, juvenil y adulto. Plántula: Individuos que posean de 2 a 5 hojas, con un área foliar de la hoja bandera menor que 20 cm2. Juveniles: Individuos que cuentan con un mínimo de 5 hojas, con área foliar de la hoja bandera entre 20 cm2 y 70 cm2. Adultos: Individuos que posean 5 o más hojas, con un área foliar de 70 cm2, en adelante. Con estos datos se propone el diagrama de ciclo de vida con probabilidades de permanencia y retroceso entre las etapas (Figura 3).</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># diagrama delciclo de vida sin probabilidades</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span>
@@ -458,9 +460,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"plantulas"</span>, <span class="st">"juvenil"</span>, <span class="st">"adultos"</span>)</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(matA, <span class="at">stages=</span>etapas, <span class="at">fontsize =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-7ada85257c9147e64487" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-7ada85257c9147e64487">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plantulas\" -> \"juvenil\" -> \"adultos\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plantulas\" -> \"juvenil\" -> \"adultos\" [style=invis] } [style=invis] \"plantulas\" -> \"plantulas\"[minlen=0,fontsize=0,color=grey,xlabel=\" 0.3\"]\n\"plantulas\" -> \"juvenil\"[minlen=3,fontsize=0,color=grey,xlabel=\" 0.3\"]\n\"juvenil\" -> \"plantulas\"[minlen=-3,fontsize=0,color=grey,xlabel=\" 0.1\"]\n\"juvenil\" -> \"juvenil\"[minlen=0,fontsize=0,color=grey,xlabel=\" 0.4\"]\n\"juvenil\" -> \"adultos\"[minlen=3,fontsize=0,color=grey,xlabel=\" 0.2\"]\n\"adultos\" -> \"plantulas\"[minlen=-6,fontsize=0,color=grey,xlabel=\" 0.4\"]\n\"adultos\" -> \"juvenil\"[minlen=-3,fontsize=0,color=grey,xlabel=\" 0.1\"]\n\"adultos\" -> \"adultos\"[minlen=0,fontsize=0,color=grey,xlabel=\" 0.5\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-e07c971f6e32308eb5aa" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-e07c971f6e32308eb5aa">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plantulas\" -> \"juvenil\" -> \"adultos\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plantulas\" -> \"juvenil\" -> \"adultos\" [style=invis] } [style=invis] \"plantulas\" -> \"plantulas\"[minlen=0,fontsize=0,color=grey,xlabel=\" 0.3\"]\n\"plantulas\" -> \"juvenil\"[minlen=3,fontsize=0,color=grey,xlabel=\" 0.3\"]\n\"juvenil\" -> \"plantulas\"[minlen=-3,fontsize=0,color=grey,xlabel=\" 0.1\"]\n\"juvenil\" -> \"juvenil\"[minlen=0,fontsize=0,color=grey,xlabel=\" 0.4\"]\n\"juvenil\" -> \"adultos\"[minlen=3,fontsize=0,color=grey,xlabel=\" 0.2\"]\n\"adultos\" -> \"plantulas\"[minlen=-6,fontsize=0,color=grey,xlabel=\" 0.4\"]\n\"adultos\" -> \"juvenil\"[minlen=-3,fontsize=0,color=grey,xlabel=\" 0.1\"]\n\"adultos\" -> \"adultos\"[minlen=0,fontsize=0,color=grey,xlabel=\" 0.5\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p>Figura 3. Diagrama de ciclo de vida con tres etapas y las probabilidades de transición entre ellas, crecimiento, permanencia, regresión y fecundidad.</p>
@@ -490,6 +493,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="matriz-demográfica-de-transición">Matriz demográfica de transición</h3>
 <p>A partir de los censos del 2022 y 2023 se calcularon las transiciones entre las clases de tamaño (etapas) por medio de una matriz de tres por tres, éstas transiciones pueden ser representadas también sobre el ciclo de vida propuesto para la planta de manera gráfica, lo que facilita su visualización y entendimiento (Figura 6). En el gráfico se puede ver que las transiciones que pueden ocurrir con mayor probabilidad serán las de la permanencia de los adultos, seguido por la de los juveniles y la reproducción de los adultos.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagrama del ciclo de vida</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
@@ -539,9 +544,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
 <span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-be8b7d3115942e87b86e" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-be8b7d3115942e87b86e">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plantulas\"; \"juvenil\"; \"adultos\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"plantulas\"; \"juvenil\"; \"adultos\" } [style=invis] \"plantulas\" -> \"plantulas\"[minlen=0,fontsize=10,color=PaleGreen4,xlabel=\" 0.3\"]\n\"plantulas\" -> \"juvenil\"[minlen=3,fontsize=10,color=red,xlabel=\" 0.3\"]\n\"juvenil\" -> \"juvenil\"[minlen=0,fontsize=10,color=PaleGreen4,xlabel=\" 0.4\"]\n\"juvenil\" -> \"adultos\"[minlen=3,fontsize=10,color=red,xlabel=\" 0.2\"]\n\"adultos\" -> \"plantulas\"[minlen=-6,fontsize=10,color=PaleGreen4,xlabel=\" 0.4\"]\n\"adultos\" -> \"juvenil\"[minlen=-3,fontsize=10,color=Goldenrod1,xlabel=\" 0.1\"]\n\"adultos\" -> \"adultos\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.5\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-df91fa8a33027d9add7b" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-df91fa8a33027d9add7b">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plantulas\"; \"juvenil\"; \"adultos\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"plantulas\"; \"juvenil\"; \"adultos\" } [style=invis] \"plantulas\" -> \"plantulas\"[minlen=0,fontsize=10,color=PaleGreen4,xlabel=\" 0.3\"]\n\"plantulas\" -> \"juvenil\"[minlen=3,fontsize=10,color=red,xlabel=\" 0.3\"]\n\"juvenil\" -> \"juvenil\"[minlen=0,fontsize=10,color=PaleGreen4,xlabel=\" 0.4\"]\n\"juvenil\" -> \"adultos\"[minlen=3,fontsize=10,color=red,xlabel=\" 0.2\"]\n\"adultos\" -> \"plantulas\"[minlen=-6,fontsize=10,color=PaleGreen4,xlabel=\" 0.4\"]\n\"adultos\" -> \"juvenil\"[minlen=-3,fontsize=10,color=Goldenrod1,xlabel=\" 0.1\"]\n\"adultos\" -> \"adultos\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.5\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p>Figura 6. Diagrama del ciclo de vida de <em>D. chimaera</em> con las probabilidades de transición calculadas entre el 2022 y 2023.</p>
@@ -550,16 +556,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="dinámica-asintótica-y-transitoria">Dinámica asintótica y transitoria</h3>
 <p>Con base en el cálculo de la matriz de transición, se estimó la dinámica de la población a 50 y a 20 intervalos de tiempo, que en este caso corresponden a 50 y 20 años debido a que el censo se adelantó anualmente y la especie presenta un pico de floración anual. La tendencia de la población es el decrecimiento que llega al límite inferior en el plazo de 10 años para todas las etapas o clases de tamaño (Figura 7).</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("popdemo")</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popdemo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Welcome to popdemo! This is version 1.3-2
 Use ?popdemo for an intro, or browseVignettes('popdemo') for vignettes
 Citation for popdemo is here: doi.org/10.1111/j.2041-210X.2012.00222.x
 Development and legacy versions are here: github.com/iainmstott/popdemo</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
@@ -574,6 +586,8 @@ Development and legacy versions are here: github.com/iainmstott/popdemo</code></
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Raymond's theme modifications graficas lindas</span></span>
@@ -589,12 +603,15 @@ Development and legacy versions are here: github.com/iainmstott/popdemo</code></
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>( Total <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.2727</span>, <span class="fl">0.0000</span>, <span class="fl">0.3957</span>, </span>
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">0.3030</span>, <span class="fl">0.3770</span>, <span class="fl">0.0652</span>, </span>
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">0.0000</span>, <span class="fl">0.1803</span>, <span class="fl">0.5217</span>), <span class="at">byrow=</span><span class="cn">TRUE</span>, <span class="at">ncol=</span><span class="dv">3</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>       [,1]   [,2]   [,3]
 [1,] 0.2727 0.0000 0.3957
 [2,] 0.3030 0.3770 0.0652
 [3,] 0.0000 0.1803 0.5217</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#nombres</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dimnames</span>(Total) <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"P"</span>, <span class="st">"J"</span>, <span class="st">"A"</span>), <span class="fu">c</span>(<span class="st">"P"</span>, <span class="st">"J"</span>, <span class="st">"A"</span>))</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#visualizar</span></span>
@@ -604,16 +621,23 @@ Development and legacy versions are here: github.com/iainmstott/popdemo</code></
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">project</span>(Total, <span class="at">time =</span> <span class="dv">50</span>, <span class="at">Aseq =</span> <span class="st">"unif"</span>)</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># stochastic projection information</span></span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">Aseq</span>(p2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 [39] 1 1 1 1 1 1 1 1 1 1 1 1</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nmat</span>(p2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -621,23 +645,35 @@ Development and legacy versions are here: github.com/iainmstott/popdemo</code></
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"Total2023.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Saving 7 x 5 in image</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a 20 años----------------------------------------------------------</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">project</span>(Total, <span class="at">time =</span> <span class="dv">20</span>, <span class="at">Aseq =</span> <span class="st">"unif"</span>)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># stochastic projection information</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">Aseq</span>(p3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nmat</span>(p3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -645,7 +681,10 @@ Development and legacy versions are here: github.com/iainmstott/popdemo</code></
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"Total2023_3.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Saving 7 x 5 in image</code></pre>
 </div>
@@ -653,13 +692,19 @@ Development and legacy versions are here: github.com/iainmstott/popdemo</code></
 <p>Figura 7. Proyección de la dinámica poblacional de <em>D. chimaera</em> a 20 años para el bosque de San Antonio</p>
 <p>Luego de esto se incluye el vector inicial o la estructura inicial por etapas que permitió calcular los valore dominantes de la matriz como, la tasa de crecimiento poblacional Lambda (λ) de 0.7076 lo que confirma la tendencia de la población hacia el decrecimiento y también el valor dominante derecho o la estructura estable de la población (ss) con los mayores valores para los juveniles 0.3505990 seguido por los adultos 0.3400269 y finalmente las plántulas 0.3093741. El valor dominante izquierdo es interpretado como el valor reproductivo (rv) que fue mayor para los adultos, 1.5413577 seguido por los juveniles 0.8405984 y finalmente las plántulas 0.5856469.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an initial stage structure</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>(initialTotal <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">33</span>,<span class="dv">61</span>,<span class="dv">46</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 33 61 46</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Análisis asintótico</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">eigs</span>(Total, <span class="at">what =</span> <span class="st">"all"</span>, <span class="at">check =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$lambda
 [1] 0.7076059
@@ -673,8 +718,11 @@ $rv
 </div>
 <p>Con los valores dominantes se calcula la sensitividad y la elasticidad, ésta ultima estandarizada permite sumar los valores por etapa y por tipo de transición para mostrar la influencia de los diferentes procesos dentro de la población (Tabla 1)</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate sensitivities of dominant eigenvalue</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">elas</span>(Total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>           P         J          A
 P 0.06982542 0.0000000 0.11135858
@@ -684,36 +732,54 @@ A 0.00000000 0.1376951 0.38640795</code></pre>
 </div>
 <p>Tabla 1. Matriz de elasticidad y sumatorias de elasticidades por etapa y por tipo de transición para la población de <em>D. chimaera</em> en el Bosque de San Antonio.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#transient index-----------------------------------------------------</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate Cohen cumulative distance</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">CohenD</span>(Total, <span class="at">vector=</span>initialTotal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.1935268</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">convt</span>(Total, <span class="at">vector =</span> <span class="st">"n"</span>, <span class="at">accuracy =</span> <span class="fl">0.01</span>, <span class="at">iterations =</span> <span class="fl">1e+05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 7 6 4</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the convergence time of the 3 stage-biased</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># populations within 0.1% of lambda-max</span></span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>( <span class="fu">convt</span>(Total, <span class="at">accuracy=</span><span class="fl">1e-3</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 9 9 7</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the convergence time of the projection of initial and A</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co"># to within 0.001% of lambda-max</span></span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>( <span class="fu">convt</span>(Total, <span class="at">vector=</span>initialTotal, <span class="at">accuracy=</span><span class="fl">1e-5</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 12</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate damping ratio</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dr</span>(Total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.217586</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate damping ratio and time to convergence using a</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># multiple of 10</span></span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dr</span>(Total, <span class="at">return.time=</span><span class="cn">TRUE</span>, <span class="at">x=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$dr
 [1] 2.217586
@@ -721,24 +787,36 @@ A 0.00000000 0.1376951 0.38640795</code></pre>
 $t
 [1] 2.891172</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the upper bound on inertia of A</span></span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">inertia</span>(Total,<span class="at">bound=</span><span class="st">"upper"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.541358</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the lower bound on inertia of A</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">inertia</span>(Total,<span class="at">bound=</span><span class="st">"lower"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.5856469</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate case-specific inertia of A and initial</span></span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">inertia</span>(Total, <span class="at">vector=</span>initialTotal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.010752</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate case-specific inertia of A and initial and</span></span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="co"># return realised population size at t=25</span></span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">inertia</span>(Total, <span class="at">vector=</span>initialTotal, <span class="at">return.N=</span><span class="cn">TRUE</span>, <span class="at">t=</span><span class="dv">25</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in inertia(Total, vector = initialTotal, return.N = TRUE, t = 25): Estimation of N will be  inaccurate for
  t where the model has not converged.</code></pre>
@@ -750,21 +828,30 @@ $t
 $N
 [1] 0.02486331</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnose ergodicity</span></span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">isErgodic</span>(Total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a 3x3 nonergodic PPM</span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>LBBTotal<span class="ot">&lt;-</span>Total; LBBTotal[<span class="dv">3</span>,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="dv">0</span>; LBBTotal</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>       P     J      A
 P 0.2727 0.000 0.3957
 J 0.3030 0.377 0.0652
 A 0.0000 0.000 0.5217</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnose ergodicity and return left eigenvector</span></span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">isErgodic</span>(LBBTotal, <span class="at">return.eigvec=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$ergodic
 [1] FALSE
@@ -772,37 +859,58 @@ A 0.0000 0.000 0.5217</code></pre>
 $eigvec
 [1] 0 0 1</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">isIrreducible</span>(LBBTotal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] FALSE</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">isIrreducible</span>(LBBTotal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] FALSE</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnose primitivity</span></span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">isPrimitive</span>(Total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnose primitivity</span></span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">isPrimitive</span>(Total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate Keyfitz's delta</span></span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">KeyfitzD</span>(Total, <span class="at">vector=</span>initialTotal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.08511526</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the bound on maximal amplification of A</span></span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">maxamp</span>(Total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.578955</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the bound on maximal amplification of A and</span></span>
 <span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="co"># return the stage that achieves it</span></span>
 <span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="fu">maxamp</span>(Total, <span class="at">return.stage=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$maxamp
 [1] 1.578955
@@ -810,16 +918,22 @@ $eigvec
 $stage
 [1] 3</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate case-specific maximal amplification of A</span></span>
 <span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and initial</span></span>
 <span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a><span class="fu">maxamp</span>(Total, <span class="at">vector=</span>initialTotal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.011492</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate case-specific maximal amplification of A</span></span>
 <span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and initial and return realised population size and the</span></span>
 <span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a><span class="co"># time at which it is achieved</span></span>
 <span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a><span class="fu">maxamp</span>(Total, <span class="at">vector=</span>initialTotal, <span class="at">return.N=</span><span class="cn">TRUE</span>, <span class="at">return.t=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$maxamp
 [1] 1.011492
@@ -830,14 +944,20 @@ $N
 $t
 [1] 5</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the bound on maximal attenuation of A</span></span>
 <span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">maxatt</span>(Total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.5700057</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the bound on maximal attenuation of A and</span></span>
 <span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="co"># return the stage that achieves it</span></span>
 <span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a><span class="fu">maxatt</span>(Total, <span class="at">return.stage=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$maxatt
 [1] 0.5700057
@@ -845,16 +965,22 @@ $t
 $stage
 [1] 1</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate case-specific maximal attenuation of A</span></span>
 <span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and initial</span></span>
 <span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a><span class="fu">maxatt</span>(Total, <span class="at">vector=</span><span class="st">"n"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.5700057</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate case-specific maximal attenuation of A</span></span>
 <span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and initial and return realised population size and the</span></span>
 <span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a><span class="co"># time at which it is achieved</span></span>
 <span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a><span class="fu">maxatt</span>(Total, <span class="at">vector=</span><span class="st">"n"</span>, <span class="at">return.N=</span><span class="cn">TRUE</span>, <span class="at">return.t=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$maxatt
 [1] 0.5700057
@@ -865,10 +991,13 @@ $N
 $t
 [1] 4</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate case-specific maximal attenuation of A</span></span>
 <span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and initial and return realised population size and the</span></span>
 <span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a><span class="co"># time at which it is achieved</span></span>
 <span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a><span class="fu">maxatt</span>(Total, <span class="at">vector=</span><span class="st">"n"</span>, <span class="at">return.N=</span><span class="cn">TRUE</span>, <span class="at">return.t=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$maxatt
 [1] 0.5700057
@@ -881,12 +1010,15 @@ $t
 </div>
 </div>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co">#gráfico con sombra Bosque</span></span>
 <span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>Totalpd <span class="ot">&lt;-</span> <span class="fu">project</span>(Total, <span class="st">"diri"</span>, <span class="at">time =</span> <span class="dv">15</span>, <span class="at">draws =</span> <span class="dv">10000</span>,</span>
 <span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">standard.A =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a><span class="fu">jpeg</span>(<span class="st">'Total.jpg'</span>)</span>
 <span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Totalpd, <span class="at">plottype =</span> <span class="st">"shady"</span>, <span class="at">bounds =</span> T, <span class="at">log =</span> <span class="st">"y"</span>)</span>
 <span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>quartz_off_screen 
                 2 </code></pre>
@@ -894,10 +1026,13 @@ $t
 </div>
 <p>Figura 8</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Transfer function analysis of inertia of a population matrix projection model for all matrix elements. </span></span>
 <span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>tfmatTotal <span class="ot">&lt;-</span> <span class="fu">tfam_inertia</span>(Total, <span class="at">vector=</span>initialTotal) </span>
 <span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="co">#...and plot it! </span></span>
 <span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tfmatTotal) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
