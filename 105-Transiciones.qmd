@@ -2,8 +2,16 @@
 
 Por: Aucencia Emeterio-Lara, Ernesto Mujíca y Elaine González y Raymond L. Tremblay
 
+#### Librerías de R requeridas para el siguiente módulo
+
 ```{r Trans1, message=FALSE}
 library(tidyverse)
+library(gt)
+library(popbio)
+library(Rcompadre)
+library(DiagrammeR)
+
+
 ```
 
 ## Introducción
@@ -22,7 +30,8 @@ De A a otras clases
 -   1/7 = 0.1428 fallecieron o sea que las "plantas pequeñas" en el primer periodo de tiempo fallecieron antes de llegar al segundo muestreo
 
 ```{r Trans2}
-library(tidyverse)
+
+
 a=2/6
 b=1/6
 c=1/6
@@ -49,7 +58,7 @@ De C a otras clases
 
 ```{r Trans3, message=FALSE, echo=FALSE}
 
-library(gt)
+
 Orchis_ficticia=tribble(~Num_ind, ~anio_1, ~anio_2,
                         1,  "plantas_pequeñas", "Muerto",
                         2,  "plantas_pequeñas", "juvenil",
@@ -82,6 +91,7 @@ Ahora usamos los valores calculados arriba para construir la matriz de transicio
 Nota que en las columnas representa el estado en el tiempo 1 y las filas los estados en el periodo 2. Importante la transiciones a Muerto no se pone en la matriz, automáticamente los análisis reconoce que 1 menos la suma las transiciones en la matriz, sera la proporciones de fallecimiento.
 
 ```{r Trans4}
+
 ficticia_matrix=matrix(c(0.1428, 0.3333, 0.1666,
                          0.2857, 0.1666, 0.3333,
                          0.4285, 0.3333, 0.1666), 
@@ -95,6 +105,7 @@ ficticia_matrix
 Es buena práctica añadir el nombre de las etapas a la matriz ya que ayuda a encontrar incosistencia y posible errores. Las dos funciones necesarias son **rownames** y **colnames**.
 
 ```{r Trans5}
+
 rownames(ficticia_matrix)<-c("plantas_pequeñas", "juvenil", "adulto")
 colnames(ficticia_matrix)<-c("plantas_pequeñas", "juvenil", "adulto")
 
@@ -127,13 +138,13 @@ Nota que el "output" de la función **projection.matrix** es una lista con dos e
 Antes de comenzar hacer los análisis es importante que los nombres de las columnas se cambian a nombres que causan menos problemas para la función **projection.matrix**. En este caso, cambiamos los nombres de las columnas de la tabla de datos de "anio_1" a "stage" y de "anio_2" a "fate". Esos nombres corresponde a las etapas en el primer y segundo periodo de tiempo, *fate* se traduce como "destino" en español.
 
 ```{r Trans6}
-library(tidyverse)
+
 Orchis_ficticia=Orchis_ficticia %>% rename(stage=anio_1, fate=anio_2)
 head(Orchis_ficticia)
 ```
 
 ```{r Trans7}
-library(popbio)
+
 
 Orchis_ficticia_df=as.data.frame(Orchis_ficticia) # Nota que es importante convertir la tabla de datos a un data frame si es en formato de tibble. 
 stages=c("plantas_pequeñas", "juvenil", "adulto")
@@ -148,6 +159,7 @@ Si quiere la matriz con la unión de ambas matrices, puede usar el argumento **T
 Nota que esta matriz se llama matA = matT + matF (la suma de las matrices de transiciones y de fertilidad)
 
 ```{r Trans8}
+
 projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=FALSE)
 
 
@@ -161,12 +173,9 @@ Muchas orquídeas se reproducen por clonaje, o sea que los individuos son genét
 
 Vemos un ejemplo del trabajo de *Cypripedium calceolus* en Europa [@garcia2010living]. En este trabajo los autores querían explorar la dinámica de especies que viven a la periferia de su distribución geográfica. La poblaciones se encuentran en los Pirineos y en el norte de Europa. Aprovechamos para demostrar como se extrae las expecies que tienen una matriz de clonaje, **matC**.
 
-```{r Trans9}
-library(Rcompadre)
-
-```
 
 ```{r Trans10, message=FALSE}
+
 compadre <- cdb_fetch("compadre") # Usar este código para bajar los datos del repositorio de COMPADRE. Tiene que haber activado la librería de Rcompadre.
 
 
@@ -213,6 +222,7 @@ NOTE que la matriz de clonaje es la siguiente.
 Lo que se observa es que hay NUEVOS individuos en el tiempo t+1, que provienen de los individuos en el tiempo t. En este caso, son individuos de que crecen a las etapas 4, 5 y 6 que producen individuos nuevos en la etapa 3 y 4.
 
 ```{r Trans13}
+
 matC <- matC(Cyp_cal_matC) # extraer la matriz de clonaje a partir de la base de datos de COMPADRE
 matC
 ```
@@ -220,7 +230,7 @@ matC
 Ahora vemos el ciclo de vida de *Cypripedium calceolus* en este estudio donde las lineas azules son las transiciones de una etapa las transiciones por clonaje.
 
 ```{r Trans14}
-library(DiagrammeR)
+
 
 
 #etapas <- c("A1", "A2", "A3", "A4", "A5", "A6")
@@ -277,4 +287,5 @@ El uso de estos métodos tradicionales aun que sean calculado a mano o usar la f
 
 Revisión:
 
-RLT: Apr 19, 2025 Demetria:
+- RLT: Apr 19, 2025 
+- Demetria:

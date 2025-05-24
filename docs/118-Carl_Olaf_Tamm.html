@@ -160,6 +160,7 @@ window.Quarto = {
 </script>
 
 <meta property="og:title" content="Diagnostico Poblacional">
+<meta property="og:description" content="">
 <meta property="og:image" content="Figures/Tamm_1972_Dactylorhiza_incarnata_2.jpeg">
 <meta property="og:site_name" content="Diagnostico Poblacional">
 </head>
@@ -414,7 +415,7 @@ window.Quarto = {
   <ul>
   <li><a href="#OTamm" id="toc-OTamm" class="nav-link active" data-scroll-target="#OTamm">Carl Olaf Tamm</a>
   <ul class="collapse">
-  <li><a href="#uno-de-los-padres-de-la-ecología-de-población" id="toc-uno-de-los-padres-de-la-ecología-de-población" class="nav-link" data-scroll-target="#uno-de-los-padres-de-la-ecología-de-población">Uno de los padres de la ecología de población</a></li>
+  <li><a href="#el-padere-de-ecología-de-población-en-orquídea" id="toc-el-padere-de-ecología-de-población-en-orquídea" class="nav-link" data-scroll-target="#el-padere-de-ecología-de-población-en-orquídea">El padere de ecología de población en orquídea?</a></li>
   <li><a href="#re-evaluación-de-los-datos-de-tamm" id="toc-re-evaluación-de-los-datos-de-tamm" class="nav-link" data-scroll-target="#re-evaluación-de-los-datos-de-tamm">Re-evaluación de los datos de Tamm</a></li>
   <li><a href="#instalación-de-raretrans-2" id="toc-instalación-de-raretrans-2" class="nav-link" data-scroll-target="#instalación-de-raretrans-2">Instalación de raretrans #2</a></li>
   <li><a href="#construcción-de-la-matriz-de-transición" id="toc-construcción-de-la-matriz-de-transición" class="nav-link" data-scroll-target="#construcción-de-la-matriz-de-transición">Construcción de la matriz de transición</a></li>
@@ -436,8 +437,41 @@ window.Quarto = {
 
 <section id="OTamm" class="level1">
 <h1>Carl Olaf Tamm</h1>
-<section id="uno-de-los-padres-de-la-ecología-de-población" class="level2">
-<h2 class="anchored" data-anchor-id="uno-de-los-padres-de-la-ecología-de-población">Uno de los padres de la ecología de población</h2>
+<p>Por Raymond L. Tremblay</p>
+<section id="librerías-de-r-requeridas-para-el-siguiente-módulo" class="level4">
+<h4 class="anchored" data-anchor-id="librerías-de-r-requeridas-para-el-siguiente-módulo">Librerías de R requeridas para el siguiente módulo</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(janitor, tidyverse, devtools, popbio, knitr, gt)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popbio)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#library(devtools) # remover el "#" para la instalación de devtools</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#devtools::install_github("atyre2/raretrans", build = TRUE, build_opts = c("--no-resave-data", "--no-manual")) # Instalar el paquete 'raretrans' desde GitHub</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raretrans)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Mi tema de formato de las gráficas de ggplot2 personal</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>rlt_theme <span class="ot">&lt;-</span> <span class="fu">theme</span>(<span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">colour=</span><span class="st">"grey20"</span>,<span class="at">size=</span><span class="dv">15</span>,<span class="at">face=</span><span class="st">"bold"</span>),</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">colour=</span><span class="st">"grey20"</span>,<span class="at">size=</span><span class="dv">15</span>, <span class="at">face=</span><span class="st">"bold"</span>),</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">colour=</span><span class="st">"grey20"</span>,<span class="at">size=</span><span class="dv">15</span>,<span class="at">face=</span><span class="st">"bold"</span>),  </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">colour=</span><span class="st">"grey20"</span>,<span class="at">size=</span><span class="dv">15</span>,<span class="at">face=</span><span class="st">"bold"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="el-padere-de-ecología-de-población-en-orquídea" class="level2">
+<h2 class="anchored" data-anchor-id="el-padere-de-ecología-de-población-en-orquídea">El padere de ecología de población en orquídea?</h2>
 <p>Carl Olaf Tamm (1919-2007) fue un biólogo Sueco y profesor de botánica y suelos de la escuela de “Soil Science at the Royal College of Forestry” (1957-1962) en Estocolmo y el primer profesor de <strong>Ecología de bosques</strong> de dicha universidad (1962). Su carrera académica se desarrolló en la Universidad de Estocolmo, donde fue profesor de ecología de bosques desde 1957 hasta 1985. Los trabajos de Tamm son reconocidos por trabajos a largo plazo, de múltiples años y décadas, donde el enfatizó la importancia de la variabilidad temporal y espacial en los ecosistemas y los eventos raros en la dinámica de especies. Tamm desarrollo protocolos de muestreos de plantas y suelos en bosques, donde la recolección de datos era anuales y continuos. Algunos de estos trabajos son ahora conocidos como clásicos en ecología de poblaciones y comunidades. Tres de estos trabajos relevante a la dinámica poblacional incluye: @ref(OTamm)</p>
 <ul>
 <li>Observation on reproduction and survival of some perrenial herbs <span class="citation" data-cites="tamm1948observations">(<a href="#ref-tamm1948observations" role="doc-biblioref">Tamm 1948</a>)</span>.</li>
@@ -481,23 +515,23 @@ window.Quarto = {
 <p>En la publicación de 1972 <span class="citation" data-cites="tamm1972survival">(<a href="#ref-tamm1972survival" role="doc-biblioref">Tamm 1972</a>)</span>, Tamm describe la dinámica de múltiples especies de orquídeas, y alguna especies en múltiples sitios.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="xbwzyybaks" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#xbwzyybaks table {
+<div id="hydhukbbfq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#hydhukbbfq table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#xbwzyybaks thead, #xbwzyybaks tbody, #xbwzyybaks tfoot, #xbwzyybaks tr, #xbwzyybaks td, #xbwzyybaks th {
+#hydhukbbfq thead, #hydhukbbfq tbody, #hydhukbbfq tfoot, #hydhukbbfq tr, #hydhukbbfq td, #hydhukbbfq th {
   border-style: none;
 }
 
-#xbwzyybaks p {
+#hydhukbbfq p {
   margin: 0;
   padding: 0;
 }
 
-#xbwzyybaks .gt_table {
+#hydhukbbfq .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -523,12 +557,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#xbwzyybaks .gt_caption {
+#hydhukbbfq .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#xbwzyybaks .gt_title {
+#hydhukbbfq .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -540,7 +574,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#xbwzyybaks .gt_subtitle {
+#hydhukbbfq .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -552,7 +586,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#xbwzyybaks .gt_heading {
+#hydhukbbfq .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -564,13 +598,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#xbwzyybaks .gt_bottom_border {
+#hydhukbbfq .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#xbwzyybaks .gt_col_headings {
+#hydhukbbfq .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -585,7 +619,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#xbwzyybaks .gt_col_heading {
+#hydhukbbfq .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -605,7 +639,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#xbwzyybaks .gt_column_spanner_outer {
+#hydhukbbfq .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -617,15 +651,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#xbwzyybaks .gt_column_spanner_outer:first-child {
+#hydhukbbfq .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#xbwzyybaks .gt_column_spanner_outer:last-child {
+#hydhukbbfq .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#xbwzyybaks .gt_column_spanner {
+#hydhukbbfq .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -637,11 +671,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#xbwzyybaks .gt_spanner_row {
+#hydhukbbfq .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#xbwzyybaks .gt_group_heading {
+#hydhukbbfq .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -667,7 +701,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#xbwzyybaks .gt_empty_group_heading {
+#hydhukbbfq .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -682,15 +716,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#xbwzyybaks .gt_from_md > :first-child {
+#hydhukbbfq .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#xbwzyybaks .gt_from_md > :last-child {
+#hydhukbbfq .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#xbwzyybaks .gt_row {
+#hydhukbbfq .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -709,7 +743,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#xbwzyybaks .gt_stub {
+#hydhukbbfq .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -722,7 +756,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#xbwzyybaks .gt_stub_row_group {
+#hydhukbbfq .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -736,15 +770,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#xbwzyybaks .gt_row_group_first td {
+#hydhukbbfq .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#xbwzyybaks .gt_row_group_first th {
+#hydhukbbfq .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#xbwzyybaks .gt_summary_row {
+#hydhukbbfq .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -754,16 +788,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#xbwzyybaks .gt_first_summary_row {
+#hydhukbbfq .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#xbwzyybaks .gt_first_summary_row.thick {
+#hydhukbbfq .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#xbwzyybaks .gt_last_summary_row {
+#hydhukbbfq .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -773,7 +807,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#xbwzyybaks .gt_grand_summary_row {
+#hydhukbbfq .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -783,7 +817,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#xbwzyybaks .gt_first_grand_summary_row {
+#hydhukbbfq .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -793,7 +827,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#xbwzyybaks .gt_last_grand_summary_row_top {
+#hydhukbbfq .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -803,11 +837,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#xbwzyybaks .gt_striped {
+#hydhukbbfq .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#xbwzyybaks .gt_table_body {
+#hydhukbbfq .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -816,7 +850,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#xbwzyybaks .gt_footnotes {
+#hydhukbbfq .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -830,7 +864,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#xbwzyybaks .gt_footnote {
+#hydhukbbfq .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -839,7 +873,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#xbwzyybaks .gt_sourcenotes {
+#hydhukbbfq .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -853,7 +887,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#xbwzyybaks .gt_sourcenote {
+#hydhukbbfq .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -861,72 +895,72 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#xbwzyybaks .gt_left {
+#hydhukbbfq .gt_left {
   text-align: left;
 }
 
-#xbwzyybaks .gt_center {
+#hydhukbbfq .gt_center {
   text-align: center;
 }
 
-#xbwzyybaks .gt_right {
+#hydhukbbfq .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#xbwzyybaks .gt_font_normal {
+#hydhukbbfq .gt_font_normal {
   font-weight: normal;
 }
 
-#xbwzyybaks .gt_font_bold {
+#hydhukbbfq .gt_font_bold {
   font-weight: bold;
 }
 
-#xbwzyybaks .gt_font_italic {
+#hydhukbbfq .gt_font_italic {
   font-style: italic;
 }
 
-#xbwzyybaks .gt_super {
+#hydhukbbfq .gt_super {
   font-size: 65%;
 }
 
-#xbwzyybaks .gt_footnote_marks {
+#hydhukbbfq .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#xbwzyybaks .gt_asterisk {
+#hydhukbbfq .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#xbwzyybaks .gt_indent_1 {
+#hydhukbbfq .gt_indent_1 {
   text-indent: 5px;
 }
 
-#xbwzyybaks .gt_indent_2 {
+#hydhukbbfq .gt_indent_2 {
   text-indent: 10px;
 }
 
-#xbwzyybaks .gt_indent_3 {
+#hydhukbbfq .gt_indent_3 {
   text-indent: 15px;
 }
 
-#xbwzyybaks .gt_indent_4 {
+#hydhukbbfq .gt_indent_4 {
   text-indent: 20px;
 }
 
-#xbwzyybaks .gt_indent_5 {
+#hydhukbbfq .gt_indent_5 {
   text-indent: 25px;
 }
 
-#xbwzyybaks .katex-display {
+#hydhukbbfq .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#xbwzyybaks div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#hydhukbbfq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1026,14 +1060,10 @@ window.Quarto = {
 <section id="instalación-de-raretrans-2" class="level2">
 <h2 class="anchored" data-anchor-id="instalación-de-raretrans-2">Instalación de raretrans #2</h2>
 <p>Para instalar <strong>raretrans</strong> remover el <strong>#</strong> antes de correr el script para tener acceso a los códigos de <strong>raretrans</strong>. Este paquete no esta disponible en CRAN, pero se puede instalar desde GitHub.</p>
-<div class="cell">
+<div class="cell" data-messae="false">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#library(devtools) # remover el "#" para la instalación de devtools</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#devtools::install_github("atyre2/raretrans", build = TRUE, build_opts = c("--no-resave-data", "--no-manual")) # Instalar el paquete 'raretrans' desde GitHub</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raretrans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#devtools::install_github("atyre2/raretrans", build = TRUE, build_opts = c("--no-resave-data", "--no-manual")) # Instalar el paquete 'raretrans' desde GitHub</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Subir los datos de Tamm</p>
@@ -1042,11 +1072,10 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>Tamm_1972_column <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/Tamm_1972.xlsx"</span>, </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">sheet =</span> <span class="st">"D_incarnata_by_column"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>Tamm_1972_column <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Tamm_1972_column <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/Tamm_1972.xlsx"</span>, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">sheet =</span> <span class="st">"D_incarnata_by_column"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>Tamm_1972_column <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 24
@@ -1067,12 +1096,12 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Dacty_apriori<span class="ot">=</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.637</span>, <span class="fl">0.571</span>, <span class="fl">0.740</span>,</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                       <span class="fl">0.273</span>, <span class="fl">0.271</span>, <span class="fl">0.049</span>,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                       <span class="fl">0.090</span>, <span class="fl">0.158</span>, <span class="fl">0.059</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                       <span class="dv">0</span>,     <span class="dv">0</span>,     <span class="fl">0.152</span>),  <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>) <span class="co"># la última fila es la proporción de individuos en esta etapa que fallece. </span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>Dacty_apriori</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Dacty_apriori<span class="ot">=</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.637</span>, <span class="fl">0.571</span>, <span class="fl">0.740</span>,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                       <span class="fl">0.273</span>, <span class="fl">0.271</span>, <span class="fl">0.049</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                       <span class="fl">0.090</span>, <span class="fl">0.158</span>, <span class="fl">0.059</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                       <span class="dv">0</span>,     <span class="dv">0</span>,     <span class="fl">0.152</span>),  <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>) <span class="co"># la última fila es la proporción de individuos en esta etapa que fallece. </span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>Dacty_apriori</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      [,1]  [,2]  [,3]
@@ -1100,16 +1129,16 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Tmat_D <span class="ot">&lt;-</span> Tamm_1972_column <span class="sc">%&gt;%</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Year, stage, next_stage, Fertility) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">stage =</span> <span class="fu">factor</span>(stage, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">"V"</span>,<span class="st">"F"</span>,<span class="st">"D"</span>,<span class="st">"m"</span>)),</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">fate =</span> <span class="fu">factor</span>(next_stage, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">"V"</span>,<span class="st">"F"</span>,<span class="st">"D"</span>,<span class="st">"m"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(stage, fate) <span class="sc">%&gt;%</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xtabs</span>(<span class="sc">~</span>fate <span class="sc">+</span> stage, <span class="at">data =</span> .) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>() </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>Tmat_D <span class="co"># se contabiliza la cantidad de individuos que pasan de una etapa a otra para todos los años (no se considerá la variación inter anual).</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Tmat_D <span class="ot">&lt;-</span> Tamm_1972_column <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Year, stage, next_stage, Fertility) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">stage =</span> <span class="fu">factor</span>(stage, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">"V"</span>,<span class="st">"F"</span>,<span class="st">"D"</span>,<span class="st">"m"</span>)),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">fate =</span> <span class="fu">factor</span>(next_stage, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">"V"</span>,<span class="st">"F"</span>,<span class="st">"D"</span>,<span class="st">"m"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(stage, fate) <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xtabs</span>(<span class="sc">~</span>fate <span class="sc">+</span> stage, <span class="at">data =</span> .) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>() </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>Tmat_D <span class="co"># se contabiliza la cantidad de individuos que pasan de una etapa a otra para todos los años (no se considerá la variación inter anual).</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>    stage
@@ -1121,8 +1150,8 @@ fate   V   F   D   m
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Tmat2 <span class="ot">&lt;-</span> Tmat_D[,<span class="sc">-</span><span class="dv">4</span>] <span class="co"># remover la columna para transiciones de la muerte (es imposible pasar de fallecido a otra etapas)</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>Tmat2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Tmat2 <span class="ot">&lt;-</span> Tmat_D[,<span class="sc">-</span><span class="dv">4</span>] <span class="co"># remover la columna para transiciones de la muerte (es imposible pasar de fallecido a otra etapas)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Tmat2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>    stage
@@ -1134,8 +1163,8 @@ fate   V   F   D
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>N2_D <span class="ot">&lt;-</span> <span class="fu">colSums</span>(Tmat2) <span class="co"># obtener el número total de una etapa.</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>N2_D</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>N2_D <span class="ot">&lt;-</span> <span class="fu">colSums</span>(Tmat2) <span class="co"># obtener el número total de una etapa.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>N2_D</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  V   F   D 
@@ -1143,8 +1172,8 @@ fate   V   F   D
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Tmat <span class="ot">&lt;-</span> <span class="fu">sweep</span>(Tmat2[<span class="sc">-</span><span class="dv">4</span>,], <span class="dv">2</span>, N2_D, <span class="st">"/"</span>) <span class="co"># normalizar las transiciones, nota que el "2" es para decir que haga los cálculos por columna (en este caso división por la cantidad total de individuos en la etapa)</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>Tmat <span class="co"># la matriz de transición final normalizada con los datos del campo</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Tmat <span class="ot">&lt;-</span> <span class="fu">sweep</span>(Tmat2[<span class="sc">-</span><span class="dv">4</span>,], <span class="dv">2</span>, N2_D, <span class="st">"/"</span>) <span class="co"># normalizar las transiciones, nota que el "2" es para decir que haga los cálculos por columna (en este caso división por la cantidad total de individuos en la etapa)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>Tmat <span class="co"># la matriz de transición final normalizada con los datos del campo</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>    stage
@@ -1177,11 +1206,11 @@ fate          V          F          D
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Fmat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow=</span><span class="dv">3</span>, <span class="at">ncol=</span><span class="dv">3</span>) <span class="co"># crear una matriz de ceros. </span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>Fmat[<span class="dv">1</span>,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="dv">15</span><span class="sc">/</span><span class="dv">9</span> <span class="co"># contar 9 adultos reproductivos en el tiempo t y 15 nuevos individuos en el tiempo t+i en la población. Añadir el valor en la posición correcta de la matriz de fertilidad (nnota es la primera fila, segunda columna). </span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>TF2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">Tmat =</span> Tmat, <span class="at">Fmat =</span> Fmat) <span class="co"># crear una lista con las matrices de transiciones y de fertilidad.</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>TF2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Fmat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow=</span><span class="dv">3</span>, <span class="at">ncol=</span><span class="dv">3</span>) <span class="co"># crear una matriz de ceros. </span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>Fmat[<span class="dv">1</span>,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="dv">15</span><span class="sc">/</span><span class="dv">9</span> <span class="co"># contar 9 adultos reproductivos en el tiempo t y 15 nuevos individuos en el tiempo t+i en la población. Añadir el valor en la posición correcta de la matriz de fertilidad (nnota es la primera fila, segunda columna). </span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>TF2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">Tmat =</span> Tmat, <span class="at">Fmat =</span> Fmat) <span class="co"># crear una lista con las matrices de transiciones y de fertilidad.</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>TF2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$Tmat
@@ -1208,8 +1237,8 @@ $Fmat
 </ul>
 <div class="cell">
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-b4166a399ce380e6a61c" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-b4166a399ce380e6a61c">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Vegetativo\"; \"Florecido\"; \"Latente\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"Vegetativo\"; \"Florecido\"; \"Latente\" } [style=invis] \"Vegetativo\" -> \"Vegetativo\"[minlen=0,fontsize=8,color=red2,xlabel=\" 0.749\"]\n\"Vegetativo\" -> \"Florecido\"[minlen=3,fontsize=8,color=PaleGreen4,xlabel=\" 0.018\"]\n\"Vegetativo\" -> \"Latente\"[minlen=6,fontsize=8,color=blue,xlabel=\" 0.234\"]\n\"Florecido\" -> \"Vegetativo\"[minlen=-3,fontsize=8,color=goldenrod1,xlabel=\" 2.524\"]\n\"Florecido\" -> \"Latente\"[minlen=3,fontsize=8,color=blue,xlabel=\" 0.143\"]\n\"Latente\" -> \"Vegetativo\"[minlen=-6,fontsize=8,color=PaleGreen4,xlabel=\" 0.162\"]\n\"Latente\" -> \"Latente\"[minlen=0,fontsize=8,color=red2,xlabel=\" 0.027\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-52090ad0f354e2207514" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-52090ad0f354e2207514">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Vegetativo\"; \"Florecido\"; \"Latente\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"Vegetativo\"; \"Florecido\"; \"Latente\" } [style=invis] \"Vegetativo\" -> \"Vegetativo\"[minlen=0,fontsize=8,color=red2,xlabel=\" 0.749\"]\n\"Vegetativo\" -> \"Florecido\"[minlen=3,fontsize=8,color=PaleGreen4,xlabel=\" 0.018\"]\n\"Vegetativo\" -> \"Latente\"[minlen=6,fontsize=8,color=blue,xlabel=\" 0.234\"]\n\"Florecido\" -> \"Vegetativo\"[minlen=-3,fontsize=8,color=goldenrod1,xlabel=\" 2.524\"]\n\"Florecido\" -> \"Latente\"[minlen=3,fontsize=8,color=blue,xlabel=\" 0.143\"]\n\"Latente\" -> \"Vegetativo\"[minlen=-6,fontsize=8,color=PaleGreen4,xlabel=\" 0.162\"]\n\"Latente\" -> \"Latente\"[minlen=0,fontsize=8,color=red2,xlabel=\" 0.027\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <hr>
@@ -1222,7 +1251,7 @@ $Fmat
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>TF2<span class="sc">$</span>Tmat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>TF2<span class="sc">$</span>Tmat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>    stage
@@ -1233,9 +1262,9 @@ fate          V          F          D
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>TF3<span class="ot">=</span><span class="fu">fill_transitions</span>(TF2, N2_D, <span class="at">P =</span> Dacty_apriori, <span class="at">priorweight =</span> <span class="fl">0.1</span>)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>TF3 <span class="co"># la matriz de transiciones posterior</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>TF3<span class="ot">=</span><span class="fu">fill_transitions</span>(TF2, N2_D, <span class="at">P =</span> Dacty_apriori, <span class="at">priorweight =</span> <span class="fl">0.1</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>TF3 <span class="co"># la matriz de transiciones posterior</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>           [,1]       [,2]        [,3]
@@ -1249,7 +1278,7 @@ fate          V          F          D
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>popbio<span class="sc">::</span><span class="fu">lambda</span>(TF3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>popbio<span class="sc">::</span><span class="fu">lambda</span>(TF3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.8415307</code></pre>
@@ -1264,14 +1293,12 @@ fate          V          F          D
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popbio)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>alpha2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="cn">NA_real_</span>, <span class="fl">1e-5</span>, <span class="cn">NA_real_</span>,</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                   <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>,</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                   <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>), <span class="at">nrow=</span><span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>) <span class="co"># la matriz de los valores alpha</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>beta2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>( <span class="cn">NA_real_</span>, <span class="fl">1e-5</span>, <span class="cn">NA_real_</span>,</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>                   <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>,</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>                   <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>), <span class="at">nrow=</span><span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>) <span class="co"># la matriz de los valores beta</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>alpha2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="cn">NA_real_</span>, <span class="fl">1e-5</span>, <span class="cn">NA_real_</span>,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                   <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                   <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>), <span class="at">nrow=</span><span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>) <span class="co"># la matriz de los valores alpha</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>beta2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>( <span class="cn">NA_real_</span>, <span class="fl">1e-5</span>, <span class="cn">NA_real_</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                   <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                   <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>, <span class="cn">NA_real_</span>), <span class="at">nrow=</span><span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>) <span class="co"># la matriz de los valores beta</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Ahora unimos todos los valores, para simular el crecimiento poblacional de <em>Dactylorhiza incarnata</em> con la función <strong>sim_transitions</strong> muestreado por Tamm desde 1944 a 1971.</p>
@@ -1286,15 +1313,15 @@ fate          V          F          D
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Dacty_0<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">sim_transitions</span>(TF2, N2_D, <span class="at">P =</span> Dacty_apriori, <span class="at">alpha =</span> alpha2, <span class="at">beta =</span> beta2,</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">priorweight =</span> <span class="fl">0.1</span>, <span class="at">samples =</span> <span class="dv">5000</span>) <span class="co"># generar 5000 matrices basado en las previas de transiciones y de fertilidades, el tamaño de muestra, en adición de los datos</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Dacty_0<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">sim_transitions</span>(TF2, N2_D, <span class="at">P =</span> Dacty_apriori, <span class="at">alpha =</span> alpha2, <span class="at">beta =</span> beta2,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">priorweight =</span> <span class="fl">0.1</span>, <span class="at">samples =</span> <span class="dv">5000</span>) <span class="co"># generar 5000 matrices basado en las previas de transiciones y de fertilidades, el tamaño de muestra, en adición de los datos</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Se convierte el objeto “Dacty_0.1” en un tibble para poder visualizar la distribución de los lambda que proviene de la simulación.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Dacty_0<span class="fl">.1</span>b <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">lposterior =</span> <span class="fu">map_dbl</span>(Dacty_0<span class="fl">.1</span>, lambda))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Dacty_0<span class="fl">.1</span>b <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">lposterior =</span> <span class="fu">map_dbl</span>(Dacty_0<span class="fl">.1</span>, lambda))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -1303,12 +1330,12 @@ fate          V          F          D
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Dacty_0<span class="fl">.1</span>b,</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> lposterior)) <span class="sc">+</span> </span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.01</span>, <span class="at">colour=</span><span class="st">"white"</span>) <span class="sc">+</span> </span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  rlt_theme<span class="sc">+</span> </span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1</span>, </span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size=</span><span class="fl">1.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Dacty_0<span class="fl">.1</span>b,</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> lposterior)) <span class="sc">+</span> </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.01</span>, <span class="at">colour=</span><span class="st">"white"</span>) <span class="sc">+</span> </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  rlt_theme<span class="sc">+</span> </span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1</span>, </span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size=</span><span class="fl">1.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
@@ -1327,39 +1354,39 @@ fate          V          F          D
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Dacty_0<span class="fl">.1</span>bdf<span class="ot">=</span><span class="fu">as.data.frame</span>(Dacty_0<span class="fl">.1</span>b)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>Dacty_0<span class="fl">.1</span>_summary <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">summarize</span>(Dacty_0<span class="fl">.1</span>bdf,</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">medianL =</span> <span class="fu">median</span>(lposterior),</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">meanL =</span> <span class="fu">mean</span>(lposterior),</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">lcl =</span> <span class="fu">quantile</span>(lposterior, <span class="at">probs =</span> <span class="fl">0.025</span>),</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">ucl =</span> <span class="fu">quantile</span>(lposterior, <span class="at">probs =</span> <span class="fl">0.975</span>),</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">pincrease =</span> <span class="fu">sum</span>(lposterior <span class="sc">&gt;</span> <span class="fl">1.</span>)<span class="sc">/</span><span class="fu">n</span>()</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>                            )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>Dacty_0<span class="fl">.1</span>bdf<span class="ot">=</span><span class="fu">as.data.frame</span>(Dacty_0<span class="fl">.1</span>b)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>Dacty_0<span class="fl">.1</span>_summary <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">summarize</span>(Dacty_0<span class="fl">.1</span>bdf,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">medianL =</span> <span class="fu">median</span>(lposterior),</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">meanL =</span> <span class="fu">mean</span>(lposterior),</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">lcl =</span> <span class="fu">quantile</span>(lposterior, <span class="at">probs =</span> <span class="fl">0.025</span>),</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">ucl =</span> <span class="fu">quantile</span>(lposterior, <span class="at">probs =</span> <span class="fl">0.975</span>),</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">pincrease =</span> <span class="fu">sum</span>(lposterior <span class="sc">&gt;</span> <span class="fl">1.</span>)<span class="sc">/</span><span class="fu">n</span>()</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                            )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">signif</span>(Dacty_0<span class="fl">.1</span>_summary, <span class="at">digits =</span> <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">signif</span>(Dacty_0<span class="fl">.1</span>_summary, <span class="at">digits =</span> <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="mskakmztvh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#mskakmztvh table {
+<div id="ogmghxnpcu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ogmghxnpcu table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#mskakmztvh thead, #mskakmztvh tbody, #mskakmztvh tfoot, #mskakmztvh tr, #mskakmztvh td, #mskakmztvh th {
+#ogmghxnpcu thead, #ogmghxnpcu tbody, #ogmghxnpcu tfoot, #ogmghxnpcu tr, #ogmghxnpcu td, #ogmghxnpcu th {
   border-style: none;
 }
 
-#mskakmztvh p {
+#ogmghxnpcu p {
   margin: 0;
   padding: 0;
 }
 
-#mskakmztvh .gt_table {
+#ogmghxnpcu .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1385,12 +1412,12 @@ fate          V          F          D
   border-left-color: #D3D3D3;
 }
 
-#mskakmztvh .gt_caption {
+#ogmghxnpcu .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#mskakmztvh .gt_title {
+#ogmghxnpcu .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1402,7 +1429,7 @@ fate          V          F          D
   border-bottom-width: 0;
 }
 
-#mskakmztvh .gt_subtitle {
+#ogmghxnpcu .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1414,7 +1441,7 @@ fate          V          F          D
   border-top-width: 0;
 }
 
-#mskakmztvh .gt_heading {
+#ogmghxnpcu .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1426,13 +1453,13 @@ fate          V          F          D
   border-right-color: #D3D3D3;
 }
 
-#mskakmztvh .gt_bottom_border {
+#ogmghxnpcu .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#mskakmztvh .gt_col_headings {
+#ogmghxnpcu .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1447,7 +1474,7 @@ fate          V          F          D
   border-right-color: #D3D3D3;
 }
 
-#mskakmztvh .gt_col_heading {
+#ogmghxnpcu .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1467,7 +1494,7 @@ fate          V          F          D
   overflow-x: hidden;
 }
 
-#mskakmztvh .gt_column_spanner_outer {
+#ogmghxnpcu .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1479,15 +1506,15 @@ fate          V          F          D
   padding-right: 4px;
 }
 
-#mskakmztvh .gt_column_spanner_outer:first-child {
+#ogmghxnpcu .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#mskakmztvh .gt_column_spanner_outer:last-child {
+#ogmghxnpcu .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#mskakmztvh .gt_column_spanner {
+#ogmghxnpcu .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1499,11 +1526,11 @@ fate          V          F          D
   width: 100%;
 }
 
-#mskakmztvh .gt_spanner_row {
+#ogmghxnpcu .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#mskakmztvh .gt_group_heading {
+#ogmghxnpcu .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1529,7 +1556,7 @@ fate          V          F          D
   text-align: left;
 }
 
-#mskakmztvh .gt_empty_group_heading {
+#ogmghxnpcu .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1544,15 +1571,15 @@ fate          V          F          D
   vertical-align: middle;
 }
 
-#mskakmztvh .gt_from_md > :first-child {
+#ogmghxnpcu .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#mskakmztvh .gt_from_md > :last-child {
+#ogmghxnpcu .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#mskakmztvh .gt_row {
+#ogmghxnpcu .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1571,7 +1598,7 @@ fate          V          F          D
   overflow-x: hidden;
 }
 
-#mskakmztvh .gt_stub {
+#ogmghxnpcu .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1584,7 +1611,7 @@ fate          V          F          D
   padding-right: 5px;
 }
 
-#mskakmztvh .gt_stub_row_group {
+#ogmghxnpcu .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1598,15 +1625,15 @@ fate          V          F          D
   vertical-align: top;
 }
 
-#mskakmztvh .gt_row_group_first td {
+#ogmghxnpcu .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#mskakmztvh .gt_row_group_first th {
+#ogmghxnpcu .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#mskakmztvh .gt_summary_row {
+#ogmghxnpcu .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1616,16 +1643,16 @@ fate          V          F          D
   padding-right: 5px;
 }
 
-#mskakmztvh .gt_first_summary_row {
+#ogmghxnpcu .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#mskakmztvh .gt_first_summary_row.thick {
+#ogmghxnpcu .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#mskakmztvh .gt_last_summary_row {
+#ogmghxnpcu .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1635,7 +1662,7 @@ fate          V          F          D
   border-bottom-color: #D3D3D3;
 }
 
-#mskakmztvh .gt_grand_summary_row {
+#ogmghxnpcu .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1645,7 +1672,7 @@ fate          V          F          D
   padding-right: 5px;
 }
 
-#mskakmztvh .gt_first_grand_summary_row {
+#ogmghxnpcu .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1655,7 +1682,7 @@ fate          V          F          D
   border-top-color: #D3D3D3;
 }
 
-#mskakmztvh .gt_last_grand_summary_row_top {
+#ogmghxnpcu .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1665,11 +1692,11 @@ fate          V          F          D
   border-bottom-color: #D3D3D3;
 }
 
-#mskakmztvh .gt_striped {
+#ogmghxnpcu .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#mskakmztvh .gt_table_body {
+#ogmghxnpcu .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1678,7 +1705,7 @@ fate          V          F          D
   border-bottom-color: #D3D3D3;
 }
 
-#mskakmztvh .gt_footnotes {
+#ogmghxnpcu .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1692,7 +1719,7 @@ fate          V          F          D
   border-right-color: #D3D3D3;
 }
 
-#mskakmztvh .gt_footnote {
+#ogmghxnpcu .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1701,7 +1728,7 @@ fate          V          F          D
   padding-right: 5px;
 }
 
-#mskakmztvh .gt_sourcenotes {
+#ogmghxnpcu .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1715,7 +1742,7 @@ fate          V          F          D
   border-right-color: #D3D3D3;
 }
 
-#mskakmztvh .gt_sourcenote {
+#ogmghxnpcu .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1723,72 +1750,72 @@ fate          V          F          D
   padding-right: 5px;
 }
 
-#mskakmztvh .gt_left {
+#ogmghxnpcu .gt_left {
   text-align: left;
 }
 
-#mskakmztvh .gt_center {
+#ogmghxnpcu .gt_center {
   text-align: center;
 }
 
-#mskakmztvh .gt_right {
+#ogmghxnpcu .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#mskakmztvh .gt_font_normal {
+#ogmghxnpcu .gt_font_normal {
   font-weight: normal;
 }
 
-#mskakmztvh .gt_font_bold {
+#ogmghxnpcu .gt_font_bold {
   font-weight: bold;
 }
 
-#mskakmztvh .gt_font_italic {
+#ogmghxnpcu .gt_font_italic {
   font-style: italic;
 }
 
-#mskakmztvh .gt_super {
+#ogmghxnpcu .gt_super {
   font-size: 65%;
 }
 
-#mskakmztvh .gt_footnote_marks {
+#ogmghxnpcu .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#mskakmztvh .gt_asterisk {
+#ogmghxnpcu .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#mskakmztvh .gt_indent_1 {
+#ogmghxnpcu .gt_indent_1 {
   text-indent: 5px;
 }
 
-#mskakmztvh .gt_indent_2 {
+#ogmghxnpcu .gt_indent_2 {
   text-indent: 10px;
 }
 
-#mskakmztvh .gt_indent_3 {
+#ogmghxnpcu .gt_indent_3 {
   text-indent: 15px;
 }
 
-#mskakmztvh .gt_indent_4 {
+#ogmghxnpcu .gt_indent_4 {
   text-indent: 20px;
 }
 
-#mskakmztvh .gt_indent_5 {
+#ogmghxnpcu .gt_indent_5 {
   text-indent: 25px;
 }
 
-#mskakmztvh .katex-display {
+#ogmghxnpcu .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#mskakmztvh div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#ogmghxnpcu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1805,10 +1832,10 @@ fate          V          F          D
 </thead>
 <tbody class="gt_table_body">
 <tr class="odd">
-<td class="gt_row gt_right" headers="medianL">0.845</td>
-<td class="gt_row gt_right" headers="meanL">0.844</td>
+<td class="gt_row gt_right" headers="medianL">0.846</td>
+<td class="gt_row gt_right" headers="meanL">0.845</td>
 <td class="gt_row gt_right" headers="lcl">0.792</td>
-<td class="gt_row gt_right" headers="ucl">0.893</td>
+<td class="gt_row gt_right" headers="ucl">0.892</td>
 <td class="gt_row gt_right" headers="pincrease">0</td>
 </tr>
 </tbody>

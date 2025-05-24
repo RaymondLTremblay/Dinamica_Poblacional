@@ -2,11 +2,16 @@
 
 Por: Raymond L. Tremblay
 
+#### Librerías de R requeridas para el siguiente módulo
+
 ```{r sim1, message=FALSE, warning=FALSE}
+
 library(tidyverse)
 library(ggtext)
 library(janitor)
 library(popbio)
+library(raretrans)
+library(ggpubr)
 ```
 
 El termino **biología** pudiese ser un sinónimo de variación biológica. No hay dos organismos iguales, ni siquiera gemelos que sean completamente idénticos. La variación biológica es una característica fundamental de la vida y es la base de la evolución, no puede haber evolución sin variación. Cuando se considera los individuos, por ejemplos humanos, fácilmente reconocemos variación, en tamaño, color de ojos, susceptibilidad a cáncer o infección y efecto que tiene el ambiente (por ejemplo la dieta o acceso a la educación) entre muchos factores que impacta la supervivencia o crecimiento y reproducción. Pero desafortunadamente cuando se considera los animales y plantas de una misma especie frecuentemente se obvia la variación en los análisis. Podemos observar variación a múltiples niveles en una misma especie
@@ -160,6 +165,7 @@ Para observar cuantos individuos hubiese en el futuro de la población de *Serap
 Order the variable names "plantula", "latente", "rosetta", "con flores"
 
 ```{r sim4}
+
 Serapia.eq=clean_names(as.data.frame(Serapia.eq)) 
 
 
@@ -179,6 +185,7 @@ Serapia.eq %>%
 La suma total de individuos por simulación es una medida de la cantidad de individuos esperado en el futuro. En el siguiente gráfico se muestra la distribución de la cantidad de individuos esperado en el futuro de la población de *Serapia cordigera* si la especie se comporta como las matrices de transiciones arriba y seleccionado al azar por la misma probabilidades. Se observa que la mayoría de las simulaciones tienen menos de 10 individuos en el futuro.
 
 ```{r sim5}
+
 Serapia_eq_T=Serapia.eq %>% 
   mutate(total=rowSums(across(where(is.numeric)))) 
 
@@ -211,6 +218,7 @@ head(Serapia.uneq) # vemos las primeras 6 simulaciones de tamaño de muestra
 Ahora vamos a solapar las dos distribuciones (la de selección por igual y por poblaciones mayormente impactado por humanos) para ver si hay una diferencia en la distribución de tamaño de muestra entre las dos simulaciones. Los resultados de la simulaciones siguiere que las poblaciones afectada de forma antropogénicas (rojo) tienen una mayor cantidad de individuos en el futuro que las poblaciones naturales (azul).
 
 ```{r sim7}
+
 Serapia.uneq=clean_names(as.data.frame(Serapia.uneq))
 
 Serapia.uneq_T=Serapia.uneq %>% 
@@ -318,9 +326,6 @@ Serapia_eq_N=Serapia.eq_N %>%
 
 ```
 
-
-
-
 ```{r}
 
 ggplot(Serapia_eq_N, aes(total))+
@@ -344,6 +349,7 @@ Seguimos con los datos *Serapias cordigera*, pero ahora evaluamos cual es el efe
 El primer paso en entrar los datos en una lista de matrices de transición.
 
 ```{r sim14}
+
 Serapia_tiempo<-list(
   A1_1999=matrix(c(
 0.745,	0.152,	0.452,	0.564,
@@ -499,9 +505,6 @@ A1_2011=matrix(c(
 
 
  Serapia_tiempo
- 
-  
-  
   
 ```
 
@@ -590,7 +593,7 @@ La otra ventaja de usar la función Dirichlet es que se basa en la distribución
 
 ```{r sim19}
 
-library(popbio)
+
 n <- c(2, 0, 4, 99) # población inicial por etapa
 names(n) <- c("latente", "plantula", "rosetta", "con flor")
 Serapia_A3   <- splitA(Serapia$A3) # simulación solamente la matriz A1 de la lista de matriz
@@ -612,11 +615,7 @@ RLT_Serapia_previa <- matrix(c(0.5, 0.1,   0.4,   0.4,
 
 ```
 
-```{r sim21}
 
-library(raretrans)
-
-```
 
 ### Obtener los inertvalos de confianza (IC) para entradas de matriz individuales
 
@@ -737,7 +736,7 @@ Fallecidos=plot_beta(60.687, 39.303)+
 
 
 
-library(ggpubr)
+
 ggarrange(Latentes, Plantulas, Rosetta, Adultos, Fallecidos, ncol=3, nrow=2)
 ```
 

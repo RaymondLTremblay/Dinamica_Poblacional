@@ -441,13 +441,17 @@ window.Quarto = {
 <section id="variación-temporal-y-espacial-vartempesp" class="level1">
 <h1>Variación Temporal y Espacial {##VarTempEsp}</h1>
 <p>Por: Raymond L. Tremblay</p>
+<section id="librerías-de-r-requeridas-para-el-siguiente-módulo" class="level4">
+<h4 class="anchored" data-anchor-id="librerías-de-r-requeridas-para-el-siguiente-módulo">Librerías de R requeridas para el siguiente módulo</h4>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtext)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popbio)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popbio)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raretrans)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>El termino <strong>biología</strong> pudiese ser un sinónimo de variación biológica. No hay dos organismos iguales, ni siquiera gemelos que sean completamente idénticos. La variación biológica es una característica fundamental de la vida y es la base de la evolución, no puede haber evolución sin variación. Cuando se considera los individuos, por ejemplos humanos, fácilmente reconocemos variación, en tamaño, color de ojos, susceptibilidad a cáncer o infección y efecto que tiene el ambiente (por ejemplo la dieta o acceso a la educación) entre muchos factores que impacta la supervivencia o crecimiento y reproducción. Pero desafortunadamente cuando se considera los animales y plantas de una misma especie frecuentemente se obvia la variación en los análisis. Podemos observar variación a múltiples niveles en una misma especie</p>
@@ -458,6 +462,7 @@ window.Quarto = {
 <li>Variación entre tiempo (entre periodos de tiempo).</li>
 </ul>
 <p>Todos estos componentes de variación tendrán impacto en la dispersión de los estimados de los parámetros de la matriz de transición y el crecimiento poblacional en adición del comportamiento de la población en tiempo. Hay un componente que frecuentemente se deja por olvido es el efecto de la variación en tamaño de muestra pequeña en los estimados de los parámetros de la matriz de transición y el crecimiento poblacional, este es el efecto demográfico por tamaño de muestra. En este capítulo se discute el efecto de la variación en tiempo y espacio en los estimados de los parámetros de la matriz de transición y el crecimiento poblacional.</p>
+</section>
 <section id="componentes-de-variación" class="level3">
 <h3 class="anchored" data-anchor-id="componentes-de-variación">Componentes de Variación</h3>
 <section id="la-variación-sub-individual" class="level4">
@@ -629,12 +634,12 @@ con flor   0.210    0.465   0.498    0.485</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>       latente   plantula   rosetta  con flor
-[1,] 2.2043127 0.14379038 1.0828990 0.9034078
-[2,] 0.7355888 0.64487294 0.4594102 1.2373230
-[3,] 1.8613812 1.57843439 1.2361714 3.1887375
-[4,] 1.0601554 0.05568675 0.5311122 0.3875013
-[5,] 0.9597855 0.76752616 0.4553980 1.6929325
-[6,] 1.5424048 1.33913572 0.8196376 2.0542518</code></pre>
+[1,] 0.8577567 0.73433943 0.5646320 1.4777129
+[2,] 0.4991859 0.48527777 0.4022170 0.9929188
+[3,] 2.1887049 1.78942107 1.3620801 3.1927345
+[4,] 1.1851760 0.04971845 0.5356177 0.4531656
+[5,] 2.9373569 0.52480023 0.7608097 1.1923803
+[6,] 1.4841698 0.25136412 0.3716240 0.6566561</code></pre>
 </div>
 </div>
 </section>
@@ -706,13 +711,13 @@ con flor   0.210    0.465   0.498    0.485</code></pre>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Serapia.uneq) <span class="co"># vemos las primeras 6 simulaciones de tamaño de muestra</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>       latente  plantula  rosetta  con flor
-[1,] 42.497782 4.3833330 9.260611 14.094396
-[2,]  3.551201 1.5214342 5.796165 10.859528
-[3,]  8.255778 0.9955606 1.517313  2.736407
-[4,] 19.620490 2.1715580 4.347209  6.785428
-[5,] 12.527577 2.4111372 2.774660  4.996042
-[6,] 10.929027 1.9852955 2.793280  4.478411</code></pre>
+<pre><code>       latente  plantula   rosetta  con flor
+[1,] 50.550407 5.6631528 11.298123 17.823738
+[2,] 32.948138 3.6859707  7.414969 11.535817
+[3,]  4.188853 3.3815716  2.694369  6.252103
+[4,]  8.728004 0.8377132  4.249667  3.910314
+[5,] 22.390995 2.3106688  4.891472  7.358196
+[6,]  6.159048 5.7909040  4.551868 10.995096</code></pre>
 </div>
 </div>
 </section>
@@ -777,10 +782,10 @@ con flor   0.210    0.465   0.498    0.485</code></pre>
 [1] -0.06760619
 
 $sim
-[1] -0.04355517
+[1] -0.05146945
 
 $sim.CI
-[1] -0.07341741 -0.01369294</code></pre>
+[1] -0.08291281 -0.02002610</code></pre>
 </div>
 </div>
 <p>Simulaciones por selección de matriz con diferente probabilidad</p>
@@ -799,10 +804,10 @@ $sim.CI
 [1] -0.02988694
 
 $sim
-[1] -0.001502866
+[1] -0.02216321
 
 $sim.CI
-[1] -0.02700164  0.02399591</code></pre>
+[1] -0.049985795  0.005659375</code></pre>
 </div>
 </div>
 <p>Para convertir el log(crecimiento poblacional estocástica) a lambda se usa la siguiente formula <span class="math inline">\(e^r\)</span> donde <span class="math inline">\(r\)</span> es el log(crecimiento poblacional estocástica). Como ejemplo se muestra la metodología con las simulaciones con probabilidad desigual de selección de las matrices de transición.</p>
@@ -816,21 +821,21 @@ $sim.CI
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_uneq<span class="sc">$</span>sim) <span class="co"># matrices seleccionado con igual probabilidad</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9984983</code></pre>
+<pre><code>[1] 0.9780806</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_uneq<span class="sc">$</span>sim.CI[<span class="dv">1</span>]) <span class="co">#El intervalo de confianza inferior</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9733596</code></pre>
+<pre><code>[1] 0.9512429</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_uneq<span class="sc">$</span>sim.CI[<span class="dv">2</span>]) <span class="co">#El intervalo de confianza superior</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.024286</code></pre>
+<pre><code>[1] 1.005675</code></pre>
 </div>
 </div>
 </section>
@@ -1164,12 +1169,12 @@ con flor   0.139    0.368   0.367    0.177</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      latente  plantula  rosetta con flor
-[1,] 66.49757  7.891623 12.53986 22.01271
-[2,] 50.27460  4.686242 15.62010 20.51327
-[3,] 73.52772 24.571458 21.41282 28.23418
-[4,] 74.67971 24.164387 22.58505 31.14530
-[5,] 92.84366 22.633287 35.40128 42.13017
-[6,] 46.36930  9.969213 13.37867 22.97553</code></pre>
+[1,] 40.13959  5.385852 15.31405 18.40051
+[2,] 51.86257 16.333032 20.11220 21.81906
+[3,] 77.34910 26.967442 25.15960 36.70357
+[4,] 55.45546 17.743447 17.10502 23.75495
+[5,] 73.91860 23.068686 28.86153 31.23518
+[6,] 48.60214  6.468250 19.60000 22.62173</code></pre>
 </div>
 </div>
 <p>Para evaluar el cambio de crecimiento poblacional en la especies de <em>Serapia cordigera</em> en 1999 a 2012 se usa la función <em>stoch.growth.rate</em>.</p>
@@ -1192,10 +1197,10 @@ con flor   0.139    0.368   0.367    0.177</code></pre>
 [1] 0.002712947
 
 $sim
-[1] 0.0124335
+[1] 0.004570326
 
 $sim.CI
-[1] -0.01479270  0.03965971</code></pre>
+[1] -0.02105965  0.03020030</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -1204,21 +1209,21 @@ $sim.CI
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim) <span class="co"># Lambda de matrices seleccionado con igual probabilidad</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.012511</code></pre>
+<pre><code>[1] 1.004581</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim.CI[<span class="dv">1</span>]) <span class="co">#Lambda del intervalo de confianza inferior</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9853162</code></pre>
+<pre><code>[1] 0.9791606</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(SGR_Temp_eq<span class="sc">$</span>sim.CI[<span class="dv">2</span>]) <span class="co"># Lambda del intervalo de confianza superior</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.040457</code></pre>
+<pre><code>[1] 1.030661</code></pre>
 </div>
 </div>
 </section>
@@ -1240,8 +1245,8 @@ $sim.CI
 <pre><code># A tibble: 2 × 5
   tipo     valor CI_inf CI_sup diff_ci
   &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
-1 Espacial 0.957  0.929  0.986  0.0572
-2 Temporal 1.01   0.985  1.04   0.0551</code></pre>
+1 Espacial 0.950  0.920  0.980  0.0597
+2 Temporal 1.00   0.979  1.03   0.0515</code></pre>
 </div>
 </div>
 </section>
@@ -1282,10 +1287,9 @@ $sim.CI
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popbio)</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">99</span>) <span class="co"># población inicial por etapa</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(n) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>Serapia_A3   <span class="ot">&lt;-</span> <span class="fu">splitA</span>(Serapia<span class="sc">$</span>A3) <span class="co"># simulación solamente la matriz A1 de la lista de matriz</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">99</span>) <span class="co"># población inicial por etapa</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(n) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"latente"</span>, <span class="st">"plantula"</span>, <span class="st">"rosetta"</span>, <span class="st">"con flor"</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>Serapia_A3   <span class="ot">&lt;-</span> <span class="fu">splitA</span>(Serapia<span class="sc">$</span>A3) <span class="co"># simulación solamente la matriz A1 de la lista de matriz</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>En el siguiente paso vamos a asignar una previa a los datos. Estas previas proviene de Tremblay, no representa la visión de los autores del articulo. Se añade una previa también para la proporción de plantas que fallece en cada etapa (la quita fila). Nota que es importante que la suma de cada columna sea igual a 1. Típicamente uno debería tratar de obtener la previa de la literatura, pero en este caso no se tiene información previa.</p>
@@ -1300,12 +1304,6 @@ $sim.CI
 <span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">nrow =</span> <span class="dv">5</span>, <span class="at">ncol =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raretrans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
 <section id="obtener-los-inertvalos-de-confianza-ic-para-entradas-de-matriz-individuales" class="level3">
 <h3 class="anchored" data-anchor-id="obtener-los-inertvalos-de-confianza-ic-para-entradas-de-matriz-individuales">Obtener los inertvalos de confianza (IC) para entradas de matriz individuales</h3>
 <p>La distribución posterior marginal de un elemento en un multinomio es una distribución beta, y usamos esto para obtener intervalos creíbles en nuestro tasas de transición. Podemos usar el tipo de retorno TN para obtener los parámetros de el multinomio deseado.</p>
@@ -1316,16 +1314,16 @@ $sim.CI
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>TN <span class="ot">&lt;-</span> <span class="fu">fill_transitions</span>(Serapia_A3, <span class="at">N=</span>n, <span class="at">P =</span> RLT_Serapia_previa, <span class="at">priorweight =</span> .<span class="dv">01</span>, <span class="at">returnType =</span> <span class="st">"TN"</span>)</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> TN[,<span class="dv">1</span>] <span class="co"># cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. </span></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">sum</span>(TN[,<span class="dv">1</span>]) <span class="sc">-</span> TN[,<span class="dv">1</span>]<span class="co"># cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. </span></span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> a <span class="sc">/</span> (a <span class="sc">+</span> b)</span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>lcl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.025</span>, a, b)</span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>ucl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.975</span>, a, b)</span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>A3<span class="ot">=</span>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">sprintf</span>(<span class="st">"%.3f, %.3f, %.3f"</span>, p, lcl, ucl))</span>
-<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>A3df_lat<span class="ot">=</span><span class="fu">round</span>(<span class="fu">data.frame</span>(p, lcl, ucl), <span class="at">digits=</span><span class="dv">3</span>)</span>
-<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>A3df_lat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>TN <span class="ot">&lt;-</span> <span class="fu">fill_transitions</span>(Serapia_A3, <span class="at">N=</span>n, <span class="at">P =</span> RLT_Serapia_previa, <span class="at">priorweight =</span> .<span class="dv">01</span>, <span class="at">returnType =</span> <span class="st">"TN"</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> TN[,<span class="dv">1</span>] <span class="co"># cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. </span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">sum</span>(TN[,<span class="dv">1</span>]) <span class="sc">-</span> TN[,<span class="dv">1</span>]<span class="co"># cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. </span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> a <span class="sc">/</span> (a <span class="sc">+</span> b)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>lcl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.025</span>, a, b)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>ucl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.975</span>, a, b)</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>A3<span class="ot">=</span>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">sprintf</span>(<span class="st">"%.3f, %.3f, %.3f"</span>, p, lcl, ucl))</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>A3df_lat<span class="ot">=</span><span class="fu">round</span>(<span class="fu">data.frame</span>(p, lcl, ucl), <span class="at">digits=</span><span class="dv">3</span>)</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>A3df_lat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      p   lcl   ucl
@@ -1340,17 +1338,17 @@ $sim.CI
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>TN <span class="ot">&lt;-</span> <span class="fu">fill_transitions</span>(Serapia_A3, <span class="at">N=</span>n, <span class="at">P =</span> RLT_Serapia_previa, <span class="at">priorweight =</span> <span class="fl">0.01</span>, <span class="at">returnType =</span> <span class="st">"TN"</span>)</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> TN[,<span class="dv">4</span>] <span class="co"># cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. </span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">sum</span>(TN[,<span class="dv">4</span>]) <span class="sc">-</span> TN[,<span class="dv">4</span>]<span class="co"># cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. </span></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> a <span class="sc">/</span> (a <span class="sc">+</span> b)</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>lcl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.025</span>, a, b)</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>ucl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.975</span>, a, b)</span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a> A3<span class="ot">=</span>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">sprintf</span>(<span class="st">"%.3f, %.3f, %.3f"</span>, p, lcl, ucl))</span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>A3df<span class="ot">=</span><span class="fu">round</span>(<span class="fu">data.frame</span>(p, lcl, ucl), <span class="at">digits=</span><span class="dv">3</span>)</span>
-<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>A3df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>TN <span class="ot">&lt;-</span> <span class="fu">fill_transitions</span>(Serapia_A3, <span class="at">N=</span>n, <span class="at">P =</span> RLT_Serapia_previa, <span class="at">priorweight =</span> <span class="fl">0.01</span>, <span class="at">returnType =</span> <span class="st">"TN"</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> TN[,<span class="dv">4</span>] <span class="co"># cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. </span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">sum</span>(TN[,<span class="dv">4</span>]) <span class="sc">-</span> TN[,<span class="dv">4</span>]<span class="co"># cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. </span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> a <span class="sc">/</span> (a <span class="sc">+</span> b)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>lcl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.025</span>, a, b)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>ucl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.975</span>, a, b)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a> A3<span class="ot">=</span>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">sprintf</span>(<span class="st">"%.3f, %.3f, %.3f"</span>, p, lcl, ucl))</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>A3df<span class="ot">=</span><span class="fu">round</span>(<span class="fu">data.frame</span>(p, lcl, ucl), <span class="at">digits=</span><span class="dv">3</span>)</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>A3df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      p   lcl   ucl
@@ -1365,18 +1363,18 @@ $sim.CI
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>n500 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">500</span>) <span class="co"># población inicial por etapa</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>TN <span class="ot">&lt;-</span> <span class="fu">fill_transitions</span>(Serapia_A3, <span class="at">N=</span>n500, <span class="at">P =</span> RLT_Serapia_previa, <span class="at">priorweight =</span> <span class="fl">0.01</span>, <span class="at">returnType =</span> <span class="st">"TN"</span>)</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>a500 <span class="ot">&lt;-</span> TN[,<span class="dv">4</span>] <span class="co"># cambie 1 a 2, 3 o 4 ect. para obtener la distribución beta marginal de cada columna (etapas). </span></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>b500 <span class="ot">&lt;-</span> <span class="fu">sum</span>(TN[,<span class="dv">4</span>]) <span class="sc">-</span> TN[,<span class="dv">4</span>]<span class="co"># cambie 1 a 2, 3 ect. para obtener la distribución beta marginal de cada columna. </span></span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>p500 <span class="ot">&lt;-</span> a500 <span class="sc">/</span> (a500 <span class="sc">+</span> b500)</span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>lcl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.025</span>, a500, b500)</span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>ucl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.975</span>, a500, b500)</span>
-<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a> A3<span class="ot">=</span>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">sprintf</span>(<span class="st">"%.3f, %.3f, %.3f"</span>, p, lcl, ucl))</span>
-<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>A3df<span class="ot">=</span><span class="fu">round</span>(<span class="fu">data.frame</span>(p, lcl, ucl), <span class="at">digits=</span><span class="dv">3</span>)</span>
-<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>A3df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>n500 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">500</span>) <span class="co"># población inicial por etapa</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>TN <span class="ot">&lt;-</span> <span class="fu">fill_transitions</span>(Serapia_A3, <span class="at">N=</span>n500, <span class="at">P =</span> RLT_Serapia_previa, <span class="at">priorweight =</span> <span class="fl">0.01</span>, <span class="at">returnType =</span> <span class="st">"TN"</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>a500 <span class="ot">&lt;-</span> TN[,<span class="dv">4</span>] <span class="co"># cambie 1 a 2, 3 o 4 ect. para obtener la distribución beta marginal de cada columna (etapas). </span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>b500 <span class="ot">&lt;-</span> <span class="fu">sum</span>(TN[,<span class="dv">4</span>]) <span class="sc">-</span> TN[,<span class="dv">4</span>]<span class="co"># cambie 1 a 2, 3 ect. para obtener la distribución beta marginal de cada columna. </span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>p500 <span class="ot">&lt;-</span> a500 <span class="sc">/</span> (a500 <span class="sc">+</span> b500)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>lcl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.025</span>, a500, b500)</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>ucl <span class="ot">&lt;-</span> <span class="fu">qbeta</span>(<span class="fl">0.975</span>, a500, b500)</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a> A3<span class="ot">=</span>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">sprintf</span>(<span class="st">"%.3f, %.3f, %.3f"</span>, p, lcl, ucl))</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>A3df<span class="ot">=</span><span class="fu">round</span>(<span class="fu">data.frame</span>(p, lcl, ucl), <span class="at">digits=</span><span class="dv">3</span>)</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>A3df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      p   lcl   ucl
@@ -1392,69 +1390,69 @@ $sim.CI
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>a <span class="co"># los valores del shape alpha </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>a <span class="co"># los valores del shape alpha </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]  0.396  0.000 28.710 10.197 60.687</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>b <span class="co"># los valores del shape beta</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>b <span class="co"># los valores del shape beta</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 99.594 99.990 71.280 89.793 39.303</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Función para visualizar la distribution beta</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>plot_beta <span class="ot">&lt;-</span> <span class="cf">function</span>(alpha, beta) {</span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, alpha, beta)</span>
-<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)</span>
-<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
-<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>()</span>
-<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Distirbuciones beta</span></span>
-<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>Latentes<span class="ot">=</span><span class="fu">plot_beta</span>(<span class="fl">0.396</span>, <span class="fl">99.594</span>)<span class="sc">+</span></span>
-<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, .<span class="dv">1</span>)<span class="sc">+</span></span>
-<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Distribución de latentes </span><span class="sc">\n</span><span class="st"> (alpha ="</span>, <span class="fl">0.396</span>, <span class="st">", beta ="</span>, <span class="fl">99.594</span>, <span class="st">")"</span>),</span>
-<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"Probabilidad"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)<span class="sc">+</span></span>
-<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))<span class="sc">+</span></span>
-<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.004</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
-<span id="cb57-17"><a href="#cb57-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a>Plantulas<span class="ot">=</span><span class="fu">plot_beta</span>(<span class="fl">0.000</span>, <span class="fl">99.990</span>)<span class="sc">+</span></span>
-<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, .<span class="dv">025</span>)<span class="sc">+</span><span class="fu">ylim</span>(<span class="dv">0</span>, .<span class="dv">05</span>)<span class="sc">+</span></span>
-<span id="cb57-20"><a href="#cb57-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Distribución de plántulas </span><span class="sc">\n</span><span class="st"> (alpha ="</span>, <span class="fl">0.000</span>, <span class="st">", beta ="</span>, <span class="fl">99.90</span>, <span class="st">")"</span>),</span>
-<span id="cb57-21"><a href="#cb57-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"probabilidad"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)<span class="sc">+</span></span>
-<span id="cb57-22"><a href="#cb57-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))<span class="sc">+</span></span>
-<span id="cb57-23"><a href="#cb57-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.000</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
-<span id="cb57-24"><a href="#cb57-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-25"><a href="#cb57-25" aria-hidden="true" tabindex="-1"></a>Rosetta<span class="ot">=</span><span class="fu">plot_beta</span>(<span class="fl">28.710</span>, <span class="fl">71.280</span>)<span class="sc">+</span></span>
-<span id="cb57-26"><a href="#cb57-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, .<span class="dv">5</span>)<span class="sc">+</span></span>
-<span id="cb57-27"><a href="#cb57-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Distribución de rosettas </span><span class="sc">\n</span><span class="st"> (alpha ="</span>, <span class="fl">28.710</span>, <span class="st">", beta ="</span>, <span class="fl">71.280</span>, <span class="st">")"</span>),</span>
-<span id="cb57-28"><a href="#cb57-28" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"probabilidad"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)<span class="sc">+</span></span>
-<span id="cb57-29"><a href="#cb57-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))<span class="sc">+</span></span>
-<span id="cb57-30"><a href="#cb57-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.287</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
-<span id="cb57-31"><a href="#cb57-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-32"><a href="#cb57-32" aria-hidden="true" tabindex="-1"></a>Adultos<span class="ot">=</span><span class="fu">plot_beta</span>(<span class="fl">10.197</span>, <span class="fl">89.793</span>)<span class="sc">+</span></span>
-<span id="cb57-33"><a href="#cb57-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, .<span class="dv">27</span>)<span class="sc">+</span></span>
-<span id="cb57-34"><a href="#cb57-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Distribución de Ind. con flores </span><span class="sc">\n</span><span class="st"> (alpha ="</span>, <span class="fl">10.197</span>, <span class="st">", beta ="</span>, <span class="fl">89.793</span>, <span class="st">")"</span>),</span>
-<span id="cb57-35"><a href="#cb57-35" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"probabilidad"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)<span class="sc">+</span></span>
-<span id="cb57-36"><a href="#cb57-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))<span class="sc">+</span></span>
-<span id="cb57-37"><a href="#cb57-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.102</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
-<span id="cb57-38"><a href="#cb57-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-39"><a href="#cb57-39" aria-hidden="true" tabindex="-1"></a>Fallecidos<span class="ot">=</span><span class="fu">plot_beta</span>(<span class="fl">60.687</span>, <span class="fl">39.303</span>)<span class="sc">+</span></span>
-<span id="cb57-40"><a href="#cb57-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(.<span class="dv">40</span>, .<span class="dv">8</span>)<span class="sc">+</span></span>
-<span id="cb57-41"><a href="#cb57-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Distribución de fallecidos </span><span class="sc">\n</span><span class="st"> (alpha ="</span>, <span class="fl">60.687</span>, <span class="st">", beta ="</span>, <span class="fl">39.303</span>, <span class="st">")"</span>),</span>
-<span id="cb57-42"><a href="#cb57-42" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"probabilidad"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)<span class="sc">+</span></span>
-<span id="cb57-43"><a href="#cb57-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))<span class="sc">+</span></span>
-<span id="cb57-44"><a href="#cb57-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.607</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
-<span id="cb57-45"><a href="#cb57-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-46"><a href="#cb57-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-47"><a href="#cb57-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-48"><a href="#cb57-48" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
-<span id="cb57-49"><a href="#cb57-49" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(Latentes, Plantulas, Rosetta, Adultos, Fallecidos, <span class="at">ncol=</span><span class="dv">3</span>, <span class="at">nrow=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Función para visualizar la distribution beta</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>plot_beta <span class="ot">&lt;-</span> <span class="cf">function</span>(alpha, beta) {</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(x, alpha, beta)</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>()</span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Distirbuciones beta</span></span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>Latentes<span class="ot">=</span><span class="fu">plot_beta</span>(<span class="fl">0.396</span>, <span class="fl">99.594</span>)<span class="sc">+</span></span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, .<span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Distribución de latentes </span><span class="sc">\n</span><span class="st"> (alpha ="</span>, <span class="fl">0.396</span>, <span class="st">", beta ="</span>, <span class="fl">99.594</span>, <span class="st">")"</span>),</span>
+<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"Probabilidad"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)<span class="sc">+</span></span>
+<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))<span class="sc">+</span></span>
+<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.004</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
+<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a>Plantulas<span class="ot">=</span><span class="fu">plot_beta</span>(<span class="fl">0.000</span>, <span class="fl">99.990</span>)<span class="sc">+</span></span>
+<span id="cb56-19"><a href="#cb56-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, .<span class="dv">025</span>)<span class="sc">+</span><span class="fu">ylim</span>(<span class="dv">0</span>, .<span class="dv">05</span>)<span class="sc">+</span></span>
+<span id="cb56-20"><a href="#cb56-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Distribución de plántulas </span><span class="sc">\n</span><span class="st"> (alpha ="</span>, <span class="fl">0.000</span>, <span class="st">", beta ="</span>, <span class="fl">99.90</span>, <span class="st">")"</span>),</span>
+<span id="cb56-21"><a href="#cb56-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"probabilidad"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)<span class="sc">+</span></span>
+<span id="cb56-22"><a href="#cb56-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))<span class="sc">+</span></span>
+<span id="cb56-23"><a href="#cb56-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.000</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
+<span id="cb56-24"><a href="#cb56-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-25"><a href="#cb56-25" aria-hidden="true" tabindex="-1"></a>Rosetta<span class="ot">=</span><span class="fu">plot_beta</span>(<span class="fl">28.710</span>, <span class="fl">71.280</span>)<span class="sc">+</span></span>
+<span id="cb56-26"><a href="#cb56-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, .<span class="dv">5</span>)<span class="sc">+</span></span>
+<span id="cb56-27"><a href="#cb56-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Distribución de rosettas </span><span class="sc">\n</span><span class="st"> (alpha ="</span>, <span class="fl">28.710</span>, <span class="st">", beta ="</span>, <span class="fl">71.280</span>, <span class="st">")"</span>),</span>
+<span id="cb56-28"><a href="#cb56-28" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"probabilidad"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)<span class="sc">+</span></span>
+<span id="cb56-29"><a href="#cb56-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))<span class="sc">+</span></span>
+<span id="cb56-30"><a href="#cb56-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.287</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
+<span id="cb56-31"><a href="#cb56-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-32"><a href="#cb56-32" aria-hidden="true" tabindex="-1"></a>Adultos<span class="ot">=</span><span class="fu">plot_beta</span>(<span class="fl">10.197</span>, <span class="fl">89.793</span>)<span class="sc">+</span></span>
+<span id="cb56-33"><a href="#cb56-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, .<span class="dv">27</span>)<span class="sc">+</span></span>
+<span id="cb56-34"><a href="#cb56-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Distribución de Ind. con flores </span><span class="sc">\n</span><span class="st"> (alpha ="</span>, <span class="fl">10.197</span>, <span class="st">", beta ="</span>, <span class="fl">89.793</span>, <span class="st">")"</span>),</span>
+<span id="cb56-35"><a href="#cb56-35" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"probabilidad"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)<span class="sc">+</span></span>
+<span id="cb56-36"><a href="#cb56-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))<span class="sc">+</span></span>
+<span id="cb56-37"><a href="#cb56-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.102</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
+<span id="cb56-38"><a href="#cb56-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-39"><a href="#cb56-39" aria-hidden="true" tabindex="-1"></a>Fallecidos<span class="ot">=</span><span class="fu">plot_beta</span>(<span class="fl">60.687</span>, <span class="fl">39.303</span>)<span class="sc">+</span></span>
+<span id="cb56-40"><a href="#cb56-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(.<span class="dv">40</span>, .<span class="dv">8</span>)<span class="sc">+</span></span>
+<span id="cb56-41"><a href="#cb56-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Distribución de fallecidos </span><span class="sc">\n</span><span class="st"> (alpha ="</span>, <span class="fl">60.687</span>, <span class="st">", beta ="</span>, <span class="fl">39.303</span>, <span class="st">")"</span>),</span>
+<span id="cb56-42"><a href="#cb56-42" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"probabilidad"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)<span class="sc">+</span></span>
+<span id="cb56-43"><a href="#cb56-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))<span class="sc">+</span></span>
+<span id="cb56-44"><a href="#cb56-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.607</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
+<span id="cb56-45"><a href="#cb56-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-46"><a href="#cb56-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-47"><a href="#cb56-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-48"><a href="#cb56-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-49"><a href="#cb56-49" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(Latentes, Plantulas, Rosetta, Adultos, Fallecidos, <span class="at">ncol=</span><span class="dv">3</span>, <span class="at">nrow=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>

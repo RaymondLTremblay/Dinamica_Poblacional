@@ -443,12 +443,19 @@ window.Quarto = {
 <section id="MatricesT" class="level1">
 <h1>Transiciones</h1>
 <p>Por: Aucencia Emeterio-Lara, Ernesto Mujíca y Elaine González y Raymond L. Tremblay</p>
+<section id="librerías-de-r-requeridas-para-el-siguiente-módulo" class="level4">
+<h4 class="anchored" data-anchor-id="librerías-de-r-requeridas-para-el-siguiente-módulo">Librerías de R requeridas para el siguiente módulo</h4>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popbio)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rcompadre)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+</section>
 <section id="introducción" class="level2">
 <h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
 <p>En el siguiente capítulo estaremos viendo como calcular las transiciones para la matriz de Lefkovitch. En la primera parte veremos como calcular las transiciones de manera tradicional y a mano y en la segunda parte veremos como calcular las transiciones de manera más eficiente usando funciones que estén disponibles en algunos paquetes de R. Los métodos presentado aquí son una adaptación de los métodos presentados en <span class="citation" data-cites="caswell2000matrix">(<a href="#ref-caswell2000matrix" role="doc-biblioref">Caswell 2000</a>)</span> y pueden ver también una aplicación de estos métodos aplicado a las orquídeas <span class="citation" data-cites="tremblay2003population">(<a href="#ref-tremblay2003population" role="doc-biblioref">R. Tremblay and Hutchings 2003</a>)</span>. Si ha hecho análisis de matrices de transición antes, probablemente ha usado el método tradicional de calcular las transiciones y pueden obviar leer este capítulo. Este método consiste en calcular la proporciones de individuos que transitan de una clase de edad a otra. Este método es tedioso y propenso a errores cuando se hacen a mano.</p>
@@ -466,14 +473,13 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>a<span class="ot">=</span><span class="dv">2</span><span class="sc">/</span><span class="dv">6</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>b<span class="ot">=</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>c<span class="ot">=</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>d<span class="ot">=</span><span class="dv">2</span><span class="sc">/</span><span class="dv">6</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>sum<span class="ot">=</span>a<span class="sc">+</span>b<span class="sc">+</span>c<span class="sc">+</span>d</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>sum</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>a<span class="ot">=</span><span class="dv">2</span><span class="sc">/</span><span class="dv">6</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>b<span class="ot">=</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>c<span class="ot">=</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>d<span class="ot">=</span><span class="dv">2</span><span class="sc">/</span><span class="dv">6</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>sum<span class="ot">=</span>a<span class="sc">+</span>b<span class="sc">+</span>c<span class="sc">+</span>d</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>sum</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1</code></pre>
@@ -498,23 +504,23 @@ window.Quarto = {
 </ul>
 <div class="cell">
 <div class="cell-output-display">
-<div id="ynwttczhmu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ynwttczhmu table {
+<div id="qvshelnqhv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qvshelnqhv table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ynwttczhmu thead, #ynwttczhmu tbody, #ynwttczhmu tfoot, #ynwttczhmu tr, #ynwttczhmu td, #ynwttczhmu th {
+#qvshelnqhv thead, #qvshelnqhv tbody, #qvshelnqhv tfoot, #qvshelnqhv tr, #qvshelnqhv td, #qvshelnqhv th {
   border-style: none;
 }
 
-#ynwttczhmu p {
+#qvshelnqhv p {
   margin: 0;
   padding: 0;
 }
 
-#ynwttczhmu .gt_table {
+#qvshelnqhv .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -540,12 +546,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#ynwttczhmu .gt_caption {
+#qvshelnqhv .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ynwttczhmu .gt_title {
+#qvshelnqhv .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -557,7 +563,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#ynwttczhmu .gt_subtitle {
+#qvshelnqhv .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -569,7 +575,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#ynwttczhmu .gt_heading {
+#qvshelnqhv .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -581,13 +587,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ynwttczhmu .gt_bottom_border {
+#qvshelnqhv .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ynwttczhmu .gt_col_headings {
+#qvshelnqhv .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -602,7 +608,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ynwttczhmu .gt_col_heading {
+#qvshelnqhv .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -622,7 +628,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#ynwttczhmu .gt_column_spanner_outer {
+#qvshelnqhv .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -634,15 +640,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#ynwttczhmu .gt_column_spanner_outer:first-child {
+#qvshelnqhv .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ynwttczhmu .gt_column_spanner_outer:last-child {
+#qvshelnqhv .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ynwttczhmu .gt_column_spanner {
+#qvshelnqhv .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -654,11 +660,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#ynwttczhmu .gt_spanner_row {
+#qvshelnqhv .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ynwttczhmu .gt_group_heading {
+#qvshelnqhv .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -684,7 +690,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#ynwttczhmu .gt_empty_group_heading {
+#qvshelnqhv .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -699,15 +705,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#ynwttczhmu .gt_from_md > :first-child {
+#qvshelnqhv .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ynwttczhmu .gt_from_md > :last-child {
+#qvshelnqhv .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ynwttczhmu .gt_row {
+#qvshelnqhv .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -726,7 +732,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#ynwttczhmu .gt_stub {
+#qvshelnqhv .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -739,7 +745,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ynwttczhmu .gt_stub_row_group {
+#qvshelnqhv .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -753,15 +759,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#ynwttczhmu .gt_row_group_first td {
+#qvshelnqhv .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ynwttczhmu .gt_row_group_first th {
+#qvshelnqhv .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ynwttczhmu .gt_summary_row {
+#qvshelnqhv .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -771,16 +777,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ynwttczhmu .gt_first_summary_row {
+#qvshelnqhv .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ynwttczhmu .gt_first_summary_row.thick {
+#qvshelnqhv .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ynwttczhmu .gt_last_summary_row {
+#qvshelnqhv .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -790,7 +796,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#ynwttczhmu .gt_grand_summary_row {
+#qvshelnqhv .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -800,7 +806,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ynwttczhmu .gt_first_grand_summary_row {
+#qvshelnqhv .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -810,7 +816,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#ynwttczhmu .gt_last_grand_summary_row_top {
+#qvshelnqhv .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -820,11 +826,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#ynwttczhmu .gt_striped {
+#qvshelnqhv .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ynwttczhmu .gt_table_body {
+#qvshelnqhv .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -833,7 +839,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#ynwttczhmu .gt_footnotes {
+#qvshelnqhv .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -847,7 +853,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ynwttczhmu .gt_footnote {
+#qvshelnqhv .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -856,7 +862,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ynwttczhmu .gt_sourcenotes {
+#qvshelnqhv .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -870,7 +876,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ynwttczhmu .gt_sourcenote {
+#qvshelnqhv .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -878,72 +884,72 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ynwttczhmu .gt_left {
+#qvshelnqhv .gt_left {
   text-align: left;
 }
 
-#ynwttczhmu .gt_center {
+#qvshelnqhv .gt_center {
   text-align: center;
 }
 
-#ynwttczhmu .gt_right {
+#qvshelnqhv .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ynwttczhmu .gt_font_normal {
+#qvshelnqhv .gt_font_normal {
   font-weight: normal;
 }
 
-#ynwttczhmu .gt_font_bold {
+#qvshelnqhv .gt_font_bold {
   font-weight: bold;
 }
 
-#ynwttczhmu .gt_font_italic {
+#qvshelnqhv .gt_font_italic {
   font-style: italic;
 }
 
-#ynwttczhmu .gt_super {
+#qvshelnqhv .gt_super {
   font-size: 65%;
 }
 
-#ynwttczhmu .gt_footnote_marks {
+#qvshelnqhv .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ynwttczhmu .gt_asterisk {
+#qvshelnqhv .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ynwttczhmu .gt_indent_1 {
+#qvshelnqhv .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ynwttczhmu .gt_indent_2 {
+#qvshelnqhv .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ynwttczhmu .gt_indent_3 {
+#qvshelnqhv .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ynwttczhmu .gt_indent_4 {
+#qvshelnqhv .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ynwttczhmu .gt_indent_5 {
+#qvshelnqhv .gt_indent_5 {
   text-indent: 25px;
 }
 
-#ynwttczhmu .katex-display {
+#qvshelnqhv .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#ynwttczhmu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#qvshelnqhv div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1123,9 +1129,8 @@ adulto                     0.4285  0.3333 0.1666</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Orchis_ficticia<span class="ot">=</span>Orchis_ficticia <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">stage=</span>anio_1, <span class="at">fate=</span>anio_2)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Orchis_ficticia)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Orchis_ficticia<span class="ot">=</span>Orchis_ficticia <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">stage=</span>anio_1, <span class="at">fate=</span>anio_2)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Orchis_ficticia)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
@@ -1142,12 +1147,10 @@ adulto                     0.4285  0.3333 0.1666</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(popbio)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>Orchis_ficticia_df<span class="ot">=</span><span class="fu">as.data.frame</span>(Orchis_ficticia) <span class="co"># Nota que es importante convertir la tabla de datos a un data frame si es en formato de tibble. </span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>stages<span class="ot">=</span><span class="fu">c</span>(<span class="st">"plantas_pequeñas"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto"</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>Orchis_ficticia_df<span class="sc">$</span>fertilidad<span class="ot">&lt;-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">projection.matrix</span>(Orchis_ficticia_df, stage, fate, fertilidad, stages, <span class="at">TF=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Orchis_ficticia_df<span class="ot">=</span><span class="fu">as.data.frame</span>(Orchis_ficticia) <span class="co"># Nota que es importante convertir la tabla de datos a un data frame si es en formato de tibble. </span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>stages<span class="ot">=</span><span class="fu">c</span>(<span class="st">"plantas_pequeñas"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>Orchis_ficticia_df<span class="sc">$</span>fertilidad<span class="ot">&lt;-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">projection.matrix</span>(Orchis_ficticia_df, stage, fate, fertilidad, stages, <span class="at">TF=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$T
@@ -1190,13 +1193,7 @@ $F
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rcompadre)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>compadre <span class="ot">&lt;-</span> <span class="fu">cdb_fetch</span>(<span class="st">"compadre"</span>) <span class="co"># Usar este código para bajar los datos del repositorio de COMPADRE. Tiene que haber activado la librería de Rcompadre.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>compadre <span class="ot">&lt;-</span> <span class="fu">cdb_fetch</span>(<span class="st">"compadre"</span>) <span class="co"># Usar este código para bajar los datos del repositorio de COMPADRE. Tiene que haber activado la librería de Rcompadre.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="extraer-de-compadre-las-matrices-cypripedium-calceolus." class="level3">
@@ -1207,14 +1204,14 @@ $F
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Cyp_cal_matC<span class="ot">=</span>compadre <span class="sc">%&gt;%</span> <span class="fu">select</span>(MatrixID, SpeciesAccepted, mat, Authors, DOI_ISBN, MatrixDimension) <span class="sc">%&gt;%</span> </span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(SpeciesAccepted <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Cypripedium calceolus"</span>),</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>         DOI_ISBN <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"10.1111/j.1523-1739.2010.01466.x"</span>),</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>         MatrixDimension <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">6</span>),</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>         MatrixID <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">242623</span>)) <span class="co">#</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">#Cyp_cal_matC$mat # para el año 2000 a 2001</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Cyp_cal_matC<span class="ot">=</span>compadre <span class="sc">%&gt;%</span> <span class="fu">select</span>(MatrixID, SpeciesAccepted, mat, Authors, DOI_ISBN, MatrixDimension) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(SpeciesAccepted <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Cypripedium calceolus"</span>),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>         DOI_ISBN <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"10.1111/j.1523-1739.2010.01466.x"</span>),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>         MatrixDimension <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">6</span>),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>         MatrixID <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">242623</span>)) <span class="co">#</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">#Cyp_cal_matC$mat # para el año 2000 a 2001</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -1224,9 +1221,9 @@ $F
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>matA <span class="ot">&lt;-</span> <span class="fu">matA</span>(Cyp_cal_matC) <span class="co"># extraer la matriz a partir de la base de datos de COMPADRE</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>matcc<span class="ot">=</span><span class="fu">as.matrix</span>(<span class="fu">as.data.frame</span>(matA)) <span class="co"># convertir la matriz a un data frame y luego a un objeto en forma de matriz </span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>matcc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>matA <span class="ot">&lt;-</span> <span class="fu">matA</span>(Cyp_cal_matC) <span class="co"># extraer la matriz a partir de la base de datos de COMPADRE</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>matcc<span class="ot">=</span><span class="fu">as.matrix</span>(<span class="fu">as.data.frame</span>(matA)) <span class="co"># convertir la matriz a un data frame y luego a un objeto en forma de matriz </span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>matcc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>     A1   A2   A3   A4   A5   A6
@@ -1247,8 +1244,8 @@ A6 0.00 0.00 0.00 0.00 0.00 0.27</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>matC <span class="ot">&lt;-</span> <span class="fu">matC</span>(Cyp_cal_matC) <span class="co"># extraer la matriz de clonaje a partir de la base de datos de COMPADRE</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>matC</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>matC <span class="ot">&lt;-</span> <span class="fu">matC</span>(Cyp_cal_matC) <span class="co"># extraer la matriz de clonaje a partir de la base de datos de COMPADRE</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>matC</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
@@ -1265,57 +1262,54 @@ C6  0  0  0 0.0 0.00 0.00</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">#etapas &lt;- c("A1", "A2", "A3", "A4", "A5", "A6")</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Dormant"</span>, <span class="st">"Smallest"</span>, <span class="st">"Small"</span>, <span class="st">"Intermediate"</span>, <span class="st">"Large"</span>, <span class="st">"Extra Large"</span>) <span class="co"># Etapas del articulo</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">factor</span>(etapas, <span class="at">levels =</span>  <span class="fu">c</span>(<span class="st">"Dormant"</span>, <span class="st">"Smallest"</span>, <span class="st">"Small"</span>, <span class="st">"Intermediate"</span>, <span class="st">"Large"</span>, <span class="st">"Extra Large"</span>))</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> etapas, <span class="at">from =</span> etapas)</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matcc), <span class="dv">2</span>)</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, etapas, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">3</span></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"black"</span>, <span class="st">"black"</span>, <span class="st">"black"</span>,<span class="st">"black"</span>,</span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"black"</span>, <span class="st">"red"</span>, <span class="st">"black"</span>, <span class="st">"black"</span>,</span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"black"</span>,  <span class="st">"black"</span>, <span class="st">"red"</span>, <span class="st">"black"</span>, <span class="st">"black"</span>,</span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"black"</span>,  <span class="st">"black"</span>, <span class="st">"blue"</span>, <span class="st">"black"</span>, <span class="st">"black"</span>,</span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"black"</span>,  <span class="st">"black"</span>, <span class="st">"blue"</span>, <span class="st">"black"</span>, <span class="st">"black"</span>, </span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"black"</span>,   <span class="st">"black"</span>, <span class="st">"blue"</span>, <span class="st">"blue"</span>,<span class="st">"black"</span>, <span class="st">"black"</span></span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
-<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
-<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
-<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
-<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">""</span></span>
-<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
-<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
-<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
-<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
-<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
-<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
-<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=etapas;</span></span>
-<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
-<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
-<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
-<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
-<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
-<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
-<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
-<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
-<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
-<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#etapas &lt;- c("A1", "A2", "A3", "A4", "A5", "A6")</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Dormant"</span>, <span class="st">"Smallest"</span>, <span class="st">"Small"</span>, <span class="st">"Intermediate"</span>, <span class="st">"Large"</span>, <span class="st">"Extra Large"</span>) <span class="co"># Etapas del articulo</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">factor</span>(etapas, <span class="at">levels =</span>  <span class="fu">c</span>(<span class="st">"Dormant"</span>, <span class="st">"Smallest"</span>, <span class="st">"Small"</span>, <span class="st">"Intermediate"</span>, <span class="st">"Large"</span>, <span class="st">"Extra Large"</span>))</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> etapas, <span class="at">from =</span> etapas)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matcc), <span class="dv">2</span>)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, etapas, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">3</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"red"</span>, <span class="st">"black"</span>, <span class="st">"black"</span>, <span class="st">"black"</span>,<span class="st">"black"</span>,</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"black"</span>, <span class="st">"red"</span>, <span class="st">"black"</span>, <span class="st">"black"</span>,</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"black"</span>,  <span class="st">"black"</span>, <span class="st">"red"</span>, <span class="st">"black"</span>, <span class="st">"black"</span>,</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"black"</span>,  <span class="st">"black"</span>, <span class="st">"blue"</span>, <span class="st">"black"</span>, <span class="st">"black"</span>,</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"black"</span>,  <span class="st">"black"</span>, <span class="st">"blue"</span>, <span class="st">"black"</span>, <span class="st">"black"</span>, </span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"black"</span>,   <span class="st">"black"</span>, <span class="st">"blue"</span>, <span class="st">"blue"</span>,<span class="st">"black"</span>, <span class="st">"black"</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">collapse =</span> <span class="st">""</span></span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=etapas;</span></span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-a7fb62ced2981b6eef4d" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-a7fb62ced2981b6eef4d">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=etapas;\n    node [shape= egg , fontsize= 12 ]; \"Dormant\"; \"Smallest\"; \"Small\"; \"Intermediate\"; \"Large\"; \"Extra Large\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"Dormant\"; \"Smallest\"; \"Small\"; \"Intermediate\"; \"Large\"; \"Extra Large\" } [style=invis] \"Dormant\" -> \"Dormant\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.11\"]\n\"Dormant\" -> \"Smallest\"[minlen=3,fontsize=10,color=black,xlabel=\" 0.17\"]\n\"Dormant\" -> \"Small\"[minlen=6,fontsize=10,color=black,xlabel=\" 0.31\"]\n\"Dormant\" -> \"Intermediate\"[minlen=9,fontsize=10,color=black,xlabel=\" 0.11\"]\n\"Dormant\" -> \"Large\"[minlen=12,fontsize=10,color=black,xlabel=\" 0.31\"]\n\"Smallest\" -> \"Dormant\"[minlen=-3,fontsize=10,color=black,xlabel=\" 0.1\"]\n\"Smallest\" -> \"Smallest\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.52\"]\n\"Smallest\" -> \"Small\"[minlen=3,fontsize=10,color=black,xlabel=\" 0.19\"]\n\"Smallest\" -> \"Intermediate\"[minlen=6,fontsize=10,color=black,xlabel=\" 0.1\"]\n\"Small\" -> \"Dormant\"[minlen=-6,fontsize=10,color=black,xlabel=\" 0.22\"]\n\"Small\" -> \"Smallest\"[minlen=-3,fontsize=10,color=black,xlabel=\" 0.02\"]\n\"Small\" -> \"Small\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.47\"]\n\"Small\" -> \"Intermediate\"[minlen=3,fontsize=10,color=black,xlabel=\" 0.16\"]\n\"Small\" -> \"Large\"[minlen=6,fontsize=10,color=black,xlabel=\" 0.04\"]\n\"Intermediate\" -> \"Dormant\"[minlen=-9,fontsize=10,color=black,xlabel=\" 0.14\"]\n\"Intermediate\" -> \"Smallest\"[minlen=-6,fontsize=10,color=black,xlabel=\" 0.01\"]\n\"Intermediate\" -> \"Small\"[minlen=-3,fontsize=10,color=blue,xlabel=\" 0.2\"]\n\"Intermediate\" -> \"Intermediate\"[minlen=0,fontsize=10,color=black,xlabel=\" 0.35\"]\n\"Intermediate\" -> \"Large\"[minlen=3,fontsize=10,color=black,xlabel=\" 0.22\"]\n\"Large\" -> \"Dormant\"[minlen=-12,fontsize=10,color=black,xlabel=\" 0.22\"]\n\"Large\" -> \"Smallest\"[minlen=-9,fontsize=10,color=black,xlabel=\" 0.02\"]\n\"Large\" -> \"Small\"[minlen=-6,fontsize=10,color=blue,xlabel=\" 0.05\"]\n\"Large\" -> \"Intermediate\"[minlen=-3,fontsize=10,color=black,xlabel=\" 0.13\"]\n\"Large\" -> \"Large\"[minlen=0,fontsize=10,color=black,xlabel=\" 0.57\"]\n\"Extra Large\" -> \"Dormant\"[minlen=-15,fontsize=10,color=black,xlabel=\" 0.17\"]\n\"Extra Large\" -> \"Smallest\"[minlen=-12,fontsize=10,color=black,xlabel=\" 0.03\"]\n\"Extra Large\" -> \"Small\"[minlen=-9,fontsize=10,color=blue,xlabel=\" 0.07\"]\n\"Extra Large\" -> \"Intermediate\"[minlen=-6,fontsize=10,color=blue,xlabel=\" 0.09\"]\n\"Extra Large\" -> \"Large\"[minlen=-3,fontsize=10,color=black,xlabel=\" 0.41\"]\n\"Extra Large\" -> \"Extra Large\"[minlen=0,fontsize=10,color=black,xlabel=\" 0.27\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-2dbea4a0a007cf70a7ab" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-2dbea4a0a007cf70a7ab">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=etapas;\n    node [shape= egg , fontsize= 12 ]; \"Dormant\"; \"Smallest\"; \"Small\"; \"Intermediate\"; \"Large\"; \"Extra Large\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"Dormant\"; \"Smallest\"; \"Small\"; \"Intermediate\"; \"Large\"; \"Extra Large\" } [style=invis] \"Dormant\" -> \"Dormant\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.11\"]\n\"Dormant\" -> \"Smallest\"[minlen=3,fontsize=10,color=black,xlabel=\" 0.17\"]\n\"Dormant\" -> \"Small\"[minlen=6,fontsize=10,color=black,xlabel=\" 0.31\"]\n\"Dormant\" -> \"Intermediate\"[minlen=9,fontsize=10,color=black,xlabel=\" 0.11\"]\n\"Dormant\" -> \"Large\"[minlen=12,fontsize=10,color=black,xlabel=\" 0.31\"]\n\"Smallest\" -> \"Dormant\"[minlen=-3,fontsize=10,color=black,xlabel=\" 0.1\"]\n\"Smallest\" -> \"Smallest\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.52\"]\n\"Smallest\" -> \"Small\"[minlen=3,fontsize=10,color=black,xlabel=\" 0.19\"]\n\"Smallest\" -> \"Intermediate\"[minlen=6,fontsize=10,color=black,xlabel=\" 0.1\"]\n\"Small\" -> \"Dormant\"[minlen=-6,fontsize=10,color=black,xlabel=\" 0.22\"]\n\"Small\" -> \"Smallest\"[minlen=-3,fontsize=10,color=black,xlabel=\" 0.02\"]\n\"Small\" -> \"Small\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.47\"]\n\"Small\" -> \"Intermediate\"[minlen=3,fontsize=10,color=black,xlabel=\" 0.16\"]\n\"Small\" -> \"Large\"[minlen=6,fontsize=10,color=black,xlabel=\" 0.04\"]\n\"Intermediate\" -> \"Dormant\"[minlen=-9,fontsize=10,color=black,xlabel=\" 0.14\"]\n\"Intermediate\" -> \"Smallest\"[minlen=-6,fontsize=10,color=black,xlabel=\" 0.01\"]\n\"Intermediate\" -> \"Small\"[minlen=-3,fontsize=10,color=blue,xlabel=\" 0.2\"]\n\"Intermediate\" -> \"Intermediate\"[minlen=0,fontsize=10,color=black,xlabel=\" 0.35\"]\n\"Intermediate\" -> \"Large\"[minlen=3,fontsize=10,color=black,xlabel=\" 0.22\"]\n\"Large\" -> \"Dormant\"[minlen=-12,fontsize=10,color=black,xlabel=\" 0.22\"]\n\"Large\" -> \"Smallest\"[minlen=-9,fontsize=10,color=black,xlabel=\" 0.02\"]\n\"Large\" -> \"Small\"[minlen=-6,fontsize=10,color=blue,xlabel=\" 0.05\"]\n\"Large\" -> \"Intermediate\"[minlen=-3,fontsize=10,color=black,xlabel=\" 0.13\"]\n\"Large\" -> \"Large\"[minlen=0,fontsize=10,color=black,xlabel=\" 0.57\"]\n\"Extra Large\" -> \"Dormant\"[minlen=-15,fontsize=10,color=black,xlabel=\" 0.17\"]\n\"Extra Large\" -> \"Smallest\"[minlen=-12,fontsize=10,color=black,xlabel=\" 0.03\"]\n\"Extra Large\" -> \"Small\"[minlen=-9,fontsize=10,color=blue,xlabel=\" 0.07\"]\n\"Extra Large\" -> \"Intermediate\"[minlen=-6,fontsize=10,color=blue,xlabel=\" 0.09\"]\n\"Extra Large\" -> \"Large\"[minlen=-3,fontsize=10,color=black,xlabel=\" 0.41\"]\n\"Extra Large\" -> \"Extra Large\"[minlen=0,fontsize=10,color=black,xlabel=\" 0.27\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <hr>
@@ -1323,7 +1317,10 @@ C6  0  0  0 0.0 0.00 0.00</code></pre>
 <h3 class="anchored" data-anchor-id="problema-con-el-uso-tradicional-de-calcular-las-transiciones">Problema con el uso tradicional de calcular las transiciones</h3>
 <p>El uso de estos métodos tradicionales aun que sean calculado a mano o usar la función <strong>projection.matrix</strong> del paquete <strong>popbio</strong> pudiese ser problemático. Los problemas ocurren por condiciones de muestreo, especialmente cuando trabajan con especies raras y los tamaños de muestra están pequeños o que las transiciones son raras de forma natural <span class="citation" data-cites="tremblay2021population gascoigne2023standard">(<a href="#ref-tremblay2021population" role="doc-biblioref">R. L. Tremblay et al. 2021</a>; <a href="#ref-gascoigne2023standard" role="doc-biblioref">Gascoigne et al. 2023</a>)</span>. En el capitulo XX: <strong>Impacto de datos sin sentidos</strong> se discute los problemas posibles cuando hay datos sin sentidos y como construir matrices más confiable y cuando se debería usar el método Bayesiano para los análisis. En el capitulo XX se discute como resolver asuntos de matrices para que sean más compatible con la biología de la especies estudiada y por consecuencia.</p>
 <p>Revisión:</p>
-<p>RLT: Apr 19, 2025 Demetria:</p>
+<ul>
+<li>RLT: Apr 19, 2025</li>
+<li>Demetria:</li>
+</ul>
 
 
 

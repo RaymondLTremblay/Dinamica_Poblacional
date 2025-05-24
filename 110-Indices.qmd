@@ -2,11 +2,9 @@
 
 ## Por: Mariana Hernández-Apolinar y Paola Portillo Tzompa
 
-## En este capitulo se cubrirá varios estimación de parametros.
 
-### Condición basica de las matrices de transición
 
-## Librerías de R requeridas para el análisis
+#### Librerías de R requeridas para el siguiente módulo
 
 ```{r Indice1, message=FALSE}
 library(popdemo)
@@ -16,7 +14,13 @@ library(dplyr)
 library(scales)
 ```
 
-------------------------------------------------------------------------
+-----------------------------------------------------------------------
+
+## En este capitulo se cubrirá varios estimación de parametros.
+
+### Condición beasica de las matrices de transición
+
+
 
 ```{r Indice2, message=FALSE}
 
@@ -72,6 +76,7 @@ primitiva <- isPrimitive(Lr1)
 *Paso 2a. Comprobación de los supuestos para las matrices de estudio*. En el siguiente cuadro se presentan los resultados que comprueban que la matriz de *L. rubripetala* cumple con los supuestos establecidos para el análisis. Se comprueba que la matriz es cuadrada al tener 4 renglones y 4 columnas; asimismo, cumple con ser no negativa, ergódica, irreducible y primitiva al ser "TRUE" el resultado en los cuatro casos.
 
 ```{r Indice4, echo=FALSE}
+
 # a) Dimensión de la matriz (filas x columnas): los valores deben ser iguales
 dimension
 # b) No negativa. 
@@ -142,6 +147,7 @@ tconvergencia <- convt(Lr1, accuracy = 1e-3, vector = n0)
 La estructura estable de edades/etapas es un indice de la distribución proporcional de la poblacional que se espera que esta población alcance en el largo plazo. En el caso de *Lepanthes rubripetala* se espera que la población alcance una estructura estable de 0.088, 0.206, 0.369 y 0.337 para las categorías de plántulas, juveniles, adultos no reproductivos y adultos reproductivos, respectivamente. Esta estructura asume que el crecimiento poblacional *lambda* $\lambda$ sigue igual y constante en el tiempo. Para una especie alcancar una estructura estable, el ambiente debería ser constante y sin cambios, lo cual es raramente el caso en la naturaleza. Esto asume que el periodo de muestreo y las condiciones abiotica y bioticas son tipica y constante. En un analisis de revisión de literatura Williams et al (@williams2011distance) encontraron que más del 80% de las poblaciones no cumplia con la condición de estructura estable. En adición observarón que mayor desviación se obervaba en poblaciones con tiempo de generación largas y matriz grandes (n x n).
 
 ```{r Indice6}
+
 #Estructura estable de estados
 Wmax <- stable.stage(Lr1)
 Wmax
@@ -150,6 +156,7 @@ Wmax
 Uno puede visualizar la estructura la estructura de la población usando el codigo siguiente.
 
 ```{r Indice7}
+
 Wdf=data.frame(Wmax)
 Wdf$Categorias=c("Plántulas","Juveniles","Adultos no reproductivos","Adultos reproductivos")
 Wdf$Categorias=factor(Wdf$Categorias, levels=c("Plántulas","Juveniles","Adultos no reproductivos","Adultos reproductivos"))
@@ -182,6 +189,7 @@ dampingratio
 El tiempo de convergencia puede ser calculado a base de la cantidad de individuos en las diferentes etapas o edades. El tiempo de convergencia es el tiempo esperado en que una población alcanza la estructura estable. En el caso de *Lepanthes rubripetala* se espera que la población alcance la estructura estable en 25 meses si se comienza con una población sesgada de solamente plántulas (n=1000) y ninguno en las etapas subsiguientes.
 
 ```{r Indice9}
+
 # Tiempo de convergencia
 n = c(1000, 0, 0, 0)
 tconvergencia <- convt(Lr1, accuracy = 1e-3, vector = n)

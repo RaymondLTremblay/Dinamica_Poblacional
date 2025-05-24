@@ -1,6 +1,12 @@
 # Carl Olaf Tamm {#OTamm}
 
-```{r, OCTamm_1, eval= T, echo=FALSE, message=F}
+Por Raymond L. Tremblay
+
+
+#### Librerías de R requeridas para el siguiente módulo
+
+```{r, OCTamm_1, eval= TRUE, message=FALSE}
+
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(janitor, tidyverse, devtools, popbio, knitr, gt)
 
@@ -8,8 +14,17 @@ library(tidyverse)
 library(janitor)
 library(popbio)
 library(knitr)
+library(tidyverse)
 library(gt)
+library(readxl)
+library(Rage)
+library(DiagrammeR)
 
+#library(devtools) # remover el "#" para la instalación de devtools
+
+#devtools::install_github("atyre2/raretrans", build = TRUE, build_opts = c("--no-resave-data", "--no-manual")) # Instalar el paquete 'raretrans' desde GitHub
+
+library(raretrans)
 
 # Mi tema de formato de las gráficas de ggplot2 personal
 rlt_theme <- theme(axis.title.y = element_text(colour="grey20",size=15,face="bold"),
@@ -20,7 +35,7 @@ rlt_theme <- theme(axis.title.y = element_text(colour="grey20",size=15,face="bol
 
 ```
 
-## Uno de los padres de la ecología de población
+## El padere de ecología de población en orquídea?
 
 Carl Olaf Tamm (1919-2007) fue un biólogo Sueco y profesor de botánica y suelos de la escuela de "Soil Science at the Royal College of Forestry" (1957-1962) en Estocolmo y el primer profesor de **Ecología de bosques** de dicha universidad (1962). Su carrera académica se desarrolló en la Universidad de Estocolmo, donde fue profesor de ecología de bosques desde 1957 hasta 1985. Los trabajos de Tamm son reconocidos por trabajos a largo plazo, de múltiples años y décadas, donde el enfatizó la importancia de la variabilidad temporal y espacial en los ecosistemas y los eventos raros en la dinámica de especies. Tamm desarrollo protocolos de muestreos de plantas y suelos en bosques, donde la recolección de datos era anuales y continuos. Algunos de estos trabajos son ahora conocidos como clásicos en ecología de poblaciones y comunidades. Tres de estos trabajos relevante a la dinámica poblacional incluye: \@ref(OTamm)
 
@@ -64,8 +79,8 @@ knitr::include_graphics("Figures/Tamm_1972_plot_48.jpeg")
 En la publicación de 1972 [@tamm1972survival], Tamm describe la dinámica de múltiples especies de orquídeas, y alguna especies en múltiples sitios.
 
 ```{r OCTamm_3, echo=FALSE, message=FALSE}
-library(tidyverse)
-library(gt)
+
+
  Tamm=tribble(~Especies, ~"Núm de la Población", ~"Año del primer muestreo", ~"Año del último muestreo",
               "Dactylorhiza incarnata", 46, 1944, 1971,
               "Dactylorhiza sambucina", 17, 1942, 1971,
@@ -121,13 +136,9 @@ Primero se estará digitalizando los datos, seguido de construcción de matriz y
 
 Para instalar **raretrans** remover el **\#** antes de correr el script para tener acceso a los códigos de **raretrans**. Este paquete no esta disponible en CRAN, pero se puede instalar desde GitHub.
 
-```{r OCTamm_4}
-#library(devtools) # remover el "#" para la instalación de devtools
+```{r OCTamm_4, evalFALSE, messae=FALSE, warning=FALSE}
 
 #devtools::install_github("atyre2/raretrans", build = TRUE, build_opts = c("--no-resave-data", "--no-manual")) # Instalar el paquete 'raretrans' desde GitHub
-
-library(raretrans)
-
 
 ```
 
@@ -138,7 +149,8 @@ Se puede tener acceso a los datos de Tamm en el archivo "Tamm_1972.xlsx" en la c
 Estos datos están limitado a la especie de *Dactylorhiza incarnata* y se tiene información de los 35 individuos monitoreado en los años 1944 hasta 1971.
 
 ```{r OCTamm_5}
-library(readxl)
+
+
 Tamm_1972_column <- read_excel("data/Tamm_1972.xlsx", 
     sheet = "D_incarnata_by_column")
 
@@ -148,6 +160,7 @@ Tamm_1972_column %>% head()
 El primer paso es encontrar una matriz de valores *prior* para añadir al modelo de construcción de los parámetros de la matriz. Como no podemos discutir de estos valores con Tamm, usamos valores de la literatura. Hay dos especies de *Dactylorhiza* con matrices en COMPADRE, usando la matriz que más se parece a los datos de los datos de Tamm, se uso como valores **prior** los de *Dacylorhiza lapponica* [@sletvold2010long]. Se modifico la matriz porque podemos solamente determinar si un individuo falleció después de ser latente. Entonces la suma de probabilidades de vegetativo y reproductivo suman a 1.0 y los latentes no suma a 1.0 (la diferencia es los fallecidos).
 
 ```{r OCTamm_6}
+
 Dacty_apriori=matrix(c(0.637, 0.571, 0.740,
                        0.273, 0.271, 0.049,
                        0.090, 0.158, 0.059,
@@ -231,8 +244,6 @@ TF2
 -   amarillo: individuos que producen nuevos individuos en la población
 
 ```{r OCTamm_9, echo=FALSE, message=FALSE, warning=FALSE}
-library(Rage)
-library(DiagrammeR)
 
 
 matA=TF2$Tmat+TF2$Fmat
@@ -303,6 +314,7 @@ El estimado de $\lambda$
 Como esperado la población de *Dactylorhiza incarnata* disminuye en el tiempo y el indice de crecimiento es menor que 1.0. El valor de crecimiento intrínsico es de 0.84, que siguiere una disminución de la población de aproximadamente 16% por año. Era a esperar que el crecimiento poblacional sea menor que 1.0, ya que la mayoría de los individuos en la población son vegetativos y que la mayoría de los individuos que florecen en un año particular no florecen en el año siguiente y haya poco reclutamiento y el nivel de mortandad es alta.
 
 ```{r OCTamm_11}
+
 popbio::lambda(TF3)
 
 
@@ -316,8 +328,9 @@ Estimar los intervalos de credibilidad se simula la matriz, tomando en considera
 
 Las matrices alpha2 y beta2, representan los parámetros de la distribución gamma con media alpha/beta. En este caso se usa valores muy pequeños para los valores alpha y beta, para que la distribución gamma no sea informativa (non-informative priors) y que los valores de lambda sean muy dispersos. En otra palabra no ponemos mucho peso en los valores prior de la fertilidad, y dejamos que los valores del campo dominan los análisis.
 
-```{r OCTamm_12, eval=TRUE, echo=TRUE}
-library(popbio)
+```{r OCTamm_12, eval=TRUE}
+
+
 
 alpha2 <- matrix(c(NA_real_, 1e-5, NA_real_,
                    NA_real_, NA_real_, NA_real_,
@@ -347,6 +360,7 @@ Dacty_0.1 <- sim_transitions(TF2, N2_D, P = Dacty_apriori, alpha = alpha2, beta 
 Se convierte el objeto "Dacty_0.1" en un tibble para poder visualizar la distribución de los lambda que proviene de la simulación.
 
 ```{r OCTamm_13, eval=TRUE, echo=TRUE}
+
 Dacty_0.1b <- tibble(lposterior = map_dbl(Dacty_0.1, lambda))
 
 ```
@@ -354,6 +368,7 @@ Dacty_0.1b <- tibble(lposterior = map_dbl(Dacty_0.1, lambda))
 ## Visualización de las distribuciones de los lambda. Se nota claramente que la población de *Dactylorhiza incarnata* muestreado por Tamm desde 1944 a 1971 tiene un crecimiento poblacional menor que 1.0. Nota que esta similación considerá variación demografica en los datos.
 
 ```{r OCTamm_14}
+
 ggplot(data = Dacty_0.1b,
      mapping = aes(x = lposterior)) + 
   geom_histogram(binwidth = 0.01, colour="white") + 
@@ -367,6 +382,7 @@ ggplot(data = Dacty_0.1b,
 Para concluir, la población de *Dactylorhiza incarnata* muestreado por Tamm desde 1944 a 1971 tiene un crecimiento poblacional menor que 1.0 (lambda promedio de 0.84), con un intervalo de confianza de 0.79 a 0.89. Esto indica que la población esta reduciendo en el tiempo por aproximadamente 16%, pero que realmente la reducción pudiese ser entre 21% a 11%. El indice de *pincrease* es el valor de *p* para evaluar si la población esta creciendo o decreciendo. En este caso el valor es 0.000, lo que indica que la población esta decreciendo.
 
 ```{r OCTamm_15, eval=T}
+
 Dacty_0.1bdf=as.data.frame(Dacty_0.1b)
 Dacty_0.1_summary <- dplyr::summarize(Dacty_0.1bdf,
                             medianL = median(lposterior),
@@ -380,6 +396,7 @@ Dacty_0.1_summary <- dplyr::summarize(Dacty_0.1bdf,
 ```
 
 ```{r OCTamm_16, eval=T}
+
 gt(signif(Dacty_0.1_summary, digits = 3))
 
 

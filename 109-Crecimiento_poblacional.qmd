@@ -2,9 +2,17 @@
 
 ## Por: Tamara Ticktin y Mariana Hernández Apolinar
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+
+#### Librerías de R requeridas para el siguiente módulo
+
+```{r, message=FALSE, waring=FALSE}
+
+library(popbio)
+library(readr)
+
 ```
+
+
 
 En los modelos matriciales, uno de los parámetros más útiles es la tasa de crecimiento poblacional proyectada, lambda $λ$. Su importancia radica en integrar las tasas de crecimiento, supervivencia y reproducción en un sólo parámetro, el cual proyecta qué tan rápido crece o decrece una población. A pesar de su relevancia, $\lambda$ también es uno de los parámetros que más ha sido malinterpretado. A continuación describiremos qué implica la tasa de crecimiento poblacional, se muestra cómo calcularla y analizamos cómo interpretarla. Para ello, usamos los datos demográficos de *Laelia speciosa*, una orquídea epífita, cuyos datos poblacionales fueron recabados en dos sitios, por dos años.
 
@@ -13,7 +21,7 @@ En los modelos matriciales, uno de los parámetros más útiles es la tasa de cr
 La tasa finita o asintótica del crecimiento poblacional, $\lambda$, es el valor propio dominante de una matriz de transición y corresponde a la solución de dicha matriz. Cuando $\lambda$ \>1 indica que se proyecta que la población crecerá a largo plazo; si $\lambda$ \<1 indica que se proyecta que disminuirá y $\lambda$ = 1 indica que se proyecta que permanecerá estable. Este parámetro se calcula utilizando la función **eigen.analysis** en el paquete **popbio**.
 
 ```{r, cre_pop_1, warning=FALSE, message=FALSE}
-library(popbio)
+
 
 #Ingresa la matriz de transición o generala desde el archivo que incorpora la transición de los individuos de un año (o un periodo de tiempo) a otro ("stage-fate dataframe"; vea el capitulo "Calcular transiciones para la matriz de Lefkovitch" y "Método bayesiano de calcular las transiciones y fecundidades"). En nuestras matrices de transición, las clases de estado se basan en el peso total de los pseudobulbos que conforman la planta. Los “Adultos” corresponden a individuos que pueden reproducirse sexualmente.
 
@@ -43,6 +51,7 @@ mat1.2
 Calcular los $\lambda$ de la población para los años 1 y 2, respectivamente usando la función **eigen.analysis** en **popbio**.
 
 ```{r, cre_pop_2}
+
 ##Calcula la lambda asintótica de cada población y año
 eig1.1<-eigen.analysis(mat1.1) 
 eig1.1$lambda
@@ -62,6 +71,7 @@ Los meta-análisis (Crone et al. 2013), en cambio, han demostrado que $\lambda$ 
 Nuestra segunda población de $Laelia speciosa$ se establece en un hábitat similar a la población 1 y fue monitoreada durante al mismo tiempo. Sin embargo, ésta fue sujeta a la extracción. Si comparamos los valores de λ de nuestras dos poblaciones, podemos hacer inferencias sobre los efectos de la extracción. La población 2 no produjo frutos y tampoco se observaron plántulas. Debido a esto, fue necesario incluir el valor de 0.001 para la transición de la matriz adulta2-\> plántula y con esto asegurar que nuestra matriz de estudio sea irreducible y primitive (**Capitulo X**).
 
 ```{r, cre_pop_3}
+
 #Matriz de la poblacion 2, año 1
 mat2.1 <- matrix (c(0.5, 0, 0, 0.001,
                     0.16, 0.79,0,0, 
@@ -103,7 +113,7 @@ ic<-quantile(x$lambda, c(0.025, 0.975))
 ic
 
 #IC para la población 1, año 2
-library(readr)
+
 
 
 
@@ -134,6 +144,7 @@ La tasa estocástica de crecimiento o $λ_e$ se puede estimar si se cuenta con d
 Noota que aqui una vez más, se asume que las condiciones bajo las cuales se construyeron las matrices de transición son constantes en el tiempo. Por lo tanto, $λ_e$ no debe ser interpretado literalmente, ni tampoco como una herramienta predictiva. En adición los valores de ic se resta y se suma al $\lambda$ promedio obtenido para tener el rango de 95% de $\lambda$.
 
 ```{r, cre_pop_5}
+
 matrices<-list(mat1.1, mat1.2) # crear una lista de matrices de las poblaciones 1 de los 2 periodos de estudio
 estocástico<-stoch.growth.rate(matrices, verbose=FALSE) ##Selección aleatoria de matrices
 estocástico
@@ -158,6 +169,7 @@ También se puede explorar el efecto de distintos factores que afectan la dinám
 En nuestro caso, sabemos que es poco frecuente el reclutamiento episódico observado en el segundo muestreo de la población 1, pero también la mortalidad y regresión de adultos observado en ese muestreo es poco frecuente. Por lo tanto, establecimos que la probabilidad de ocurrencia de la matriz 1 (del año 1-año 2) fuera de 0.8, mientras que la probabilidad de ocurrencia de la matriz 2 (del año 2 a año 3) fuera 0.2.
 
 ```{r, cre_pop_6}
+
 estocástico.desigual.9<-stoch.growth.rate(matrices, prob=c(0.9,0.1),verbose=FALSE) ## Selección de acuerdo con probabilidades definidas
 estocástico.desigual.9
 
@@ -176,6 +188,7 @@ ic.2
 Vemos que $λ_e$ no cambia mucho en el ejercicio anterior. A continuación, podemos evaluar cómo se ve afectada $λ_e$ al disminuir o aumentar la probabilidad de que ocurran las diferentes matrices. En nuestro ejemplo aumentamos a 0.8 la probabilidad de ocurrencia de la matriz 2 (la que represente reclutamiento episódico y mortalidad/regresión de adultos), y observamos que $λ_e$ decrece. Este método es útil porque permite explorar cómo la variabilidad en las condiciones afecta la dinámica poblacional dentro de un escenario representativo de la estructura de la diversidad de poblaciones. Por ejemplo considera que originalmente la especie se encontraba en un hábitat continuo, pero que debido a la deforestación, la población se ha fragmentado y ahora se encuentra en hábitats con condiciones subóptimas, y que domina ahora estas poblaciones fragmentados versus pocas poblaciones en un hábitat de mejor calidad.
 
 ```{r, cre_pop_7}
+
 estocástico.desigual.2<-stoch.growth.rate(matrices, prob=c(0.2,0.8),verbose=FALSE) 
 estocástico.desigual.2
 

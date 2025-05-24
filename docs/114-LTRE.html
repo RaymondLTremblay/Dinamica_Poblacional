@@ -455,14 +455,20 @@ window.Quarto = {
 
 <section id="ERTV" class="level1">
 <h1>Experimento de Respuesta de Tabla de Vida</h1>
+<p>por : Adriana Ramírez-Martínez</p>
+<section id="librerías-de-r-requeridas-para-el-siguiente-módulo" class="level4">
+<h4 class="anchored" data-anchor-id="librerías-de-r-requeridas-para-el-siguiente-módulo">Librerías de R requeridas para el siguiente módulo</h4>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (popbio)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>por : Adriana Ramírez-Martínez</p>
+</section>
 <section id="introducción-a-experimento-de-respuesta-de-tabla-de-vida" class="level2">
 <h2 class="anchored" data-anchor-id="introducción-a-experimento-de-respuesta-de-tabla-de-vida">Introducción a <strong>Experimento de Respuesta de Tabla de Vida</strong></h2>
 <p>La variación en los estimados de los parámetros de la matriz son inherentes a la biología. Esa variación puede ser a consecuencia de múltiples factores individuales y en combinaciones, incluyendo efectos de tiempo, espacio, genético, tamaño de muestra y suerte (<span class="citation" data-cites="hernandez2024natural">Hernández et al. (<a href="#ref-hernandez2024natural" role="doc-biblioref">2024</a>)</span>) La variación en las parámetros de la historia de vida de una especie y las causas de estas diferencias se puede evaluar a diferentes niveles: genético, demográfico, espacial o temporal. Esta variación en ecología es la norma. La variación se encuentra en todos aspectos desde la parte genética de los individuos que compone una población, la variación ambiental y las interacciones bióticas y abióticas; además de la plasticidad fenotípica que es la interacción entre la genética y el ambiente. ¿Cuál es esa variación? ¿en otra palabra qué es lo que varía? y ¿cómo los individuos responden a las variables bióticas y abióticas? son aspectos importantes para determinar la ecología, evolución y conservación de las especies. La causa de la variación en una población se puede resumir a tres componentes principales, la genética, el efecto del ambiente y la interacción entre ambiente y genética (plasticidad fenotípica) (<span class="citation" data-cites="hastings2021effects">Hastings et al. (<a href="#ref-hastings2021effects" role="doc-biblioref">2021</a>)</span>; <span class="citation" data-cites="sun2019multivariate">Sun et al. (<a href="#ref-sun2019multivariate" role="doc-biblioref">2019</a>)</span>). Se asume que el tamaño de muestra es suficiente grande para no ser la causa de la variación. Dentro de un contexto de dinámica poblacional las condiciones que los individuos en las poblaciones experimentan varían, ya sea durante tratamientos manipulados, localidades o periodos de tiempo, y por consecuencia los datos que colectamos con diferencias en espacio/tiempo también varían y pudieran tener efecto sobre la matriz de proyección poblacional <strong>A</strong>. Por tanto, las entradas (los parámetros) de esa matriz <strong>A</strong> variarán en tiempo/espacio o experimento y esto tendría un impacto sobre la tasa de crecimiento poblacional (λ) y en los estimados de dispersión (Intervalo de confianza o credibilidad; <span class="citation" data-cites="caswell2000matrix">Caswell (<a href="#ref-caswell2000matrix" role="doc-biblioref">2000</a>)</span>, <span class="citation" data-cites="caswell2010life">Caswell (<a href="#ref-caswell2010life" role="doc-biblioref">2010</a>)</span>).</p>
@@ -499,29 +505,25 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>matmart <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.68</span>, <span class="fl">0.02</span>, <span class="fl">3.88</span>, <span class="fl">16.53</span>),</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.22</span>, <span class="fl">0.76</span>, <span class="fl">0.23</span>, <span class="fl">0.0</span>),</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.13</span>, <span class="fl">0.53</span>, <span class="fl">0.58</span>),</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.17</span>, <span class="fl">0.38</span>))</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>stages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"plántula"</span>, <span class="st">"infantil"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto"</span>) <span class="co"># asignar los nombres de los estadíos</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span> <span class="co"># título del diagrama ninguno</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> stages, <span class="at">from =</span> stages) <span class="co"># crear un data frame con los estadíos</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matmart), <span class="dv">4</span>) <span class="co"># redondear los valores de la matriz a 4 decimales</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ] <span class="co"># seleccionar solo los valores mayores a 0</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, stages, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>) <span class="co"># crear los nodos</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">4</span> <span class="co"># calcular la longitud de las flechas</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>matmart <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.68</span>, <span class="fl">0.02</span>, <span class="fl">3.88</span>, <span class="fl">16.53</span>),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.22</span>, <span class="fl">0.76</span>, <span class="fl">0.23</span>, <span class="fl">0.0</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.13</span>, <span class="fl">0.53</span>, <span class="fl">0.58</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.17</span>, <span class="fl">0.38</span>))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>stages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"plántula"</span>, <span class="st">"infantil"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto"</span>) <span class="co"># asignar los nombres de los estadíos</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span> <span class="co"># título del diagrama ninguno</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> stages, <span class="at">from =</span> stages) <span class="co"># crear un data frame con los estadíos</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matmart), <span class="dv">4</span>) <span class="co"># redondear los valores de la matriz a 4 decimales</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ] <span class="co"># seleccionar solo los valores mayores a 0</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, stages, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>) <span class="co"># crear los nodos</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">4</span> <span class="co"># calcular la longitud de las flechas</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-c942ea99d0861f86ac4a" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-c942ea99d0861f86ac4a">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\"; \"infantil\"; \"juvenil\"; \"adulto\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\"; \"infantil\"; \"juvenil\"; \"adulto\" } [style=invis] \"plántula\" -> \"plántula\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.68\"]\n\"plántula\" -> \"infantil\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.22\"]\n\"infantil\" -> \"plántula\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.02\"]\n\"infantil\" -> \"infantil\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.76\"]\n\"infantil\" -> \"juvenil\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.13\"]\n\"juvenil\" -> \"plántula\"[minlen=-8,fontsize=10,color=Goldenrod1,xlabel=\" 3.88\"]\n\"juvenil\" -> \"infantil\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.23\"]\n\"juvenil\" -> \"juvenil\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.53\"]\n\"juvenil\" -> \"adulto\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.17\"]\n\"adulto\" -> \"plántula\"[minlen=-12,fontsize=10,color=Goldenrod1,xlabel=\" 16.53\"]\n\"adulto\" -> \"juvenil\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.58\"]\n\"adulto\" -> \"adulto\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.38\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-ae6917a7c31797dc92a4" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-ae6917a7c31797dc92a4">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\"; \"infantil\"; \"juvenil\"; \"adulto\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\"; \"infantil\"; \"juvenil\"; \"adulto\" } [style=invis] \"plántula\" -> \"plántula\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.68\"]\n\"plántula\" -> \"infantil\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.22\"]\n\"infantil\" -> \"plántula\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.02\"]\n\"infantil\" -> \"infantil\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.76\"]\n\"infantil\" -> \"juvenil\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.13\"]\n\"juvenil\" -> \"plántula\"[minlen=-8,fontsize=10,color=Goldenrod1,xlabel=\" 3.88\"]\n\"juvenil\" -> \"infantil\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.23\"]\n\"juvenil\" -> \"juvenil\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.53\"]\n\"juvenil\" -> \"adulto\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.17\"]\n\"adulto\" -> \"plántula\"[minlen=-12,fontsize=10,color=Goldenrod1,xlabel=\" 16.53\"]\n\"adulto\" -> \"juvenil\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.58\"]\n\"adulto\" -> \"adulto\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.38\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p>Figura x: Ciclo de vida de <em>Oncidium brachyandrum</em> creciendo sobre <em>Quercus martinezii</em>. Las flechas representan las transiciones entre estadíos, estasis y fecundidades y los números son las tasas vitales de fecundidad, supervivencia y crecimiento. El color <span class="math inline">\(\color{#ffc125}{\text{amarillo}}\)</span> para fecundidad, <span class="math inline">\(\color{#36648b}{\text{azul}}\)</span> para supervivencia y <span class="math inline">\(\color{#548b54}{\text{verde}}\)</span> para crecimiento, <span class="math inline">\(\color{#7a378b}{\text{violeta}}\)</span> para retroceso y azul oscuro para permanencia.</p>
@@ -531,54 +533,51 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>matrug <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.64</span>, <span class="fl">0.06</span>, <span class="dv">0</span>, <span class="fl">0.0045</span>),</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.27</span>, <span class="fl">0.75</span>, <span class="fl">0.27</span>, <span class="fl">0.0</span>),</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.08</span>, <span class="fl">0.47</span>, <span class="fl">0.28</span>),</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.27</span>, <span class="fl">0.68</span>))</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>stages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"plántula"</span>, <span class="st">"infantil"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto"</span>)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> stages, <span class="at">from =</span> stages)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matrug), <span class="dv">4</span>)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, stages, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">4</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="st">"steelblue4"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"MediumOrchid4"</span>, <span class="st">"steelblue4"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"MediumOrchid4"</span>,<span class="st">"steelblue4"</span>, <span class="st">"PaleGreen4"</span>,  <span class="st">"Goldenrod1"</span>, <span class="st">"MediumOrchid4"</span>, <span class="st">"steelblue4"</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>                <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>                <span class="at">collapse =</span> <span class="st">""</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>matrug <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.64</span>, <span class="fl">0.06</span>, <span class="dv">0</span>, <span class="fl">0.0045</span>),</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.27</span>, <span class="fl">0.75</span>, <span class="fl">0.27</span>, <span class="fl">0.0</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.08</span>, <span class="fl">0.47</span>, <span class="fl">0.28</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.27</span>, <span class="fl">0.68</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>stages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"plántula"</span>, <span class="st">"infantil"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">to =</span> stages, <span class="at">from =</span> stages)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>trans <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">c</span>(matrug), <span class="dv">4</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> graph[graph<span class="sc">$</span>trans <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="st">"'"</span>, stages, <span class="st">"'"</span>), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>min_len <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(graph<span class="sc">$</span>to) <span class="sc">-</span> <span class="fu">as.numeric</span>(graph<span class="sc">$</span>from)) <span class="sc">*</span> <span class="dv">4</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>graph<span class="sc">$</span>col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="st">"steelblue4"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"MediumOrchid4"</span>, <span class="st">"steelblue4"</span>, <span class="st">"PaleGreen4"</span>, <span class="st">"MediumOrchid4"</span>,<span class="st">"steelblue4"</span>, <span class="st">"PaleGreen4"</span>,  <span class="st">"Goldenrod1"</span>, <span class="st">"MediumOrchid4"</span>, <span class="st">"steelblue4"</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"'"</span>, graph<span class="sc">$</span>from, <span class="st">"'"</span>, <span class="st">" -&gt; "</span>, <span class="st">"'"</span>, graph<span class="sc">$</span>to, <span class="st">"'"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                <span class="st">"[minlen="</span>, graph<span class="sc">$</span>min_len,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>                <span class="st">",fontsize="</span>, <span class="dv">10</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>                <span class="st">",color="</span>, graph<span class="sc">$</span>col,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>                <span class="st">",xlabel="</span>, <span class="fu">paste</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, graph<span class="sc">$</span>trans),</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                <span class="st">"</span><span class="sc">\"</span><span class="st">]</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                <span class="at">collapse =</span> <span class="st">""</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="st">digraph {</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="st">    graph[overlap=false];</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="st">    rank=same;</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="st">    node [shape="</span>, <span class="st">"egg"</span>, <span class="st">", fontsize="</span>, <span class="dv">12</span>, <span class="st">"];"</span>,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    nodes, <span class="st">"</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="st">  }"</span>,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ordering=out</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="st">  x [style=invis]</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="st">  x -&gt; {"</span>, nodes, <span class="st">"} [style=invis]"</span>, edges,</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"labelloc=</span><span class="sc">\"</span><span class="st">t</span><span class="sc">\"</span><span class="st">;</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="st">  label=</span><span class="sc">\"</span><span class="st">"</span>, title, <span class="st">"</span><span class="sc">\"</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-e2fda7e5d50c16710017" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-e2fda7e5d50c16710017">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\"; \"infantil\"; \"juvenil\"; \"adulto\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\"; \"infantil\"; \"juvenil\"; \"adulto\" } [style=invis] \"plántula\" -> \"plántula\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.64\"]\n\"plántula\" -> \"infantil\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.27\"]\n\"infantil\" -> \"plántula\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.06\"]\n\"infantil\" -> \"infantil\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.75\"]\n\"infantil\" -> \"juvenil\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.08\"]\n\"juvenil\" -> \"infantil\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.27\"]\n\"juvenil\" -> \"juvenil\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.47\"]\n\"juvenil\" -> \"adulto\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.27\"]\n\"adulto\" -> \"plántula\"[minlen=-12,fontsize=10,color=Goldenrod1,xlabel=\" 0.0045\"]\n\"adulto\" -> \"juvenil\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.28\"]\n\"adulto\" -> \"adulto\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.68\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-82f681823b895d2cdb19" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-82f681823b895d2cdb19">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\"; \"infantil\"; \"juvenil\"; \"adulto\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\"; \"infantil\"; \"juvenil\"; \"adulto\" } [style=invis] \"plántula\" -> \"plántula\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.64\"]\n\"plántula\" -> \"infantil\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.27\"]\n\"infantil\" -> \"plántula\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.06\"]\n\"infantil\" -> \"infantil\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.75\"]\n\"infantil\" -> \"juvenil\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.08\"]\n\"juvenil\" -> \"infantil\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.27\"]\n\"juvenil\" -> \"juvenil\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.47\"]\n\"juvenil\" -> \"adulto\"[minlen=4,fontsize=10,color=PaleGreen4,xlabel=\" 0.27\"]\n\"adulto\" -> \"plántula\"[minlen=-12,fontsize=10,color=Goldenrod1,xlabel=\" 0.0045\"]\n\"adulto\" -> \"juvenil\"[minlen=-4,fontsize=10,color=MediumOrchid4,xlabel=\" 0.28\"]\n\"adulto\" -> \"adulto\"[minlen=0,fontsize=10,color=steelblue4,xlabel=\" 0.68\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p>Figura x: Ciclo de vida de <em>Oncidium brachyandrum</em> creciendo sobre <em>Quercus rugosa</em>. Las flechas representan las transiciones entre estadíos, estasis y fecundidades y los números son las tasas vitales de fecundidad, supervivencia y crecimiento. El color <span class="math inline">\(\color{#ffc125}{\text{amarillo}}\)</span> para fecundidad, <span class="math inline">\(\color{#36648b}{\text{azul}}\)</span> para supervivencia y <span class="math inline">\(\color{#548b54}{\text{verde}}\)</span> para crecimiento, <span class="math inline">\(\color{#7a378b}{\text{violeta}}\)</span> para retroceso y azul oscuro para permanencia.</p>
@@ -596,23 +595,23 @@ window.Quarto = {
 <p>En un archivo nuevo de Excel se arma la base, con la columna de vital rate al principio, seguido por las especies de hospederos (tratamientos) poniendo primeramente el control y después la columna de matrix (Figura 4). Esta base contendrá las ecuaciones de la matriz de referencia. Como la matriz de <em>Q. martinezii</em> tuvo los valores más altos de lambda está ultima de colocará en nuestra base que utilizaremos para correr el análisis ERTV.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="klyostsylh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#klyostsylh table {
+<div id="tmyyrlhjkf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tmyyrlhjkf table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#klyostsylh thead, #klyostsylh tbody, #klyostsylh tfoot, #klyostsylh tr, #klyostsylh td, #klyostsylh th {
+#tmyyrlhjkf thead, #tmyyrlhjkf tbody, #tmyyrlhjkf tfoot, #tmyyrlhjkf tr, #tmyyrlhjkf td, #tmyyrlhjkf th {
   border-style: none;
 }
 
-#klyostsylh p {
+#tmyyrlhjkf p {
   margin: 0;
   padding: 0;
 }
 
-#klyostsylh .gt_table {
+#tmyyrlhjkf .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -638,12 +637,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#klyostsylh .gt_caption {
+#tmyyrlhjkf .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#klyostsylh .gt_title {
+#tmyyrlhjkf .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -655,7 +654,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#klyostsylh .gt_subtitle {
+#tmyyrlhjkf .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -667,7 +666,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#klyostsylh .gt_heading {
+#tmyyrlhjkf .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -679,13 +678,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#klyostsylh .gt_bottom_border {
+#tmyyrlhjkf .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#klyostsylh .gt_col_headings {
+#tmyyrlhjkf .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -700,7 +699,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#klyostsylh .gt_col_heading {
+#tmyyrlhjkf .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -720,7 +719,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#klyostsylh .gt_column_spanner_outer {
+#tmyyrlhjkf .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -732,15 +731,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#klyostsylh .gt_column_spanner_outer:first-child {
+#tmyyrlhjkf .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#klyostsylh .gt_column_spanner_outer:last-child {
+#tmyyrlhjkf .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#klyostsylh .gt_column_spanner {
+#tmyyrlhjkf .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -752,11 +751,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#klyostsylh .gt_spanner_row {
+#tmyyrlhjkf .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#klyostsylh .gt_group_heading {
+#tmyyrlhjkf .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -782,7 +781,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#klyostsylh .gt_empty_group_heading {
+#tmyyrlhjkf .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -797,15 +796,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#klyostsylh .gt_from_md > :first-child {
+#tmyyrlhjkf .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#klyostsylh .gt_from_md > :last-child {
+#tmyyrlhjkf .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#klyostsylh .gt_row {
+#tmyyrlhjkf .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -824,7 +823,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#klyostsylh .gt_stub {
+#tmyyrlhjkf .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -837,7 +836,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#klyostsylh .gt_stub_row_group {
+#tmyyrlhjkf .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -851,15 +850,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#klyostsylh .gt_row_group_first td {
+#tmyyrlhjkf .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#klyostsylh .gt_row_group_first th {
+#tmyyrlhjkf .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#klyostsylh .gt_summary_row {
+#tmyyrlhjkf .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -869,16 +868,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#klyostsylh .gt_first_summary_row {
+#tmyyrlhjkf .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#klyostsylh .gt_first_summary_row.thick {
+#tmyyrlhjkf .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#klyostsylh .gt_last_summary_row {
+#tmyyrlhjkf .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -888,7 +887,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#klyostsylh .gt_grand_summary_row {
+#tmyyrlhjkf .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -898,7 +897,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#klyostsylh .gt_first_grand_summary_row {
+#tmyyrlhjkf .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -908,7 +907,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#klyostsylh .gt_last_grand_summary_row_top {
+#tmyyrlhjkf .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -918,11 +917,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#klyostsylh .gt_striped {
+#tmyyrlhjkf .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#klyostsylh .gt_table_body {
+#tmyyrlhjkf .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -931,7 +930,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#klyostsylh .gt_footnotes {
+#tmyyrlhjkf .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -945,7 +944,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#klyostsylh .gt_footnote {
+#tmyyrlhjkf .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -954,7 +953,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#klyostsylh .gt_sourcenotes {
+#tmyyrlhjkf .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -968,7 +967,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#klyostsylh .gt_sourcenote {
+#tmyyrlhjkf .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -976,72 +975,72 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#klyostsylh .gt_left {
+#tmyyrlhjkf .gt_left {
   text-align: left;
 }
 
-#klyostsylh .gt_center {
+#tmyyrlhjkf .gt_center {
   text-align: center;
 }
 
-#klyostsylh .gt_right {
+#tmyyrlhjkf .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#klyostsylh .gt_font_normal {
+#tmyyrlhjkf .gt_font_normal {
   font-weight: normal;
 }
 
-#klyostsylh .gt_font_bold {
+#tmyyrlhjkf .gt_font_bold {
   font-weight: bold;
 }
 
-#klyostsylh .gt_font_italic {
+#tmyyrlhjkf .gt_font_italic {
   font-style: italic;
 }
 
-#klyostsylh .gt_super {
+#tmyyrlhjkf .gt_super {
   font-size: 65%;
 }
 
-#klyostsylh .gt_footnote_marks {
+#tmyyrlhjkf .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#klyostsylh .gt_asterisk {
+#tmyyrlhjkf .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#klyostsylh .gt_indent_1 {
+#tmyyrlhjkf .gt_indent_1 {
   text-indent: 5px;
 }
 
-#klyostsylh .gt_indent_2 {
+#tmyyrlhjkf .gt_indent_2 {
   text-indent: 10px;
 }
 
-#klyostsylh .gt_indent_3 {
+#tmyyrlhjkf .gt_indent_3 {
   text-indent: 15px;
 }
 
-#klyostsylh .gt_indent_4 {
+#tmyyrlhjkf .gt_indent_4 {
   text-indent: 20px;
 }
 
-#klyostsylh .gt_indent_5 {
+#tmyyrlhjkf .gt_indent_5 {
   text-indent: 25px;
 }
 
-#klyostsylh .katex-display {
+#tmyyrlhjkf .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#klyostsylh div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#tmyyrlhjkf div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1179,15 +1178,11 @@ window.Quarto = {
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Asegurarse de tener instalado y cargado el paquete 'popbio' package </span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (popbio)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># oncidium&lt;-read.table("data/vitalratesoncidium.txt", sep="\t", header=TRUE, stringsAsFactors=FALSE, fill=TRUE) </span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Aqui la alternativa si tiene los datos en una hoja de Excel</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#oncidium </span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># oncidium&lt;-read.table("data/vitalratesoncidium.txt", sep="\t", header=TRUE, stringsAsFactors=FALSE, fill=TRUE) </span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Aqui la alternativa si tiene los datos en una hoja de Excel</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#oncidium </span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>Oncidium</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>Oncidium</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 17 × 4
@@ -1437,27 +1432,27 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">media.sens=</span>media.sens.Martinezzi.Rugosa<span class="sc">$</span>sensitivity, </span>
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">contribucion=</span>LTRE.contrib.Martinezzi.Rugosa)</span>
 <span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(LTRE.resultados.Martinezzi.Rugosa)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="vpehyfeqvd" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#vpehyfeqvd table {
+<div id="jbpblqsulr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#jbpblqsulr table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#vpehyfeqvd thead, #vpehyfeqvd tbody, #vpehyfeqvd tfoot, #vpehyfeqvd tr, #vpehyfeqvd td, #vpehyfeqvd th {
+#jbpblqsulr thead, #jbpblqsulr tbody, #jbpblqsulr tfoot, #jbpblqsulr tr, #jbpblqsulr td, #jbpblqsulr th {
   border-style: none;
 }
 
-#vpehyfeqvd p {
+#jbpblqsulr p {
   margin: 0;
   padding: 0;
 }
 
-#vpehyfeqvd .gt_table {
+#jbpblqsulr .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1483,12 +1478,12 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#vpehyfeqvd .gt_caption {
+#jbpblqsulr .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#vpehyfeqvd .gt_title {
+#jbpblqsulr .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1500,7 +1495,7 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   border-bottom-width: 0;
 }
 
-#vpehyfeqvd .gt_subtitle {
+#jbpblqsulr .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1512,7 +1507,7 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   border-top-width: 0;
 }
 
-#vpehyfeqvd .gt_heading {
+#jbpblqsulr .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1524,13 +1519,13 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#vpehyfeqvd .gt_bottom_border {
+#jbpblqsulr .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#vpehyfeqvd .gt_col_headings {
+#jbpblqsulr .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1545,7 +1540,7 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#vpehyfeqvd .gt_col_heading {
+#jbpblqsulr .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1565,7 +1560,7 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   overflow-x: hidden;
 }
 
-#vpehyfeqvd .gt_column_spanner_outer {
+#jbpblqsulr .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1577,15 +1572,15 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   padding-right: 4px;
 }
 
-#vpehyfeqvd .gt_column_spanner_outer:first-child {
+#jbpblqsulr .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#vpehyfeqvd .gt_column_spanner_outer:last-child {
+#jbpblqsulr .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#vpehyfeqvd .gt_column_spanner {
+#jbpblqsulr .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1597,11 +1592,11 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   width: 100%;
 }
 
-#vpehyfeqvd .gt_spanner_row {
+#jbpblqsulr .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#vpehyfeqvd .gt_group_heading {
+#jbpblqsulr .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1627,7 +1622,7 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   text-align: left;
 }
 
-#vpehyfeqvd .gt_empty_group_heading {
+#jbpblqsulr .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1642,15 +1637,15 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   vertical-align: middle;
 }
 
-#vpehyfeqvd .gt_from_md > :first-child {
+#jbpblqsulr .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#vpehyfeqvd .gt_from_md > :last-child {
+#jbpblqsulr .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#vpehyfeqvd .gt_row {
+#jbpblqsulr .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1669,7 +1664,7 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   overflow-x: hidden;
 }
 
-#vpehyfeqvd .gt_stub {
+#jbpblqsulr .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1682,7 +1677,7 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   padding-right: 5px;
 }
 
-#vpehyfeqvd .gt_stub_row_group {
+#jbpblqsulr .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1696,15 +1691,15 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   vertical-align: top;
 }
 
-#vpehyfeqvd .gt_row_group_first td {
+#jbpblqsulr .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#vpehyfeqvd .gt_row_group_first th {
+#jbpblqsulr .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#vpehyfeqvd .gt_summary_row {
+#jbpblqsulr .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1714,16 +1709,16 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   padding-right: 5px;
 }
 
-#vpehyfeqvd .gt_first_summary_row {
+#jbpblqsulr .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#vpehyfeqvd .gt_first_summary_row.thick {
+#jbpblqsulr .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#vpehyfeqvd .gt_last_summary_row {
+#jbpblqsulr .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1733,7 +1728,7 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#vpehyfeqvd .gt_grand_summary_row {
+#jbpblqsulr .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1743,7 +1738,7 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   padding-right: 5px;
 }
 
-#vpehyfeqvd .gt_first_grand_summary_row {
+#jbpblqsulr .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1753,7 +1748,7 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#vpehyfeqvd .gt_last_grand_summary_row_top {
+#jbpblqsulr .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1763,11 +1758,11 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#vpehyfeqvd .gt_striped {
+#jbpblqsulr .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#vpehyfeqvd .gt_table_body {
+#jbpblqsulr .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1776,7 +1771,7 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#vpehyfeqvd .gt_footnotes {
+#jbpblqsulr .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1790,7 +1785,7 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#vpehyfeqvd .gt_footnote {
+#jbpblqsulr .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1799,7 +1794,7 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   padding-right: 5px;
 }
 
-#vpehyfeqvd .gt_sourcenotes {
+#jbpblqsulr .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1813,7 +1808,7 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#vpehyfeqvd .gt_sourcenote {
+#jbpblqsulr .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1821,72 +1816,72 @@ f41 8.267250  0.003482957  0.015052932</code></pre>
   padding-right: 5px;
 }
 
-#vpehyfeqvd .gt_left {
+#jbpblqsulr .gt_left {
   text-align: left;
 }
 
-#vpehyfeqvd .gt_center {
+#jbpblqsulr .gt_center {
   text-align: center;
 }
 
-#vpehyfeqvd .gt_right {
+#jbpblqsulr .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#vpehyfeqvd .gt_font_normal {
+#jbpblqsulr .gt_font_normal {
   font-weight: normal;
 }
 
-#vpehyfeqvd .gt_font_bold {
+#jbpblqsulr .gt_font_bold {
   font-weight: bold;
 }
 
-#vpehyfeqvd .gt_font_italic {
+#jbpblqsulr .gt_font_italic {
   font-style: italic;
 }
 
-#vpehyfeqvd .gt_super {
+#jbpblqsulr .gt_super {
   font-size: 65%;
 }
 
-#vpehyfeqvd .gt_footnote_marks {
+#jbpblqsulr .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#vpehyfeqvd .gt_asterisk {
+#jbpblqsulr .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#vpehyfeqvd .gt_indent_1 {
+#jbpblqsulr .gt_indent_1 {
   text-indent: 5px;
 }
 
-#vpehyfeqvd .gt_indent_2 {
+#jbpblqsulr .gt_indent_2 {
   text-indent: 10px;
 }
 
-#vpehyfeqvd .gt_indent_3 {
+#jbpblqsulr .gt_indent_3 {
   text-indent: 15px;
 }
 
-#vpehyfeqvd .gt_indent_4 {
+#jbpblqsulr .gt_indent_4 {
   text-indent: 20px;
 }
 
-#vpehyfeqvd .gt_indent_5 {
+#jbpblqsulr .gt_indent_5 {
   text-indent: 25px;
 }
 
-#vpehyfeqvd .katex-display {
+#jbpblqsulr .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#vpehyfeqvd div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#jbpblqsulr div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>

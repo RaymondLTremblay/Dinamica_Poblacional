@@ -1,6 +1,29 @@
 # COMPADRE y Orquideas {#Compadre}
 
-Raymond y Roberto
+Por: Raymond y Roberto
+
+#### Librerías de R requeridas para el siguiente módulo
+
+```{r Compr1, message=FALSE}
+
+
+library(Rcompadre) # Paquete para trabajar con la base de datos de COMPADRE y COMADRE
+library(tidyverse) # Paquete para activar multiples paquetes
+library(gt) # Paquete para formatear tablas
+library(kableExtra) # Paquete para formatear tablas
+library(readxl)
+library(broom)
+library(ggdist)
+library(distributional)
+library(leaflet)
+library(Rage) # función para calcular el largo de vida esperada
+library(car)
+library(popdemo)
+library(WRS2)
+
+```
+
+
 
 Uno de los esfuerzos más grandes en la ecología de poblaciones es la base de datos de COMPADRE y COMADRE. COMPADRE es una base de datos de matrices de transición de estados de poblaciones de plantas y COMADRE es una base de datos de matrices de transición de estados de poblaciones de animales. Estas bases de datos son una fuente de información para evaluar la dinámica de poblaciones de plantas y animales. En este capítulo se presenta una introducción a la base de datos de COMPADRE y algunas de las funciones en los paquetes de **Rcompadre** y **Rage**. La información aquí no sustituye la información provista en la página web de COMPADRE \<<https://compadre-db.org/>\> y los tutoriales que se encuentran en la siguiente página \<<https://compadre-db.org/Education>\>.
 
@@ -8,17 +31,10 @@ El valor de las bases de datos es tener en un mismo sitio una gran cantidad de i
 
 En este capítulo se aprende a utiliza la base de datos de COMPADRE para evaluar la dinámica de poblaciones de orquídeas. Se evalúa como extraer diferentes tipos de datos para responder a preguntas específicas.
 
-## Activar los siguiente paquetes
-
-```{r Compr1, message=FALSE}
-library(Rcompadre) # Paquete para trabajar con la base de datos de COMPADRE y COMADRE
-library(tidyverse) # Paquete para activar multiples paquetes
-library(gt) # Paquete para formatear tablas
-library(kableExtra) # Paquete para formatear tablas
-```
 
 ```{r Compr2, echo=FALSE}
-library(tidyverse)
+
+
 
 rlt_theme <- theme(axis.title.y = element_text(colour="grey20",size=10,face="bold"),
         axis.text.x = element_text(colour="grey20",size=10, face="bold"),
@@ -62,6 +78,7 @@ Para tener acceso a los datos cuando no esta conectado al internet es necesario 
 load(dirección/al/archivo/a/su/proyecto/de/RStudio) si tiene el repositorio en su computadora (preferiblemente en su proyecto de RStudio)
 
 ```{r Compr3, echo=FALSE}
+
 #load("~/Library/CloudStorage/Dropbox/GitHub_Dropbox_Drive/GitHub/Diagnostico_Poblacional/Diagnostico_Poblacional/COMPADRE_v.6.23.5.0.RData")
 
 #load("~/Dropbox/GitHub_Dropbox_Drive/GitHub/Diagnostico_Poblacional/Diagnostico_Poblacional/COMPADRE_v.6.23.5.0.RData") # work computer
@@ -74,6 +91,7 @@ load(dirección/al/archivo/a/su/proyecto/de/RStudio) si tiene el repositorio en 
 -   Usando la función *cdb_fetch()* se puede bajar los datos directamente de la pagina de web de COMPADRE. Esta función se encuentra en el paquete de **Rcompadre**.
 
 ```{r Compr4}
+
 compadre <- cdb_fetch("compadre") # Usar este código para bajar los datos del repositorio de COMPADRE.
 
 
@@ -86,6 +104,7 @@ compadre <- cdb_fetch("compadre") # Usar este código para bajar los datos del r
     -   Hay 59 variables en la base de datos de COMPADRE.
 
 ```{r Compr5}
+
 #TodasSp=as_cdb(compadre)  # Un paso critico: Convertir la base de datos anterior COM(P)ADRE (de clase 'list') en la base en un objeto CompadreDB (COMPADRE Database)
 
 TodasSp=compadre
@@ -106,6 +125,7 @@ dim(TodasSp) # La base de datos de COMPADRE tiene 8994 filas y 59 columnas (vari
 **This shows that the species added *Epidendrum xanthinum* is not yet included in the data base**
 
 ```{r Compr6}
+
 Epi = TodasSp %>% 
   filter(Genus %in% c("Epipactis")) # Filtrar la información de *Epipactis* en la base de datos.
 Epi # Nota que en el genero *Epipactis*, tenemos 51 fila, pero todas son de la misma especie de dos estudios distintos. 
@@ -118,6 +138,7 @@ Epi # Nota que en el genero *Epipactis*, tenemos 51 fila, pero todas son de la m
 -   Extraer (filter) solamente las especies de la familia **Orchidaceae** de la base completa de datos de COMPADRE.
 
 ```{r Compr7}
+
 index_O=TodasSp %>% 
  filter(Family %in% c("Orchidaceae")) # Extraer la orquídeas de la base de datos. 
 
@@ -165,6 +186,7 @@ kbl(Especies_unicas)
 La base de datos de orquídea tiene un total de 647 filas con 59 variables, por consecuencia tiene 647 matrices. Esas matrices de la misma especie son de diferentes poblaciones, tiempo o un análisis teóricos. Nota que las 647 no son de diferentes especies, pero de especies que pueden haber sido muestreado en diferentes poblaciones o años.
 
 ```{r Compr10}
+
 dim(index_O)
 
 ```
@@ -176,6 +198,7 @@ dim(index_O)
 Para saber cuantos especies distintas y los manuscritos asociado a los estudios. En este caso los de esas 53 fuentes de información publicada, revisada por pares, tesis o informes técnicos. Algunas especies fueron estudiada y publicada en más de un manuscrito. Nota que las 9 primeras filas corresponde a 9 especies de *Caladenia* publicado en el mismo articulo. Se termina con 53 especies/publicaciones.
 
 ```{r Compr11}
+
 index_O |> select(mat, SpeciesAccepted, DOI_ISBN) |>
   filter(!duplicated(paste0(pmax(SpeciesAccepted, DOI_ISBN), pmin(SpeciesAccepted, DOI_ISBN))))
 
@@ -190,6 +213,7 @@ Igualmente podemos evaluar cuantos distintos autores son responsable de esas pub
 ¿HAY una manera de contabilizar los nombres específicos (únicos), no por grupo? Para saber quien más publica sobre orquídeas.
 
 ```{r Compr13}
+
 unique(index_O$Authors)
 ```
 
@@ -198,6 +222,7 @@ unique(index_O$Authors)
 En el siguiente script se enseña como extraer la información de una especie específica. En este caso se selecciona la especie **Telipogon helleri**.
 
 ```{r Compr14}
+
 Th=index_O %>% select(SpeciesAccepted, mat, Authors, DOI_ISBN, MatrixDimension) %>% 
   filter(SpeciesAccepted %in% c("Telipogon helleri"))
 
@@ -212,6 +237,7 @@ En el siguiente script se enseña la matrices de **Telipogon helleri** y las eta
 La información incluye la clases/etapas que los autores usaron. El ciclo de vida incluyo 3 etapas, 1 inmaduras (S1-2) y 2 etapas de adultos (S3 y S4).
 
 ```{r Compr15}
+
 Th$mat
 ```
 
@@ -223,6 +249,7 @@ NOTA: OrganismType es una variable que indica si la orquídea es un epifita o te
 - Todos las *Lepanthes* son epifitas, pero hay unas que son terrestres en la base de datos. - Todas las *Caladenia* son terrestres, pero hay unas que son epifitas en la base de datos.
 
 ```{r chap16}
+
 #names(index_O) Los nombres de las variables
 SPECIES_O=index_O %>% select(StudyStart, StudyEnd, SpeciesAccepted, YearPublication, Authors, DOI_ISBN, OrganismType, MatrixPopulation, mat) %>% 
   group_by(SpeciesAccepted, YearPublication, OrganismType, StudyStart, StudyEnd) %>% 
@@ -245,6 +272,7 @@ SPECIES_O
 -   Cual es la frecuencia de cantidad de poblaciones por especies en la base de datos. La mayoría de los estudios usaron una sola población, pero hay estudios que usaron hasta 18 poblaciones distintas. Estas poblaciones pudiese ser de diferentes publicaciones o de las mismas poblaciones pero de diferentes fuentes.
 
 ```{r Compr17}
+
 as.data.frame(table(SPECIES_O$n_populations))
 
 
@@ -393,7 +421,7 @@ Una segunda alternativa es usar la función **map_dbl** de la librería **purrr*
 
 ```{r Compr23}
 
-library(purrr)
+
 ## con el paquete popdemo
 lambdaVals1 <- map_dbl(matA(Mat_erg_irred), ~popdemo::eigs(.x, what="lambda"))
  
@@ -410,6 +438,7 @@ lambdaVals2 <- map_dbl(matA(Mat_erg_irred), ~popbio::lambda(.x))
 ## Resolve the name of this data frame... Give it a more reasonable name
 
 ```{r Compr24}
+
 New_Data=Mat_erg_irred %>% 
   mutate(OrganismType = case_when(
     Genus ==  "Caladenia" & OrganismType == "Epiphyte" ~ "Herbaceous perennial",
@@ -438,7 +467,7 @@ x_epif <- subset(Compadre_flagged_epif, check_NA_A == FALSE & check_ergodic == T
 
 #sapply(matA(x_epi), popdemo::eigs, what="lambda")
 
-library(purrr)
+
 lambda_epif <- map_dbl(matA(x_epif), ~popdemo::eigs(.x, what="lambda"))
 
 #Or with popbio, which avoids some warning messages…
@@ -448,6 +477,7 @@ lambda_terr <- map_dbl(matA(terrestres), ~popbio::lambda(.x))
 Con la función evaluando las especies terrestres y epifitas uno observa que las especies terrestres tienen valores propios de lambda más dispersos que las especies epifitas, y aunque los promedios son distintos la mediana es similar.
 
 ```{r Compr26}
+
 summary(lambda_epif)
 hist(lambda_epif, main = "Lambda values")
 
@@ -458,6 +488,7 @@ hist(lambda_terr, main = "Lambda values")
 Para visualizar loa datos en una figura de **ggplot2**, hay que convertir estas filas en un data.frame y añadir una columna con el tipo de habitad, renombrar la columna lambda y unir los dos data.frames en uno solo.
 
 ```{r Compr27}
+
 df_Lamb_epif=as.data.frame(lambda_epif)
 df_Lamb_epi=df_Lamb_epif %>% 
   add_column(Habit_Type = "Epífitas") %>% 
@@ -486,10 +517,11 @@ ggsave("Figures/Terr_Epi_lambda.png")
 Para calcular los coeficientes (el promedio) y determinar si estos son significativamente diferentes entre los grupos se puede usar un modelo lineal y la función **lm**. En este caso se usa la variable **Habit_Type** para predecir el valor propio de lambda. Añadiendo un **-1** al modelo hace que los coeficientes para cada grupo este en la tabla de salida y no hay que hacer un calculo suplementario. Note que lo más interesante de este análisis es que las especies terrestres tienen menos dispersión cuando evaluado con el error estándar que las especies epifitas, y aunque los cuartiles son más amplios (análisis anterior).
 
 ```{r Compr29}
+
 model_lambda=lm(lambda ~ Habit_Type-1, data=ALL_Lambdas)
 summary(model_lambda)
 
-library(broom) # paquete para hacer tablas de modelos
+
 tidy(model_lambda) 
 
 ```
@@ -498,8 +530,7 @@ Uno puedo visualizar estas distribuciones usando la librería **ggdist** y **dis
 
 ```{r Compr30}
 
-library(ggdist)
-library(distributional)
+
 model_lambda %>%
   tidy() %>%
   ggplot(aes(y = term)) +
@@ -511,6 +542,7 @@ model_lambda %>%
 La gráfica anterior puede esconder la dispersión de los datos, específicamente los datos sesgados, por lo que se puede añadir los datos originales a la figura. En el siguiente caso se añade un **\|** por cada lambda en la posición inferior de la figura. Nota ahora que la dispersión de los datos es varia si uno mira la distribución con el promedio y el error estandard versus los datos originales, los **\|**. es claro que con esta figura uno puede apreciar la dispersión de los datos y la distribución de los datos. Esta gráfica da muy diferente al anterior con una perspectiva más completa de los datos, enfocado a en los datos fuera de datos centrado de la distribución.
 
 ```{r Compr31}
+
 ALL_Lambdas %>%
   expand(Habit_Type) %>%
   augment(model_lambda, newdata = ., se_fit = TRUE) %>%
@@ -536,16 +568,13 @@ La lista presente corresponde a los datos de COMPADRE y suplementada con busqued
 Lista de números de poblaciones únicas por especies.
 
 ```{r}
-library(readxl)
-
 
 Orchid_data_DOI_Diana_3a <- read_excel("data/Orchid_data_DOI_Diana_3a.xlsx")
-
-
 
 ```
 
 ```{r Compr32}
+
 Lat_Long=Orchid_data_DOI_Diana_3a %>% 
   select(SpeciesAccepted, Lon, Lat, OrganismType) |> 
   distinct(SpeciesAccepted, Lon, Lat, OrganismType)
@@ -557,6 +586,7 @@ Lat_Long=Orchid_data_DOI_Diana_3a %>%
 Usamos el paquete ggplot2 para visualizar la distribución de las orquídeas en la base de datos de COMPADRE. En este caso se usa la función **borders** para añadir los bordes de los países al mapa. La función **borders** usa funciones en el paquete **maps** para añadir los bordes de los países al mapa.
 
 ```{r Compr35}
+
 ggplot2::ggplot(Lat_Long, aes(Lon, Lat,colour=OrganismType)) +
   borders(database = "world", fill = "grey80", col = NA) +
   geom_point(size = 1.0, alpha = 0.5)
@@ -571,8 +601,6 @@ Aquí se usa el paquete **Leaflet** para mapear los sitios de muestreo de las es
 Se observa una disparidad en la cantidad de sitios de muestreo entre las especies, con algunas especies con muchos sitios de muestreo y otras con pocos. Las poblaciones en azul son plantas epifitas y las rojas son orquídeas terrestres. Note la disparidad, las especies terrestres estan mayormente en Europa y Norte América, con poca representación en Asia y ninguna en Africa. La especies epifitas están todas en el Caribe y Centro América (México) y ninguna en Africa, Asia y Australia.
 
 ```{r Compr35a}
-library(leaflet)
-
 
 
 PointUsePalette <- leaflet::colorFactor(palette = c("blue", "red"),
@@ -603,7 +631,7 @@ Para calcular y comparar los datos es importante que la matriz sea del mismo lar
 Aquí el script crea un data frame de los valores del largo de vida para cada especies con matrices de transiciones de un año.
 
 ```{r Compr36}
-library(Rage) # función para calcular el largo de vida esperada
+
 lifeExpectancy <- function(matU, startLife) {
   N <- solve(diag(nrow(matU)) - matU)
   return(colSums(N)[startLife])
@@ -639,6 +667,7 @@ OrchidLS=compadre_life_expect %>%
 ```
 
 ```{r Compr37}
+
 New_Data %>% 
   filter(ProjectionInterval == 1.0) |> # filtrar para matriz de un año
   filter(MatrixComposite == "Mean", # filtrar para la matriz promedia
@@ -738,6 +767,7 @@ ggsave("Figures/Caladenia_Life_Span.png")
 ```
 
 ```{r Compr41, echo=FALSE, eval=FALSE}
+
 unique(compadre_life_expect$OrganismType) #Test difference in life span.
 
 t.test(life_expectancy~OrganismType, data=compadre_life_expect)
@@ -746,7 +776,7 @@ t.test(life_expectancy~OrganismType, data=compadre_life_expect)
 shapiro.test(compadre_life_expect$life_expectancy) # Not normaly distributed
 
 
-library(car)
+
 
 leveneTest(life_expectancy~OrganismType, data=compadre_life_expect) # equal variance but not notmaly distributed
 
@@ -759,7 +789,7 @@ Para el siguiente análisis se necesita instalar el paquete **WRS2**.
 Y se necesita cargar el archivo de funciones de **Rallfun-v38.txt** que se encuentra en el siguiente enlace \<<https://github.com/rrwilcox/Rallfun>\> y guardarlo en su directorio de trabajo. Pudiese ser que haya versiones más recientes de este archivo. Nota que la dirección abajo funciona para mi computadora, uds tienen que ajustar la dirección del archivo a su directorio de trabajo.
 
 ```{r Compr42, echo=FALSE, eval=FALSE}
-library(WRS2)
+
 source("/Users/rlt/Library/CloudStorage/Dropbox/GitHub_Dropbox_Drive/GitHub/Diagnostico_Poblacional/Diagnostico_Poblacional/Rallfun-v38.txt", chdir = T) # Home computer
 #source("/Users/rlt/Dropbox/METAS+COHORT_D/Rallfun-v38.txt", chdir = T)
 #source("/Users/rlt/Dropbox/Ackermanstuff/Pollinator_Interaction/Specificity_Index_pollinators/Rallfun-v38.txt", chdir = T) ## Work laptop Computer
@@ -767,6 +797,7 @@ source("/Users/rlt/Library/CloudStorage/Dropbox/GitHub_Dropbox_Drive/GitHub/Diag
 ```
 
 ```{r Compr43, eval=FALSE, echo=FALSE}
+
 unique(compadre_life_expect$OrganismType)
 
 Cf=cdb_flatten(compadre_life_expect)
@@ -786,8 +817,7 @@ yuenbt(YSEC_T$life_expectancy, YSEC_E$life_expectancy, alpha=.05, nboot=10000, s
 ```
 
 ```{r Compr44,  echo=FALSE, eval=FALSE}
-library(Rcompadre)
-library(popdemo)
+
 data(Compadre)
 
 
@@ -816,9 +846,10 @@ Compadre$null_stages <- sapply(matA(Compadre), NullStages)
 ### Calcular el promedio y la varianza en la expectativa de vida de un modelo de matriz poblacional
 
 ```{r Compr45,  echo=FALSE, eval=FALSE}
+
 # función para calcular la esperanza de vida
 
-library(Rage)
+
 data(mpm1)
 
 life_expect_mean(mpm1$matU, start = 1)

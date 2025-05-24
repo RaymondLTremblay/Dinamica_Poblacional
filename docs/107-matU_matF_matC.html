@@ -414,6 +414,19 @@ div.csl-indent {
 <section id="MatricesTFC" class="level1">
 <h1>Matrices de transición, fecundidad y clonal</h1>
 <p>Raymond L. Tremblay</p>
+<section id="librerías-de-r-requeridas-para-el-siguiente-módulo" class="level4">
+<h4 class="anchored" data-anchor-id="librerías-de-r-requeridas-para-el-siguiente-módulo">Librerías de R requeridas para el siguiente módulo</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rcompadre)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
 <section id="tres-tipos-de-matrices" class="level2">
 <h2 class="anchored" data-anchor-id="tres-tipos-de-matrices">Tres tipos de matrices</h2>
 <p>Para facilitar los análisis e interpretaciones es necesario tener claro el ciclo de vida de la especie y el origen de los parámetros de transiciones, fecundidades y clonaje. Para lo cual, hay que recordar que la matriz A (matA), para evaluar varios de los parámetros del crecimiento poblacional, es el resultado de la suma de las submatrices de transición, de fecundidad y de clonación. Un ejemplo de por qué es necesario crear submatrices es que, para calcular la supervivencia promedia y sus intervalos de confianza, se necesita la matriz de transiciones <strong>matU</strong> separado de la matriz de fecundidad, mientras que para calcular la tasa de crecimiento poblacional, se necesita <strong>matA</strong>. En adición si uno quiere un estimado de la endogamia es importante reconocer la importancia de la clonación en la dinámica poblacional, se necesita incluir <strong>matC</strong>. Por consecuencia, es importante tener claro el ciclo de vida y la forma de reproducción de la especie que se está estudiando.</p>
@@ -437,19 +450,17 @@ div.csl-indent {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>matU <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.3</span>, <span class="fl">0.05</span>),</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.001</span>, <span class="fl">0.4</span>, <span class="fl">0.8</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>stages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Plantulas"</span>, <span class="st">"Juvenil"</span>, <span class="st">"Adulto"</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(matU, <span class="at">stages=</span>stages)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>matU <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.3</span>, <span class="fl">0.05</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.001</span>, <span class="fl">0.4</span>, <span class="fl">0.8</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>stages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Plantulas"</span>, <span class="st">"Juvenil"</span>, <span class="st">"Adulto"</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(matU, <span class="at">stages=</span>stages)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-e7c15880d279e10e69bd" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-e7c15880d279e10e69bd">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Plantulas\" -> \"Juvenil\" -> \"Adulto\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"Plantulas\" -> \"Juvenil\" -> \"Adulto\" [style=invis] } [style=invis] \"Plantulas\" -> \"Plantulas\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.1\"]\n\"Plantulas\" -> \"Juvenil\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.5\"]\n\"Plantulas\" -> \"Adulto\"[minlen=6,fontsize=10,color=grey,xlabel=\" 0.001\"]\n\"Juvenil\" -> \"Juvenil\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.3\"]\n\"Juvenil\" -> \"Adulto\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.4\"]\n\"Adulto\" -> \"Juvenil\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.05\"]\n\"Adulto\" -> \"Adulto\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.8\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-504529df5b3b7cf16bdb" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-504529df5b3b7cf16bdb">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Plantulas\" -> \"Juvenil\" -> \"Adulto\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"Plantulas\" -> \"Juvenil\" -> \"Adulto\" [style=invis] } [style=invis] \"Plantulas\" -> \"Plantulas\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.1\"]\n\"Plantulas\" -> \"Juvenil\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.5\"]\n\"Plantulas\" -> \"Adulto\"[minlen=6,fontsize=10,color=grey,xlabel=\" 0.001\"]\n\"Juvenil\" -> \"Juvenil\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.3\"]\n\"Juvenil\" -> \"Adulto\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.4\"]\n\"Adulto\" -> \"Juvenil\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.05\"]\n\"Adulto\" -> \"Adulto\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.8\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -459,19 +470,17 @@ div.csl-indent {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>matF <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.4</span>, <span class="fl">1.8</span>),</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>stages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Plantulas"</span>, <span class="st">"Ind Pequeños"</span>, <span class="st">"Ind Grande"</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(matF, <span class="at">stages=</span>stages)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>matF <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.4</span>, <span class="fl">1.8</span>),</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>stages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Plantulas"</span>, <span class="st">"Ind Pequeños"</span>, <span class="st">"Ind Grande"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(matF, <span class="at">stages=</span>stages)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-8a80b30d931d9912f06b" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-8a80b30d931d9912f06b">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Plantulas\" -> \"Ind Pequeños\" -> \"Ind Grande\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"Plantulas\" -> \"Ind Pequeños\" -> \"Ind Grande\" [style=invis] } [style=invis] \"Ind Pequeños\" -> \"Plantulas\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.4\"]\n\"Ind Grande\" -> \"Plantulas\"[minlen=-6,fontsize=10,color=grey,xlabel=\" 1.8\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-da3a5578519f0e4289b0" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-da3a5578519f0e4289b0">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Plantulas\" -> \"Ind Pequeños\" -> \"Ind Grande\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"Plantulas\" -> \"Ind Pequeños\" -> \"Ind Grande\" [style=invis] } [style=invis] \"Ind Pequeños\" -> \"Plantulas\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.4\"]\n\"Ind Grande\" -> \"Plantulas\"[minlen=-6,fontsize=10,color=grey,xlabel=\" 1.8\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -484,15 +493,6 @@ div.csl-indent {
 <h3 class="anchored" data-anchor-id="ramet-y-genet">Ramet y Genet</h3>
 <p>Cuando se estudia especies con clonación hay que diferenciar entre el crecimiento que es el “ramet” y un “genet”. Los “genets” son la suma de todas las partes “los ramets” que tiene la misma genética. Los “ramet”, son las partes individuales del individuo. En orquídea se podría considerar cada seudobulbo como un ramet y la suma de todos los seudobulbo como el “genet”. Hay acercamiento para tomar en cuenta la adecuación de los “individuos” en la matriz y por consecuencia integrar el concepto de clonación en los estimados, vea:<span class="citation" data-cites="mcgraw1996estimation">(<a href="#ref-mcgraw1996estimation" role="doc-biblioref">McGraw and Caswell 1996</a>)</span>.</p>
 <p>A continuación vemos un ejemplo de una matriz de clonación. El único ejemplo en la base de datos de COMPADRE es el de <em>Cypripedium calceolus</em> <span class="citation" data-cites="garcia2010living">(<a href="#ref-garcia2010living" role="doc-biblioref">Garcı́a, Goni, and Guzmán 2010</a>)</span>. Aprovechamos para demostrar como extraer matrix caracteristica especifica de la base de datos de COMPADRE.</p>
-<p>Activar paquetes</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rcompadre)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
 </section>
 <section id="decargar-la-base-de-datos-de-compradre" class="level3">
 <h3 class="anchored" data-anchor-id="decargar-la-base-de-datos-de-compradre">Decargar la base de datos de compradre</h3>
@@ -764,8 +764,8 @@ matC:
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(matC[[<span class="dv">1</span>]], <span class="at">stages =</span> <span class="fu">c</span>(<span class="st">"Dormant"</span>, <span class="st">"Smallest"</span>, <span class="st">"Small"</span>, <span class="st">"Inter"</span>, <span class="st">"Large"</span>, <span class="st">"ExtraLarge"</span>), <span class="at">node_order =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>, <span class="dv">6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-2e894b8b527bbb251ea6" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-2e894b8b527bbb251ea6">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Smallest\" -> \"Dormant\" -> \"Small\" -> \"Inter\" -> \"Large\" -> \"ExtraLarge\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"Smallest\" -> \"Dormant\" -> \"Small\" -> \"Inter\" -> \"Large\" -> \"ExtraLarge\" [style=invis] } [style=invis] \"Inter\" -> \"Small\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.17\"]\n\"Large\" -> \"Small\"[minlen=-6,fontsize=10,color=grey,xlabel=\" 0.06\"]\n\"ExtraLarge\" -> \"Small\"[minlen=-9,fontsize=10,color=grey,xlabel=\" 0.09\"]\n\"ExtraLarge\" -> \"Inter\"[minlen=-6,fontsize=10,color=grey,xlabel=\" 0.15\"]\n\"ExtraLarge\" -> \"Large\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.06\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-b3963d518e7e60d7aace" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-b3963d518e7e60d7aace">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"Smallest\" -> \"Dormant\" -> \"Small\" -> \"Inter\" -> \"Large\" -> \"ExtraLarge\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"Smallest\" -> \"Dormant\" -> \"Small\" -> \"Inter\" -> \"Large\" -> \"ExtraLarge\" [style=invis] } [style=invis] \"Inter\" -> \"Small\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.17\"]\n\"Large\" -> \"Small\"[minlen=-6,fontsize=10,color=grey,xlabel=\" 0.06\"]\n\"ExtraLarge\" -> \"Small\"[minlen=-9,fontsize=10,color=grey,xlabel=\" 0.09\"]\n\"ExtraLarge\" -> \"Inter\"[minlen=-6,fontsize=10,color=grey,xlabel=\" 0.15\"]\n\"ExtraLarge\" -> \"Large\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.06\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <section id="ejemplo-de-inclusión-de-matc-en-otras-familias" class="level3">

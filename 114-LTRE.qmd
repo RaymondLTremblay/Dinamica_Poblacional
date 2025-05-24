@@ -1,11 +1,20 @@
 # Experimento de Respuesta de Tabla de Vida {#ERTV}
 
-```{r, message=FALSE}
+por : Adriana Ramírez-Martínez
+
+#### Librerías de R requeridas para el siguiente módulo
+
+```{r, message=FALSE, warning=FALSE}
+
 library(tidyverse)
 library(gt)
+library(Rage)
+library(DiagrammeR)
+library (popbio)
+
 ```
 
-por : Adriana Ramírez-Martínez
+
 
 ## Introducción a **Experimento de Respuesta de Tabla de Vida**
 
@@ -50,8 +59,7 @@ Cuadro 1. Matrices de proyección poblaciones de dos poblaciones de *Oncidiun br
 Primeramente se creó el ciclo de vida por especie de hospedero utilizando el siguiente código:
 
 ```{r LTRE1_Q_martinezii, echo=TRUE}
-library(Rage)
-library(DiagrammeR)
+
 
 
 matmart <- rbind(
@@ -70,6 +78,7 @@ graph$min_len <- (as.numeric(graph$to) - as.numeric(graph$from)) * 4 # calcular 
 ```
 
 ```{r LTRE2, echo=FALSE}
+
 graph$col <- c(
   "steelblue4", "PaleGreen4", "MediumOrchid4", "steelblue4", "PaleGreen4", "Goldenrod1",
   "MediumOrchid4", "steelblue4", "PaleGreen4", "Goldenrod1", "MediumOrchid4", "steelblue4"
@@ -110,9 +119,6 @@ Figura x: Ciclo de vida de *Oncidium brachyandrum* creciendo sobre *Quercus mart
 
 ```{r LTRE3_Quercus_rugosa, echo=TRUE}
 
-
-library(Rage)
-library(DiagrammeR)
 
 matrug <- rbind(
   c(0.64, 0.06, 0, 0.0045),
@@ -178,8 +184,7 @@ Figura 3. Forma de calcular las ecuaciones para la base de ERTV.
 En un archivo nuevo de Excel se arma la base, con la columna de vital rate al principio, seguido por las especies de hospederos (tratamientos) poniendo primeramente el control y después la columna de matrix (Figura 4). Esta base contendrá las ecuaciones de la matriz de referencia. Como la matriz de *Q. martinezii* tuvo los valores más altos de lambda está ultima de colocará en nuestra base que utilizaremos para correr el análisis ERTV.
 
 ```{r LTRE4, echo=FALSE}
-library(tidyverse)
-library(gt)
+
 Oncidium=tribble(~"names.vitalrate", ~"Martinezzi", ~"Rugosa", ~"matrix",
              "lambda",1.30, 0.93,  "",
              "s1",    0.8961, .8636,  "0",
@@ -219,11 +224,8 @@ Subir la base de datos de la carpeta de trabajo y cargarla en R.
 -   Nota que debería observar la base de datos en la consola de R para verificar que se haya cargado correctamente con los mismos valores que en la hoja de Excel.
 
 ```{r LTRE5, echo=TRUE}
+
 # Asegurarse de tener instalado y cargado el paquete 'popbio' package 
-
-
-
-library (popbio)
 
 # oncidium<-read.table("data/vitalratesoncidium.txt", sep="\t", header=TRUE, stringsAsFactors=FALSE, fill=TRUE) 
      # Aqui la alternativa si tiene los datos en una hoja de Excel
@@ -237,6 +239,7 @@ Debido a que la columna de matrix contiene más filas con datos nos aparecerá l
 Para extraer los nombres de las tasas vitales (de la fila 2 a la 13), sin incluir el valor de *λ* el cual está en la primera
 
 ```{r LTRE6}
+
 razonvital<-Oncidium$names.vitalrate[2:13] 
 
 razonvital # mostrar los nombres del objeto razonvital
@@ -260,6 +263,7 @@ Martinezzi
 Extraer tasas vitales de de la orquidea *Oncidium brachyandrum* que crecen sobre *Q. rugosa* y dejar a lambda a un lado
 
 ```{r LTRE8}
+
 Rugosa<-Oncidium$Rugosa [2:13]
 names(Rugosa)<-razonvital # asignar los nombres de las tasas vitales
 Rugosa
@@ -268,6 +272,7 @@ Rugosa
 ### Extraer los elementos de matriz utilizando los nombres de las tasas vitales
 
 ```{r LTRE9}
+
 matrix.el<-as.expression(parse(text=Oncidium$matrix)) 
 matrix.el
 expression(s1*(1-g12), s1*g12, 0, 0, s2*g21, s2*(1-g23-g21), 
@@ -284,6 +289,7 @@ Nota que usando la función vitalsens se pueden calcular las sensibilidades y el
 ## HAY algo extraño en la matriz de sensibilidades y elasticidades, no se ve bien., hay elasticidad negativas, y esto no es posible. Hay que revisar el código.
 
 ```{r LTRE10}
+
 Martinezzi.se<-vitalsens(matrix.el, Martinezzi)
 Martinezzi.se
 ```
@@ -291,6 +297,7 @@ Martinezzi.se
 #### *Quercus rugosa*
 
 ```{r chap12_9}
+
 Rugosa.se<-vitalsens(matrix.el, Rugosa)
 Rugosa.se
 ```
@@ -300,6 +307,7 @@ Rugosa.se
 En esta parte se calculará la diferencia entre las tasas vitales de *Oncidium brachyandrum* creciendo sobre *Q. martinezii* y *Q. rugosa*. ¿Como se interpreta estos resultados?
 
 ```{r LTRE11}
+
 vr.dif.Martinezzi.Rugosa<-Rugosa-Martinezzi 
 vr.dif.Martinezzi.Rugosa
 ```
@@ -309,6 +317,7 @@ vr.dif.Martinezzi.Rugosa
 En este paso se calculará la tasa vital media para *Oncidium brachyandrum* creciendo sobre *Q. martinezii* y *Q. rugosa*. La tasa vital media se calcula sumando las tasas vitales de las dos matrices y dividiendo entre 2.
 
 ```{r LTRE12}
+
 vr.promedia.Martinezzi.Rugosa<-((Rugosa+Martinezzi)/2) #calcular la tazas vitales parta la matrix promedia
 
 # Nota: si se tuvieran 3 matrices se sumarían las tasas vitales de las tres dividido por 3. 
@@ -321,6 +330,7 @@ vr.promedia.Martinezzi.Rugosa
 En este paso se calculará las sensibilidades y elasticidades para la matriz promedia de *Oncidium brachyandrum* creciendo sobre *Q. martinezii* y *Q. rugosa*.
 
 ```{r LTRE13}
+
 media.sens.Martinezzi.Rugosa<-vitalsens(matrix.el, vr.promedia.Martinezzi.Rugosa) 
 media.sens.Martinezzi.Rugosa
 ```
@@ -328,6 +338,7 @@ media.sens.Martinezzi.Rugosa
 ### Calcular las contribuciones de ERTV y ver los resultados
 
 ```{r chap12_13}
+
 LTRE.contrib.Martinezzi.Rugosa<-vr.dif.Martinezzi.Rugosa*media.sens.Martinezzi.Rugosa$sensitivity  
 LTRE.contrib.Martinezzi.Rugosa
 ```
@@ -335,6 +346,7 @@ LTRE.contrib.Martinezzi.Rugosa
 ### Resultados de ERTV
 
 ```{r LTRE14}
+
 LTRE.resultados.Martinezzi.Rugosa<- data.frame(razonvital=razonvital,
                                                rug.vr=Rugosa, 
                                             mart.vr=Martinezzi, 
@@ -342,7 +354,7 @@ LTRE.resultados.Martinezzi.Rugosa<- data.frame(razonvital=razonvital,
                                             media.sens=media.sens.Martinezzi.Rugosa$sensitivity, 
                                             contribucion=LTRE.contrib.Martinezzi.Rugosa)
 
-library(gt)
+
 gt(LTRE.resultados.Martinezzi.Rugosa)
 ```
 
@@ -351,6 +363,7 @@ gt(LTRE.resultados.Martinezzi.Rugosa)
 Se puede crear un gráfico de la contribucioón de cada tasa vitales sobre la historia de vida de la especies comparando las dos matrix
 
 ```{r LTRE15}
+
 ggplot(LTRE.resultados.Martinezzi.Rugosa, aes(y=contribucion, x=razonvital, fill=razonvital))+
   geom_bar(stat="identity")+
   theme_minimal()+
@@ -367,6 +380,7 @@ De acuerdo con el análisis de elasticidad para cada una de las poblaciones de *
 Figure 6. Resultados de los análisis de elasticidad, para dos poblaciones de *Oncidium brachyandrum* creciendo sobre *Quercus martinezii* y *Q. rugosa*. Por proceso demográfico (a) y por estadío (b).
 
 ```{r LTRE16}
+
 ggplot(LTRE.resultados.Martinezzi.Rugosa, aes(y=media.sens, x=razonvital, fill=razonvital))+
   geom_bar(stat="identity")+
   theme_minimal()+

@@ -2,11 +2,17 @@
 
 Raymond L. Tremblay
 
-```{r CV_1}
+#### Librerías de R requeridas para el siguiente módulo
+
+
+
+
+```{r CV_1, messge=FALSE, warning=FALSE}
 
 #devtools::install_github("rich-iannone/DiagrammeR") # Instalar directamente de github para tener la versión más reciente
-library(Rage)
-library(DiagrammeR)
+library(Rage) # para crear diagramas de ciclo de vida y métricas de historia de vida 
+library(DiagrammeR) # para crear diagramas de ciclo de vida
+library(rsvg) # trabajar con imágenes 
 ```
 
 ## Introducción
@@ -27,8 +33,6 @@ El la matriz de transición de este ciclo de vida es la siguiente: 50% de la sem
 
 ```{r CV_2}
 
-library(DiagrammeRsvg) # paquete para salvar la figura
-library(rsvg) # paquete para salvar la figura
 # hidden code to produce figures
 matA <- rbind(
   c(0.0, 0.0, 3.2),
@@ -89,7 +93,6 @@ Nota aquí es que si este diagrama representa la recolección de datos en el cam
 
 ```{r CV_3}
 # hidden code to produce figures
-library(DiagrammeR)
 matA <- rbind(
   c(0.0, 0.0, 0.0, 3.2),
   c(0.5, 0.3, 0.0, 0.0),
@@ -161,8 +164,8 @@ El ciclo de vida es representada por 5 etapas. Los datos provienen de la figura 
 Nota aquí que se hizo un estimado de la cantidad de semillas producidas y la proporciones de semillas que germinan y se convierten en plántulas el siguiente año.
 
 ```{r CV_5}
-# hidden code to produce figures
-library(DiagrammeR)
+
+
 matA <- rbind(
   c(0.0,     0.0,  0.00, 52686, 127324),
   c(0.00022, 0.0,  0.00, 0.0,   0.0),
@@ -283,8 +286,8 @@ Es este trabajo se recolectaron datos de la etapa de plántula, juvenil, adulto 
 Las etapas que pasen a latente el próximo año son de color azul, los que se quedan en la misma etapa son de color roja (incluyendo de latente a latente), verde es crecimiento y amarillo es reproducción.
 
 ```{r CV7Prasophyllum_correctum}
-# hidden code to produce figures
-library(DiagrammeR)
+
+
 matA <- rbind(
   c(0.0, 0.0,     0.0125, 0.0),
   c(0.0, 0.2874,  0.375,  0.1364),
@@ -344,8 +347,8 @@ En el trabajo de Waite y Hutchings 1991, se recolectaron datos de la etapas vege
 El objetivo de la publicación era determinar la probabilidad de que un individuo con latencia de múltiples años (uno o dos) este vivo. Por consecuencia no incluye reproducción (nota que no hay linea amarilla). Las etapas que pasen a latente el próximo año son de color azul, los que se quedan en la misma etapa son de color roja, verde es de una etapa no latente.
 
 ```{r CV8_Ophrys}
-# hidden code to produce figures
-library(DiagrammeR)
+
+
 G1=matrix(c(0.0080, 0.0184,   0.0149, 0.0148,
             0.0180,  0.4249,  0.1214, 0.1214,
             0.1853,  0.2770,  0,      0,
@@ -405,6 +408,7 @@ Aquí se visualiza la matriz de *Orchis purpurea* de la publicación de [@jacque
 ##### 
 
 ```{r CV9}
+
 matA_Os=matrix(c(
 0.000, 0.000, 0, 0.00, 0.000, 84.88725,
 0.012, 0.000, 0, 0.00, 0.000,  0.00000,
@@ -467,8 +471,8 @@ La importancia de este capitulo es reconocer la diferencia entre la historia de 
 Pero eso no son los únicos problemas. La recolección de datos en el campo puede ser irreal dentro de un contexto de historia de vida general y la matemática que le corresponde. Aquí vemos un ejemplo de lo siguiente. Para mucho más detalles ver el capitulo "Impacto de datos sin sentidos". En la siguiente figura aparece tres errores comunes cuando se recolectan datos de la historia de vida de una especie. El primero es que no hay mortandad en una de las etapas (los juveniles), y el otro es que todos los individuos se mueren (las plántulas) o se quedan en la misma etapa (los adultos), resultando en un ciclo de vida donde no es posible pasar de una etapa a otra. Estos errores ocurren típicamente cuando el tamaño de muestra es pequeña o la probabilidad de transiciones es rara (por ejemplos los arboles grandes no fallecen). Nota que no hay flecha que va de plántulas a otros estados. Esos son tres errores típicos que se enfrenta cuando se usa análisis de dinámica poblacional en especies con transiciones poco comunes.
 
 ```{r CV10, echo=FALSE}
-# hidden code to produce figures
-library(DiagrammeR)
+
+
 matA <- rbind(
   c(0.0, 0.0, 3.2),
   c(0.0, 1.0, 0.1),
@@ -524,7 +528,8 @@ digraph {
 Nota aquí podemos usar otro paquete de R (Rage). La diferencia es que no se puede cambiar los colores de las lineas y los nodos. Es una opción más sencilla para crear diagramas de ciclo de vida. Y practico para publicaciones donde no se necesita cambiar los colores de las lineas y los nodos.
 
 ```{r CV11}
-library(Rage)
+
+
 plot_life_cycle(matA, stages=etapas, fontsize = 0)
 
 

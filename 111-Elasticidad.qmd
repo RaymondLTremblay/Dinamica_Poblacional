@@ -2,7 +2,7 @@
 
 Autores: "Demetria Mondragón, Ernesto Mujica y Elaine González"
 
-### Librerías de R requeridas para el siguiente modulo
+#### Librerías de R requeridas para el siguiente módulo
 
 ```{r Elas1, message=FALSE, warning=FALSE, comment=FALSE}
 library(popdemo)
@@ -116,9 +116,9 @@ La suma de cada grupo:
 -   Retrogresión: 0.060
 -   Fecundidad: 0.058
 
-```{r Elas4, echo=FALSE}
+```{r Elas4}
 
-elas(ec)
+#elas(ec)
 
 # Convertir la matriz de elasticidad en un data frame
 ec_df=as.data.frame(elas(ec)) |> round(3)
@@ -223,9 +223,11 @@ En la Figura 1a y b se observa los valores de elasticidad añadidos por proceso 
 -   *Lepanthes caritensis* [@tremblay1997lepanthes] -azul-
 -   *Lepanthes eltoroensis* [@tremblay2003population] -violeta-.
 
-en la figura 1a, la suma por la historia de vida, F: fecundidad, P: permenancia y C: crecimiento y en la figura 1b los valores de elasticidad sumados por estadios (b), P: plántulas, NR; individuos no reproductivos, R: individuos reproductivos o adultos.
+en la figura 1a, la suma por la historia de vida, F: fecundidad, P: permanencia y C: crecimiento y en la figura 1b los valores de elasticidad sumados por estadios (b), P: plántulas, NR; individuos no reproductivos, R: individuos reproductivos o adultos.
 
-Se observa que en los valores de elasticidad estan más altos en los procesos de permanencia seguido por el crecimiento. En la figura 1b se observa que los valores de elasticidad son más altos en los estadios de no reproductivo y reproductivos (adultos activos) al comparar que individuos en la etapa de plántulas.
+Se observa que en los valores de elasticidad están más altos en los procesos de permanencia seguido por el crecimiento.
+
+
 
 ```{r Elas5, echo=FALSE}
 
@@ -246,6 +248,8 @@ Elasticidad_estadios %>%
   colformat_md() %>% 
   set_table_properties(layout = "autofit")
 ```
+
+
 
 ```{r, Elas7, echo=TRUE}
 EE=Elasticidad_estadios %>% 
@@ -270,6 +274,11 @@ EE$Estadios=factor(EE$Estadios, levels = c("Fecundidad", "Estasis", "Crecimiento
 
 ```
 
+
+En la siguiente figura se observa la elasticidad agrupado por plántulas, individuos no reproductivos y reproductivos.  Se observa que los valores de elasticidad son más altos en los estadios de no reproductivo en tres especies y reproductivos (adultos activos) en dos especies. Las plántulas tienen las elasticidad más pequeñas en todas las especies.
+
+
+
 ```{r Elas8}
 
 
@@ -277,10 +286,10 @@ EE1=Elasticidad_estadios %>%
   select(Especie, Plántulas, No_reproductivos, Reproductivos) %>%
   pivot_longer(cols = -Especie, names_to = "Estadios", values_to = "Elasticidad")
 
-EE1$Estadios=factor(EE1$Estadios, levels = c("Plántulas", "No_reproductivos", "Reproductivos"))
+EE1$Estadios2=factor(EE1$Estadios, levels = c("Plántulas", "No_reproductivos", "Reproductivos"))
 
  
-  ggplot(EE, aes(x = Estadios, y = Elasticidad, fill = Especie)) +
+  ggplot(EE1, aes(x = Estadios2, y = Elasticidad, fill = Especie)) +
   geom_bar(stat = "identity", position = "dodge", color="white") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
@@ -297,38 +306,58 @@ EE1$Estadios=factor(EE1$Estadios, levels = c("Plántulas", "No_reproductivos", "
 
 ## Limitaciones
 
-Aunque las matrices son una herramienta muy útil para determinar el comportamiento demográfico de una especie o un conjunto de estas, es necesario estar conscientes que las diferentes entradas de dicha matriz son el resultado, en la mayoría de los casos, de la conjunción de varias tasas vitales a la vez [@franco2004comparative] ademas que dependen fuertemente de la calidad de los datos (vea capitulo xx ) . Así mismo, es importante considerar que ciertas entradas son la combinación de varios procesos demográficos, es decir por ejemplo la entrada que representa la transición de plántula a juvenil, implica que el individuo debe sobrevivir y además crecer lo suficiente para pasar al siguiente estadio, o en el caso de la fecundidad que el individuo debe sobrevivir y además, por lo que se recomiendo separar los valores de cada proceso de cada entrada y calcular las elasticidades de las tasas vitales per se. Por consecuencia el acercamiento más reciente de “transient function” desarollado por Stott et al. [@stott2012beyond] pudiese ser un acercamiento más adecuado si los cambios en sean grandes.
+Aunque las matrices son una herramienta muy útil para determinar el comportamiento demográfico de una especie o un conjunto de estas, es necesario estar conscientes que las diferentes entradas de dicha matriz son el resultado, en la mayoría de los casos, de la conjunción de varias tasas vitales a la vez [@franco2004comparative] ademas que dependen fuertemente de la calidad de los datos (vea capitulo xx ). Así mismo, es importante considerar que ciertas entradas son la combinación de varios procesos demográficos, es decir por ejemplo la entrada que representa la transición de plántula a juvenil, implica que el individuo debe sobrevivir y además crecer lo suficiente para pasar al siguiente estadio, o en el caso de la fecundidad que el individuo debe sobrevivir y además, por lo que se recomiendo separar los valores de cada proceso de cada entrada y calcular las elasticidades de las tasas vitales per se. Por consecuencia el acercamiento más reciente de “transient function” desarollado por Stott et al. [@stott2012beyond] pudiese ser un acercamiento más adecuado si los cambios en sean grandes. En adición si la población este lejos de su equilibrio de estapas/edades estable, la elasticidad no es una buena aproximación de la respuesta de la población a los cambios en las tasas vitales [@stott2012beyond]. Por lo que es recomendable usar el análisis de elasticidad solamente para poblaciones que están cerca de su equilibrio y que los cambios en las tasas vitales son pequeños.
 
-Una de las limitaciones principales de los análisis de elasticidad tradicional mencionado arriba es que el modelo de respuestas es lineal. En otra palabra se asume que los cambios en las tasas vitales son proporcionales a los cambios en la tasa de crecimiento poblacional y que irrelevante del tamaño del cambio el cambio seguirá una respuesta lineal. En la realidad, los cambios en las tasas vitales no son proporcionales y lineal a los cambios en la tasa de crecimiento poblacional. Por ejemplo, si uno aumenta mucho la supervivencia de los individuos de una etapa, la tasa de crecimiento poblacional no aumentará de manera proporcional. Por consecuencia, la elasticidad es una aproximación y no una descripción exacta de la relación entre los cambios en las tasas vitales y la tasa de crecimiento poblacional y es aplicable a solamente analisis de perturbaciones pequeñas. Vea el capitulo x para metodos más avanzados de análisis de elasticidad.
+Una de las limitaciones principales de los análisis de elasticidad tradicional mencionado arriba es que el modelo de respuestas es lineal. En otra palabra se asume que los cambios en las tasas vitales son proporcionales a los cambios en la tasa de crecimiento poblacional y que irrelevante del tamaño del cambio el cambio seguirá una respuesta lineal. En la realidad, los cambios en las tasas vitales no son proporcionales y lineal a los cambios en la tasa de crecimiento poblacional. Por ejemplo, si uno aumenta mucho la supervivencia de los individuos de una etapa, la tasa de crecimiento poblacional no aumentará de manera proporcional y lineal. Por consecuencia, la elasticidad es una aproximación y no una descripción exacta de la relación entre los cambios en las tasas vitales y la tasa de crecimiento poblacional y es aplicable a solamente análisis de perturbaciones pequeñas. Vea el capitulo [x] para métodos más avanzados de análisis de elasticidad.
 
-------------------------------------------------------------------------
+****
 
-## Introducir los nombres de los estadíos o categorías de tamaño, según sea su caso
+## Resumen corto de los pasos
 
-## Capturar los datos de la matriz para Erycina crita-galli [@mondragon2007life] (tabla 4 del artículo)
+### Introducir los nombres de los estadíos o categorías de tamaño, según sea su caso
 
-```{r Elas9, message=FALSE, warning=FALSE}
+```{r}
 
 etapas <- c ("plántula", "juvenil", "adulto1", "adulto2")
+```
 
+
+### Caputurar una matriz
+
+Capturar los datos de la matriz para *Erycina crita-galli* [@mondragon2007life] (tabla 4 del artículo)
+
+```{r Elas9, message=FALSE, warning=FALSE}
 
 ec <- matrix (c(0, 0, 0.004, 0.062,
                 0.195, 0, 0, 0, 
                 0.171, 0.120, 0.053, 0.04,
                 0.073, 0.10, 0.435, 0.447), 
-              nrow = 4, ncol=4, byrow = TRUE, dimnames = list(etapas, etapas))
+              nrow = 4, ncol=4, byrow = TRUE, 
+              dimnames = list(etapas, etapas))
 
 ec
-
-
-# Introducir los valores iniciales por estadío (vector N)
-
-N0_ec<- matrix (c(41,50,246,226), ncol = 1)
-
-N0_ec
 ```
 
-## Para calcular los autovalores y autovectores de la matriz
+### Valores iniciales de la población
+
+Introducir los valores iniciales por estadío (vector N): Cuantos individuos hay en cada estadío al inicio del análisis.
+
+
+```{r Elas9b, message=FALSE, warning=FALSE}
+
+
+N0_ec<- matrix(c(41,50,246,226), ncol = 1)
+
+N0_ec
+
+
+```
+
+## La función **eigen.analysis** 
+
+ 
+
+ Para calcular los autovalores y autovectores de la matriz se usa la función `eigen.analysis` del paquete `popbio`. Se optiene el crecimiento intrinsico **Lambda**, las sensitividad, elasticidad, valor reproductivo y damping ratio.  En el capitulo () se presenta la interpretación de los valores reproductivos y el damping ratio.  
 
 ```{r Elas10}
 
@@ -337,3 +366,7 @@ eigen.analysis(ec, zero=FALSE) # la función es del paquete popbio
 ```
 
 Revisión:
+
+- Demetria : Mayo 2025
+- RLT: Mayo 2025
+

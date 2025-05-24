@@ -2,11 +2,28 @@
 
 Por: Raymond L. Tremblay
 
-```{r, sin_sentido_1}
+#### Librerías de R requeridas para el siguiente módulo
+
+```{r, sin_sentido_1, message=FALSE, warnng=FALSE}
+
 #devtools::install_github("rich-iannone/DiagrammeR") # Instalar directamente de github para tener la versión más reciente
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load("DiagrammeR", "Rage", "popdemo", "popbio", "interpretCI", 
                "MCMCpack", "ggplot2", "plyr", "reshape")
+
+library(DiagrammeR)
+library(Rage)
+library(popdemo)
+library(popbio)
+library(tidyverse)
+library(gt)
+library(flextable)
+library(ftExtra)
+library(interpretCI)
+library(MCMCpack)
+library(plyr)
+library(reshape2)
+
 
 ```
 
@@ -27,7 +44,7 @@ Sin duda, el tema principal para el uso de MPP ha sido evaluar la proyección de
 Muestreos en donde uno no se observa la mortalidad, que equivaldrían a una supervivencia perfecta, son problemáticos. Esto se presenta generalmente en especies longevas, en donde la mortalidad de los individuos, en especial de los individuos adultos es rara, pero EXISTE. Considere una especie donde se recopilan datos **Sp1** y se crea una matriz de transición **Sp1matU** y una matriz de fertilidad **Sp1matF** (script 1). Note que ninguno de los individuos adultos muestreados murió, por lo que el valor de la permanencia es de 1 (supervivencia perfecta). En consecuencia, el tamaño de la población nunca disminuye. Sin embargo, esto es completamente irreal. Así, bajo TODOS los modelos biológicamente realistas, esperaríamos que el tamaño de la población comience a disminuir si una población no tiene reproducción. Sin embargo, en nuestro ejemplo, a pesar de que la fecundidad es cero, nuestra población se mantiene ya que los individuos adultos presentan una supervivencia perfecta, lo cual es biológicamente imposible.
 
 ```{r, sin_sentido_2,message=FALSE}
-library(DiagrammeR)
+
 
 Sp1matU <- rbind(
   c(0.0, 0.0, 0.0),
@@ -42,7 +59,7 @@ Sp1matF <- rbind(
 ) # fertility matrix
 
 Sp1matA = Sp1matU+Sp1matF # TF matrix
-library(Rage)
+
 stages <- c("plantula", "juvenil", "adulto")
 
 plot_life_cycle(Sp1matA, stages=stages, fontsize = 0)
@@ -53,10 +70,10 @@ Si analizamos **Sp1matU**, asumimos que ninguno de los individuos muestreados en
 En el *script* mostramos que la población no cambia después de 7-8 periodos/años y se mantiene cercana a uno (usamos la matriz de transición sin fecundidad). Si no hay reclutas (matriz de fertilidad), el tamaño de la población debería reducirse con el tiempo. Todos los modelos de transiciones que no incluyan a la matriz de fertilidad (solamente la matU), deberían resultar en reducción de tamaño poblacional en el tiempo, debido a la no incorporación de nuevos individuos (fecundidad), de la perdida de individuos muestreados (mortalidad).
 
 ```{r, sin_sentido_3}
+
 n=c(50,50,50)
 
-library(popdemo)
-library(popbio)
+
 truelambda(Sp1matU) # despues de unos periodos de tiempo vemos que el crecimiento poblacional es 1
 pop.projection(Sp1matU, n=n)$pop.changes # lista del cambio poblacional en 16 años
 ```
@@ -70,6 +87,7 @@ El efecto de aumentar el tamaño de muestra impacta directamente los posibles va
 Si consideramos la matriz del script 3 y observamos el valor de la permanencia (sobrevivencia) de los individuos adultos Podemos deducir que se muestrearon 1000 individuos y que 995 sobrevivieron. Así tamaños muestrales superiores, por ejmplo 1000, además de conferir una mayor confianza en el parámetro, permite la existencia de valores intermedios. Tenga en cuenta que en este nuevo modelo de la especie *SP1*, aunque la tasa de supervivencia es muy cercana a 100% (0,995), existe mortalidad y por tanto existiría una disminución de la población en cada período de tiempo (aunque solo sea en una pequeña fracción), si los valores de la de fecundidad fueran de cero. Siempre hay que considerar si esta tasa de mortalidad es biológicamente real o es un resultado del tamaño de la muestra.
 
 ```{r, sin_sentido_4}
+
 Sp1matU_2 <- rbind(
   c(0.0, 0.0, 0.0),
   c(0.5, 0.3, 0.0),
@@ -96,10 +114,7 @@ En la mayoría de las investigaciones el tamaño de muestra es limitado. Por lo 
 Usando el artículo de Ticktin 2020, vemos algunos de los tamaños de muestra de los estudios de orquídeas usando MPP. Esta tabla representa solamente parte de los datos en la publicación. El objetivo es demostrar el tamaño de muestra en algunos de los estudios de orquídeas. Note que en algunos estudios el tamaño por etapa es muy pequeño, lo que puede resultar en estimaciones sesgadas de los parámetros y, a menudo, resultados sin sentido biológicos.
 
 ```{r, sin_sentido4b, message=FALSE, echo=FALSE}
-library(tidyverse)
-library(gt)
-library(flextable)
-library(ftExtra)
+
 
 N_PPM=tribble(~Especie, ~"Población", ~Etapas,~"Tamaño de Muestrea", ~Referencia,
               "*Erycina crista-galli*", "Pop_1", "Plantulas", 41, "Mondragón 2007",
@@ -152,7 +167,7 @@ La *irreductibilidad* es un concepto importante en los análisis de matrices pob
 Por tal motivo, la matriz sugiere que los juveniles no crecen para convertirse en adultos, y todos los juveniles siguen siendo juveniles o mueren, ya que no hay una flecha que conecte a los juveniles con los adultos. En tanto que en el caso de los adultos no existe una flecha que los conecte con las plántulas, lo que sugiere que no hay producción de nuevas plántulas por parte de los adultos.
 
 ```{r, sin_sentido_5}
-library(DiagrammeR)
+
 
 Sp1matU_NT <- rbind(
   c(0.0, 0.0, 0.0),
@@ -167,7 +182,7 @@ Sp1matF <- rbind(
 ) # fertility matrix
 
 Sp1matA_NT = Sp1matU_NT+Sp1matF # TF matrix
-library(Rage)
+
 stages <- c("plantula", "juvenil", "adulto")
 
 plot_life_cycle(Sp1matU_NT, stages=stages, fontsize = 0)
@@ -178,6 +193,7 @@ plot_life_cycle(Sp1matU_NT, stages=stages, fontsize = 0)
 Una manera fácil de determinar si la matriz es irreducible es correr el siguiente scriptt *isIrreducible* en el paquete (popdemo)(Script 5). Tenga en cuenta que, en este caso, el resultado es *Falso* para la matriz anterior.
 
 ```{r, sin_sentido_6}
+
 isIrreducible(Sp1matU_NT) # para la matriz de transición, faltando una etapa de transición y fertilidad
 isIrreducible(Sp1matA_NT) # para la matriz TF, falta una etapa de transición
 
@@ -198,7 +214,7 @@ Como es bien conocido en el campo, la germinación de semillas en las orquídeas
 En el gráfico del ciclo de vida emergido del srcipt 6, se puede observar que ninguna de las plántulas sobrevive o crece a la siguiente etapa. Tenga en cuenta que en la primera columna de la matriz de transición todos los valores son cero. La población puede haber comenzado con muchas (incluso miles o cientos de miles) de plántulas, pero ninguna creció hasta convertirse en un juvenil o permaneció como plántula antes del siguiente muestreo. Esto da como resultado una matriz que es reducible *isIrreducible* = *FALSE* y por consecuencia no cumple con los requisitos necesarios para muchos de los análisis de matrices poblacionales.
 
 ```{r, sin_sentido_7}
-library(DiagrammeR)
+
 
 Sp1matU_NS <- rbind(
   c(0.0, 0.0, 0.0),
@@ -213,7 +229,7 @@ Sp1matF <- rbind(
 ) # fertility matrix
 
 Sp1matA_NS = Sp1matU_NS+Sp1matF # TF matrix
-library(Rage)
+
 stages <- c("plantula", "juvenil", "adulto")
 
 plot_life_cycle(Sp1matU_NS, stages=stages, fontsize = 0)
@@ -228,7 +244,7 @@ isIrreducible(Sp1matU_NS)
 Uno de los error más comunes en la construcción de los elementos de la matriz es el error de redondeo excesivo u otras estimaciones que dan como resultado valores de supervivencia superiores a 100%. Una estimación de supervivencia mayor a 1.00, genera que de manera artificial (por un milagro matemático) aumente la cantidad de individuos, ya que su origen no es debido a la reproducción (sexual u asexual), si no a un artificio matemático. El estimado de supervivencia de una etapa siempre tiene que ser menor o igual a 1. Tomemos el ejemplo el análisis de *Serapia cordigera* [@pellegrino2014effects] (script 7) en donde los autores evaluaron las transiciones entre latencia, plántulas, roseta vegetativa y floración, en este ejemplo podemos observar que al sumar los valores de transición de la columna de plántulas de la matriz SerapiaU, obtenemos un valor de 1.01, lo que significa que no solamente las plántulas presentan una sobrevivencia perfecta, que ya vimos que es biológicamente imposible, si no que además están apareciendo plántulas de la nada (ya que las plántulas son incapaces de reproducirse sexual o asexualmente y por tanto su entrada en la matriz de fecundidad-SerapiaF- es cero), que provocan que la población de plántulas aumente en un 1% en cada período. Estos valores de sobrevivencia superiores a 1 son el resultado de errores en la recolección de datos y/o en el cálculo de la supervivencia de la etapa, pero más frecuentemente por el redondeo excesivo de los valores de sobrevivencia calculada al momento de incorporarlos a la matriz, en donde generalmente sólo se utilizan entre dos y tres decimales.
 
 ```{r, sin_sentido_8}
-library(DiagrammeR)
+
 
 SerapiaU <- rbind(
   c(0.668, 0.122, 0.294, 0.401),
@@ -247,7 +263,7 @@ SerapiaF <- rbind(
 ) # fertility matrix
 
 SerapiaA = SerapiaU+SerapiaF # TF matrix
-library(Rage)
+
 stages <- c("latente", "plantulas", "vegetativa", "adulto")
 
 plot_life_cycle(SerapiaA, stages=stages)
@@ -271,7 +287,7 @@ Suponga que tiene una especie en la que modela el ciclo de vida con los siguient
 Este error es el resultado del calculo de la fecundidad, que debiera ser estimada con base en la primera etapa de la matriz, en este caso la etapa de plántula. Por lo tanto, la esquina superior derecha de la matriz de fertilidad NO debe ser la **cantidad media de semillas** por planta, sino la **cantidad media de semillas que transitan a plántulas** producidas por una planta adulta. Recuerde que el número de semillas que llegan a plántula, son el resultado de múltiples factores; por ejemplo el porcentaje de viabilidad de las semillas, el porcentaje de semillas que arriban a un micro nicho propicio, el porcentaje de semillas que germinan y el porcentaje de sobrevivencia de las plántulas hasta el momento del muestreo, en donde se contabiliza el número de nuevas plántulas reclutadas.
 
 ```{r, sin_sentido_9}
-library(DiagrammeR)
+
 
 Sp1matU_Fert <- rbind(
   c(0.0, 0.0, 0.0),
@@ -286,7 +302,7 @@ Sp1matF <- rbind(
 ) # matriz de fertilidad
 
 Sp1matA_Fert = Sp1matU_Fert+Sp1matF # TF matriz combinada: matA = matU + matF
-library(Rage)
+
 stages <- c("plantula", "juvenil", "adulto")
 
 lambda(Sp1matA_Fert)
@@ -300,7 +316,7 @@ plot(pr) # Nota que después de solamente 5 años ya la población aumentó a 25
 Si deseamos agregar una etapa de semilla a nuestro modelo (Script 9), debemos incluir la etapa en nuestro modelo y crear una matriz con una nueva etapa *semilla*, para lo cual será necesario tener una estimación del número de semillas que germinan y se convierten en plántulas para poder calcular la transición de semillas a plántulas de nuestro modelo. En el caso de las orquídeas, dicha estimación es bastante difícil de lograr ya que las semillas de las orquídeas, debido a su tamaño minúsculo, son difíciles de seguir en la naturaleza. Aunque existen métodos como el de paquetes de semillas [@rasmussen1993seed; @batty2006situ; @shao2024improved] o algún método de huella genética para determinar la procedencia de las plántulas, que nos pueden ayudar a tener una estimación de esta transición, esta será incorrecta la mayoría de las veces, ya que en el caso de los paquetes de semillas se estará sobreestimando la transición ya que no se estaría considerando la perdida de semillas por dispersión, en tanto que en el método de huella genética es muy probable que se subestima la transición ya que es muy difícil encontrar las plántulas en campo, sobre todo en orquídea epífitas. Por lo tanto, la estimación de la fertilidad en las orquídeas es un desafío y requiere un muestreo y análisis cuidadoso.
 
 ```{r, sin_sentido_10}
-library(DiagrammeR)
+
 
 Sp1matU_Fert2 <- rbind(
   c(0.0, 0.0, 0.0, 0.0),
@@ -317,7 +333,7 @@ Sp1matF2 <- rbind(
 ) # fertility matrix
 
 Sp1matA_Fert2 = Sp1matU_Fert2+Sp1matF2 # TF matrix
-library(Rage)
+
 stages <- c("semillas", "plantula", "juvenil", "adulto")
 
 plot_life_cycle(Sp1matA_Fert2, stages=stages)
@@ -356,6 +372,7 @@ Donde la proporción que murió es $\hat{p}$ y el número que murió es $n_d$ y 
 $$\hat{p}=\frac{n_d}{n}$$ con una probabilidad de muerte del 5%.
 
 ```{r, sin_sentido_11}
+
 p=1/20
 p
 ```
@@ -378,7 +395,7 @@ LCI # Nota que el valor es sin sentido, ya que es negativo (que es una proporci�
 Un método más fácil es usar la función R *propCI* de la **library(interceptCI)** (Script 12). La función *propCI* calcula el intervalo de confianza del 95% de una proporción binomial. La función requiere el tamaño de la muestra, el número de eventos y el nivel de significancia. En este caso, el tamaño de la muestra es 20, el número de eventos es 1 (un individuo fallecido) y el nivel de significancia es 0.05. Note que el intervalo de confianza incluye valores negativos (**irreales**). Para resolver esto hay que usar funciones estadísticas alternativas como la distribución de Dirichlet en donde no se asume una distribución normal.
 
 ```{r, sin_sentido_13}
-library(interpretCI)
+
 
 resultado=propCI(n=20, p=0.05, alpha=0.05)
 
@@ -404,7 +421,7 @@ Dirichlet <- rbind(
   c(0.0, 0.3, 0.7)
 ) # transition matrix
 
-library(Rage)
+
 stages <- c("plantula", "juvenil", "adulto")
 
 plot_life_cycle(Dirichlet, stages=stages)
@@ -422,13 +439,10 @@ Los resultados en la figura muestran que hay mucha dispersión alrededor de la p
 -   Cambiamos los nombres de las etapas de la vida para que sean más fáciles de leer en la gráfica.
 -   Graficamos los resultados
 
-```{r, sin_sentido_15, message=FALSE}
 
-library(MCMCpack)
-```
 
 ```{r}
-library(gt)
+
 n=25
 L=posteriorPRIORL <- MCmultinomdirichlet(c(.50*n,.2*n,.0*n,.3*n), c(.5,.2,0.0001,.3), mc=10000)
 dfL=as.data.frame(L)
@@ -449,7 +463,7 @@ levels(All_Data3$ind)[levels(All_Data3$ind)=="pi.4"]="Muerto"
 -   Graficamos los resultados
 
 ```{r, sin_sentido_16}
-library(ggplot2)
+
 ggplot(data=All_Data3, aes(x=values, fill=ind))+
   geom_density(alpha=.5) +
   scale_y_continuous(limit=c(0, 5.5))+
@@ -473,8 +487,7 @@ Aspectos importantes a tener en cuenta.
 
 ```{r, sin_sentido_17}
 
-library(plyr)
-library(reshape2)
+
 
 Transiciones=ddply(All_Data3, c("ind"), summarise,
             mean = round(mean(values),3), sd = round(sd(values),4),
@@ -499,6 +512,7 @@ Para comparar con el ejemplo anterior asumimos que en lugar de tener solamente 2
 Note que la mediana sigue en el mismo lugar (casi) pero los IC cambian mucho y son más reducidos los anchos de la dispersión, ya que con más datos en el muestreo existe más confianza resultado de una reducción en el IC. Este análisis es primordial para entender la confianza que uno debería tener sobre los estimados de los parámetros de la matriz. Si se observa un IC muy grande, se recomendaría modificar la recolección de datos en el campo para aumentar el tamaño de muestra de esa etapa específica.
 
 ```{r, sin_sentido_18}
+
 b=250
 L=posteriorPRIORL <- MCmultinomdirichlet(c(.50*b,.2*b,.0*b,.3*b), c(.5,.2,0.0001,.3), mc=10000)
 dfL=as.data.frame(L)
@@ -514,7 +528,7 @@ levels(All_Data4$ind)[levels(All_Data3$ind)=="pi.2"]="Juvenil"
 levels(All_Data4$ind)[levels(All_Data3$ind)=="pi.3"]="Adulto"
 levels(All_Data4$ind)[levels(All_Data3$ind)=="pi.4"]="Muerto"
 
-library(ggplot2)
+
 ggplot(data=All_Data4, aes(x=values, fill=ind))+
   geom_density(aes(alpha=.5)) +
   scale_y_continuous(limit=c(0, 18))+
@@ -532,8 +546,6 @@ N0te que ahora, los intervalos de confianza son más estrechos y no son negativo
 
 ```{r, sin_sentido_19}
 
-library(plyr)
-library(reshape2)
 
 Transiciones=ddply(All_Data4, c("ind"), summarise,
             mean = round(mean(values),3), sd = round(sd(values),4),
@@ -552,7 +564,7 @@ Transiciones
 Revisión:
 
 ```{r}
-library(tidyverse)
+
 Revision=tribble(~Revisor, ~fecha, ~"fecha de cumplimiento",
                 "Raymond", "2024-12-25", "2024-12-26",
                 "Demetria", "2025-02-08", "2025-02-09",

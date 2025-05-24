@@ -1,5 +1,18 @@
 # Historia breve de la dinámica poblacional en orquídeas. {#HistoriaBreve}
 
+
+Por: Raymond L. Tremmblay
+
+#### Librerías de R requeridas para el siguiente módulo
+
+```{r Hist1, message=FALSE, warning=FALSE}
+library(Rcompadre) # Paquete para trabajar con la base de datos de COMPADRE y COMADRE
+library(tidyverse) # Paquete para activar múltiples paquetes
+library(gt) # Paquete para formatear tablas
+library(kableExtra) # Paquete para formatear tablas
+```
+
+
 ### Estudios realizados
 
 La cantidad de estudios de demográficos usando PPM es bastante impresionante y incluye al momento de la publicación del libro 136 familias de plantas y 509 géneros y 792 especies en la base de datos de COMPADRE (octubre 3, 2024). La familia Orquidaceae (\>50 especie) se encuentra en una de las familias donde hay más especies que han sido evaluado, después de Asteraceae (\>65 especie) y Leguminaceae (\> 55 especies), pero la gran mayoría de las familias tienen de 3 (mediana) o menos especies evaluada. En la tabla del Apéndice A \@ref(lista_3a) se presentan los estudios de dinámica poblacional en orquídeas que usaron PPM y que están incluido en la base de COMPADRE. Se incluye en la table algunas de las preguntas o conceptos principales que los autores evaluaron. En la gran mayoría de los trabajos se considera múltiples hipótesis/ideas sobre la dinámica poblacional de las orquídeas. Para información específica sobre la metodología usada en cada estudio se recomienda revisar los trabajos originales.
@@ -85,14 +98,10 @@ Haciendo una busqueda en Google Scholar para \[“orchid “population dynamics�
 
 -   Ricardo Calvo and Carol C. Horvitz [@calvo1990pollinator] estudian la dinámica poblacional de *Tolumnia variegata* en Puerto Rico. En este trabajo se presenta un análisis de la dinámica poblacional usando PPM y se discute el impacto de la variación transiciones sobre la adecuación demográfica, especificamente sobre el efecto de limitaciones de polinizadores sobre la producciones de frutos.
 
-```{r Hist_1, message=FALSE, warning=FALSE, echo=FALSE, eval=FALSE}
-library(Rcompadre) # Paquete para trabajar con la base de datos de COMPADRE y COMADRE
-library(tidyverse) # Paquete para activar multiples paquetes
-library(gt) # Paquete para formatear tablas
-library(kableExtra) # Paquete para formatear tablas
-```
 
-```{r Hist_2, message=FALSE, warning=FALSE, echo=FALSE, eval=FALSE}
+
+```{r Hist_2, message=FALSE, warning=FALSE, eval=FALSE}
+
 compadre <- cdb_fetch("compadre") # Usar este código para bajar los datos del repositorio de COMPADRE. Tiene que haber activado la librería de Rcompadre.
 
 
@@ -101,7 +110,8 @@ compadre <- cdb_fetch("compadre") # Usar este código para bajar los datos del r
 
 Number of studies using PPM by family
 
-```{r Hist3, message=FALSE, warning=FALSE, echo=FALSE, eval=FALSE}
+```{r Hist3, message=FALSE, warning=FALSE, eval=FALSE}
+
 compadre %>% n_distinct("Family")
 
 Genera=(as.data.frame(sort(unique(compadre$Genus))))
@@ -117,7 +127,8 @@ as.data.frame(sort(unique(compadre$SpeciesAccepted)))
 
 ```
 
-```{r Hist4, message=FALSE, warning=FALSE, echo=FALSE, eval=FALSE}
+```{r Hist4, message=FALSE, warning=FALSE, eval=FALSE}
+
 SPECIES_Number=compadre%>% select(Family, StudyStart, StudyEnd, SpeciesAccepted, YearPublication, Authors, DOI_ISBN, OrganismType, MatrixPopulation, mat) %>% 
   group_by(Family) %>% 
   summarize(n_species = length(unique(SpeciesAccepted))) %>% 
