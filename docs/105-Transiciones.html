@@ -428,7 +428,8 @@ window.Quarto = {
   </ul></li>
   <li><a href="#extraer-la-matriz-de-clonaje" id="toc-extraer-la-matriz-de-clonaje" class="nav-link" data-scroll-target="#extraer-la-matriz-de-clonaje">Extraer la matriz de Clonaje</a>
   <ul class="collapse">
-  <li><a href="#problema-con-el-uso-tradicional-de-calcular-las-transiciones" id="toc-problema-con-el-uso-tradicional-de-calcular-las-transiciones" class="nav-link" data-scroll-target="#problema-con-el-uso-tradicional-de-calcular-las-transiciones">Problema con el uso tradicional de calcular las transiciones</a></li>
+  <li><a href="#el-ciclo-de-vida-de-cypripedium-calceolus-con-clonaje" id="toc-el-ciclo-de-vida-de-cypripedium-calceolus-con-clonaje" class="nav-link" data-scroll-target="#el-ciclo-de-vida-de-cypripedium-calceolus-con-clonaje">El ciclo de vida de <em>Cypripedium calceolus</em> con clonaje</a></li>
+  <li><a href="#limitaciones-de-los-métodos-tradicionales" id="toc-limitaciones-de-los-métodos-tradicionales" class="nav-link" data-scroll-target="#limitaciones-de-los-métodos-tradicionales">Limitaciones de los métodos tradicionales</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -458,13 +459,13 @@ window.Quarto = {
 </section>
 <section id="introducción" class="level2">
 <h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
-<p>En el siguiente capítulo estaremos viendo como calcular las transiciones para la matriz de Lefkovitch. En la primera parte veremos como calcular las transiciones de manera tradicional y a mano y en la segunda parte veremos como calcular las transiciones de manera más eficiente usando funciones que estén disponibles en algunos paquetes de R. Los métodos presentado aquí son una adaptación de los métodos presentados en <span class="citation" data-cites="caswell2000matrix">(<a href="#ref-caswell2000matrix" role="doc-biblioref">Caswell 2000</a>)</span> y pueden ver también una aplicación de estos métodos aplicado a las orquídeas <span class="citation" data-cites="tremblay2003population">(<a href="#ref-tremblay2003population" role="doc-biblioref">R. Tremblay and Hutchings 2003</a>)</span>. Si ha hecho análisis de matrices de transición antes, probablemente ha usado el método tradicional de calcular las transiciones y pueden obviar leer este capítulo. Este método consiste en calcular la proporciones de individuos que transitan de una clase de edad a otra. Este método es tedioso y propenso a errores cuando se hacen a mano.</p>
+<p>En el siguiente capítulo se enseña como calcular las transiciones para la matriz de Lefkovitch (transiciones por etapas). En la primera parte se enseña como calcular las transiciones de manera tradicional y a mano y en la segunda parte veremos como calcular las transiciones de manera más eficiente usando funciones que estén disponibles en algunos paquetes de R. Los métodos presentado aquí son una adaptación de los métodos presentados en <span class="citation" data-cites="caswell2000matrix">(<a href="#ref-caswell2000matrix" role="doc-biblioref">Caswell 2000</a>)</span> y pueden ver también una aplicación de estos métodos aplicado a las orquídeas <span class="citation" data-cites="tremblay2003population">(<a href="#ref-tremblay2003population" role="doc-biblioref">Tremblay and Hutchings 2003</a>)</span>. Si ha hecho análisis de matrices de transición antes, probablemente ha usado el método tradicional de calcular las transiciones y pueden obviar leer este capítulo. Este método consiste en calcular la proporciones de individuos que transitan de una clase de edad a otra. Este método es tedioso y propenso a errores cuando se hacen a mano. Pero es importante por lo menos hacer el esfuerzo una vez a mano para conocer como es la mecanica de calcular las transiciones. En la segunda parte del capítulo veremos como calcular las transiciones usando la función <strong>projection.matrix</strong> del paquete <strong>popbio</strong>. Esta función es más eficiente y menos propensa a errores que hacerlo a mano.</p>
 <hr>
 </section>
 <section id="métodos-tradicional-de-calcular-las-transiciones" class="level2">
 <h2 class="anchored" data-anchor-id="métodos-tradicional-de-calcular-las-transiciones">Métodos tradicional de calcular las transiciones</h2>
-<p>El primer paso es la tabla de datos de la orquídea y sus estados en dos periodos de tiempo, digamos un año de intervalo. Aquí adjunto un ejemplo de una tabla de datos de 20 individuos. Tenemos 3 estados en esta planta, “A”, “B”, “C” y “Muerto”. En la tabla de datos, tenemos 19 individuos que fueron muestreados en dos periodos de tiempo. En el primer periodo de tiempo, 7 individuos estaban en el estado “A”, 6 en el estado “B” y 6 en el estado “C”. Para calcular las transiciones, necesitamos calcular la proporción de individuos que transitaron de un estado a otro. Por ejemplo, de los 7 individuos que estaban en el estado “A” en el primer periodo de tiempo, 1 individuos estaba en el estado “A” en el segundo periodo de tiempo, 2 individuos estaban en el estado “B”, 3 individuos estaban en el estado “C”, y un individuo que murió, dando las siguientes proporciones</p>
-<p>De A a otras clases</p>
+<p>El primer paso es la tabla de datos de la orquídea y sus estados en dos periodos de tiempo, digamos un año de intervalo. Aquí adjunto un ejemplo de una tabla de datos de 19 individuos. Tenemos 3 estados en esta planta, “plantas pequeñas”, “juveniles”, “adultos” y “Muerto”. En la tabla de datos, tenemos 19 individuos que fueron muestreados en dos periodos de tiempo. En el primer periodo de tiempo, 7 individuos estaban en el estado “plantas pequeñas”, 6 en el estado “juveniles” y 6 en el estado “adultos”. Para calcular las transiciones, necesitamos calcular la proporción de individuos que transitaron de un estado a otro. Por ejemplo, de los 7 individuos que estaban en el estado “plantas pequeñas” en el primer periodo de tiempo, 1 individuos estaba en el estado “plantas pequeñas” en el segundo periodo de tiempo, 2 individuos estaban en el estado “juvenile”, 3 individuos estaban en el estado “adulto”, y un individuo que murió, dando las siguientes proporciones</p>
+<p>De plantas pequeñas a otras clases</p>
 <ul>
 <li>1/7 = 0.1428, transitaron de “plantas pequeñas” a “plantas pequeñas”</li>
 <li>2/7 = 0.2857, transitaron de “plantas pequeñas” a “juveniles”</li>
@@ -475,10 +476,10 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>a<span class="ot">=</span><span class="dv">2</span><span class="sc">/</span><span class="dv">6</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>b<span class="ot">=</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>c<span class="ot">=</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>d<span class="ot">=</span><span class="dv">2</span><span class="sc">/</span><span class="dv">6</span></span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>a<span class="ot">=</span><span class="dv">1</span><span class="sc">/</span><span class="dv">7</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>b<span class="ot">=</span><span class="dv">2</span><span class="sc">/</span><span class="dv">7</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>c<span class="ot">=</span><span class="dv">3</span><span class="sc">/</span><span class="dv">7</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>d<span class="ot">=</span><span class="dv">1</span><span class="sc">/</span><span class="dv">7</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>sum<span class="ot">=</span>a<span class="sc">+</span>b<span class="sc">+</span>c<span class="sc">+</span>d</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>sum</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -487,52 +488,52 @@ window.Quarto = {
 <pre><code>[1] 1</code></pre>
 </div>
 </div>
-<p>La suma de la proporciones calculado de los calculos de la tabla</p>
+<p>La suma de la proporciones calculado de las proporciones</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sum2<span class="ot">=</span><span class="fl">0.1428+0.1428+0.2857+0.4285</span></span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sum2<span class="ot">=</span><span class="fl">0.1428+0.2857+0.4285+0.1428</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sum2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.9998</code></pre>
 </div>
 </div>
-<p>Nota que la suma de todas estas transiciones tienen que sumar a 1.000. NO pueden ser mayor que 1 o menor que 1. Si la suma de las transiciones es mayor que 1, significa que hay un error en los datos. Si la suma de las transiciones es menor que 1, significa que hay un error en los datos. Esto ocurre cuando se redondea excesivamente o incorrectamente. En este caso, nota que la suma da un total de 0.9998, que es suficiente cerca de 1.0.</p>
+<p>Nota que la suma de todas estas transiciones tienen que sumar a 1.000. NO pueden ser mayor que 1 o menor de 1. Si la suma de las transiciones es mayor o menor de 1, significa que hay un error en los cálculos de las proporciones. Una de las causas principales ocurre cuando se redondea excesivamente o incorrectamente. En este caso, nota que la suma da un total de 0.9998, que es suficiente cerca de 1.0.</p>
 <p>Ahora calculamos las otras transiciones de juveniles a otras clases</p>
 <ul>
-<li>2/6 = 0.3333, transitaron de “juveniles” a “plantas pequeñas”</li>
-<li>1/6 = 0.1666, transitaron de “juveniles” a “juveniles”</li>
+<li>0/6 = 0.0000, transitaron de “juveniles” a “plantas pequeñas”</li>
+<li>3/6 = 0.5000, transitaron de “juveniles” a “juveniles”</li>
 <li>2/6 = 0.3333, transitaron de “juveniles” a “adultos” ’</li>
 <li>1/6 = 0.1666, fallecieron de las “juveniles” en el primer periodo de tiempo fallecieron en el segundo periodo de tiempo</li>
 </ul>
-<p>De C a otras clases</p>
+<p>De adultos a otras clases</p>
 <ul>
-<li>1/6 = 0.1666, transitaron de “adulto” a “plantas pequeñas”</li>
-<li>2/6 = 0.3333, transitaron de “adulto” a “juveniles”</li>
-<li>1/6 = 0.1666, transitaron de “adulto” a “adulto”</li>
+<li>0/6 = 0, transitaron de “adulto” a “plantas pequeñas”</li>
+<li>0/6 = 0, transitaron de “adulto” a “juveniles”</li>
+<li>4/6 = 0.6667, transitaron de “adulto” a “adulto”</li>
 <li>2/6 = 0.3333, fallecieron de las “adulto” en el primer periodo de tiempo fallecieron antes del segundo periodo de tiempo.</li>
 </ul>
-<p>Aqui la lista completa de las transiciones a todas las etapas posibles.</p>
+<p>Aquí la lista completa de las transiciones a todas las etapas posibles.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="pomievzbme" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#pomievzbme table {
+<div id="tqjaifhdqy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tqjaifhdqy table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#pomievzbme thead, #pomievzbme tbody, #pomievzbme tfoot, #pomievzbme tr, #pomievzbme td, #pomievzbme th {
+#tqjaifhdqy thead, #tqjaifhdqy tbody, #tqjaifhdqy tfoot, #tqjaifhdqy tr, #tqjaifhdqy td, #tqjaifhdqy th {
   border-style: none;
 }
 
-#pomievzbme p {
+#tqjaifhdqy p {
   margin: 0;
   padding: 0;
 }
 
-#pomievzbme .gt_table {
+#tqjaifhdqy .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -558,12 +559,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#pomievzbme .gt_caption {
+#tqjaifhdqy .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#pomievzbme .gt_title {
+#tqjaifhdqy .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -575,7 +576,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#pomievzbme .gt_subtitle {
+#tqjaifhdqy .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -587,7 +588,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#pomievzbme .gt_heading {
+#tqjaifhdqy .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -599,13 +600,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#pomievzbme .gt_bottom_border {
+#tqjaifhdqy .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#pomievzbme .gt_col_headings {
+#tqjaifhdqy .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -620,7 +621,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#pomievzbme .gt_col_heading {
+#tqjaifhdqy .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -640,7 +641,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#pomievzbme .gt_column_spanner_outer {
+#tqjaifhdqy .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -652,15 +653,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#pomievzbme .gt_column_spanner_outer:first-child {
+#tqjaifhdqy .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#pomievzbme .gt_column_spanner_outer:last-child {
+#tqjaifhdqy .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#pomievzbme .gt_column_spanner {
+#tqjaifhdqy .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -672,11 +673,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#pomievzbme .gt_spanner_row {
+#tqjaifhdqy .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#pomievzbme .gt_group_heading {
+#tqjaifhdqy .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -702,7 +703,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#pomievzbme .gt_empty_group_heading {
+#tqjaifhdqy .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -717,15 +718,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#pomievzbme .gt_from_md > :first-child {
+#tqjaifhdqy .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#pomievzbme .gt_from_md > :last-child {
+#tqjaifhdqy .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#pomievzbme .gt_row {
+#tqjaifhdqy .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -744,7 +745,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#pomievzbme .gt_stub {
+#tqjaifhdqy .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -757,7 +758,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#pomievzbme .gt_stub_row_group {
+#tqjaifhdqy .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -771,15 +772,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#pomievzbme .gt_row_group_first td {
+#tqjaifhdqy .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#pomievzbme .gt_row_group_first th {
+#tqjaifhdqy .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#pomievzbme .gt_summary_row {
+#tqjaifhdqy .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -789,16 +790,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#pomievzbme .gt_first_summary_row {
+#tqjaifhdqy .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#pomievzbme .gt_first_summary_row.thick {
+#tqjaifhdqy .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#pomievzbme .gt_last_summary_row {
+#tqjaifhdqy .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -808,7 +809,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#pomievzbme .gt_grand_summary_row {
+#tqjaifhdqy .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -818,7 +819,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#pomievzbme .gt_first_grand_summary_row {
+#tqjaifhdqy .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -828,7 +829,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#pomievzbme .gt_last_grand_summary_row_top {
+#tqjaifhdqy .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -838,11 +839,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#pomievzbme .gt_striped {
+#tqjaifhdqy .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#pomievzbme .gt_table_body {
+#tqjaifhdqy .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -851,7 +852,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#pomievzbme .gt_footnotes {
+#tqjaifhdqy .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -865,7 +866,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#pomievzbme .gt_footnote {
+#tqjaifhdqy .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -874,7 +875,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#pomievzbme .gt_sourcenotes {
+#tqjaifhdqy .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -888,7 +889,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#pomievzbme .gt_sourcenote {
+#tqjaifhdqy .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -896,72 +897,72 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#pomievzbme .gt_left {
+#tqjaifhdqy .gt_left {
   text-align: left;
 }
 
-#pomievzbme .gt_center {
+#tqjaifhdqy .gt_center {
   text-align: center;
 }
 
-#pomievzbme .gt_right {
+#tqjaifhdqy .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#pomievzbme .gt_font_normal {
+#tqjaifhdqy .gt_font_normal {
   font-weight: normal;
 }
 
-#pomievzbme .gt_font_bold {
+#tqjaifhdqy .gt_font_bold {
   font-weight: bold;
 }
 
-#pomievzbme .gt_font_italic {
+#tqjaifhdqy .gt_font_italic {
   font-style: italic;
 }
 
-#pomievzbme .gt_super {
+#tqjaifhdqy .gt_super {
   font-size: 65%;
 }
 
-#pomievzbme .gt_footnote_marks {
+#tqjaifhdqy .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#pomievzbme .gt_asterisk {
+#tqjaifhdqy .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#pomievzbme .gt_indent_1 {
+#tqjaifhdqy .gt_indent_1 {
   text-indent: 5px;
 }
 
-#pomievzbme .gt_indent_2 {
+#tqjaifhdqy .gt_indent_2 {
   text-indent: 10px;
 }
 
-#pomievzbme .gt_indent_3 {
+#tqjaifhdqy .gt_indent_3 {
   text-indent: 15px;
 }
 
-#pomievzbme .gt_indent_4 {
+#tqjaifhdqy .gt_indent_4 {
   text-indent: 20px;
 }
 
-#pomievzbme .gt_indent_5 {
+#tqjaifhdqy .gt_indent_5 {
   text-indent: 25px;
 }
 
-#pomievzbme .katex-display {
+#tqjaifhdqy .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#pomievzbme div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#tqjaifhdqy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1010,13 +1011,13 @@ window.Quarto = {
 <td class="gt_row gt_right" headers="Num_ind">4</td>
 <td class="gt_row gt_left" headers="anio_1">juvenil</td>
 <td class="gt_row gt_left" headers="anio_2">plantas_pequeñas</td>
-<td class="gt_row gt_right" headers="transición">0.3333</td>
+<td class="gt_row gt_right" headers="transición">0.0000</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="Num_ind">5</td>
 <td class="gt_row gt_left" headers="anio_1">juvenil</td>
 <td class="gt_row gt_left" headers="anio_2">juvenil</td>
-<td class="gt_row gt_right" headers="transición">0.1666</td>
+<td class="gt_row gt_right" headers="transición">0.5000</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="Num_ind">6</td>
@@ -1034,19 +1035,19 @@ window.Quarto = {
 <td class="gt_row gt_right" headers="Num_ind">7</td>
 <td class="gt_row gt_left" headers="anio_1">adulto</td>
 <td class="gt_row gt_left" headers="anio_2">plantas_pequeñas</td>
-<td class="gt_row gt_right" headers="transición">0.1666</td>
+<td class="gt_row gt_right" headers="transición">0.0000</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="Num_ind">8</td>
 <td class="gt_row gt_left" headers="anio_1">adulto</td>
 <td class="gt_row gt_left" headers="anio_2">juvenil</td>
-<td class="gt_row gt_right" headers="transición">0.3333</td>
+<td class="gt_row gt_right" headers="transición">0.0000</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="Num_ind">9</td>
 <td class="gt_row gt_left" headers="anio_1">adulto</td>
 <td class="gt_row gt_left" headers="anio_2">adulto</td>
-<td class="gt_row gt_right" headers="transición">0.1666</td>
+<td class="gt_row gt_right" headers="transición">0.6777</td>
 </tr>
 </tbody>
 </table>
@@ -1058,29 +1059,33 @@ window.Quarto = {
 <section id="construyendo-la-matriz-de-transiciones" class="level3">
 <h3 class="anchored" data-anchor-id="construyendo-la-matriz-de-transiciones">Construyendo la matriz de transiciones</h3>
 <p>Ahora usamos los valores calculados arriba para construir la matriz de transiciones.</p>
-<p>Nota que en las columnas representa el estado en el tiempo 1 y las filas los estados en el periodo 2. Importante la transiciones a Muerto no se pone en la matriz, automáticamente los análisis reconoce que 1 menos la suma las transiciones en la matriz, sera la proporciones de fallecimiento.</p>
+<p>Nota que en las columnas representa el estado en el tiempo 1 y las filas los estados en el periodo 2. Importante la transiciones a Muerto no se pone en la matriz, automáticamente los análisis reconoce que 1 menos la suma las transiciones en la matriz, sera la proporciones de fallecimiento. Se añade la información usando la función matrix() de R. La función matrix() tiene los siguientes argumentos:</p>
+<ul>
+<li>nrow =: el número de filas y columnas (siempre la mtriz estará cuadrada.</li>
+<li>byrow =: si se quiere llenar la matriz por filas (byrow) o por columnas (bycol).</li>
+</ul>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ficticia_matrix<span class="ot">=</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.1428</span>, <span class="fl">0.3333</span>, <span class="fl">0.1666</span>,</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                         <span class="fl">0.2857</span>, <span class="fl">0.1666</span>, <span class="fl">0.3333</span>,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                         <span class="fl">0.4285</span>, <span class="fl">0.3333</span>, <span class="fl">0.1666</span>), </span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ficticia_matrix<span class="ot">=</span><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.1428</span>, <span class="fl">0.0000</span>, <span class="fl">0.0000</span>,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                         <span class="fl">0.2857</span>, <span class="fl">0.5000</span>, <span class="fl">0.0000</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                         <span class="fl">0.4285</span>, <span class="fl">0.3333</span>, <span class="fl">0.6777</span>), </span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">nrow=</span><span class="dv">3</span>, <span class="at">byrow=</span><span class="cn">TRUE</span>)</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>ficticia_matrix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>       [,1]   [,2]   [,3]
-[1,] 0.1428 0.3333 0.1666
-[2,] 0.2857 0.1666 0.3333
-[3,] 0.4285 0.3333 0.1666</code></pre>
+[1,] 0.1428 0.0000 0.0000
+[2,] 0.2857 0.5000 0.0000
+[3,] 0.4285 0.3333 0.6777</code></pre>
 </div>
 </div>
 <hr>
 </section>
 <section id="añadiendo-los-nombres-de-las-etapas" class="level3">
 <h3 class="anchored" data-anchor-id="añadiendo-los-nombres-de-las-etapas">Añadiendo los nombres de las etapas</h3>
-<p>Es buena práctica añadir el nombre de las etapas a la matriz ya que ayuda a encontrar incosistencia y posible errores. Las dos funciones necesarias son <strong>rownames</strong> y <strong>colnames</strong>.</p>
+<p>Es buena práctica es añadir el nombre de las etapas a la matriz ya que ayuda a encontrar inconsistencia y posible errores. Las dos funciones necesarias son <strong>rownames</strong> y <strong>colnames</strong>.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1091,66 +1096,1176 @@ window.Quarto = {
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>                 plantas_pequeñas juvenil adulto
-plantas_pequeñas           0.1428  0.3333 0.1666
-juvenil                    0.2857  0.1666 0.3333
-adulto                     0.4285  0.3333 0.1666</code></pre>
+plantas_pequeñas           0.1428  0.0000 0.0000
+juvenil                    0.2857  0.5000 0.0000
+adulto                     0.4285  0.3333 0.6777</code></pre>
 </div>
 </div>
 <hr>
 </section>
 <section id="construcción-de-matriz-con-funciones-en-r" class="level3">
 <h3 class="anchored" data-anchor-id="construcción-de-matriz-con-funciones-en-r">Construcción de matriz con funciones en R</h3>
-<p>En la próxima sección veremos como calcular las transiciones de manera más eficiente usando funciones disponibles en un paquete de R. La función principal que usaremos es la función <strong>projection.matrix</strong> del paquete <strong>popbio</strong>. Sin duda esta función es más eficiente y menos propensa a errores que hacerlo a mano.</p>
+<p>En la próxima sección veremos como calcular las transiciones de manera más eficiente usando funciones disponibles en un paquete de R. La función principal que usaremos es la función <strong>projection.matrix</strong> del paquete <strong>popbio</strong>. Sin duda esta función es más eficiente y menos propensa a errores que hacerlo a mano. Naturalmente en investigaciones, la cantidad de datos será mucho a mayor al ejemplo anterior, y más datos mayor es la probabilidad de cometer errores al calcular las transiciones a mano. La función <strong>projection.matrix</strong> es una función que calcula las transiciones y la fecundidad a partir de una tabla de datos con los estados de los individuos en dos periodos de tiempo. Esta función es muy útil para calcular las transiciones y la fecundidad de manera rápida y eficiente.</p>
 <p>Los argumentos de la función <strong>projection.matrix</strong> son los siguientes:</p>
 <pre><code>projection.matrix(
-  transitions, # el nombre de la tabla de datos
+  transitions, # el nombre de la tabla de datos con los estados de los individuos en dos periodos de tiempo
   stage = NULL, # el nombre de la columna con los estados en el primer tiempo
   fate = NULL, # el nombre de la column con los estados en el segundo tiempo
   fertility = NULL, la información sobre la fertilidad
   sort = NULL, # si se quiere ordenar los estados de la historia de vida
   add = NULL,
+  stages = NULL, # los nombres de las etapas del modelo en el primer y el segundo muestreo
   TF = FALSE # si quiere que la matriz de transiciones y de fertilidad sean separados usa = TRUE 
    )</code></pre>
 <p>Nota que el “output” de la función <strong>projection.matrix</strong> es una lista con dos elementos, en dos matrices, una con las transiciones <span class="math inline">\(T\)</span> y otra con la fertilidad <span class="math inline">\(F\)</span>. La primera tiene solamente los valores de transiciones y la segunda solamente los valores que corresponde a la fertilidad, o sea la cantidad de individuos que se añaden a cada clase de edad.</p>
 <p>Antes de comenzar hacer los análisis es importante que los nombres de las columnas se cambian a nombres que causan menos problemas para la función <strong>projection.matrix</strong>. En este caso, cambiamos los nombres de las columnas de la tabla de datos de “anio_1” a “stage” y de “anio_2” a “fate”. Esos nombres corresponde a las etapas en el primer y segundo periodo de tiempo, <em>fate</em> se traduce como “destino” en español.</p>
+<p>Los datos tienen que estar en formato de tabla de datos, o sea que cada fila es un individuo y cada columna es una variable. En este caso, tenemos 19 filas y 4 columnas. La columna “transición” no es necesaria para la función <strong>projection.matrix</strong>.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Orchis_ficticia<span class="ot">=</span>Orchis_ficticia <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">stage=</span>anio_1, <span class="at">fate=</span>anio_2)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Orchis_ficticia)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Orchis_ficticia_por_ind<span class="ot">=</span><span class="fu">tribble</span>(<span class="sc">~</span>Num_ind, <span class="sc">~</span>anio_1, <span class="sc">~</span>anio_2, <span class="sc">~</span>fertilidad,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">1</span>,  <span class="st">"plantas_pequeñas"</span>, <span class="st">"Muerto"</span>,  <span class="dv">0</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">2</span>,  <span class="st">"plantas_pequeñas"</span>, <span class="st">"plantas_pequeñas"</span>,<span class="dv">0</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">3</span>,  <span class="st">"plantas_pequeñas"</span>, <span class="st">"juvenil"</span>,<span class="dv">0</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">4</span>,  <span class="st">"plantas_pequeñas"</span>, <span class="st">"juvenil"</span>,<span class="dv">0</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">5</span>,  <span class="st">"plantas_pequeñas"</span>, <span class="st">"adulto"</span>,<span class="dv">0</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">6</span>,  <span class="st">"plantas_pequeñas"</span>, <span class="st">"adulto"</span>,<span class="dv">0</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">7</span>,  <span class="st">"plantas_pequeñas"</span>, <span class="st">"adulto"</span>,<span class="dv">0</span>,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">8</span>,  <span class="st">"juvenil"</span>, <span class="st">"Muerto"</span>,<span class="dv">0</span>,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">9</span>,  <span class="st">"juvenil"</span>, <span class="st">"juvenil"</span>,<span class="dv">0</span>,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">10</span>, <span class="st">"juvenil"</span>, <span class="st">"juvenil"</span>,<span class="dv">0</span>,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">11</span>, <span class="st">"juvenil"</span>, <span class="st">"juvenil"</span>,<span class="dv">0</span>,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">12</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto"</span>,<span class="dv">0</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">13</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto"</span>,<span class="dv">0</span>,</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">14</span>, <span class="st">"adulto"</span>, <span class="st">"Muerto"</span>,<span class="dv">0</span>,</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">15</span>, <span class="st">"adulto"</span>, <span class="st">"Muerto"</span>,<span class="dv">0</span> ,</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">16</span>, <span class="st">"adulto"</span>, <span class="st">"adulto"</span>,<span class="dv">0</span>,</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">17</span>, <span class="st">"adulto"</span>, <span class="st">"adulto"</span>,<span class="dv">1</span>,</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">18</span>, <span class="st">"adulto"</span>, <span class="st">"adulto"</span>,<span class="dv">0</span>,</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">19</span>, <span class="st">"adulto"</span>, <span class="st">"adulto"</span>,<span class="dv">0</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>                        )</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(Orchis_ficticia_por_ind) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 4
-  Num_ind stage            fate             transición
-    &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;                 &lt;dbl&gt;
-1       1 plantas_pequeñas Muerto                0.143
-2       2 plantas_pequeñas plantas_pequeñas      0.143
-3       2 plantas_pequeñas juvenil               0.286
-4       3 plantas_pequeñas adulto                0.428
-5       4 juvenil          Muerto                0.167
-6       4 juvenil          plantas_pequeñas      0.333</code></pre>
+<div class="cell-output-display">
+<div id="yimtvmxkbj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#yimtvmxkbj table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#yimtvmxkbj thead, #yimtvmxkbj tbody, #yimtvmxkbj tfoot, #yimtvmxkbj tr, #yimtvmxkbj td, #yimtvmxkbj th {
+  border-style: none;
+}
+
+#yimtvmxkbj p {
+  margin: 0;
+  padding: 0;
+}
+
+#yimtvmxkbj .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#yimtvmxkbj .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#yimtvmxkbj .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#yimtvmxkbj .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#yimtvmxkbj .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#yimtvmxkbj .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yimtvmxkbj .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#yimtvmxkbj .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#yimtvmxkbj .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#yimtvmxkbj .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#yimtvmxkbj .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#yimtvmxkbj .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#yimtvmxkbj .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#yimtvmxkbj .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#yimtvmxkbj .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#yimtvmxkbj .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#yimtvmxkbj .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#yimtvmxkbj .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#yimtvmxkbj .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yimtvmxkbj .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#yimtvmxkbj .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#yimtvmxkbj .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#yimtvmxkbj .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yimtvmxkbj .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#yimtvmxkbj .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#yimtvmxkbj .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yimtvmxkbj .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yimtvmxkbj .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#yimtvmxkbj .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yimtvmxkbj .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#yimtvmxkbj .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yimtvmxkbj .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#yimtvmxkbj .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yimtvmxkbj .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#yimtvmxkbj .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yimtvmxkbj .gt_left {
+  text-align: left;
+}
+
+#yimtvmxkbj .gt_center {
+  text-align: center;
+}
+
+#yimtvmxkbj .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#yimtvmxkbj .gt_font_normal {
+  font-weight: normal;
+}
+
+#yimtvmxkbj .gt_font_bold {
+  font-weight: bold;
+}
+
+#yimtvmxkbj .gt_font_italic {
+  font-style: italic;
+}
+
+#yimtvmxkbj .gt_super {
+  font-size: 65%;
+}
+
+#yimtvmxkbj .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#yimtvmxkbj .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#yimtvmxkbj .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#yimtvmxkbj .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#yimtvmxkbj .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#yimtvmxkbj .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#yimtvmxkbj .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#yimtvmxkbj .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#yimtvmxkbj div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="Num_ind" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Num_ind</th>
+<th id="anio_1" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">anio_1</th>
+<th id="anio_2" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">anio_2</th>
+<th id="fertilidad" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">fertilidad</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="Num_ind">1</td>
+<td class="gt_row gt_left" headers="anio_1">plantas_pequeñas</td>
+<td class="gt_row gt_left" headers="anio_2">Muerto</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Num_ind">2</td>
+<td class="gt_row gt_left" headers="anio_1">plantas_pequeñas</td>
+<td class="gt_row gt_left" headers="anio_2">plantas_pequeñas</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Num_ind">3</td>
+<td class="gt_row gt_left" headers="anio_1">plantas_pequeñas</td>
+<td class="gt_row gt_left" headers="anio_2">juvenil</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Num_ind">4</td>
+<td class="gt_row gt_left" headers="anio_1">plantas_pequeñas</td>
+<td class="gt_row gt_left" headers="anio_2">juvenil</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Num_ind">5</td>
+<td class="gt_row gt_left" headers="anio_1">plantas_pequeñas</td>
+<td class="gt_row gt_left" headers="anio_2">adulto</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Num_ind">6</td>
+<td class="gt_row gt_left" headers="anio_1">plantas_pequeñas</td>
+<td class="gt_row gt_left" headers="anio_2">adulto</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Num_ind">7</td>
+<td class="gt_row gt_left" headers="anio_1">plantas_pequeñas</td>
+<td class="gt_row gt_left" headers="anio_2">adulto</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Num_ind">8</td>
+<td class="gt_row gt_left" headers="anio_1">juvenil</td>
+<td class="gt_row gt_left" headers="anio_2">Muerto</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Num_ind">9</td>
+<td class="gt_row gt_left" headers="anio_1">juvenil</td>
+<td class="gt_row gt_left" headers="anio_2">juvenil</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Num_ind">10</td>
+<td class="gt_row gt_left" headers="anio_1">juvenil</td>
+<td class="gt_row gt_left" headers="anio_2">juvenil</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Num_ind">11</td>
+<td class="gt_row gt_left" headers="anio_1">juvenil</td>
+<td class="gt_row gt_left" headers="anio_2">juvenil</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Num_ind">12</td>
+<td class="gt_row gt_left" headers="anio_1">juvenil</td>
+<td class="gt_row gt_left" headers="anio_2">adulto</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Num_ind">13</td>
+<td class="gt_row gt_left" headers="anio_1">juvenil</td>
+<td class="gt_row gt_left" headers="anio_2">adulto</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Num_ind">14</td>
+<td class="gt_row gt_left" headers="anio_1">adulto</td>
+<td class="gt_row gt_left" headers="anio_2">Muerto</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Num_ind">15</td>
+<td class="gt_row gt_left" headers="anio_1">adulto</td>
+<td class="gt_row gt_left" headers="anio_2">Muerto</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Num_ind">16</td>
+<td class="gt_row gt_left" headers="anio_1">adulto</td>
+<td class="gt_row gt_left" headers="anio_2">adulto</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Num_ind">17</td>
+<td class="gt_row gt_left" headers="anio_1">adulto</td>
+<td class="gt_row gt_left" headers="anio_2">adulto</td>
+<td class="gt_row gt_right" headers="fertilidad">1</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Num_ind">18</td>
+<td class="gt_row gt_left" headers="anio_1">adulto</td>
+<td class="gt_row gt_left" headers="anio_2">adulto</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Num_ind">19</td>
+<td class="gt_row gt_left" headers="anio_1">adulto</td>
+<td class="gt_row gt_left" headers="anio_2">adulto</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+</tbody>
+</table>
+
 </div>
 </div>
+</div>
+<p>Aqui la función para cambiar los nombres de las columnas a “stage” y “fate”.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Orchis_ficticia_df<span class="ot">=</span><span class="fu">as.data.frame</span>(Orchis_ficticia) <span class="co"># Nota que es importante convertir la tabla de datos a un data frame si es en formato de tibble. </span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>stages<span class="ot">=</span><span class="fu">c</span>(<span class="st">"plantas_pequeñas"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto"</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>Orchis_ficticia_df<span class="sc">$</span>fertilidad<span class="ot">&lt;-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">projection.matrix</span>(Orchis_ficticia_df, stage, fate, fertilidad, stages, <span class="at">TF=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Orchis_ficticia_por_ind<span class="ot">=</span>Orchis_ficticia_por_ind <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">stage=</span>anio_1, <span class="at">fate=</span>anio_2)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">head</span>(Orchis_ficticia_por_ind))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="twxnhzxjud" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#twxnhzxjud table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#twxnhzxjud thead, #twxnhzxjud tbody, #twxnhzxjud tfoot, #twxnhzxjud tr, #twxnhzxjud td, #twxnhzxjud th {
+  border-style: none;
+}
+
+#twxnhzxjud p {
+  margin: 0;
+  padding: 0;
+}
+
+#twxnhzxjud .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#twxnhzxjud .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#twxnhzxjud .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#twxnhzxjud .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#twxnhzxjud .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#twxnhzxjud .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#twxnhzxjud .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#twxnhzxjud .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#twxnhzxjud .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#twxnhzxjud .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#twxnhzxjud .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#twxnhzxjud .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#twxnhzxjud .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#twxnhzxjud .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#twxnhzxjud .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#twxnhzxjud .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#twxnhzxjud .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#twxnhzxjud .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#twxnhzxjud .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#twxnhzxjud .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#twxnhzxjud .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#twxnhzxjud .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#twxnhzxjud .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#twxnhzxjud .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#twxnhzxjud .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#twxnhzxjud .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#twxnhzxjud .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#twxnhzxjud .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#twxnhzxjud .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#twxnhzxjud .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#twxnhzxjud .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#twxnhzxjud .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#twxnhzxjud .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#twxnhzxjud .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#twxnhzxjud .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#twxnhzxjud .gt_left {
+  text-align: left;
+}
+
+#twxnhzxjud .gt_center {
+  text-align: center;
+}
+
+#twxnhzxjud .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#twxnhzxjud .gt_font_normal {
+  font-weight: normal;
+}
+
+#twxnhzxjud .gt_font_bold {
+  font-weight: bold;
+}
+
+#twxnhzxjud .gt_font_italic {
+  font-style: italic;
+}
+
+#twxnhzxjud .gt_super {
+  font-size: 65%;
+}
+
+#twxnhzxjud .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#twxnhzxjud .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#twxnhzxjud .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#twxnhzxjud .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#twxnhzxjud .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#twxnhzxjud .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#twxnhzxjud .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#twxnhzxjud .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#twxnhzxjud div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="Num_ind" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Num_ind</th>
+<th id="stage" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">stage</th>
+<th id="fate" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">fate</th>
+<th id="fertilidad" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">fertilidad</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="Num_ind">1</td>
+<td class="gt_row gt_left" headers="stage">plantas_pequeñas</td>
+<td class="gt_row gt_left" headers="fate">Muerto</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Num_ind">2</td>
+<td class="gt_row gt_left" headers="stage">plantas_pequeñas</td>
+<td class="gt_row gt_left" headers="fate">plantas_pequeñas</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Num_ind">3</td>
+<td class="gt_row gt_left" headers="stage">plantas_pequeñas</td>
+<td class="gt_row gt_left" headers="fate">juvenil</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Num_ind">4</td>
+<td class="gt_row gt_left" headers="stage">plantas_pequeñas</td>
+<td class="gt_row gt_left" headers="fate">juvenil</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Num_ind">5</td>
+<td class="gt_row gt_left" headers="stage">plantas_pequeñas</td>
+<td class="gt_row gt_left" headers="fate">adulto</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Num_ind">6</td>
+<td class="gt_row gt_left" headers="stage">plantas_pequeñas</td>
+<td class="gt_row gt_left" headers="fate">adulto</td>
+<td class="gt_row gt_right" headers="fertilidad">0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Ahora que tenemos los nombres de las columnas cambiados, podemos usar la función <strong>projection.matrix</strong> para calcular las transiciones y la fertilidad. En este caso, la columna “fertilidad” es la cantidad de individuos que se añaden a cada clase de edad. En este caso, solamente los adultos pueden reproducirse y añadir nuevos individuos a la clase de edad “plantas pequeñas”. En este caso, la fertilidad es 1/6 = 0.1666, o sea que un adulto añade un nuevo individuo a la clase de edad “plantas pequeñas” en el segundo periodo de tiempo.</p>
+<p>Aquí un ejemplo de la función</p>
+<p>projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=TRUE)</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Orchis_ficticia_df<span class="ot">=</span><span class="fu">as.data.frame</span>(Orchis_ficticia_por_ind) <span class="co"># Nota que es importante convertir la tabla de datos a un data frame si es en formato de tibble. </span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>stages<span class="ot">=</span><span class="fu">c</span>(<span class="st">"plantas_pequeñas"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto"</span>) <span class="co"># Las etapas del modelo en el primer muestreo</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>fate<span class="ot">=</span><span class="fu">c</span>(<span class="st">"plantas_pequeñas"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto"</span>, <span class="st">"Muerto"</span>) <span class="co"># Las etapas del modelo en el segundo periodo de muestreo</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">projection.matrix</span>(Orchis_ficticia_df, stage, fate, fertilidad, stages, <span class="at">TF=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$T
                   
-                   plantas_pequeñas juvenil adulto
-  plantas_pequeñas             0.25    0.25   0.25
-  juvenil                      0.25    0.25   0.25
-  adulto                       0.25    0.25   0.25
+                   plantas_pequeñas   juvenil    adulto
+  plantas_pequeñas        0.1428571 0.0000000 0.0000000
+  juvenil                 0.2857143 0.5000000 0.0000000
+  adulto                  0.4285714 0.3333333 0.6666667
 
 $F
                   
                    plantas_pequeñas   juvenil    adulto
-  plantas_pequeñas        0.1666667 0.1666667 0.1666667
+  plantas_pequeñas        0.0000000 0.0000000 0.1666667
   juvenil                 0.0000000 0.0000000 0.0000000
   adulto                  0.0000000 0.0000000 0.0000000</code></pre>
 </div>
@@ -1165,9 +2280,9 @@ $F
 <div class="cell-output cell-output-stdout">
 <pre><code>                  
                    plantas_pequeñas   juvenil    adulto
-  plantas_pequeñas        0.4166667 0.4166667 0.4166667
-  juvenil                 0.2500000 0.2500000 0.2500000
-  adulto                  0.2500000 0.2500000 0.2500000</code></pre>
+  plantas_pequeñas        0.1428571 0.0000000 0.1666667
+  juvenil                 0.2857143 0.5000000 0.0000000
+  adulto                  0.4285714 0.3333333 0.6666667</code></pre>
 </div>
 </div>
 <hr>
@@ -1176,8 +2291,9 @@ $F
 <section id="matriz-con-clonaje" class="level2">
 <h2 class="anchored" data-anchor-id="matriz-con-clonaje">Matriz con Clonaje</h2>
 <p><strong>THIS NEEDS TO BE REWORKED AND FOCUSED ON how to evaluate and code cloning</strong>. Half the script here is in chapter 7</p>
-<p>Muchas orquídeas se reproducen por clonaje, o sea que los individuos son genéticamente idénticos pero se separan de la planta madre. En algunas ocasiones estos clones se pueden separar de la planta madre por medio de un <strong>keiki</strong>. Este un método de reproducción asexual. En este caso, la matriz de transiciones se puede modificar para incluir el clonaje. Hay pocos ejemplos en las orquídeas de matriz que incluyen una sub-matriz de clonaje <strong>matC</strong>. Evolutivamente es solamente un individuo que crece y no hay fecundidad. Este concepto de crecimiento es diferente a la fecundidad y tiene importancia en los análisis de selección natural y deriva genética (los dos procesos evolutivos). El crecimiento poblacional por medio asexual puede impactar el creicimiento intrinsico de la población y la dinámica poblacional.</p>
-<p>Vemos un ejemplo del trabajo de <em>Cypripedium calceolus</em> en Europa <span class="citation" data-cites="garcia2010living">(<a href="#ref-garcia2010living" role="doc-biblioref">Garcı́a, Goni, and Guzmán 2010</a>)</span>. En este trabajo los autores querían explorar la dinámica de especies que viven a la periferia de su distribución geográfica. La poblaciones se encuentran en los Pirineos y en el norte de Europa. Aprovechamos para demostrar como se extrae las expecies que tienen una matriz de clonaje, <strong>matC</strong>.</p>
+<p>Muchas orquídeas se reproducen por clonaje, o sea que los individuos son genéticamente idénticos pero se separan de la planta madre. En algunas ocasiones estos clones se pueden separar de la planta madre por medio de un <strong>keiki</strong>. Este un método de reproducción asexual. En este caso, la matriz de transiciones se puede modificar para incluir el clonaje. Hay pocos ejemplos en las orquídeas de matriz que incluyen una sub-matriz de clonaje <strong>matC</strong>. Evolutivamente es solamente un individuo que crece y no hay fecundidad. Este concepto de crecimiento es diferente a la fecundidad y tiene importancia en los análisis de selección natural y deriva genética (los dos procesos evolutivos). El crecimiento poblacional por medio asexual puede impactar el crecimiento intrínsico de la población y la dinámica poblacional.</p>
+<p>Vemos un ejemplo del trabajo de <em>Cypripedium calceolus</em> en Europa <span class="citation" data-cites="garcia2010living">(<a href="#ref-garcia2010living" role="doc-biblioref">Garcı́a, Goni, and Guzmán 2010</a>)</span>. En este trabajo los autores querían explorar la dinámica de especies que viven a la periferia de su distribución geográfica. La poblaciones se encuentran en los Pirineos y en el norte de Europa. Aprovechamos para demostrar como se extrae las especies que tienen una matriz de clonaje, <strong>matC</strong>.</p>
+<p>Primero tenemos que bajar los datos de la base de datos de COMPADRE. Para esto, tenemos que usar la función <strong>cdb_fetch</strong> del paquete <strong>Rcompadre</strong>. Esta función baja los datos de la base de datos de COMPADRE y los guarda en un objeto llamado <strong>compadre</strong>.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1187,9 +2303,15 @@ $F
 <hr>
 <section id="extraer-de-compadre-las-matrices-cypripedium-calceolus." class="level3">
 <h3 class="anchored" data-anchor-id="extraer-de-compadre-las-matrices-cypripedium-calceolus.">Extraer de COMPADRE las matrices <em>Cypripedium calceolus</em>.</h3>
-<p>Extraer de la base de datos de COMPADRE las matrices de transiciones de <em>Cypripedium calceolus</em> del articulo mencionado arriba.</p>
-<p>Los pasos son los siguientes - Filtrar la base de datos para <em>Cypripedium calceolus</em> - Filtrar la base de datos para el DOI del articulo - Filtrar la base de datos para la dimensión de la matriz de transiciones (6x6) - Filtrar la base base de datos para una matriz en particular (242623)</p>
-<p>NOTA que se podría haber filtrado parte la MatrixID solamente.</p>
+<p>Segundo extraer de la base de datos de COMPADRE las matrices de transiciones de <em>Cypripedium calceolus</em> del artículo mencionado arriba.</p>
+<p>Los pasos son los siguientes</p>
+<ul>
+<li>Filtrar la base de datos para <em>Cypripedium calceolus</em></li>
+<li>Filtrar la base de datos para el DOI del artículo</li>
+<li>Filtrar la base de datos para la dimensión de la matriz de transiciones (6x6)</li>
+<li>Filtrar la base base de datos para una matriz en particular (242623)</li>
+</ul>
+<p>NOTA que se podría haber filtrado parte la <strong>MatrixID</strong> solamente si uno conoce la identificación de esta matriz en la base de datos.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1229,7 +2351,7 @@ A6 0.00 0.00 0.00 0.00 0.00 0.27</code></pre>
 <section id="extraer-la-matriz-de-clonaje" class="level2">
 <h2 class="anchored" data-anchor-id="extraer-la-matriz-de-clonaje">Extraer la matriz de Clonaje</h2>
 <p>NOTE que la matriz de clonaje es la siguiente.</p>
-<p>Lo que se observa es que hay NUEVOS individuos en el tiempo t+1, que provienen de los individuos en el tiempo t. En este caso, son individuos de que crecen a las etapas 4, 5 y 6 que producen individuos nuevos en la etapa 3 y 4.</p>
+<p>Lo que se observa es que hay NUEVOS INDIVIDUOS en el tiempo <span class="math inline">\(\text{t}_{i+1}\)</span>, que provienen de los individuos en el tiempo <span class="math inline">\(\text{t}_i\)</span>. En este caso, son individuos de provienen de a las etapas 4, 5 y 6 que producen individuos nuevos en la etapa 3 y 4.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1247,6 +2369,8 @@ C5  0  0  0 0.0 0.00 0.00
 C6  0  0  0 0.0 0.00 0.00</code></pre>
 </div>
 </div>
+<section id="el-ciclo-de-vida-de-cypripedium-calceolus-con-clonaje" class="level3">
+<h3 class="anchored" data-anchor-id="el-ciclo-de-vida-de-cypripedium-calceolus-con-clonaje">El ciclo de vida de <em>Cypripedium calceolus</em> con clonaje</h3>
 <p>Ahora vemos el ciclo de vida de <em>Cypripedium calceolus</em> en este estudio donde las lineas azules son las transiciones de una etapa las transiciones por clonaje.</p>
 <div class="cell">
 <details class="code-fold">
@@ -1297,18 +2421,20 @@ C6  0  0  0 0.0 0.00 0.00</code></pre>
 <span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-d935884fd0c3ac2d0136" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-d935884fd0c3ac2d0136">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=etapas;\n    node [shape= egg , fontsize= 12 ]; \"Dormant\"; \"Smallest\"; \"Small\"; \"Intermediate\"; \"Large\"; \"Extra Large\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"Dormant\"; \"Smallest\"; \"Small\"; \"Intermediate\"; \"Large\"; \"Extra Large\" } [style=invis] \"Dormant\" -> \"Dormant\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.11\"]\n\"Dormant\" -> \"Smallest\"[minlen=3,fontsize=10,color=black,xlabel=\" 0.17\"]\n\"Dormant\" -> \"Small\"[minlen=6,fontsize=10,color=black,xlabel=\" 0.31\"]\n\"Dormant\" -> \"Intermediate\"[minlen=9,fontsize=10,color=black,xlabel=\" 0.11\"]\n\"Dormant\" -> \"Large\"[minlen=12,fontsize=10,color=black,xlabel=\" 0.31\"]\n\"Smallest\" -> \"Dormant\"[minlen=-3,fontsize=10,color=black,xlabel=\" 0.1\"]\n\"Smallest\" -> \"Smallest\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.52\"]\n\"Smallest\" -> \"Small\"[minlen=3,fontsize=10,color=black,xlabel=\" 0.19\"]\n\"Smallest\" -> \"Intermediate\"[minlen=6,fontsize=10,color=black,xlabel=\" 0.1\"]\n\"Small\" -> \"Dormant\"[minlen=-6,fontsize=10,color=black,xlabel=\" 0.22\"]\n\"Small\" -> \"Smallest\"[minlen=-3,fontsize=10,color=black,xlabel=\" 0.02\"]\n\"Small\" -> \"Small\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.47\"]\n\"Small\" -> \"Intermediate\"[minlen=3,fontsize=10,color=black,xlabel=\" 0.16\"]\n\"Small\" -> \"Large\"[minlen=6,fontsize=10,color=black,xlabel=\" 0.04\"]\n\"Intermediate\" -> \"Dormant\"[minlen=-9,fontsize=10,color=black,xlabel=\" 0.14\"]\n\"Intermediate\" -> \"Smallest\"[minlen=-6,fontsize=10,color=black,xlabel=\" 0.01\"]\n\"Intermediate\" -> \"Small\"[minlen=-3,fontsize=10,color=blue,xlabel=\" 0.2\"]\n\"Intermediate\" -> \"Intermediate\"[minlen=0,fontsize=10,color=black,xlabel=\" 0.35\"]\n\"Intermediate\" -> \"Large\"[minlen=3,fontsize=10,color=black,xlabel=\" 0.22\"]\n\"Large\" -> \"Dormant\"[minlen=-12,fontsize=10,color=black,xlabel=\" 0.22\"]\n\"Large\" -> \"Smallest\"[minlen=-9,fontsize=10,color=black,xlabel=\" 0.02\"]\n\"Large\" -> \"Small\"[minlen=-6,fontsize=10,color=blue,xlabel=\" 0.05\"]\n\"Large\" -> \"Intermediate\"[minlen=-3,fontsize=10,color=black,xlabel=\" 0.13\"]\n\"Large\" -> \"Large\"[minlen=0,fontsize=10,color=black,xlabel=\" 0.57\"]\n\"Extra Large\" -> \"Dormant\"[minlen=-15,fontsize=10,color=black,xlabel=\" 0.17\"]\n\"Extra Large\" -> \"Smallest\"[minlen=-12,fontsize=10,color=black,xlabel=\" 0.03\"]\n\"Extra Large\" -> \"Small\"[minlen=-9,fontsize=10,color=blue,xlabel=\" 0.07\"]\n\"Extra Large\" -> \"Intermediate\"[minlen=-6,fontsize=10,color=blue,xlabel=\" 0.09\"]\n\"Extra Large\" -> \"Large\"[minlen=-3,fontsize=10,color=black,xlabel=\" 0.41\"]\n\"Extra Large\" -> \"Extra Large\"[minlen=0,fontsize=10,color=black,xlabel=\" 0.27\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-48407a2f0368c570974d" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-48407a2f0368c570974d">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=etapas;\n    node [shape= egg , fontsize= 12 ]; \"Dormant\"; \"Smallest\"; \"Small\"; \"Intermediate\"; \"Large\"; \"Extra Large\" \n  } ordering=out\n  x [style=invis]\n  x -> { \"Dormant\"; \"Smallest\"; \"Small\"; \"Intermediate\"; \"Large\"; \"Extra Large\" } [style=invis] \"Dormant\" -> \"Dormant\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.11\"]\n\"Dormant\" -> \"Smallest\"[minlen=3,fontsize=10,color=black,xlabel=\" 0.17\"]\n\"Dormant\" -> \"Small\"[minlen=6,fontsize=10,color=black,xlabel=\" 0.31\"]\n\"Dormant\" -> \"Intermediate\"[minlen=9,fontsize=10,color=black,xlabel=\" 0.11\"]\n\"Dormant\" -> \"Large\"[minlen=12,fontsize=10,color=black,xlabel=\" 0.31\"]\n\"Smallest\" -> \"Dormant\"[minlen=-3,fontsize=10,color=black,xlabel=\" 0.1\"]\n\"Smallest\" -> \"Smallest\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.52\"]\n\"Smallest\" -> \"Small\"[minlen=3,fontsize=10,color=black,xlabel=\" 0.19\"]\n\"Smallest\" -> \"Intermediate\"[minlen=6,fontsize=10,color=black,xlabel=\" 0.1\"]\n\"Small\" -> \"Dormant\"[minlen=-6,fontsize=10,color=black,xlabel=\" 0.22\"]\n\"Small\" -> \"Smallest\"[minlen=-3,fontsize=10,color=black,xlabel=\" 0.02\"]\n\"Small\" -> \"Small\"[minlen=0,fontsize=10,color=red,xlabel=\" 0.47\"]\n\"Small\" -> \"Intermediate\"[minlen=3,fontsize=10,color=black,xlabel=\" 0.16\"]\n\"Small\" -> \"Large\"[minlen=6,fontsize=10,color=black,xlabel=\" 0.04\"]\n\"Intermediate\" -> \"Dormant\"[minlen=-9,fontsize=10,color=black,xlabel=\" 0.14\"]\n\"Intermediate\" -> \"Smallest\"[minlen=-6,fontsize=10,color=black,xlabel=\" 0.01\"]\n\"Intermediate\" -> \"Small\"[minlen=-3,fontsize=10,color=blue,xlabel=\" 0.2\"]\n\"Intermediate\" -> \"Intermediate\"[minlen=0,fontsize=10,color=black,xlabel=\" 0.35\"]\n\"Intermediate\" -> \"Large\"[minlen=3,fontsize=10,color=black,xlabel=\" 0.22\"]\n\"Large\" -> \"Dormant\"[minlen=-12,fontsize=10,color=black,xlabel=\" 0.22\"]\n\"Large\" -> \"Smallest\"[minlen=-9,fontsize=10,color=black,xlabel=\" 0.02\"]\n\"Large\" -> \"Small\"[minlen=-6,fontsize=10,color=blue,xlabel=\" 0.05\"]\n\"Large\" -> \"Intermediate\"[minlen=-3,fontsize=10,color=black,xlabel=\" 0.13\"]\n\"Large\" -> \"Large\"[minlen=0,fontsize=10,color=black,xlabel=\" 0.57\"]\n\"Extra Large\" -> \"Dormant\"[minlen=-15,fontsize=10,color=black,xlabel=\" 0.17\"]\n\"Extra Large\" -> \"Smallest\"[minlen=-12,fontsize=10,color=black,xlabel=\" 0.03\"]\n\"Extra Large\" -> \"Small\"[minlen=-9,fontsize=10,color=blue,xlabel=\" 0.07\"]\n\"Extra Large\" -> \"Intermediate\"[minlen=-6,fontsize=10,color=blue,xlabel=\" 0.09\"]\n\"Extra Large\" -> \"Large\"[minlen=-3,fontsize=10,color=black,xlabel=\" 0.41\"]\n\"Extra Large\" -> \"Extra Large\"[minlen=0,fontsize=10,color=black,xlabel=\" 0.27\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <hr>
-<section id="problema-con-el-uso-tradicional-de-calcular-las-transiciones" class="level3">
-<h3 class="anchored" data-anchor-id="problema-con-el-uso-tradicional-de-calcular-las-transiciones">Problema con el uso tradicional de calcular las transiciones</h3>
-<p>El uso de estos métodos tradicionales aun que sean calculado a mano o usar la función <strong>projection.matrix</strong> del paquete <strong>popbio</strong> pudiese ser problemático. Los problemas ocurren por condiciones de muestreo, especialmente cuando trabajan con especies raras y los tamaños de muestra están pequeños o que las transiciones son raras de forma natural <span class="citation" data-cites="tremblay2021population gascoigne2023standard">(<a href="#ref-tremblay2021population" role="doc-biblioref">R. L. Tremblay et al. 2021</a>; <a href="#ref-gascoigne2023standard" role="doc-biblioref">Gascoigne et al. 2023</a>)</span>. En el capitulo XX: <strong>Impacto de datos sin sentidos</strong> se discute los problemas posibles cuando hay datos sin sentidos y como construir matrices más confiable y cuando se debería usar el método Bayesiano para los análisis. En el capitulo XX se discute como resolver asuntos de matrices para que sean más compatible con la biología de la especies estudiada y por consecuencia.</p>
+</section>
+<section id="limitaciones-de-los-métodos-tradicionales" class="level3">
+<h3 class="anchored" data-anchor-id="limitaciones-de-los-métodos-tradicionales">Limitaciones de los métodos tradicionales</h3>
+<p>El uso de estos métodos tradicionales aun que sean calculado a mano o usar la función <strong>projection.matrix</strong> del paquete <strong>popbio</strong> pudiese ser problemático. Los problemas ocurren por condiciones de muestreo, especialmente cuando trabajan con especies raras y los tamaños de muestra están pequeños o que las transiciones son raras de forma natural <span class="citation" data-cites="tremblay2021population gascoigne2023standard">(<a href="#ref-tremblay2021population" role="doc-biblioref">Tremblay et al. 2021</a>; <a href="#ref-gascoigne2023standard" role="doc-biblioref">Gascoigne et al. 2023</a>)</span>. En el capitulo XX: <strong>Impacto de datos sin sentidos biológico</strong> se discute los problemas posibles cuando hay datos sin sentidos y como construir matrices más confiable y cuando se debería usar el método Bayesiano para los análisis. En el capitulo <strong>Impacto de datos sin sentido biológico</strong> se discute como resolver asuntos de matrices para que sean más compatible con la biología de la especies estudiada y por consecuencia con más relevancia a la biología de los especies estudiada.</p>
 <p>Revisión:</p>
 <ul>
 <li>RLT: Apr 19, 2025</li>
 <li>Demetria:</li>
+<li>RLT: May 26, 2025</li>
 </ul>
 
 
@@ -1327,11 +2453,11 @@ Garcı́a, Marı́a B, Daniel Goni, and David Guzmán. 2010. <span>“Living at 
 <div id="ref-gascoigne2023standard" class="csl-entry" role="listitem">
 Gascoigne, Samuel J. L., Simon Rolph, Daisy Sankey, Nagalakshmi Nidadavolu, Adrian S. Stell Pičman, Christina M. Hernández, Matthew E. R. Philpott, et al. 2023. <span>“A Standard Protocol to Report Discrete Stage-Structured Demographic Information.”</span> <em>Methods in Ecology and Evolution</em>.
 </div>
-<div id="ref-tremblay2021population" class="csl-entry" role="listitem">
-Tremblay, Raymond L, Andrew J Tyre, Maria-Eglée Pérez, and James D Ackerman. 2021. <span>“Population Projections from Holey Matrices: Using Prior Information to Estimate Rare Transition Events.”</span> <em>Ecological Modelling</em> 447: 109526.
-</div>
 <div id="ref-tremblay2003population" class="csl-entry" role="listitem">
 Tremblay, RL, and MJ Hutchings. 2003. <span>“Population Dynamics in Orchid Conservation: A Review of Analytical Methods Based on the Rare Species <em>Lepanthes <span class="nocase">e</span>ltoroensis</em>.”</span> <em>Orchid Conservation. Kota Kinabalu: Natural History Publications (Borneo)</em>, 183–204.
+</div>
+<div id="ref-tremblay2021population" class="csl-entry" role="listitem">
+Tremblay, RL, Andrew J Tyre, Maria-Eglée Pérez, and James D Ackerman. 2021. <span>“Population Projections from Holey Matrices: Using Prior Information to Estimate Rare Transition Events.”</span> <em>Ecological Modelling</em> 447: 109526.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
