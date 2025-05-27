@@ -396,6 +396,8 @@ window.Quarto = {
   <li><a href="#por-aucencia-equipo-ecosur-y-rlt" id="toc-por-aucencia-equipo-ecosur-y-rlt" class="nav-link" data-scroll-target="#por-aucencia-equipo-ecosur-y-rlt">Por: Aucencia: equipo ECOSUR y RLT</a></li>
   <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a></li>
   <li><a href="#ejemplo-de-cálculo-de-fecundidad-como-semillas" id="toc-ejemplo-de-cálculo-de-fecundidad-como-semillas" class="nav-link" data-scroll-target="#ejemplo-de-cálculo-de-fecundidad-como-semillas">Ejemplo de cálculo de fecundidad como semillas</a></li>
+  <li><a href="#ejemplo-de-cálculo-de-fecundidad-como-semillas-y-plántulas" id="toc-ejemplo-de-cálculo-de-fecundidad-como-semillas-y-plántulas" class="nav-link" data-scroll-target="#ejemplo-de-cálculo-de-fecundidad-como-semillas-y-plántulas">Ejemplo de cálculo de fecundidad como semillas y plántulas</a></li>
+  <li><a href="#fecundidad-en-términos-de-plántulas" id="toc-fecundidad-en-términos-de-plántulas" class="nav-link" data-scroll-target="#fecundidad-en-términos-de-plántulas">Fecundidad en términos de plántulas</a></li>
   <li><a href="#sesgos-en-el-cálculo-de-fecundidad" id="toc-sesgos-en-el-cálculo-de-fecundidad" class="nav-link" data-scroll-target="#sesgos-en-el-cálculo-de-fecundidad">Sesgos en el cálculo de fecundidad</a></li>
   </ul></li>
   </ul>
@@ -442,6 +444,7 @@ window.Quarto = {
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<p>Visualizamos el ciclo de vida de la población con la función <code>plot_life_cycle()</code> de la librería <code>Rage</code>:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -450,10 +453,13 @@ window.Quarto = {
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">plot_life_cycle</span>(matA_sem, <span class="at">stages=</span>etapas, <span class="at">fontsize =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-2ff6abbded5daee038f9" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-2ff6abbded5daee038f9">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] } [style=invis] \"plántula\" -> \"juvenil\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.5\"]\n\"juvenil\" -> \"adulto\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.4\"]\n\"adulto\" -> \"plántula\"[minlen=-6,fontsize=5,color=grey,xlabel=\" 1000\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-9b724c4f2ca18b38fe80" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-9b724c4f2ca18b38fe80">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] } [style=invis] \"plántula\" -> \"juvenil\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.5\"]\n\"juvenil\" -> \"adulto\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.4\"]\n\"adulto\" -> \"plántula\"[minlen=-6,fontsize=5,color=grey,xlabel=\" 1000\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
+</section>
+<section id="ejemplo-de-cálculo-de-fecundidad-como-semillas-y-plántulas" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplo-de-cálculo-de-fecundidad-como-semillas-y-plántulas">Ejemplo de cálculo de fecundidad como semillas y plántulas</h2>
 <p>Por consecuencia una alternativa es calcular la fecundidad en términos de plántulas, utilizando una tasa de germinación o una tasa de supervivencia hasta la etapa de plántulas. Por ejemplo, si la tasa de germinación es del 50% y la tasa de supervivencia de plántulas es del 20%, y hay 75 adultos entonces la fecundidad en términos de plántulas sería: <span class="math display">\[Fecundidad = (1000 \times 0.5 \times 0.2) / 75 = 1.33 \]</span></p>
 <p>Por consecuencia la matriz cambia a:</p>
 <div class="cell">
@@ -470,19 +476,14 @@ window.Quarto = {
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a> <span class="fu">plot_life_cycle</span>(matA_pl, <span class="at">stages=</span>etapas, <span class="at">fontsize =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-d130240f6655afec8ba2" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-d130240f6655afec8ba2">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] } [style=invis] \"plántula\" -> \"juvenil\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.5\"]\n\"juvenil\" -> \"adulto\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.4\"]\n\"adulto\" -> \"plántula\"[minlen=-6,fontsize=5,color=grey,xlabel=\" 1.333\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-22ec57b76231f7476a64" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-22ec57b76231f7476a64">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] } [style=invis] \"plántula\" -> \"juvenil\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.5\"]\n\"juvenil\" -> \"adulto\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.4\"]\n\"adulto\" -> \"plántula\"[minlen=-6,fontsize=5,color=grey,xlabel=\" 1.333\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
+</section>
+<section id="fecundidad-en-términos-de-plántulas" class="level2">
+<h2 class="anchored" data-anchor-id="fecundidad-en-términos-de-plántulas">Fecundidad en términos de plántulas</h2>
 <p>Otra alternativa es calcular la fecundidad en términos de plántulas directamente, utilizando una tasa de fecundidad por adulto. Por ejemplo, si no hay información sobre la cantidad de semillas producidas, y/o la supervivencia y germinacion de estas a plántulas el metodo anterior no es muy viable. Se puede incluir un estimado del reclutamiento tomando en cuenta la cantidad de plántulas producidas total en el periodo <span class="math inline">\(t_2\)</span> divido por la cantidad de adultos en el periodo <span class="math inline">\(t_1\)</span>. Entonces si hubo 50 nuevas plántulas en el periodo <span class="math inline">\(t_2\)</span> y había 100 individuos en la etapa de adultos en el periodo <span class="math inline">\(t_1\)</span>, entonces la fecundidad en términos de plántulas sería: <span class="math display">\[Fecundidad = 50 / 100 = 0.5\]</span>.</p>
-<p>Hay unos supuestos importante aqui.</p>
-<ul>
-<li>que la cantidad de plántulas producidas en el periodo <span class="math inline">\(t_2\)</span> es el resultado de la fecundidad de los adultos en el periodo <span class="math inline">\(t_1\)</span>.</li>
-<li>en otra palabra no hay inmigrantes de otros sitios.</li>
-<li>no hay banco de semillas, semillas que provienen de otro periodo de tiempo y que no habían y que germinaron en el periodo contabilizado <span class="math inline">\(t_1\)</span>.</li>
-<li>que el periodo de muestreo (la ventana de muestreo) de las plántulas es cuando germinan la semillas y sean visibles al ecólogo.</li>
-</ul>
-<p>Naturalmente, no hay métodos perfectos para calcular la fecundidad, pero este es un método que puede ser usado cuando no hay información sobre la cantidad de semillas producidas, y/o la supervivencia y germinación de estas a plántulas. Siempre puede haber semillas que germinan en otros periodos de tiempo, que provienen de otros sitios y que no son contabilizadas en el periodo <span class="math inline">\(t_2\)</span>. Tanto que estos estimados no sean sesgados, pueden ser usados para calcular la fecundidad en términos de plántulas.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -497,8 +498,8 @@ window.Quarto = {
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a> <span class="fu">plot_life_cycle</span>(matA_pl2, <span class="at">stages=</span>etapas, <span class="at">fontsize =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-a3285963e096d7dde14c" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-a3285963e096d7dde14c">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] } [style=invis] \"plántula\" -> \"juvenil\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.5\"]\n\"juvenil\" -> \"adulto\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.4\"]\n\"adulto\" -> \"plántula\"[minlen=-6,fontsize=5,color=grey,xlabel=\" 0.5\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-4a46f8d2c3c20d4ebe5c" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-4a46f8d2c3c20d4ebe5c">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] } [style=invis] \"plántula\" -> \"juvenil\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.5\"]\n\"juvenil\" -> \"adulto\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.4\"]\n\"adulto\" -> \"plántula\"[minlen=-6,fontsize=5,color=grey,xlabel=\" 0.5\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>

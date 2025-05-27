@@ -2,9 +2,6 @@
 
 Por: Raymond L. Tremblay
 
-
-
-
 ```{r}
 
 if (!require("pacman")) install.packages("pacman")
@@ -13,7 +10,6 @@ pacman::p_load(janitor, tidyverse, devtools)
 library(tidyverse)
 library(janitor)
 library(popbio) # para la función projection.matrix()
-
 library(devtools) # para instalar el paquete desde github
 library(raretrans) # vea abajo para instalar esta libreria
 library(DiagrammeR)
@@ -22,32 +18,33 @@ library(gt)
 
 ```
 
-
 El objetivo de este capítulo es mostrar algunos de los problemas a los que nos enfrentamos al estimar parámetros de matrices poblacionales de especies raras, de especies con tamaños de muestra limitados o de especies con transiciones poco frecuentes. Particularmente, se muestran los problemas asociados a las matrices de especies raras y se propone un método basado en estadística bayesiana que permita estimar parámetros que representen de manera realista el ciclo de vida de la especie de estudio.
 
 Considere un primer ejemplo donde sabemos que la especie de interés tiene tres etapas en su ciclo de vida (semillas, plántulas y adultos) de las cuales sólo la etapa más grande (i.e., adultos) produce semillas. El primer paso para llevar a cabo el análisis es evaluar las etapas del ciclo de vida para determinar cuáles de éstas determinan mayoritariamente la dinámica poblacional de la especie así como evaluar que cuales son más prácticas de medir para llevar a cabo una óptima colecta de datos.
 
 En la primera figura podemos observar el ciclo de vida considerado para esta especie hipotética. Una vez definido el ciclo de vida de la especie procedimos a colectar datos de campo y a estimar las transiciones y la fertilidad. Los resultados obtenidos mostraron lo siguiente:
 
-1.  Las semilla germinaron y transitaron a la etapa de plántula?\
+1.  Las semilla germinaron y transitaron a la etapa de plántula?
 
 -   ¿Es realista que todas las semillas germinen?
--   ¿Por qué no se encontraron semillas que NO germinen?
+-   ¿Por qué no se encontraron semillas?
 
 2.  Todos las plántulas murieron antes de llegar a la etapa de adulto.
 
 -   ¿Es realista que todas las plántulas se mueran durante el ciclo de vida de una especie?
 
-Aquí podemos observar dos resultados no realistas de las matrices de proyección poblacionales (MPM). En estos casos ningún individuo muere o que todos se mueren, sin embargo, estos resultados están afectados por el tamaño de muestra. Suponga que para nuestra especie de interés solamente se tuvo acceso a 4 plantas adultas ya que es un especies rara, si estos 4 individuos sobreviven obtendríamos una supervivencia del 100%. Es decir, obtendríamos que ¡los individuos son inmortales! Claramente este resultado se debe más a un error debido al reducido tamaño de muestra que al ciclo de vida de la especie ya que por pura probabilidad no se encontró ninguna planta que se muera. Entonces, es importante reconocer cuando los parámetros que estimamos a partir de los datos colectados no reflejan la historia de vida típica de la especie.
+Aquí podemos observar dos resultados no realistas de las matrices de proyección poblacionales (MPP). En estos casos ningún individuo muere o que todos se mueren, sin embargo, estos resultados están afectados por el tamaño de muestra. Suponga que para nuestra especie de interés solamente se tuvo acceso a 4 plantas adultas ya que es un especies rara, si estos 4 individuos sobreviven obtendríamos una supervivencia del 100%. Es decir, obtendríamos que ¡los individuos son inmortales! Claramente este resultado se debe más a un error debido al reducido tamaño de muestra que al ciclo de vida de la especie ya que por pura probabilidad no se encontró ninguna planta que se muera. Entonces, es importante reconocer cuando los parámetros que estimamos a partir de los datos colectados no reflejan la historia de vida típica de la especie.
 
 El paquete **raretrans** ayuda a resolver estos problemas y a estimar parámetros más realistas al considerar explicítamente el ciclo de vida típico de la especie estudiada.
 
-Algunas características de ciclos de vida biológicamente NO realistas:
+Algunas características de ciclos de vida biologícamente NO realistas incluye:
 
 -   Todas las semilla sobreviven y pasan a plántulas
--   Ninguna plántula sobrevive y/o pasa a ser adulto -La mayorías de los adultos se quedan como adulto pero ninguno produce semillas
+-   Ninguna plántula sobrevive y/o pasa a ser adulto
+-   La mayorías de los adultos se quedan como adulto (ninguna mortandad)
+-   Ninguno de los adultos producen semillas
 
-NOTE que es posible que los datos colectados en campo arrojen estos valores, pero muchas veces esas observaciones son resultado de tamaños de muestra limitados.
+**NOTE**: que es posible que los datos colectados en campo arrojen estos valores, pero muchas veces esas observaciones son resultado de tamaños de muestra limitados.
 
 ```{r bayes1, message=FALSE}
 
@@ -64,21 +61,23 @@ title <- NULL
 
 ```
 
+## Un ciclo de vida incompleto
+
 ```{r bayes2}
 
 plot_life_cycle(matA, stages = stages)
 
 ```
 
-Considera el siguiente ejemplo:
+### Datos biologícamente irreal
 
--   Se quiere estudiar a los árboles del género *Sequoia*. Si se muestrean los árboles grandes (con un dbh de \> xxx) aunque la muestra sea de más de 1000 individuos es posible que no encontremos ningun individuo que muera entre un año y otro. Con estos datos podríamos determinar que la supervivencia para esta especie es del 100%. Sin embargo, es necesario considerar que 1) si el tamaño de muestra aumenta a 10,000 o 100,000 árboles se podrían haber detectado uno o más individuos muertos, 2) la mortalidad en plantas frecuentemente está relacionada con el tamaño del individuo, por lo que, entre más grande es un individuo menor es la probabilidad de morir y 3) que la mortalidad en este tipo de individuos puede ser dependiente del tiempo, es decir, en años con variación biótica o abiótica muy alta la mortalidad puede aumentar. Si toma en cuenta estas consideraciones en el estudio de *Sequoias* la mortalidad en estos individuos sería baja pero no 0.
+-   Se quiere estudiar a los árboles del género *Sequoia*. Si se muestran los árboles grandes (con un dbh de \> muy grande) aunque la muestra sea de más de 1000 individuos es posible que no encontremos ningún individuo que muera entre un año y otro o dos periodos de muestreo. Con estos datos podríamos determinar que la supervivencia para esta especie es del 100%. Sin embargo, es necesario considerar que 1) si el tamaño de muestra aumenta a 10,000 o 100,000 árboles se podrían haber detectado uno o más individuos muertos, 2) la mortalidad en plantas frecuentemente está relacionada con el tamaño del individuo, por lo que, entre más grande es un individuo menor es la probabilidad de morir y 3) que la mortalidad en este tipo de individuos puede ser dependiente del tiempo, es decir, en años con variación biótica o abiótica muy alta la mortalidad puede aumentar. Si toma en cuenta estas consideraciones en el estudio de *Sequoias* la mortalidad en estos individuos sería baja pero no 0.
 
 Tomando en cuenta los ejemplos anteriores podemos concluir que es importante considerar la biología de la especie, el método de muestreo y el tamaño de muestra para llevar a cabo un análisis de datos correcto.
 
 ## El paquete "raretrans"
 
-El manuscrito [@tremblay2021population, @raretrans2024] contiene los datos originales y el uso del paquete y se encuentra en https://doi.org/10.1016/j.ecolmodel.2021.109526.
+El manuscrito [@tremblay2021population, @raretrans2024] contiene los datos originales y el uso del paquete. Para tener acceso a los documentos siguen el siguiente enlace https://doi.org/10.1016/j.ecolmodel.2021.109526.
 
 **Population projections from holey matrices: Using prior information to estimate rare transition events**
 
@@ -87,8 +86,6 @@ Resumen
 Las matrices de proyección poblacional (MPM) son una herramienta común para predecir el comportamiento de la población a corto y largo plazo. Sin embargo, cuando se utilizan para especies raras, amenazadas y en peligro de extinción los datos disponibles suelen tener tamaños de muestra reducido. En consecuencia, algunos eventos demográficos podrían perderse en la modelación dando como resultado matrices con eventos faltantes que reflejen trayectorias de ciclo de vida incompletas o biológicamente poco realistas. Estas matrices con eventos faltantes (ceros; e.g., sin observación de semillas que se transforman en plántulas) a menudo se sustituye utilizando información de la literatura aunque información referente a otras poblaciones, otros períodos de tiempo, otras especies usualmente se omite.
 
 Una forma de abordar este problema es a través de estadística bayesiana para el ajuste de los parámetros matriciales. Este marco estadístico nos permite completar los valores faltantes usando un modelo multinomial de Dirichlet para parametrizar las transiciones de estado y una distribución Gamma para parametrizar la fecundida. Este método permite integrar información conocida (*a priori*) e incluir explícitamente el peso de la información previa en las distribuciones posteriores. Además, al establecer explícitamente las distribuciones a priori, los resultados son reproducibles y se pueden volver a evaluar con diferentes distribuciones *a priori* disponibles en el futuro. A continuación mostramos como el uso de estos métodos en datos reales influye en la dispersión de los posteriores y origina matrices irreducibles y ergódicas además de que nos permite hacer inferencias biológicamente más realistas sobre las probabilidades de transición y fertilidad.
-
-
 
 ## Instalación del paquete raretrans
 
@@ -104,13 +101,11 @@ library(raretrans)
 
 ```
 
-Ver el siguiente enlace para más información, la información que se presenta a continuación es una traducción y ampliación de la información del siguiente enlace.
+Ver el siguiente enlace para más información, la información que se presenta a continuación es una traducción y ampliación de la información del siguiente enlace. A continuación se muestra el uso del paquete `raretrans` para estimar los parámetros en una población y en un periodo de transición determinados.
 
 <https://atyre2.github.io/raretrans/articles/onepopperiod.html>
 
 ```{r bayes5, message = FALSE}
-
-
 
 # Mi tema de formato de las gráficas de ggplot2 personal
 rlt_theme <- theme(axis.title.y = element_text(colour="grey20",size=15,face="bold"),
@@ -119,15 +114,14 @@ rlt_theme <- theme(axis.title.y = element_text(colour="grey20",size=15,face="bol
         axis.title.x = element_text(colour="grey20",size=15,face="bold"))
 ```
 
-A continuación se muestra el uso del paquete `raretrans` para estimar los parámetros en una población y en un periodo de transición determinados.
 
 ## Obtención de la matriz de proyección
 
 `raretrans` asume que la matriz de proyección es una lista de dos matrices, una matriz de transición y una matriz de fertilidad. Este es el formato de salida de `popbio::projection.matrix`. Si tenemos transiciones individuales en nuestra base de datos (con clase data.frame()), podemos usar `raretrans::get_state_vector` para obtener el número inicial de individuos por etapa.
 
-Podemos utilizar la función `popbio::projection.matrix` para obtener los datos necesarios. Hacemos una demostración con los datos de transición y fertilidad de *Lepanthes elto* **POPNUM 250** en el **periodo 5**. *Lepanthes eltoroensis* es la orquídea epifita, endémica de Puerto Rico y con una distribución limitada a una pequeña región de la isla.
+Podemos utilizar la función `popbio::projection.matrix` para obtener los datos necesarios. Hacemos una demostración con los datos de transición y fertilidad de *Lepanthes elto* **POPNUM 250** en el **periodo 5**. *Lepanthes eltoroensis* es una orquídea epífita, endémica de Puerto Rico y con una distribución limitada a una pequeña región de la isla.
 
-## Paso 1: Cargar los datos de la una población de *L. elto*
+## Paso 1: Cargar los datos de la una población de *L. elto* del paquete **raretrans**
 
 ```{r bayes6}
 
@@ -151,6 +145,16 @@ onepop <- L_elto %>%
                            TRUE ~ stage),
          next_stage = case_when(next_stage == "p"~ "s",
                            TRUE ~ next_stage))  # redefine "p" por plantula a "s" para seedling
+```
+
+
+En el siguiente codigo usamos la función `popbio::projection.matrix()` para crear la matriz de proyección poblacional. Tenemos ahora nuestra matriz de transición y fecundidad basado en los datos de la población #250 del periodo 5. La función `projection.matrix()` requiere que se especifiquen los nombres de las etapas y los estados siguientes, así como el nombre de la columna de fertilidad. En este caso, las etapas son "s" (plántula), "j" (juvenil) y "a" (adulto), y el estado siguiente es "next_stage". La columna de fertilidad se llama "fertility". El argumento `sort` especifica el orden en que queremos que aparezcan las etapas en la matriz.
+
+Solamente los adultos pueden producir plántulas, por lo que la matriz de fertilidad tiene un valor de fertilidad solamente en la posición 1,3 (plántula, adulto). La función `projection.matrix()` devuelve una lista con dos matrices: una de transición y otra de fertilidad. La matriz de transición es una matriz cuadrada que muestra las probabilidades de transición entre las etapas, mientras que la matriz de fertilidad es una matriz que muestra la fecundidad por etapa.
+
+A partir de este punto los análisis se llevan a cabo considerando **s** (plántula), **j** (juvenil) y **a** (adulto), y ahora tenemos dos matrices: **T** (transición de estadios) y **F** (fertilidad). La tasa de crecimiento asintótica de la población observada es $\lambda$. Las transiciones raras que faltan en nuestra primera matriz de transición 'TF\$T', pero que sabemos que ocurren, son la transición de plántula (*s*) a adulto (*a*) y la transición de *j* a *s*.
+
+```{r bayes8_projectionMatrix, message=FALSE}
 
 # popbio::projection.matrix no funciona con el formato *tibbles*, por consecuencia se convierte en data.frame
 
@@ -162,19 +166,20 @@ TF <- popbio::projection.matrix(as.data.frame(onepop),
 TF # Este es la estructura de etapas de vida para esa población.  Nota que tenemos dos matrices, una de transiciones **T** y otra de fertilidad **F**. 
 ```
 
-## Nota:
 
-A partir de este punto los análisis se llevan a cabo considerando **s** (plántula), **j** (juvenil) y **a** (adulto), y ahora tenemos dos matrices: **T** (transición de estadios) y **F** (fertilidad). La tasa de crecimiento asintótica de la población observada es $\lambda =$ `r format(lambda(TF$T + TF$F),digits = 2)`. Las transiciones raras que faltan en nuestra primera matriz de transición 'TF\$T', pero que sabemos que ocurren, son la transición de plántula (*s*) a adulto (*a*) y la transición de *j* a *s*.
+***
+
 
 ## Paso 2: Obtener el número inicial de individuos por etapa
 
-Dado que nuestros conteos (número de individuos, *N*) y el tamaño de *muestra equivalente* *a priori* se expresa como múltiplo del número de individuos observados, necesitamos obtener el número de individuos en cada etapa ($N$) en el primer periodo de tiempo. Para esto Utilizamos la función `raretrans::get_state_vector()`. Se observa que la cantidad de individuos inciales por etapa es el número de individuos en el primer muestreo es muy limitada, con 11 plántulas, 47 juveniles y 34 adultos.
+Dado que nuestros conteos (número de individuos, $N$ y el tamaño de *muestra equivalente* *a priori* se expresa como múltiplo del número de individuos observados, necesitamos obtener el número de individuos en cada etapa ($N$) en el primer periodo de tiempo. Para esto utilizamos la función `raretrans::get_state_vector()`. Se observa que la cantidad de individuos inciales por etapa es el número de individuos en el primer muestreo es muy limitada, con 11 plántulas, 47 juveniles y 34 adultos.
 
 ```{r bayes8}
 
 N <- get_state_vector(onepop, stage = stage, sort=c("s","j","a")) 
 N # Un vector # de individuos iniciales para cada etapa, nota que la cantidad por etapa, "stage", son los individuos en el primer muestreo
 ```
+
 
 ## Método alterno para calcular transiciones, fertilidades y el número de individuos por etapas.
 
@@ -204,6 +209,8 @@ Fmat[1,3] <- 2/16 # contar 16 adultos reproductivos en el tiempo t y dos plántu
 TF2 <- list(Tmat = Tmat, Fmat = Fmat)
 ```
 
+La matriz de transición y la matriz de fertilidad y el vector de tamaño poblacional para la población 231, periodo 2 son:
+
 ```{r bayes10}
 
 TF2
@@ -212,7 +219,9 @@ N2
 
 ¿Cómo se ve el ciclo de vida de la población en ese periodo?
 
-A la matriz mostrada le falta la transición de plántula a juvenil. Ademas dado que ninguno de los 6 juveniles murió hay una sobrestimación de su supervivencia. La tasa de crecimiento asintótica de la población observada es $\lambda =$ `r format(lambda(TF2$T + TF2$F),digits = 2)`. La matriz no es ergódica (no se puede llegar a cualquier otro estado desde uno o más estados), y es reducible, lo que significa que una o más columnas y filas se pueden descartar y tienen las mismas propiedades en términos de sus eigenvalores y eigenvectores.
+A la matriz mostrada le falta la transición de plántula a juvenil. Ademas dado que ninguno de los 6 juveniles murió hay una sobrestimación de su supervivencia. La tasa de crecimiento asintótica de la población observada es $\lambda$. La matriz no es ergódica (no se puede llegar a cualquier otro estado desde uno o más estados), y es reducible, lo que significa que una o más columnas y filas se pueden descartar y tienen las mismas propiedades en términos de sus eigenvalores y eigenvectores.
+
+Lo que vimos anteriormente fueron algunos de los problemas reales que encontramos cuando usamos datos de campo y hay tamaños de muestra pequeños o transiciones raras. A continuación veremos cómo resolverlos.
 
 ```{r bayes11}
 
@@ -221,19 +230,19 @@ title <- NULL
 plot_life_cycle(Tmat, stages=stages2)
 ```
 
-Lo que vimos anteriormente fueron algunos de los problemas reales que nos encontramos cuando usamos datos de campo y hay tamaños de muestra pequeños o transiciones raras. A continuación veremos cómo resolverlos.
+
 
 ## Uso de priors para incorporar transiciones raras
 
-### Uso priors no informativos
+### Uso de priors no informativos
 
--   El paso siguiente solamente nos permite entender por qué no se calcula y por qué no es recomendable usar *priors* uniformes. Si se entiende el concepto de valores *a priori* y *a posteriori* puede saltarse este bloque e ir directo a la sección de *Añadiendo realidad a los análisis*. Tremblay (@tremblay2021population) muestran que un *prior* determinado por una distribución Dirichlet funciona para estimar las transiciones de una matriz (**T**) y que usar como *prior* una distribución gamma funciona para estimar los parámetros de fertilidad de la submatriz (**F**).
+-   El paso siguiente solamente nos permite entender por qué no es recomendable usar *priors* uniformes. Si se entiende el concepto de valores *a priori* y *a posteriori* puede saltarse este bloque e ir directo a la sección de *Añadiendo realidad a los análisis*. Tremblay (@tremblay2021population) muestran que un *prior* determinado por una distribución Dirichlet funciona para estimar las transiciones de una matriz (**T**) y que usar como *prior* una distribución gamma funciona para estimar los parámetros de fertilidad de la submatriz (**F**).
 
 ### Matriz de transición
 
 A continuación vamos a añadir una distribución Dirichlet uniforme como prior con un peso = $1$ a la matriz de transición, $T$. En este caso, tenemos 4 destinos (3 + muerte), por lo que cada destino añade 0,25 a la matriz de destinos *observados* (¡no a la matriz de transición!). Cuando especificamos una matriz con valores *a priori* para las transiciones, hay una fila más que columnas. Esta fila extra representa la mortalidad por etapa.
 
-Note que un prior uniforme no es recomendado, aquí se utiliza sólo para mostrar el concepto. Un prior uniforme probablemente no refleja el ciclo de vida de la especie. Por ejemplo, un prior unifome podría hacer que las plántulas pasen a adulto de un tiempo a otro o que los adultos regresen a ser plántulas, lo cual no tiene mucho sentido biológico en muchas especies.
+Note que un prior uniforme no es recomendado, aquí se utiliza sólo para mostrar el concepto. Un prior uniforme no refleja el ciclo de vida rasonable para especie biologicas. Por ejemplo, un prior uniforme podría hacer que las plántulas pasen a adulto de un tiempo a otro o que los adultos regresen a ser plántulas, lo cual no tiene mucho sentido biológico en muchas especies.
 
 ```{r bayes12_posterior1}
 
@@ -247,7 +256,7 @@ TF
 
 ### ¿Cómo calcular a mano las transiciones de estado ?
 
-Podemos obtener el mismo resultado 'a mano'. Lo primero que necesitamos es el vector de observaciones porque la distribución posterior se calcula a partir de las observaciones de transiciones, no de la matriz de transiciones.
+Podemos obtener el mismo resultado 'a mano'. Lo primero que necesitamos es el vector de observaciones porque la distribución posterior se calcula a partir de las observaciones de transiciones, no de la matriz de transiciones. Si no tiene experiencia con analisis Bayesiano es recomendable seguir los siguientes scripts
 
 ```{r bayes13_manualTransitionPost}
 
@@ -257,7 +266,7 @@ Tobs <- Tobs + 0.25 # añadir los valores a priori
 sweep(Tobs, 2, colSums(Tobs), "/")[-4,] # dividir por la suma de la columna y descarta la fila de muerte 
 ```
 
-El *prior* uniforme rellena las transiciones faltantes, pero también crea problemas porque algunos de los valores de transición que asigna son biológicamente imposibles en muchas especies. Por ejemplo, para la transición de adulto a plántula se asigna un valor, sin embargo, este valor sólo es posible en la matriz de fertilidad $F$ en las especies de *Lepanthes*. Debido a esto, no es recomendable el uso de priors uniformes ya que NO toma en cuenta el ciclo de vida de nuestra especie.
+El *prior* uniforme rellena las transiciones faltantes, pero también crea problemas porque algunos de los valores de transición que se asigna son biologícamente imposibles en muchas especies. Por ejemplo, para la transición de adulto a plántula se asigna un valor, sin embargo, este valor sólo es posible en la matriz de fertilidad $F$ en las especies de *Lepanthes*. Debido a esto, no es recomendable el uso de priors uniformes ya que NO toma en cuenta el ciclo de vida de nuestra especie. Sera necesario crear una matriz de **priors** que refleje el ciclo de vida de la especie de interés (vea abajo).
 
 ### Matriz de fertilidad
 
@@ -282,9 +291,9 @@ En el siguiente caso *alfa prior* es el número de descendientes observadois y *
 
 ```{r bayes15}
 
-obs_offspring <- N[3]*TF$F[1,3] 
-prior_alpha <- 1e-05
-prior_beta <- 1e-05
+obs_offspring <- N[3]*TF$F[1,3] # número de descendientes observados
+prior_alpha <- 1e-05  
+prior_beta <- 1e-05 
 posterior_alpha <- obs_offspring + prior_alpha
 posterior_beta <- N[3] + prior_beta
 posterior_alpha / posterior_beta # valores esperados de la fertilidad
@@ -302,23 +311,30 @@ unif <- list(T = fill_transitions(TF, N),
                                 beta = beta))
 unif
 ```
+***
+
 
 ## El crecimiento poblacional
 
-La tasa de crecimiento asintótico de la población es $\lambda =$ `r format(lambda(unif$T + unif$F),digits = 2)`. Esta tasa de crecimiento se reduce ligeramente cuando usamos un *prior* uniforme ya que las probabilidades de transición observadas de crecimiento y supervivencia se reducen ligeramente en comparación con las transiciones no observadas de crecimiento y supervivencia.
+La tasa de crecimiento asintótico de la población es $\lambda$. Esta tasa de crecimiento se reduce ligeramente cuando usamos un *prior* uniforme ya que las probabilidades de transición observadas de crecimiento y supervivencia se reducen ligeramente en comparación con las transiciones no observadas de crecimiento y supervivencia.
+
+
+***
 
 ### Otras opciones para el argumento \`returnType
 
 Por defecto, `fill_transitions()` devuelve la matriz de transición $T$, y `fill_fertility()` devuelve la matriz de fertilidad $F$. En ambas funciones existen tres valores que puede tomar el argumento `returnType`:
 
-1.  `fill_transitions(... returnType = "TN")` puede devolver una matriz aumentada en destinos, que es útil para la simulación. La cuarta fila de este resultado (véase más adelante) es el estado de mortalidad.
+### fill_fertility() y fill_transitions()
+
+`fill_transitions(... returnType = "TN")` puede devolver una matriz aumentada en destinos, que es útil para la simulación. La cuarta fila de este resultado (véase más adelante) es el estado de mortalidad.
 
 ```{r bayes17}
 
 fill_transitions(TF, N, returnType = "TN")
 ```
 
-2.  `fill_fertility(... returnType = "ab")` devuelve los vectores alfa y beta de los vectores posteriores.\
+ `fill_fertility(... returnType = "ab")` devuelve los vectores alfa y beta de los vectores posteriores.\
 
 ```{r bayes18}
 
@@ -328,20 +344,27 @@ fill_fertility(TF, N,
                returnType = "ab")
 ```
 
-3.  Ambas funciones también pueden devolver la matriz completa, la suma de $T$ y $F$.
+ 
+### returnType = "A"
+
+ `fill_transitions(... returnType = "A")` Ambas funciones también pueden devolver la matriz completa, la suma de $T$ y $F$ o sea la $matA$.
 
 ```{r bayes19}
 
 fill_transitions(TF, N, returnType = "A")
 ```
+***
+
 
 ## Añadiendo realidad a los análisis
 
 Hasta este punto, el objetivo era entender las funciones y su aplicaciones, ahora vamos a añadir realidad biológica a los análisis. Como se ha mencionado no debemos usar *priors* uniformes, debemos usar valores que reflejen el ciclo de vida de la especie de interés.
 
+***
+
 ### Incorporar priores informativos
 
-Para solucionar el problema de la creación de transiciones imposibles, especificamos *priors* informativos obtenidos del conocimiento de un experto en orquídeas epífitas de *Lepanthes* (RLT). La información tiene que tener la misma forma que la matriz de transiciones, i.e., con una fila más que columnas. Esta última fila representa los individuos que se mueren para cada etapa. Además, estos valores deberían ser especificados ANTES de colectar los datos de campo, para no sesgar los resultados.
+Para solucionar el problema de la creación de transiciones imposibles, especificamos *priors* informativos obtenidos del conocimiento de un experto en orquídeas epífitas de *Lepanthes* (RLT). La información tiene que tener la misma forma que la matriz de transiciones, i.e., con una fila más que columnas. Esta última fila representa los individuos que se mueren para cada etapa. Además, estos valores deberían ser preferiblemente especificados ANTES de colectar los datos de campo, para no sesgar los resultados.
 
 ```{r bayes20}
 
@@ -363,33 +386,41 @@ fill_transitions(TF, N, P = RLT_Tprior)
 
 ### Modificar el peso de los valores *a priori*
 
-Podemos especificar el peso de los valores **a priori** modificando el tamaño de muestra de cada etapa. Si tenemos poca confianza en los valores **a priori** le damos un peso pequeño para que los datos del campo dominen en los resultados.
+Podemos especificar el peso de los valores **a priori** modificando el tamaño de muestra de cada etapa. Si tenemos poca confianza en los valores **a priori** le damos un peso pequeño para que los datos del campo dominen más los resultados.
 
 ```{r bayes22}
 
 fill_transitions(TF, N, P = RLT_Tprior, priorweight = 0.5)
 ```
 
-En este caso, el prior se pondera con la mitad del número observado de transiciones. En este caso, con sólo 2 transiciones, el tamaño efectivo de la muestra **a priori** sigue siendo 1. Si el número de transiciones observadas fuera mayor, una ponderación **a priori** de 0,5N sería mayor que 1, pero permitiría que los datos dominen. Siempre se debería asignar al los *priors* un peso que sea menor que el tamaño de muestra observado ya que entre más pequeño sea valor de este peso mayor peso tendrán los datos del campo.
+En este caso, el prior se pondera con la mitad del número observado de transiciones. En este caso, con sólo 2 transiciones, el tamaño efectivo de la muestra **a priori** sigue siendo 1. Si el número de transiciones observadas fuera mayor, una ponderación **a priori** de 0,5N sería mayor que 1, pero permitiría que los datos dominen. Siempre se debería asignar al los *priors* un peso que sea menor (preferiblemente mucho menor) que el tamaño de muestra observado ya que entre más pequeño sea mayor peso tendrán los datos del campo.
 
 Note que ahora tenemos una matriz de transición que es ergódica y reducible. En adición la tasa de mortandad y la tasa de transiciones son más realista.
+
+
+*** 
 
 ## Intervalos de credibilidad de los parámetros
 
 A continuación obtendremos los intervalos de creibilidad (ICr) para cada entrada de la matriz. Como la distribución posterior marginal de un elemento en una multinomial es una distribución beta es posible utilizar estas distribuciones beta para calcular los intervalos de credibilidad de las tasas de transición. Para esto podemos usar el tipo de retorno **TN** para obtener los parámetros deseados. Esas son las estimaciones puntuales (comparar con la primera columna anterior), inferior y superior $95\%$ de los intervalos de credibilidad simétricos para transiciones de la etapa de plántula. Sin embargo, existe un alto grado de incertidumbre debido a la tamaño de muestra pequeño ($2$) y al bajo peso que tienen los *priors* ($1$), lo que implica a un tamaño de muestra efectivo de 3.
 
-Ahora tenemos sobre la credibilidad de los parámetros. Por ejemplo la tasa de mortandad puntual es de 0.31 pero el intervalo de 95% de credibilidad es entre 0.096 y 0.585 demostrando que el mejor estimado de este parámetro es muy incierto.
+Ahora tenemos sobre la credibilidad de los parámetros. Por ejemplo la tasa de mortandad puntual es de 0.31 pero el intervalo de 95% de credibilidad es entre 0.096 y 0.585 demostrando que el mejor estimado de este parámetro es muy incierto. Este es claramente un ejemplo de cómo los tamaños de muestra pequeños pueden afectar la credibilidad de los parámetros. En este caso, el intervalo de credibilidad es muy amplio, lo que indica que hay mucha incertidumbre en la estimación de la tasa de transición.
 
 ```{r bayes23}
 
 TN <- fill_transitions(TF, N, P = RLT_Tprior, priorweight = 0.1, returnType = "TN")
 a <- TN[,1] # cambie 1 a 2, 3 etc para obtener la distribución beta marginal de cada columna. 
-b <- sum(TN[,1]) - TN[,1]# cambie 1 a 2, 3 etc para obtener la distribución beta marginal de cada columna. 
+b <- sum(TN[,1]) - TN[,1] # cambie 1 a 2, 3 etc para obtener la distribución beta marginal de cada columna. 
 p <- a / (a + b)
 lcl <- qbeta(0.025, a, b) # el valor 0.025 de la distribución beta
 ucl <- qbeta(0.975, a, b) # el valor 0.975 de la distribución beta
-knitr::kable(sprintf("%.3f (%.3f, %.3f)", p, lcl, ucl))
+knitr::kable(sprintf("%.4f (%.4f, %.4f)", p, lcl, ucl)) # Crear una tabla con los resultados con 4 cifras decimales (note la ultima fila son los fallecidos)
 ```
+
+
+Una de la gran ventaja de usar el paquete `raretrans` es que podemos calcular los intervalos de credibilidad de las tasas de transición y fertilidad de manera rápida y sencilla. Ademas que los intervalos de confianza estan limitado a los valores entre 0 y 1, lo que es importante para las tasas de transición y fertilidad. Esto es especialmente útil cuando se trabaja con datos de campo donde el tamaño de muestra es pequeño y las transiciones raras son comunes. Muchos metodos estadísticos no pueden calcular intervalos de confianza para tasas de transición y fertilidad, y cuando lo hacen tienen valores ilógicos como proporciones negativa o mayores a 1.  
+
+*** 
 
 ### El efecto del tamaño de muestra sobre los intervalos de credibilidad
 
@@ -421,21 +452,27 @@ ggplot(data = alltogethernow,
   rlt_theme
 ```
 
-## Intervalo de credibilidad de $\lambda$
+***
 
-Obtener intervalos de credibilidad para la tasa de crecimiento asintótica, $\lambda$, requiere simular matrices a partir de las distribuciones posteriores. Estas simulaciones usualmente son complicadas de hacer, por lo que hemos incorporado en el paquete la función `raretrans::sim_transitions()` para generar una lista de matrices simuladas dada la matriz observada y las especificaciones previas. En otras palabras, esta función se calcula múltiples veces la matriz de transición y fertilidad basándose en los datos observados y en los valores *a priori* especificados pero variando los valores de los parámetros de las distribuciones beta y gamma.
+## Simulación de la distribución posterior
 
-En este ejemplo, simulamos 5000 matrices y calculamos el valor $\lambda$ de cada matriz. Después, creamos un histograma de la distribución de $\lambda$.
+### Intervalo de credibilidad de $\lambda$
 
-Corra el script múltiples veces, y verá que los valores cambian a cada simulación. En este script se simula solamente una vez.
+Obtener intervalos de credibilidad para la tasa de crecimiento asintótica, $\lambda$, requiere simular matrices a partir de las distribuciones posteriores. Estas simulaciones usualmente son complicadas de hacer, por lo que hemos incorporado en el paquete la función `raretrans::sim_transitions()` para generar una lista de matrices simuladas dada la matriz observada y las especificaciones previas. En otras palabras, esta función se calcula múltiples veces de las matrices de transición y fertilidad basándose en los datos observados y en los valores *a priori* especificados pero variando los valores de los parámetros de las distribuciones beta y gamma.
+
+### Simulación de una matriz de transición
+
+Corra el script múltiples veces, y verá que los valores cambian en cada simulación. En este script la simulación es solamente de una vez (samples = 1). Este script es para que visualizan lo que hace la función `sim_transitions()`. 
 
 ```{r bayes25}
 
 sim_transitions(TF, N, P = RLT_Tprior, alpha = alpha, beta = beta,
-                priorweight = 0.5)
+                priorweight = 0.5, samples = 1)
 ```
 
-Ahora simulamos 5000 veces, calculamos el valor $\lambda$ de cada matriz y creamos un histograma de su distribución. Se añade el valor de lambda en un objeto llamado RLT_0.5. Posteriormente se crea un histograma de la distribución de $\lambda$. Note que el valor de $\lambda$ = 1 queda dentro de la distribución, en otras palabras el histograma muestra que la mayoría de los valores de $\lambda$ están cerca de 1.
+### Simulación de 5000 matrices de transición
+
+Ahora simulamos 5000 veces, calculamos el valor $\lambda$ de cada matriz y creamos un histograma de su distribución. Se añade los valores de lambda en un objeto llamado RLT_0.5. Posteriormente se crea un histograma de la distribución de $\lambda$. Note que el valor de $\lambda$ = 1 queda dentro de la distribución, en otras palabras el histograma muestra que la mayoría de los valores de $\lambda$ están cerca de 1.
 
 ```{r bayes26}
 
@@ -449,7 +486,10 @@ beta2 <- matrix(c(NA_real_, NA_real_, 1,
 # generar 5000 matrices basado en las previas de transciones y de fertilidades, el tamaño de muestra, en adición de los datos
 RLT_0.5 <- sim_transitions(TF, N, P = RLT_Tprior, alpha = alpha2, beta = beta2,
                 priorweight = 0.5, samples = 5000)
-# extract the lambdas for each matrix
+
+
+# extraer los valores de lambda de cada simulación en un histograma
+
 RLT_0.5 <- tibble(lposterior = map_dbl(RLT_0.5, lambda)) # convertir la lista en un tibble
 ggplot(data = RLT_0.5,
        mapping = aes(x = lposterior)) + 
@@ -458,11 +498,15 @@ ggplot(data = RLT_0.5,
                 color = "blue", linewidth=1.5)
 ```
 
+***
+
 ## Determinar si el $\lambda$ es significativamente diferente de 1
 
 Esta prueba está basada en la simulación de la distribución posterior.
 
-Se calcula la distribución de las $\lambda$ y se determina si $\lambda$ observada es significativamente más grande que 1. También podemos calcular algunas estadísticas descriptivos, donde `pincrease` es el probabilidad de que $\lambda > 1$. En este caso el valor de $\lambda$ no es significativamente más grande que 1 ya que se obtuvo un valor de 0.13.
+Se calcula la distribución de las $\lambda$ y se determina si $\lambda$ observada es significativamente más grande que 1. También podemos calcular algunas estadísticas descriptivos, donde `p_increase` es el probabilidad de que $\lambda > 1$. En este caso el valor de $\lambda$ no es significativamente más grande que 1 ya que se obtuvo un valor de 0.14.  Aunque el histogama siguiere que el crecimiento es menor de 1, la probabilidad de que $\lambda$ sea mayor que 1 es de 0.14, lo que indica que hay una probabilidad del 14% de que la población esté creciendo. Dando poca apoyo que la población este creciendo. 
+
+
 
 ```{r bayes27}
 
@@ -471,7 +515,7 @@ RLT_0.5_summary <- summarize(RLT_0.5,
                              meanL = mean(lposterior),
                              lcl = quantile(lposterior, probs = 0.025),
                              ucl = quantile(lposterior, probs = 0.975),
-                             pincrease = sum(lposterior > 1.)/n())
+                             p_increase = sum(lposterior > 1.)/n())
 ```
 
 ### Tabla de resultado de lambda
@@ -489,3 +533,5 @@ Sept 15, 2024
 RLT: Oct 8, 2024
 
 Paola: Apr 25, 2025
+
+RLT: May 27, 2025
