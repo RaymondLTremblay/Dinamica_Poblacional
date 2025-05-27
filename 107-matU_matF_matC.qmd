@@ -4,7 +4,7 @@ Raymond L. Tremblay
 
 #### Librerías de R requeridas para el siguiente módulo
 
-```{r, message=FALSE, warning=FALSE}
+```{r matA, message=FALSE, warning=FALSE}
 
 library(DiagrammeR)
 library(Rage)
@@ -13,7 +13,6 @@ library(dplyr)
 library(purrr)
 
 ```
-
 
 ## Tres tipos de matrices
 
@@ -27,6 +26,8 @@ Definiciones de las matrices
 -   MatA = MatU + MatF + MatC
 
 ![Relación entre matrices; Diseño: Samuel Gascoigne](Figures/Matrices_A_U_F_C.jpg){width="90%"}
+
+***
 
 ## MatU: Matriz de transiciones
 
@@ -43,6 +44,8 @@ stages <- c("Plantulas", "Juvenil", "Adulto")
 plot_life_cycle(matU, stages=stages)
 ```
 
+***
+
 ## MatF: Matriz de fecundidad
 
 Si uno sigue la figura resultante del Script 2. puede observar que algunos de los individuos en la segunda etapa pueden producir plántulas. Por consecuencia seria probablemente más adecuado cambiar de nombre para la segunda etapa de "juvenil" a "adultos pequeños"; debido que el concepto de juvenil pudiese ser confundido con individuos no reproductivos. Lo que se observa en el ciclo de vida son las aportaciones de plántulas que provienen de adultos pequeños y grandes. Esta separación de categorías de adultos (en este caso pequeños y grandes) es recomendables cuando las probabilidades de fecundidad son muy diferentes entre clases de tamaño, por ejemplo, en el caso de *Guariante aurantica* [@mondragon2009population] en donde al estudiar su demografía se decidió crear dos categorías de reproductivos r1 (altura del pseudobulbo entre 7 y 15 cm) y r2( pseudobulbo \> 15 cm) en donde la producción de plántulas fue de 0.007, en tanto que la de los individuos r2 fue de 0.121.
@@ -58,19 +61,27 @@ stages <- c("Plantulas", "Ind Pequeños", "Ind Grande")
 plot_life_cycle(matF, stages=stages)
 ```
 
+***
+
+
 ## MatC = Matriz de clonación
 
-Esa matriz representa la contribución de la reproducción asexual en la dinámica de la población. Primeramente, es muy importante entender que la propagación asexual da origen a un individuo ecológicamente independiente (ramet), aunque genéticamente sea el mismo individuo (genet) [@cook1983clonal]. Tomemos el caso de un individuo de *Epidendrum* en el que la producción de nuevos tallos claramente NO es una reproducción ya que los tallos permanecen unidos y conectados (como las ramas de un árbol) y representan más una forma de crecimiento que una reproducción, ya que el destino demográfico de cada tallo es dependiente del destino de los otros tallos. Por el contrario, en el caso de *Artorima erubensis* en donde las cadenas de pseudobulbos pueden fraccionarse y cada sección tendrá un destino demográfico independiente del otro fragmento, en ese caso SI se podría estar hablando de una reproducción vegetativa [@garciasoriano2003demografia]. Esto quizá quede más claro para el caso de en especies de orquídeas que producen *keikis*, en donde cada *keiki* es un nuevo individuo ecológico que se agrega a la población, ya que al momento en que se separan de la madre, su crecimiento, su sobrevivencia y su fecundidad es independiente del destino de la madre.
+Esa matriz representa la contribución de la reproducción asexual en la dinámica de la población. Primeramente, es muy importante entender que la propagación asexual da origen a un individuo ecológicamente independiente (ramet), aunque genéticamente sea el mismo individuo (genet) [@cook1983clonal]. Tomemos el caso de un individuo de *Epidendrum* en el que la producción de nuevos tallos claramente NO es una reproducción ya que los tallos permanecen unidos y conectados (como las ramas de un árbol) y representan más una forma de crecimiento que una reproducción, ya que el destino demográfico de cada tallo es dependiente del destino de los otros tallos. Por el contrario, en el caso de *Artorima erubensis* en donde las cadenas de pseudobulbos pueden fraccionarse y cada sección tendrá un destino demográfico independiente del otro fragmento, en ese caso se podría estar hablando de una reproducción vegetativa [@garciasoriano2003demografia]. Esto quizá quede más claro para el caso de en especies de orquídeas que producen *keikis*, en donde cada *keiki* es un nuevo individuo ecológico que se agrega a la población, ya que al momento en que se separan de la madre, su crecimiento, su sobrevivencia y su fecundidad es independiente del destino de la madre.
 
 Cabe destacar que la incorporación de nuevos ramets, no puede ser incorporada la información de nuevos individuos a la matriz de fecundidad **matF** (cuando esta es calculada vía plántulas) ya que el comportamiento de individuos generados a través de la propagación vegetativa es completamente diferente al de las plántulas, primeramente, desde su origen las plántulas provienen de semillas, mientras que los ramet son originadas a través de un meristemo, este origen también conlleva a que los ramets presenten tasas mucho mayores de crecimiento y sobrevivencia que el de las plántulas ya que reciben cuidados maternos (mientras estén conectados a la planta madre reciben nutrimentos y agua de ella). Así su incorporación en la matriz es generalmente en estadios superiores, como se puede ver en el scrip 3 en donde el aporte se hace a la categoría de los juveniles, note que esto provocará que en la matriz **matA** las transiciones (cuyos valores oscilan entre 0-1), pudiese tener valores superiores ya que la entrada en dicha matriz será la suma de la transición más la fecundidad vía ramets.
 
 Es importante enfatizar que añadir el concepto de clonaje dentro de la matriz **matU** de transiciones resulta en estimados de parámetros diferentes, tal como el tamaño efectivo de población, Ne, en adición de evaluar otros conceptos evolutivos. En estudios evolutivos no es el individuo como tal que es la unidad de interés pero el individuo como fuente de diversidad genética, por consecuencia individuos (clones) que son genéticamente igual son evolutivamente el mismo individuos aunque estén separado físicamente. Las poblaciones organizados en clones afecta la interpretación de datos tanto en los estudios ecológico y evolutivos [@cook1983clonal].
 
+
+***
+
 ### Ramet y Genet
 
 Cuando se estudia especies con clonación hay que diferenciar entre el crecimiento que es el "ramet" y un "genet". Los "genets" son la suma de todas las partes "los ramets" que tiene la misma genética. Los "ramet", son las partes individuales del individuo. En orquídea se podría considerar cada seudobulbo como un ramet y la suma de todos los seudobulbo como el "genet". Hay acercamiento para tomar en cuenta la adecuación de los "individuos" en la matriz y por consecuencia integrar el concepto de clonación en los estimados, vea:[@mcgraw1996estimation].
 
-A continuación vemos un ejemplo de una matriz de clonación. El único ejemplo en la base de datos de COMPADRE es el de *Cypripedium calceolus* [@garcia2010living]. Aprovechamos para demostrar como extraer matrix caracteristica especifica de la base de datos de COMPADRE.
+A continuación vemos un ejemplo de una matriz de clonación. El único ejemplo en la base de datos de COMPADRE es el de *Cypripedium calceolus* [@garcia2010living]. Aprovechamos para demostrar como extraer matriz con característica específica de la base de datos de COMPADRE.
+
+***
 
 
 ### Decargar la base de datos de compradre
@@ -80,20 +91,22 @@ A continuación vemos un ejemplo de una matriz de clonación. El único ejemplo 
 compadre <- cdb_fetch("compadre")
 ```
 
-## Extraer MPMs con matriz de clonaje
+*****
 
-Nota que se suma todos los valores de la matriz de clonaje (matC). Toda especie que tenga un valor mayor a 0 en la matriz de clonaje se considera que tiene clonaje en por lo menos una de las etapas de su ciclo de vida.
+## Extraer MPP con matriz de clonaje
+
+En el siguiente script se suma todos los valores de la matriz de clonaje (matC). Toda especie que tenga un valor mayor a 0 en la matriz de clonaje se considera que tiene clonaje en por lo menos una de las etapas de su ciclo de vida. Se observa que hay 8162 especies que no tienen información en matC, una población con un matC que su suma es 0.001, etc.
 
 ```{r mat5}
 
-#Finding MPMs with clonality
+#Encontrar MPP con matC clonaje no cero
 compadre$clonality <- 0
 
 for (i in 1:dim(compadre)[1]){
   compadre$clonality[i] <- sum(compadre$mat[[i]]@matC) # suma de todos los valores de la matriz de clonación
 }
 
-# table(compadre$clonality) # Remover el "#" para ver los resultados, 
+# table(compadre$clonality) # Remover el "#" para ver todos los resultados, 
 
 head(table(compadre$clonality)) #Se observa la suma de las matrices de clonaje, hay 8162 especies que no tiene información en matC, una población con un matC que su suma es 0.001, etc.    
 
@@ -101,44 +114,57 @@ head(table(compadre$clonality)) #Se observa la suma de las matrices de clonaje, 
 
 ```
 
-#### Control de Calidad
 
-Añade control de calidad a la base de datos (por ejemplo, para entradas faltantes en matA).
+*** 
+
+### Control de Calidad de las matriz
+
+Añade control de calidad a la base de datos (por ejemplo, para entradas faltantes en **matA**). En el capítulo de la COMPADRE y las orquídeas que se encuentra en la base de datos @Compadre se describe muchas alternativa para la limpieza y o sea la selección de las matriz con datos específicos.   
 
 ```{r mat6}
 
 compadre_flagged <- cdb_flag(compadre, checks = "check_NA_A") # Evaluar que la matA no es nula
 ```
 
+
+***
+
 ## Orquídeas con clonaje
 
-Ahora filtar para orquídeas solamente y para aquellos con matC no nulo (clonality \>0). Se observa que solamente dos poblaciones tienen información de clonación.
+Ahora filtrar para orquídeas solamente y para aquellos con matC no nulo (clonality \>0). Se observa que solamente dos poblaciones tienen información de clonación.
 
 ```{r mat7}
 
 orchid_clonal <- compadre_flagged %>% 
-  filter(Family == "Orchidaceae") %>% # filtrar para orquideas
-  filter(clonality > 0) # filtrar para aquellos con matC no nulo
+  filter(Family == "Orchidaceae") %>%    # filtrar para orquideas
+  filter(clonality > 0)                  # filtrar para aquellos con matC no nulo
 
 # Visualizar la base de datos de orquídea, se observa solamente dos matrices de clonaje
-summary(orchid_clonal)
+
+
 unique(orchid_clonal$SpeciesAuthor) # hay dos poblaciones solamente en toda la base de datos
 
 ```
 
-## El estudio de *Cypripedium calceolus*
+***
 
-Selecionamos solamente un ejemplo la Matriz de *Cypripedium calceolus*, #242621 [@garcia2010living], que es la matrz promedio de la tercera población.
+### El estudio de *Cypripedium calceolus*
+
+Seleccionamos solamente un ejemplo la Matriz de *Cypripedium calceolus*, #24262 [@garcia2010living], que es la matriz promedio de la tercera población (SpeciesAuthor==Cypripedium_calceolus_3).
 
 ```{r mat8}
 
 Cyp_cal_2 <- orchid_clonal %>%
-  filter(MatrixID == 242621)
+  filter(MatrixID == 242624)
 
 Cyp_cal_2
 ```
 
-Buscar la población que tiene **matC** máxima.
+***
+
+#### Buscar la población que tiene **matC** máxima.
+
+En esta codigo, se evaluá todas las orquideas donde tiene una matriz de clonaje y se filtra para la que tiene la suma de matC máxima. En este caso, es la misma población que se seleccionó en el script anterior.
 
 ```{r mat9}
 
@@ -153,9 +179,11 @@ orchid_clonal %>%
 
 ```
 
-## El estudio de *Cypripedium calceolus*
+***
 
-Selecionamos solamente un ejemplo la Matriz de *Cypripedium calceolus*, #242624 [@garcia2010living]. Este estudio tiene como objetivo evaluar la hipótesis de que las poblaciones que viven al margen de su distribución son más susceptible que las poblaciones que viven en el centro de la distribución, el modelo de central-marginal. La especie fue modelado basado en 6 etapas, "muy pqueñas", "pequeñas", "intermedias", "grandes", "muy grandes" y "extra grandes" en adición de una etapa de "latencia". García et al. reconoce que en *Cypripedium calceolus* es difícil diferenciar entre reclutamiento sexual y asexual y que la percepción de reclutamiento asexual es probablemente mucho más común que el reclutamiento sexual [@garcia2010living, @kull1995genet].
+#### El estudio de *Cypripedium calceolus*
+
+Seleccionamos solamente un ejemplo la Matriz de *Cypripedium calceolus*, #242624 [@garcia2010living]. Este estudio tiene como objetivo evaluar la hipótesis de que las poblaciones que viven al margen de su distribución son más susceptible que las poblaciones que viven en el centro de la distribución, el modelo de central-marginal. La especie fue modelado basado en 6 etapas, "muy pequeñas", "pequeñas", "intermedias", "grandes", "muy grandes" y "extra grandes" en adición de una etapa de "latencia". García et al. [@garcia2010living] reconoce que en *Cypripedium calceolus* es difícil diferenciar entre reclutamiento sexual y asexual y que la percepción de reclutamiento asexual es probablemente mucho más común que el reclutamiento sexual [@garcia2010living, @kull1995genet].
 
 ```{r mat10}
 
@@ -165,35 +193,39 @@ Cyp_cal_2 <- orchid_clonal %>%
 Cyp_cal_2
 ```
 
-Las etapas del ciclo de vida de *Cypripedium calceolus* son:
+***
+
+#### Las etapas del ciclo de vida de *Cypripedium calceolus* son:
+
+Aquí visualizamos las etapas del ciclo de vida de *Cypripedium calceolus* y la matriz de transición, fecundidad y clonación. 
 
 ```{r mat11}
 
-Cyp_cal_2$mat #
+Cyp_cal_2$mat[[1]] #[[1]] ver las etapas del ciclo de vida de esta población con las tres matrices
 ```
 
-Vizualizar matU, matF y matC
+***
 
-```{r mat12}
+#### Visualizar la transición de las diferentes etapas por clonación
 
-Cyp_cal_2$mat[[1]]
-
-```
-
-Visualizar la transición de las diferentes etapas por clonación
+Podemos visualizar las transiciones de las diferentes etapas por clonación. Usa la función `plot_life_cycle` de la librería **Rage** para visualizar el ciclo de vida. En este caso, las etapas son "Dormant", "Smallest", "Small", "Inter", "Large", "ExtraLarge" y la matriz de clonación es la **matC**.  Si se reemplaza la matriz de clonación por la matriz **matA** se puede ver el ciclo de vida con todas las transiciones, fecundidad y clonación.
 
 ```{r mat13}
 
 #remotes::install_github("jonesor/Rage") # Instalar de Github para la más reciente versión
 library(Rage)
 
-matC=matC(Cyp_cal_2)
+matC=matC(Cyp_cal_2) # extraemos la matriz de clonación de este especie/población
+
 
 
 plot_life_cycle(matC[[1]], stages = c("Dormant", "Smallest", "Small", "Inter", "Large", "ExtraLarge"), node_order = c(2,1,3,4,5, 6))
 
 
 ```
+
+
+***
 
 ### Ejemplo de inclusión de matC en otras familias
 
@@ -209,7 +241,12 @@ for (i in 1:dim(compadre)[1]){
 
 ```
 
-Ver cual las lista especie tienen incluido la matriz de clonación, **matC**. En esta lista vemos 825 filas, donde esto incluye las poblaciones muestreadas donde matC \> 0.
+
+***
+
+### Clonación en otras especies
+
+Ver cual las lista especie tienen incluido la matriz de clonación, **matC**. En esta lista vemos 825 filas, donde esto incluye las poblaciones muestreadas donde matC \> 0. Hay 108 especies únicas donde la **matC** esta incluida en la dinámica de la población.
 
 ```{r mat15}
 
@@ -221,15 +258,12 @@ Clonal_Species=compadre %>%
 head(Clonal_Species) # ver las primeras 6 poblaciones
 ```
 
-Hay 108 especies únicas donde la **matC** esta incluida en la dinámica de la población.
+***
 
-```{r}
 
-Species=(as.data.frame(sort(unique(Clonal_Species$SpeciesAuthor))))
+### Cuantas familias de plantas incluyeron matriz de clonación en sus modelos
 
-```
-
-Hay 44 familias de plantas donde la matC esta incluida en la dinámica.
+Hay 44 familias de plantas donde la **matC** esta incluida en la dinámica. 
 
 ```{r mat16}
 
@@ -239,7 +273,10 @@ Families=(as.data.frame(sort(unique(Clonal_Species$Family))))
 head(Families) # ver las primeras 6 familias
 ```
 
-Extraemos las especies de la Bromeliaceae
+
+***
+
+### Clonación en las Bromeliaceae
 
 ```{r mat17}
 
@@ -254,14 +291,26 @@ Bromeliaceae
 
 ```
 
-\*\*\* FINISH THIS SECTION\*\*
+Seleccionamos una especie de bromelia, *Aechmea nudicaulis* [@sampaio2005ramet], que tiene una matriz de clonación. En este caso, la matriz de clonación es la **matC** y la matriz de transición es la **matU**. La matriz de fecundidad no está incluida en este modelo. Visualizamos la matriz de clonación y la matriz de transición. En este caso, la matriz de clonación es la **matC** y la matriz de transición es la **matU**. La matriz de fecundidad no está incluida en este modelo.
 
 ```{r mat18, echoFALSE}
 
-compadre %>% 
+Aechmea=compadre %>% 
   filter(clonality > 0) %>% # filtrar para aquellos con matC no nulo
   filter(SpeciesAuthor == "Aechmea_nudicaulis") %>%  # para 
-  arrange(desc(clonality))
+  arrange(desc(clonality)) 
+
+
+Aechmea=Aechmea %>% 
+  filter(clonality == max(clonality))  # filtrar para la suma de matC máximo
+  
+ Ae_matC=matC(Aechmea) 
+  
+ plot_life_cycle(Ae_matC[[1]], stages = c("rametes joven", "rametes vegetativo", "rametes con flores"), node_order = c(1,2,3))
+
+
+
+
 ```
 
 La visión de crecimiento clonal de la bromelia *Aechmea nudicaulis* [@sampaio2005ramet] es diferente a la de *Cypripedium calceolus* ya que en este caso la clonación es por medio de la producción de hijuelos (offsets) que se separan de la planta madre y se convierten en nuevos individuos. En el caso de *Cypripedium calceolus* la clonación es por medio de rizomas que permanecen conectados a la planta madre. Pero en ambos casos no es claro si los individuos siguen conectado madre/hijo y compartiendo recursos. ¿Que es crecimiento por clonación o crecimiento vegetativo? Un individuo como *Cypripedium calceolus* aumenta su tamaño y su número de tallos por medio de la producción de rizomas, pero no se considera clonación ya que los rizomas permanecen conectados a la planta madre y debería considerarse crecimiento por clonación cuando se desenlase de la planta madre. En el caso de *Aechmea nudicaulis* la producción de hijuelos pudiese ser lo mismo que tanto que las diferentes partes siguen conectado vegetativamente es solamente crecimiento hasta que los hijuelos se separan de la planta madre y se convierten en nuevos individuos. Una revisión exhaustiva de este tema es necesaria, vea el trabajo de Cook para una introducción al tema [@cook1983clonal] y Vallejo et al. [@vallejo2010ecological].
@@ -277,3 +326,4 @@ Demetria: Feb 11th, 2025
 RLT: Feb 12th, 2025
 
 RLT: Apr 19th, 2025
+RLT: May 27, 2025

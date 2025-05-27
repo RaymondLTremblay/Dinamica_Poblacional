@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -69,7 +103,41 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="site_libs/viz-1.8.2/viz.js"></script>
+<link href="site_libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
+<script src="site_libs/grViz-binding-1.0.11.9000/grViz.js"></script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <meta property="og:title" content="Diagnostico Poblacional">
 <meta property="og:site_name" content="Diagnostico Poblacional">
@@ -325,10 +393,10 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#MatricesF" id="toc-MatricesF" class="nav-link active" data-scroll-target="#MatricesF">Fecundidad</a>
   <ul class="collapse">
-  <li><a href="#por-demetria-y-aucencia-equipo-ecosur" id="toc-por-demetria-y-aucencia-equipo-ecosur" class="nav-link" data-scroll-target="#por-demetria-y-aucencia-equipo-ecosur">Por: Demetria y Aucencia: equipo ECOSUR</a></li>
-  <li><a href="#métodos-tradicional-de-calcular-las-transiciones" id="toc-métodos-tradicional-de-calcular-las-transiciones" class="nav-link" data-scroll-target="#métodos-tradicional-de-calcular-las-transiciones">Métodos tradicional de calcular las transiciones</a></li>
-  <li><a href="#problema-con-el-uso-tradicional" id="toc-problema-con-el-uso-tradicional" class="nav-link" data-scroll-target="#problema-con-el-uso-tradicional">Problema con el uso tradicional</a></li>
-  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
+  <li><a href="#por-aucencia-equipo-ecosur-y-rlt" id="toc-por-aucencia-equipo-ecosur-y-rlt" class="nav-link" data-scroll-target="#por-aucencia-equipo-ecosur-y-rlt">Por: Aucencia: equipo ECOSUR y RLT</a></li>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a></li>
+  <li><a href="#ejemplo-de-cálculo-de-fecundidad-como-semillas" id="toc-ejemplo-de-cálculo-de-fecundidad-como-semillas" class="nav-link" data-scroll-target="#ejemplo-de-cálculo-de-fecundidad-como-semillas">Ejemplo de cálculo de fecundidad como semillas</a></li>
+  <li><a href="#sesgos-en-el-cálculo-de-fecundidad" id="toc-sesgos-en-el-cálculo-de-fecundidad" class="nav-link" data-scroll-target="#sesgos-en-el-cálculo-de-fecundidad">Sesgos en el cálculo de fecundidad</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -341,20 +409,109 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="MatricesF" class="level1">
 <h1>Fecundidad</h1>
-<section id="por-demetria-y-aucencia-equipo-ecosur" class="level2">
-<h2 class="anchored" data-anchor-id="por-demetria-y-aucencia-equipo-ecosur">Por: Demetria y Aucencia: equipo ECOSUR</h2>
+<section id="por-aucencia-equipo-ecosur-y-rlt" class="level2">
+<h2 class="anchored" data-anchor-id="por-aucencia-equipo-ecosur-y-rlt">Por: Aucencia: equipo ECOSUR y RLT</h2>
 <section id="librerías-de-r-requeridas-para-el-siguiente-módulo" class="level4">
 <h4 class="anchored" data-anchor-id="librerías-de-r-requeridas-para-el-siguiente-módulo">Librerías de R requeridas para el siguiente módulo</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rage)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section>
 </section>
-<section id="métodos-tradicional-de-calcular-las-transiciones" class="level2">
-<h2 class="anchored" data-anchor-id="métodos-tradicional-de-calcular-las-transiciones">Métodos tradicional de calcular las transiciones</h2>
+<section id="introducción" class="level2">
+<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<p>Irrelevante de la especies, animal, plantas, bacteria, para que una población pueda crecer, es necesario que los individuos de esa población se reproduzcan. En el caso de las poblaciones animales, la reproducción puede ser sexual o asexual. En el caso de las plantas, la reproducción puede ser sexual o vegetativa. En el caso de las bacterias, la reproducción es asexual y ocurre por fisión binaria. Cuando se incluye crecimiento poblacional vegetativo es necedario incluir la matriz de clonación. En este capítulo se considera la reproducción sexual solamente, que es el caso más común en los estudios de ecología de poblaciones.</p>
+<p>Cualquier población que no se reproduzca, no puede crecer. Por lo tanto, la reproducción es un proceso fundamental para el crecimiento de las poblaciones y determinar si el reclutamiento es suficiente para que la población crezca. Aunque parece un proceso sencillo, la reproducción es un proceso complejo que involucra muchos factores, como la disponibilidad de recursos, la competencia entre individuos, la depredación, las enfermedades, entre otros. Ademas como se recoje e incorporá la reproducción en los modelos de crecimiento poblacional es importante, ya que la forma en que se incorpora puede afectar los resultados del modelo y las conclusiones que se pueden extraer de él.</p>
+<p>Comenzamos primero para describir errores comunes en el uso de las matrices de transición para calcular la fecundidad.</p>
+<p>El primer paso para calcular la fecundidad es definir las clases de edad o tamaño de los individuos de la población. Las clases de edad o tamaño son grupos de individuos que tienen características similares en términos de edad o tamaño. Por ejemplo, en una población de peces, las clases de edad pueden ser: juveniles, adultos jóvenes y adultos viejos. En una población de plantas, las clases de tamaño pueden ser: plántulas, juveniles y adultos. Si la primera etapa del modelo es “plántula”, entonces la manera de incluir reclutamiento es contabilizar las “nuevas plántulas” que se incorporan a la población en cada período de tiempo. Es importante que la etapa de reproducción sea medida en la misma escala que las otras etapas reclutamiento y en el mismo periodo de tiempo.</p>
+<p>Un ejemplo incoorecto seria calcular la fecundidad de una población de usando la cantidad de semillas producidas pero la primera etapa del modelo son plántulas. En este caso, la fecundidad debe ser calculada en términos de plántulas, no de semillas. Por lo tanto, es necesario convertir la cantidad de semillas producidas en plántulas, utilizando una tasa de germinación o una tasa de supervivencia de plántulas.</p>
 </section>
-<section id="problema-con-el-uso-tradicional" class="level2">
-<h2 class="anchored" data-anchor-id="problema-con-el-uso-tradicional">Problema con el uso tradicional</h2>
+<section id="ejemplo-de-cálculo-de-fecundidad-como-semillas" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplo-de-cálculo-de-fecundidad-como-semillas">Ejemplo de cálculo de fecundidad como semillas</h2>
+<p>La primera fila representa la fecundidad de la población en la posición 1,3, que es la cantidad de semillas promedia producidas por un adulto. Pero la fecundidad debe ser calculada en términos de plántulas, no de semillas. Por lo tanto, es necesario convertir la cantidad de semillas producidas en plántulas, utilizando una tasa de germinación o una tasa de supervivencia hasta la etapa de plántulas.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a> matA_sem <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="dv">1000</span>), <span class="co">#  fecundidad 1000 semillas en promedio por adulto</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.4</span>, <span class="fl">0.0</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"plántula"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">plot_life_cycle</span>(matA_sem, <span class="at">stages=</span>etapas, <span class="at">fontsize =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="grViz html-widget html-fill-item" id="htmlwidget-2ff6abbded5daee038f9" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-2ff6abbded5daee038f9">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] } [style=invis] \"plántula\" -> \"juvenil\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.5\"]\n\"juvenil\" -> \"adulto\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.4\"]\n\"adulto\" -> \"plántula\"[minlen=-6,fontsize=5,color=grey,xlabel=\" 1000\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Por consecuencia una alternativa es calcular la fecundidad en términos de plántulas, utilizando una tasa de germinación o una tasa de supervivencia hasta la etapa de plántulas. Por ejemplo, si la tasa de germinación es del 50% y la tasa de supervivencia de plántulas es del 20%, y hay 75 adultos entonces la fecundidad en términos de plántulas sería: <span class="math display">\[Fecundidad = (1000 \times 0.5 \times 0.2) / 75 = 1.33 \]</span></p>
+<p>Por consecuencia la matriz cambia a:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>matA_pl <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">1.333</span>), <span class="co">#  fecundidad 100 plántulas en promedio por adulto</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.4</span>, <span class="fl">0.0</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"plántula"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto"</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a> <span class="fu">plot_life_cycle</span>(matA_pl, <span class="at">stages=</span>etapas, <span class="at">fontsize =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="grViz html-widget html-fill-item" id="htmlwidget-d130240f6655afec8ba2" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-d130240f6655afec8ba2">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] } [style=invis] \"plántula\" -> \"juvenil\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.5\"]\n\"juvenil\" -> \"adulto\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.4\"]\n\"adulto\" -> \"plántula\"[minlen=-6,fontsize=5,color=grey,xlabel=\" 1.333\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Otra alternativa es calcular la fecundidad en términos de plántulas directamente, utilizando una tasa de fecundidad por adulto. Por ejemplo, si no hay información sobre la cantidad de semillas producidas, y/o la supervivencia y germinacion de estas a plántulas el metodo anterior no es muy viable. Se puede incluir un estimado del reclutamiento tomando en cuenta la cantidad de plántulas producidas total en el periodo <span class="math inline">\(t_2\)</span> divido por la cantidad de adultos en el periodo <span class="math inline">\(t_1\)</span>. Entonces si hubo 50 nuevas plántulas en el periodo <span class="math inline">\(t_2\)</span> y había 100 individuos en la etapa de adultos en el periodo <span class="math inline">\(t_1\)</span>, entonces la fecundidad en términos de plántulas sería: <span class="math display">\[Fecundidad = 50 / 100 = 0.5\]</span>.</p>
+<p>Hay unos supuestos importante aqui.</p>
+<ul>
+<li>que la cantidad de plántulas producidas en el periodo <span class="math inline">\(t_2\)</span> es el resultado de la fecundidad de los adultos en el periodo <span class="math inline">\(t_1\)</span>.</li>
+<li>en otra palabra no hay inmigrantes de otros sitios.</li>
+<li>no hay banco de semillas, semillas que provienen de otro periodo de tiempo y que no habían y que germinaron en el periodo contabilizado <span class="math inline">\(t_1\)</span>.</li>
+<li>que el periodo de muestreo (la ventana de muestreo) de las plántulas es cuando germinan la semillas y sean visibles al ecólogo.</li>
+</ul>
+<p>Naturalmente, no hay métodos perfectos para calcular la fecundidad, pero este es un método que puede ser usado cuando no hay información sobre la cantidad de semillas producidas, y/o la supervivencia y germinación de estas a plántulas. Siempre puede haber semillas que germinan en otros periodos de tiempo, que provienen de otros sitios y que no son contabilizadas en el periodo <span class="math inline">\(t_2\)</span>. Tanto que estos estimados no sean sesgados, pueden ser usados para calcular la fecundidad en términos de plántulas.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>matA_pl2 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.5</span>), <span class="co">#  fecundidad 0.5 plántulas en promedio por adulto</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.4</span>, <span class="fl">0.0</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>etapas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"plántula"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto"</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a> <span class="fu">plot_life_cycle</span>(matA_pl2, <span class="at">stages=</span>etapas, <span class="at">fontsize =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="grViz html-widget html-fill-item" id="htmlwidget-a3285963e096d7dde14c" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-a3285963e096d7dde14c">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plántula\" -> \"juvenil\" -> \"adulto\" [style=invis] } [style=invis] \"plántula\" -> \"juvenil\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.5\"]\n\"juvenil\" -> \"adulto\"[minlen=3,fontsize=5,color=grey,xlabel=\" 0.4\"]\n\"adulto\" -> \"plántula\"[minlen=-6,fontsize=5,color=grey,xlabel=\" 0.5\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
 </section>
-<section id="referencias" class="level2">
-<h2 class="anchored" data-anchor-id="referencias">Referencias</h2>
+<section id="sesgos-en-el-cálculo-de-fecundidad" class="level2">
+<h2 class="anchored" data-anchor-id="sesgos-en-el-cálculo-de-fecundidad">Sesgos en el cálculo de fecundidad</h2>
+<p>Hay unos supuestos importante aqui.</p>
+<ul>
+<li>que la cantidad de plántulas producidas en el periodo <span class="math inline">\(t_2\)</span> es el resultado de la fecundidad de los adultos en el periodo <span class="math inline">\(t_1\)</span>.</li>
+<li>en otra palabra no hay inmigrantes de otros sitios.</li>
+<li>no hay banco de semillas, semillas que provienen de otro periodo de tiempo y que no habían y que germinaron en el periodo contabilizado <span class="math inline">\(t_1\)</span>.</li>
+<li>que el periodo de muestreo (la ventana de muestreo) de las plántulas es cuando germinan la semillas y sean visibles al ecólogo.</li>
+</ul>
+<p>Naturalmente, no hay métodos perfectos para calcular la fecundidad, pero este es un método que puede ser usado cuando no hay información sobre la cantidad de semillas producidas, y/o la supervivencia y germinación de estas a plántulas. Siempre puede haber semillas que germinan en otros periodos de tiempo, que provienen de otros sitios y que no son contabilizadas en el periodo <span class="math inline">\(t_2\)</span>. Tanto que estos estimados no sean sesgados, pueden ser usados para calcular la fecundidad en términos de plántulas.</p>
 
 
 </section>

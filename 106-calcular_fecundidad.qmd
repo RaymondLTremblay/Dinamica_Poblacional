@@ -1,17 +1,107 @@
 # Fecundidad {#MatricesF}
 
-## Por: Demetria y Aucencia: equipo ECOSUR
+## Por: Aucencia: equipo ECOSUR y RLT
 
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r Trans1, message=FALSE}
 
-
+library(Rage)
 
 ```
 
-## Métodos tradicional de calcular las transiciones
 
-## Problema con el uso tradicional
+## Introducción
 
-## Referencias
+Irrelevante de la especies, animal, plantas, bacteria, para que una población pueda crecer, es necesario que los individuos de esa población se reproduzcan. En el caso de las poblaciones animales, la reproducción puede ser sexual o asexual. En el caso de las plantas, la reproducción puede ser sexual o vegetativa. En el caso de las bacterias, la reproducción es asexual y ocurre por fisión binaria. Cuando se incluye crecimiento poblacional vegetativo es necedario incluir la matriz de clonación.  En este capítulo se considera la reproducción sexual solamente, que es el caso más común en los estudios de ecología de poblaciones.
+
+Cualquier población que no se reproduzca, no puede crecer. Por lo tanto, la reproducción es un proceso fundamental para el crecimiento de las poblaciones y determinar si el reclutamiento es suficiente para que la población crezca.   Aunque parece un proceso sencillo, la reproducción es un proceso complejo que involucra muchos factores, como la disponibilidad de recursos, la competencia entre individuos, la depredación, las enfermedades, entre otros. Ademas como se recoje e incorporá la reproducción en los modelos de crecimiento poblacional es importante, ya que la forma en que se incorpora puede afectar los resultados del modelo y las conclusiones que se pueden extraer de él.  
+
+Comenzamos primero para describir errores comunes en el uso de las matrices de transición para calcular la fecundidad.
+
+El primer paso para calcular la fecundidad es definir las clases de edad o tamaño de los individuos de la población. Las clases de edad o tamaño son grupos de individuos que tienen características similares en términos de edad o tamaño. Por ejemplo, en una población de peces, las clases de edad pueden ser: juveniles, adultos jóvenes y adultos viejos. En una población de plantas, las clases de tamaño pueden ser: plántulas, juveniles y adultos. Si la primera etapa del modelo es "plántula", entonces la manera de incluir reclutamiento es contabilizar las "nuevas plántulas" que se incorporan a la población en cada período de tiempo.   Es importante que la etapa de reproducción sea medida en la misma escala que las otras etapas reclutamiento y en el mismo periodo de tiempo.
+
+
+ Un ejemplo incoorecto seria calcular la fecundidad de una población de usando la cantidad de semillas producidas pero la primera etapa del modelo son plántulas. En este caso, la fecundidad debe ser calculada en términos de plántulas, no de semillas. Por lo tanto, es necesario convertir la cantidad de semillas producidas en plántulas, utilizando una tasa de germinación o una tasa de supervivencia de plántulas.
+ 
+ 
+ 
+## Ejemplo de cálculo de fecundidad como semillas
+
+La primera fila representa la fecundidad de la población en la posición 1,3, que es la cantidad de semillas promedia producidas por un adulto.  Pero la fecundidad debe ser calculada en términos de plántulas, no de semillas. Por lo tanto, es necesario convertir la cantidad de semillas producidas en plántulas, utilizando una tasa de germinación o una tasa de supervivencia hasta la etapa de plántulas. 
+
+ 
+```{r}
+ matA_sem <- rbind(
+  c(0.0, 0.0, 1000), #  fecundidad 1000 semillas en promedio por adulto
+  c(0.5, 0.0, 0.0),
+  c(0.0, 0.4, 0.0)
+)
+
+
+```
+ 
+Visualizamos el ciclo de vida de la población con la función `plot_life_cycle()` de la librería `Rage`:
+
+```{r}
+etapas <- c("plántula", "juvenil", "adulto")
+ 
+ plot_life_cycle(matA_sem, stages=etapas, fontsize = 5)
+```
+
+
+## Ejemplo de cálculo de fecundidad como semillas y plántulas
+
+Por consecuencia una alternativa es calcular la fecundidad en términos de plántulas, utilizando una tasa de germinación o una tasa de supervivencia hasta la etapa de plántulas. Por ejemplo, si la tasa de germinación es del 50% y la tasa de supervivencia de plántulas es del 20%, y hay 75 adultos entonces la fecundidad en términos de plántulas sería: $$Fecundidad = (1000 \times 0.5 \times 0.2) / 75 = 1.33 $$
+
+
+Por consecuencia la matriz cambia a:
+
+```{r}
+
+matA_pl <- rbind(
+  c(0.0, 0.0, 1.333), #  fecundidad 100 plántulas en promedio por adulto
+  c(0.5, 0.0, 0.0),
+  c(0.0, 0.4, 0.0)
+)
+
+etapas <- c("plántula", "juvenil", "adulto")
+ 
+ plot_life_cycle(matA_pl, stages=etapas, fontsize = 5)
+
+```
+
+## Fecundidad en términos de plántulas
+
+Otra alternativa es calcular la fecundidad en términos de plántulas directamente, utilizando una tasa de fecundidad por adulto. Por ejemplo, si no hay información sobre la cantidad de semillas producidas, y/o la supervivencia y germinacion de estas a plántulas el metodo anterior no es muy viable. Se puede incluir un estimado del reclutamiento tomando en cuenta la cantidad de plántulas producidas total en el periodo $t_2$ divido por la cantidad de adultos en el periodo $t_1$.  Entonces si hubo 50 nuevas plántulas en el periodo $t_2$ y había 100 individuos en la etapa de adultos en el periodo $t_1$, entonces la fecundidad en términos de plántulas sería: $$Fecundidad = 50 / 100 = 0.5$$.  
+
+
+
+```{r}
+matA_pl2 <- rbind(
+  c(0.0, 0.0, 0.5), #  fecundidad 0.5 plántulas en promedio por adulto
+  c(0.5, 0.0, 0.0),
+  c(0.0, 0.4, 0.0)
+)
+
+etapas <- c("plántula", "juvenil", "adulto")
+ 
+ plot_life_cycle(matA_pl2, stages=etapas, fontsize = 5)
+```
+
+
+
+## Sesgos en el cálculo de fecundidad
+
+Hay unos supuestos importante aqui.  
+
+  - que la cantidad de plántulas producidas en el periodo $t_2$ es el resultado de la fecundidad de los adultos en el periodo $t_1$. 
+  - en otra palabra no hay inmigrantes de otros sitios.
+  - no hay banco de semillas, semillas que provienen de otro periodo de tiempo y que no habían y que germinaron en el periodo contabilizado $t_1$. 
+  - que el periodo de muestreo (la ventana de muestreo) de las plántulas es cuando germinan la semillas y sean visibles al ecólogo. 
+  
+ Naturalmente, no hay métodos perfectos para calcular la fecundidad, pero este es un método que puede ser usado cuando no hay información sobre la cantidad de semillas producidas, y/o la supervivencia y germinación de estas a plántulas. Siempre puede haber semillas que germinan en otros periodos de tiempo, que provienen de otros sitios y que no son contabilizadas en el periodo $t_2$. Tanto que estos estimados no sean sesgados, pueden ser usados para calcular la fecundidad en términos de plántulas.
+ 
+ 
+
+
