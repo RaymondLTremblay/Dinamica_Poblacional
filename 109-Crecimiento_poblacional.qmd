@@ -2,23 +2,26 @@
 
 ## Por: Tamara Ticktin y Mariana Hernández Apolinar
 
-
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r, message=FALSE, waring=FALSE}
 
 library(popbio)
 library(readr)
+library(Rage)
+library(tidyverse)
 
 ```
 
-
-
 En los modelos matriciales, uno de los parámetros más útiles es la tasa de crecimiento poblacional proyectada, lambda $λ$. Su importancia radica en integrar las tasas de crecimiento, supervivencia y reproducción en un sólo parámetro, el cual proyecta qué tan rápido crece o decrece una población. A pesar de su relevancia, $\lambda$ también es uno de los parámetros que más ha sido malinterpretado. A continuación describiremos qué implica la tasa de crecimiento poblacional, se muestra cómo calcularla y analizamos cómo interpretarla. Para ello, usamos los datos demográficos de *Laelia speciosa*, una orquídea epífita, cuyos datos poblacionales fueron recabados en dos sitios, por dos años.
 
-## Cálculo de la tasa de crecimiento poblacional asintótica: $\lambda$
+## Interpretar de la tasa de crecimiento poblacional asintótica: $\lambda$
 
 La tasa finita o asintótica del crecimiento poblacional, $\lambda$, es el valor propio dominante de una matriz de transición y corresponde a la solución de dicha matriz. Cuando $\lambda$ \>1 indica que se proyecta que la población crecerá a largo plazo; si $\lambda$ \<1 indica que se proyecta que disminuirá y $\lambda$ = 1 indica que se proyecta que permanecerá estable. Este parámetro se calcula utilizando la función **eigen.analysis** en el paquete **popbio**.
+
+Comenzamos por ingresar dos matrices de transición, una para cada año de monitoreo. 
+
+Primera matriz 
 
 ```{r, cre_pop_1, warning=FALSE, message=FALSE}
 
@@ -29,26 +32,38 @@ La tasa finita o asintótica del crecimiento poblacional, $\lambda$, es el valor
 estadios <- c ("plantula", "juvenil", "adulto1", "adulto2")
 
 #Matriz de la poblacion 1, año 1
-mat1.1 <- matrix (c(0.43, 0, 1.03, 0.96,
-                0.32, 0.91, 0,0, 
-                0, 0.05, 0.83,0,
-                0, 0,0.17,1), 
+mat1.1 <- matrix (c(0.43, 0.00, 1.03,  0.96,
+                    0.32, 0.91, 0.00,  0.00, 
+                    0.00, 0.05, 0.82, 0.00,
+                    0.00, 0.00, 0.17,  0.99), 
               nrow = 4, ncol=4, byrow = TRUE, dimnames = list(estadios, estadios))
 
-mat1.1
-
-#Matriz de la poblacion 1, año 2
-mat1.2 <- matrix (c(0.43, 0, 0.85, 3.38,
-                    0.32, 0.9,0,0, 
-                    0, 0.02, 0.77,0.11,
-                    0, 0,0.19,0.88), 
-                  nrow = 4, ncol=4, byrow = TRUE, dimnames = list(estadios, estadios))
-
-mat1.2
+plot_life_cycle(mat1.1, stages=estadios, fontsize = 5)
 
 ```
 
+
+Segunda matriz
+
+```{r, cre_pop_1b, warning=FALSE, message=FALSE}
+#Matriz de la poblacion 1, año 2
+mat1.2 <- matrix (c(0.43, 0.00,  0.85,  3.38,
+                    0.32, 0.90,  0.00,  0.00, 
+                    0.00, 0.02,  0.77,  0.11,
+                    0.00, 0.00,  0.19,  0.88), 
+                  nrow = 4, ncol=4, byrow = TRUE, dimnames = list(estadios, estadios))
+
+plot_life_cycle(mat1.2, stages=estadios, fontsize = 5)
+
+```
+
+***
+
+## Calcular $\lambda$ de la población
+
 Calcular los $\lambda$ de la población para los años 1 y 2, respectivamente usando la función **eigen.analysis** en **popbio**.
+
+En el primer año se observa que la población tiene un valor de $\lambda$ \> 1.108, lo que indica que la población crecerá a largo plazo de aproximadamente de 11%. En el segundo año, el valor de $\lambda$ también es \>1.084 de 8%, pero es menor que el del primer año, lo que indica que la tasa de crecimiento poblacional disminuyó de un año a otro.
 
 ```{r, cre_pop_2}
 
@@ -60,23 +75,27 @@ eig1.2$lambda
 
 ```
 
-Los análisis demuestra que la población 1 estimado por dos periodos de tiempo diferentes tiene un valor de $\lambda$ \>1, lo que indica que la población crecerá a larga plazo, pero de un año a otro la tasa de crecimiento poblacional disminuyó????, de un crecimiento de 11% a 8%. ????
 
-La tasa de crecimiento asintótica representa la tasa a la que crecería una población a largo plazo, si no cambiaran las condiciones bajo las cuales se construyó el modelo. Es decir, si no cambiaran en el tiempo las condiciones bióticas, abióticas y de manejo que influyen en las tasas vitales (i.e. tasas de crecimiento, supervivencia y reproducción) de dicha población. Por supuesto, nosotros sabemos que esto no es posible una consistencia de todas las tasas vitales a largo plazo, siempre ocurre cambios temporales deterministico o estocástico. Por ejemplo, en nuestro caso no observamos mortalidad de adultos durante los dos periodos de monitoreo. Por lo tanto, es importante que el valor de $\lambda$ nunca se use en sentido estricto, ni tampoco como una herramienta predictiva.
+
+
+La tasa de crecimiento asintótica representa la tasa a la que crecería una población a largo plazo, si no cambiaran las condiciones bajo las cuales se construyó el modelo. Es decir, si no cambiaran en el tiempo las condiciones bióticas, abióticas y de manejo que influyen en las tasas vitales (i.e. tasas de crecimiento, supervivencia y reproducción) de dicha población. Por supuesto, nosotros sabemos que esto no es posible una consistencia de todas las tasas vitales a largo plazo, siempre ocurre cambios temporales determinístico o estocástico. Por ejemplo, en nuestro caso no observamos mortalidad de adultos durante los dos periodos de monitorio, pero redujo de una pequeña facción para que el valor de supervivencia sea menor de 1.0, aunque el efecto sobre el crecimiento poblacional es minimo. Por lo tanto, es importante que el valor de $\lambda$ nunca se use en sentido estricto, ni tampoco como una herramienta predictiva.
 
 También es fundamental tomar en cuenta que, $\lambda$ no es la tasa a la que se espera que la población creciera en el corto plazo. De hecho, una población con $\lambda$ \<1 pudiera crecer en el corto plazo, antes de declinar en el largo plazo y $vice-versa$. Asimismo, cabe señalar que la tasa de crecimiento poblacional de corto plazo es calculada usando los índices de la dinámica transitoria (**Capitulo X**).
 
 Los meta-análisis (Crone et al. 2013), en cambio, han demostrado que $\lambda$ es una medida robusta de las condiciones actuales, ya que ésta explica la dinámica de las poblaciones durante el período de tiempo en el que se parametrizaron los modelos. Asimismo, $\lambda$ es una buena medida del estado de la población, por lo que es una forma apropiada de comparar el comportamiento de las poblaciones bajo diferentes condiciones, incluyendo variación abiótica, biótica y de manejo. Por ejemplo, los valores de $\lambda$ permiten comparar el comportamiento de una población en distintos periodos de tiempo y con ello entender cómo la variación en las condiciones climáticas afecta su dinámica. Las comparaciones también pueden ser entre poblaciones de la misma especie distribuidas en distintos sitios, para entender los efectos de la variación en el manejo, la vegetación u otras diferencias entre sitios (vea el capitulo "Variación temporal y Espacial por simulaciones")
 
+
+## Comparar $\lambda$ entre poblaciones
+
 Nuestra segunda población de $Laelia speciosa$ se establece en un hábitat similar a la población 1 y fue monitoreada durante al mismo tiempo. Sin embargo, ésta fue sujeta a la extracción. Si comparamos los valores de λ de nuestras dos poblaciones, podemos hacer inferencias sobre los efectos de la extracción. La población 2 no produjo frutos y tampoco se observaron plántulas. Debido a esto, fue necesario incluir el valor de 0.001 para la transición de la matriz adulta2-\> plántula y con esto asegurar que nuestra matriz de estudio sea irreducible y primitive (**Capitulo X**).
 
 ```{r, cre_pop_3}
 
-#Matriz de la poblacion 2, año 1
-mat2.1 <- matrix (c(0.5, 0, 0, 0.001,
-                    0.16, 0.79,0,0, 
-                    0, 0.12, 0.78,0.11,
-                    0, 0,0.21,0.88), 
+#Matriz de la población 2, año 1
+mat2.1 <- matrix (c(0.50, 0.00, 0.00, 0.001,
+                    0.16, 0.79, 0.00, 0.00, 
+                    0.00, 0.12, 0.78, 0.11,
+                    0.00, 0.00, 0.21, 0.88), 
                   nrow = 4, ncol=4, byrow = TRUE, dimnames = list(estadios, estadios))
 
   mat2.1
@@ -91,8 +110,19 @@ La población bajo extracción tiene un valor de $\lambda$ menor (0.990) a aquel
 
 Para interpretar $\lambda$ apropiadamente necesitamos calcular los intervalos de confianza (IC). Estos intervalos pueden ser calculados con un método de remuestreo con reemplazo (i.e. bootstrap), utilizando las transiciones de estado de los individuos de un periodo a otro; es decir, los datos (i.e $stage-fate dataframe$) usados para construir la matriz de transiciones (Capitulo X). En el remuestro se puede especificar el tamaño de la muestra remuestreada, la cual fue de 1000 en nuestro caso. Cabe señalar que, se tendrán intervalos de confianza amplios cuando se tiene una muestra pequeña de datos originales, o, si se tienen pocas observaciones de aquellas transiciones que contribuyen en mayor medida a λ. En adición se puede usar el método en el paquete "raretrans" (no explicado en este capitulo).
 
-En el presente caso, calculamos los intervalos de confianza de λ para la población 1, correspondientes al año 1 y 2. En ambos años, los intervalos son amplios.
+En el presente caso, calculamos los intervalos de confianza de $\lambda$ para la población 1, correspondientes al año 1 y 2. En ambos años, los intervalos son amplios.
 
+Usando la función **boot.transitions** del paquete **popbio**, se puede calcular los intervalos de confianza de λ. Esta función requiere que se especifiquen los estadios de la matriz y el número de remuestreos. En nuestro caso, usamos 1000 remuestreos y especificamos los estadios como "pl", "j", "a1" y "a2".
+
+ - **boot.transitions(transitions, iterations, sort = stages)**
+ 
+ - transitions: un data frame con las transiciones de los individuos de un periodo a otro (i.e. $stage-fate dataframe$).
+ - iterations: el número de remuestreos a realizar.
+ - sort: un vector con los nombres de los estadios en el orden en que se encuentran en la matriz de transición.
+ 
+ 
+ 
+ 
 ```{r, cre_pop_4}
 
 #Intervalos de confianza (IC) de λ para la población 1, año 1
@@ -100,21 +130,27 @@ En el presente caso, calculamos los intervalos de confianza de λ para la poblac
 #RAYMOND: COMO DEBEMOS DE COMPARTIR EL ARCHIVO DE DATOS?# Eso es buena pregunta...  Como lo vamos a compartir con la gente que usa el libro?  
 
 
-laelia1<-read.table("data/laelia1.txt", header=TRUE)
+laelia1<-read.table("data/laelia1.txt", header=TRUE) # subir los datos de la población 1, año 1
 
-pop1.1=laelia1
+pop1.1=laelia1 # renombrar el data frame para facilitar su uso 
 
-stages<-c("pl","j","a1","a2")
+stages<-c("pl","j","a1","a2") # identificación de los estadios
 
-n<-nrow(pop1.1)
-x<-boot.transitions(pop1.1, 1000, sort=stages) # la función esta en el paquete "popbio"
+n<-nrow(pop1.1) # Crear una variable n que contiene el número de filas del data.frame
 
-ic<-quantile(x$lambda, c(0.025, 0.975))
-ic
+x<-boot.transitions(pop1.1, 1000, sort=stages) # la boot.transition seleciona al azar la cantidad de individuos en cada estadios: función esta en el paquete "popbio"
+
+ic1<-quantile(x$lambda, c(0.025, 0.975))
+ic1
 
 #IC para la población 1, año 2
 
+```
 
+
+Simulación de las transiciones de la población 1, año 2
+
+```{r, cre_pop_4b}
 
 
 laelia2<-read.table("data/laelia2.txt", header=TRUE)
@@ -125,8 +161,8 @@ stages<-c("pl","j","a1","a2")
 
 n<-nrow(pop1.2)
 x2<-boot.transitions(pop1.2, 1000, sort=stages)
-ic<-quantile(x2$lambda, c(0.025, 0.975))
-ic
+ic2<-quantile(x2$lambda, c(0.025, 0.975))
+ic2
 
 #Nota:  Los datos de algunas transiciones especificas no siempre se obtienen de los censos poblacionales, por lo que éstos pueden provenir de otros experimentos. Por ejemplo, si las observaciones de campo fueran nulas o escasas para la transición de semilla a plántula, éste dato se puede obtener de la literatura consultada o de experimentos previos o usar el método descrito en "Método bayesiano de calcular las transciones y fecundidades". En estos casos se incorporaron las transiciones a la matriz de la siguiente forma al estimar el IC: 
 
@@ -137,11 +173,24 @@ ic
 
 ```
 
+
+
+```{r}
+bind_rows(ic1, ic2) %>%
+  mutate(year = c("año 1", "año 2")) %>%
+  select(year, everything()) %>%
+  rename("IC 2.5%" = `2.5%`, "IC 97.5%" = `97.5%`) %>%
+  knitr::kable(digits= 3, caption = "Intervalos de confianza de λ")
+```
+
+
+***
+
 ## Tasa estocástica de crecimiento $λ_e$
 
 La tasa estocástica de crecimiento o $λ_e$ se puede estimar si se cuenta con datos colectados por 2 o más periodos y, por lo tanto, se tienen 2 o más matrices de transición. La tasa estocástica se puede calcular a través del método de simulación de Cohen o por la aproximación de Tuljarpurkar [@caswell2001matrix]. En la simulación, las matrices son seleccionadas aleatoriamente para un número específico de intervalos de tiempo (50,000 por omisión en **popbio**). Se calcula $λ_e$ como la tasa media del crecimiento para un lapso de tiempo. En la aproximación de Tuljarpurkar, se calcula $λ_e$ como el valor propio dominante de la matriz de transición promedio.
 
-Noota que aqui una vez más, se asume que las condiciones bajo las cuales se construyeron las matrices de transición son constantes en el tiempo. Por lo tanto, $λ_e$ no debe ser interpretado literalmente, ni tampoco como una herramienta predictiva. En adición los valores de ic se resta y se suma al $\lambda$ promedio obtenido para tener el rango de 95% de $\lambda$.
+Nota que aquí una vez más, se asume que las condiciones bajo las cuales se construyeron las matrices de transición son constantes en el tiempo. Por lo tanto, $λ_e$ no debe ser interpretado literalmente, ni tampoco como una herramienta predictiva. En adición los valores de ic se resta y se suma al $\lambda$ promedio obtenido para tener el rango de 95% de $\lambda$.
 
 ```{r, cre_pop_5}
 

@@ -114,7 +114,6 @@ rlt_theme <- theme(axis.title.y = element_text(colour="grey20",size=15,face="bol
         axis.title.x = element_text(colour="grey20",size=15,face="bold"))
 ```
 
-
 ## Obtención de la matriz de proyección
 
 `raretrans` asume que la matriz de proyección es una lista de dos matrices, una matriz de transición y una matriz de fertilidad. Este es el formato de salida de `popbio::projection.matrix`. Si tenemos transiciones individuales en nuestra base de datos (con clase data.frame()), podemos usar `raretrans::get_state_vector` para obtener el número inicial de individuos por etapa.
@@ -147,7 +146,6 @@ onepop <- L_elto %>%
                            TRUE ~ next_stage))  # redefine "p" por plantula a "s" para seedling
 ```
 
-
 En el siguiente codigo usamos la función `popbio::projection.matrix()` para crear la matriz de proyección poblacional. Tenemos ahora nuestra matriz de transición y fecundidad basado en los datos de la población #250 del periodo 5. La función `projection.matrix()` requiere que se especifiquen los nombres de las etapas y los estados siguientes, así como el nombre de la columna de fertilidad. En este caso, las etapas son "s" (plántula), "j" (juvenil) y "a" (adulto), y el estado siguiente es "next_stage". La columna de fertilidad se llama "fertility". El argumento `sort` especifica el orden en que queremos que aparezcan las etapas en la matriz.
 
 Solamente los adultos pueden producir plántulas, por lo que la matriz de fertilidad tiene un valor de fertilidad solamente en la posición 1,3 (plántula, adulto). La función `projection.matrix()` devuelve una lista con dos matrices: una de transición y otra de fertilidad. La matriz de transición es una matriz cuadrada que muestra las probabilidades de transición entre las etapas, mientras que la matriz de fertilidad es una matriz que muestra la fecundidad por etapa.
@@ -166,9 +164,7 @@ TF <- popbio::projection.matrix(as.data.frame(onepop),
 TF # Este es la estructura de etapas de vida para esa población.  Nota que tenemos dos matrices, una de transiciones **T** y otra de fertilidad **F**. 
 ```
 
-
-***
-
+------------------------------------------------------------------------
 
 ## Paso 2: Obtener el número inicial de individuos por etapa
 
@@ -179,7 +175,6 @@ Dado que nuestros conteos (número de individuos, $N$ y el tamaño de *muestra e
 N <- get_state_vector(onepop, stage = stage, sort=c("s","j","a")) 
 N # Un vector # de individuos iniciales para cada etapa, nota que la cantidad por etapa, "stage", son los individuos en el primer muestreo
 ```
-
 
 ## Método alterno para calcular transiciones, fertilidades y el número de individuos por etapas.
 
@@ -229,8 +224,6 @@ stages2 <- c("plantulas", "juveniles", "adultos")
 title <- NULL
 plot_life_cycle(Tmat, stages=stages2)
 ```
-
-
 
 ## Uso de priors para incorporar transiciones raras
 
@@ -311,15 +304,14 @@ unif <- list(T = fill_transitions(TF, N),
                                 beta = beta))
 unif
 ```
-***
 
+------------------------------------------------------------------------
 
 ## El crecimiento poblacional
 
 La tasa de crecimiento asintótico de la población es $\lambda$. Esta tasa de crecimiento se reduce ligeramente cuando usamos un *prior* uniforme ya que las probabilidades de transición observadas de crecimiento y supervivencia se reducen ligeramente en comparación con las transiciones no observadas de crecimiento y supervivencia.
 
-
-***
+------------------------------------------------------------------------
 
 ### Otras opciones para el argumento \`returnType
 
@@ -334,7 +326,7 @@ Por defecto, `fill_transitions()` devuelve la matriz de transición $T$, y `fill
 fill_transitions(TF, N, returnType = "TN")
 ```
 
- `fill_fertility(... returnType = "ab")` devuelve los vectores alfa y beta de los vectores posteriores.\
+`fill_fertility(... returnType = "ab")` devuelve los vectores alfa y beta de los vectores posteriores.\
 
 ```{r bayes18}
 
@@ -344,23 +336,22 @@ fill_fertility(TF, N,
                returnType = "ab")
 ```
 
- 
 ### returnType = "A"
 
- `fill_transitions(... returnType = "A")` Ambas funciones también pueden devolver la matriz completa, la suma de $T$ y $F$ o sea la $matA$.
+`fill_transitions(... returnType = "A")` Ambas funciones también pueden devolver la matriz completa, la suma de $T$ y $F$ o sea la $matA$.
 
 ```{r bayes19}
 
 fill_transitions(TF, N, returnType = "A")
 ```
-***
 
+------------------------------------------------------------------------
 
 ## Añadiendo realidad a los análisis
 
 Hasta este punto, el objetivo era entender las funciones y su aplicaciones, ahora vamos a añadir realidad biológica a los análisis. Como se ha mencionado no debemos usar *priors* uniformes, debemos usar valores que reflejen el ciclo de vida de la especie de interés.
 
-***
+------------------------------------------------------------------------
 
 ### Incorporar priores informativos
 
@@ -397,8 +388,7 @@ En este caso, el prior se pondera con la mitad del número observado de transici
 
 Note que ahora tenemos una matriz de transición que es ergódica y reducible. En adición la tasa de mortandad y la tasa de transiciones son más realista.
 
-
-*** 
+------------------------------------------------------------------------
 
 ## Intervalos de credibilidad de los parámetros
 
@@ -417,10 +407,9 @@ ucl <- qbeta(0.975, a, b) # el valor 0.975 de la distribución beta
 knitr::kable(sprintf("%.4f (%.4f, %.4f)", p, lcl, ucl)) # Crear una tabla con los resultados con 4 cifras decimales (note la ultima fila son los fallecidos)
 ```
 
+Una de la gran ventaja de usar el paquete `raretrans` es que podemos calcular los intervalos de credibilidad de las tasas de transición y fertilidad de manera rápida y sencilla. Ademas que los intervalos de confianza estan limitado a los valores entre 0 y 1, lo que es importante para las tasas de transición y fertilidad. Esto es especialmente útil cuando se trabaja con datos de campo donde el tamaño de muestra es pequeño y las transiciones raras son comunes. Muchos metodos estadísticos no pueden calcular intervalos de confianza para tasas de transición y fertilidad, y cuando lo hacen tienen valores ilógicos como proporciones negativa o mayores a 1.
 
-Una de la gran ventaja de usar el paquete `raretrans` es que podemos calcular los intervalos de credibilidad de las tasas de transición y fertilidad de manera rápida y sencilla. Ademas que los intervalos de confianza estan limitado a los valores entre 0 y 1, lo que es importante para las tasas de transición y fertilidad. Esto es especialmente útil cuando se trabaja con datos de campo donde el tamaño de muestra es pequeño y las transiciones raras son comunes. Muchos metodos estadísticos no pueden calcular intervalos de confianza para tasas de transición y fertilidad, y cuando lo hacen tienen valores ilógicos como proporciones negativa o mayores a 1.  
-
-*** 
+------------------------------------------------------------------------
 
 ### El efecto del tamaño de muestra sobre los intervalos de credibilidad
 
@@ -452,7 +441,7 @@ ggplot(data = alltogethernow,
   rlt_theme
 ```
 
-***
+------------------------------------------------------------------------
 
 ## Simulación de la distribución posterior
 
@@ -462,7 +451,7 @@ Obtener intervalos de credibilidad para la tasa de crecimiento asintótica, $\la
 
 ### Simulación de una matriz de transición
 
-Corra el script múltiples veces, y verá que los valores cambian en cada simulación. En este script la simulación es solamente de una vez (samples = 1). Este script es para que visualizan lo que hace la función `sim_transitions()`. 
+Corra el script múltiples veces, y verá que los valores cambian en cada simulación. En este script la simulación es solamente de una vez (samples = 1). Este script es para que visualizan lo que hace la función `sim_transitions()`.
 
 ```{r bayes25}
 
@@ -498,15 +487,13 @@ ggplot(data = RLT_0.5,
                 color = "blue", linewidth=1.5)
 ```
 
-***
+------------------------------------------------------------------------
 
 ## Determinar si el $\lambda$ es significativamente diferente de 1
 
 Esta prueba está basada en la simulación de la distribución posterior.
 
-Se calcula la distribución de las $\lambda$ y se determina si $\lambda$ observada es significativamente más grande que 1. También podemos calcular algunas estadísticas descriptivos, donde `p_increase` es el probabilidad de que $\lambda > 1$. En este caso el valor de $\lambda$ no es significativamente más grande que 1 ya que se obtuvo un valor de 0.14.  Aunque el histogama siguiere que el crecimiento es menor de 1, la probabilidad de que $\lambda$ sea mayor que 1 es de 0.14, lo que indica que hay una probabilidad del 14% de que la población esté creciendo. Dando poca apoyo que la población este creciendo. 
-
-
+Se calcula la distribución de las $\lambda$ y se determina si $\lambda$ observada es significativamente más grande que 1. También podemos calcular algunas estadísticas descriptivos, donde `p_increase` es el probabilidad de que $\lambda > 1$. En este caso el valor de $\lambda$ no es significativamente más grande que 1 ya que se obtuvo un valor de 0.14. Aunque el histogama siguiere que el crecimiento es menor de 1, la probabilidad de que $\lambda$ sea mayor que 1 es de 0.14, lo que indica que hay una probabilidad del 14% de que la población esté creciendo. Dando poca apoyo que la población este creciendo.
 
 ```{r bayes27}
 
