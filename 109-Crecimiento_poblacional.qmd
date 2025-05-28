@@ -19,9 +19,9 @@ En los modelos matriciales, uno de los parámetros más útiles es la tasa de cr
 
 La tasa finita o asintótica del crecimiento poblacional, $\lambda$, es el valor propio dominante de una matriz de transición y corresponde a la solución de dicha matriz. Cuando $\lambda$ \>1 indica que se proyecta que la población crecerá a largo plazo; si $\lambda$ \<1 indica que se proyecta que disminuirá y $\lambda$ = 1 indica que se proyecta que permanecerá estable. Este parámetro se calcula utilizando la función **eigen.analysis** en el paquete **popbio**.
 
-Comenzamos por ingresar dos matrices de transición, una para cada año de monitoreo. 
+Comenzamos por ingresar dos matrices de transición, una para cada año de monitoreo.
 
-Primera matriz 
+Primera matriz
 
 ```{r, cre_pop_1, warning=FALSE, message=FALSE}
 
@@ -42,7 +42,6 @@ plot_life_cycle(mat1.1, stages=estadios, fontsize = 5)
 
 ```
 
-
 Segunda matriz
 
 ```{r, cre_pop_1b, warning=FALSE, message=FALSE}
@@ -57,7 +56,7 @@ plot_life_cycle(mat1.2, stages=estadios, fontsize = 5)
 
 ```
 
-***
+------------------------------------------------------------------------
 
 ## Calcular $\lambda$ de la población
 
@@ -75,15 +74,11 @@ eig1.2$lambda
 
 ```
 
-
-
-
 La tasa de crecimiento asintótica representa la tasa a la que crecería una población a largo plazo, si no cambiaran las condiciones bajo las cuales se construyó el modelo. Es decir, si no cambiaran en el tiempo las condiciones bióticas, abióticas y de manejo que influyen en las tasas vitales (i.e. tasas de crecimiento, supervivencia y reproducción) de dicha población. Por supuesto, nosotros sabemos que esto no es posible una consistencia de todas las tasas vitales a largo plazo, siempre ocurre cambios temporales determinístico o estocástico. Por ejemplo, en nuestro caso no observamos mortalidad de adultos durante los dos periodos de monitorio, pero redujo de una pequeña facción para que el valor de supervivencia sea menor de 1.0, aunque el efecto sobre el crecimiento poblacional es minimo. Por lo tanto, es importante que el valor de $\lambda$ nunca se use en sentido estricto, ni tampoco como una herramienta predictiva.
 
 También es fundamental tomar en cuenta que, $\lambda$ no es la tasa a la que se espera que la población creciera en el corto plazo. De hecho, una población con $\lambda$ \<1 pudiera crecer en el corto plazo, antes de declinar en el largo plazo y $vice-versa$. Asimismo, cabe señalar que la tasa de crecimiento poblacional de corto plazo es calculada usando los índices de la dinámica transitoria (**Capitulo X**).
 
 Los meta-análisis (Crone et al. 2013), en cambio, han demostrado que $\lambda$ es una medida robusta de las condiciones actuales, ya que ésta explica la dinámica de las poblaciones durante el período de tiempo en el que se parametrizaron los modelos. Asimismo, $\lambda$ es una buena medida del estado de la población, por lo que es una forma apropiada de comparar el comportamiento de las poblaciones bajo diferentes condiciones, incluyendo variación abiótica, biótica y de manejo. Por ejemplo, los valores de $\lambda$ permiten comparar el comportamiento de una población en distintos periodos de tiempo y con ello entender cómo la variación en las condiciones climáticas afecta su dinámica. Las comparaciones también pueden ser entre poblaciones de la misma especie distribuidas en distintos sitios, para entender los efectos de la variación en el manejo, la vegetación u otras diferencias entre sitios (vea el capitulo "Variación temporal y Espacial por simulaciones")
-
 
 ## Comparar $\lambda$ entre poblaciones
 
@@ -108,21 +103,20 @@ La población bajo extracción tiene un valor de $\lambda$ menor (0.990) a aquel
 
 ## Intervalos de confianza de $\lambda$
 
-Para interpretar $\lambda$ apropiadamente necesitamos calcular los intervalos de confianza (IC). Estos intervalos pueden ser calculados con un método de remuestreo con reemplazo (i.e. bootstrap), utilizando las transiciones de estado de los individuos de un periodo a otro; es decir, los datos (i.e $stage-fate dataframe$) usados para construir la matriz de transiciones (Capitulo X). En el remuestro se puede especificar el tamaño de la muestra remuestreada, la cual fue de 1000 en nuestro caso. Cabe señalar que, se tendrán intervalos de confianza amplios cuando se tiene una muestra pequeña de datos originales, o, si se tienen pocas observaciones de aquellas transiciones que contribuyen en mayor medida a λ. En adición se puede usar el método en el paquete "raretrans" (no explicado en este capitulo).
+Para interpretar $\lambda$ apropiadamente necesitamos calcular los intervalos de confianza (IC). Estos intervalos pueden ser calculados con un método de remuestreo con reemplazo (i.e. bootstrap), utilizando las transiciones de estado de los individuos de un periodo a otro; es decir, los datos (i.e $stage-fate$) usados para construir la matriz de transiciones (Capitulo X). En el remuestro se puede especificar el tamaño de la muestra remuestreada, la cual fue de 1000 en nuestro caso. Cabe señalar que, se tendrán intervalos de confianza amplios cuando se tiene una muestra pequeña de datos originales, o, si se tienen pocas observaciones de aquellas transiciones que contribuyen en mayor medida a λ. En adición se puede usar el método en el paquete "raretrans" (no explicado en este capitulo).
 
 En el presente caso, calculamos los intervalos de confianza de $\lambda$ para la población 1, correspondientes al año 1 y 2. En ambos años, los intervalos son amplios.
 
 Usando la función **boot.transitions** del paquete **popbio**, se puede calcular los intervalos de confianza de λ. Esta función requiere que se especifiquen los estadios de la matriz y el número de remuestreos. En nuestro caso, usamos 1000 remuestreos y especificamos los estadios como "pl", "j", "a1" y "a2".
 
- - **boot.transitions(transitions, iterations, sort = stages)**
- 
- - transitions: un data frame con las transiciones de los individuos de un periodo a otro (i.e. $stage-fate dataframe$).
- - iterations: el número de remuestreos a realizar.
- - sort: un vector con los nombres de los estadios en el orden en que se encuentran en la matriz de transición.
- 
- 
- 
- 
+-   **boot.transitions(transitions, iterations, sort = stages)**
+
+-   transitions: un data frame con las transiciones de los individuos de un periodo a otro (i.e. $stage-fate$).
+
+-   iterations: el número de remuestreos a realizar.
+
+-   sort: un vector con los nombres de los estadios en el orden en que se encuentran en la matriz de transición.
+
 ```{r, cre_pop_4}
 
 #Intervalos de confianza (IC) de λ para la población 1, año 1
@@ -146,7 +140,6 @@ ic1
 #IC para la población 1, año 2
 
 ```
-
 
 Simulación de las transiciones de la población 1, año 2
 
@@ -173,8 +166,6 @@ ic2
 
 ```
 
-
-
 ```{r}
 bind_rows(ic1, ic2) %>%
   mutate(year = c("año 1", "año 2")) %>%
@@ -183,12 +174,30 @@ bind_rows(ic1, ic2) %>%
   knitr::kable(digits= 3, caption = "Intervalos de confianza de λ")
 ```
 
+------------------------------------------------------------------------
 
-***
+## Ambiente Variable
+
+En el ejemplo anterior, hemos asumido que las condiciones bajo las cuales se construyeron las matrices de transición son constantes en el tiempo. Sin embargo, sabemos que esto no es cierto, ya que las condiciones bióticas y abióticas cambian con el tiempo y espacio. Por lo tanto, $\lambda$ no debe ser interpretado literalmente, ni tampoco como una herramienta predictiva. En trabajos de viabilidad de población uno de los objetivos es evaluar cómo la variabilidad demográfica, biótica y ábiotica impactan las tasas vitales y por consecuencia el crecimiento afecta la dinámica poblacional. Para ello, se puede calcular la tasa estocástica de crecimiento $λ_e$ (ver más adelante).
 
 ## Tasa estocástica de crecimiento $λ_e$
 
-La tasa estocástica de crecimiento o $λ_e$ se puede estimar si se cuenta con datos colectados por 2 o más periodos y, por lo tanto, se tienen 2 o más matrices de transición. La tasa estocástica se puede calcular a través del método de simulación de Cohen o por la aproximación de Tuljarpurkar [@caswell2001matrix]. En la simulación, las matrices son seleccionadas aleatoriamente para un número específico de intervalos de tiempo (50,000 por omisión en **popbio**). Se calcula $λ_e$ como la tasa media del crecimiento para un lapso de tiempo. En la aproximación de Tuljarpurkar, se calcula $λ_e$ como el valor propio dominante de la matriz de transición promedio.
+La tasa estocástica de crecimiento o $λ_e$ se puede estimar si se cuenta con datos colectados por 2 o más periodos y, por lo tanto, se tienen 2 o más matrices de transición. La tasa estocástica se puede calcular a través del método de simulación de Cohen o por la aproximación de Tuljarpurkar [@caswell2001matrix]. En la simulación, las matrices son seleccionadas aleatoriamente para un número específico de intervalos de tiempo (50,000 por omisión en **popbio**). Se calcula $λ_e$ como la tasa media del crecimiento para un lapso de tiempo. En la aproximación de Tuljarpurkar, se calcula $λ_e$ como el valor propio dominante de la matriz de transición promedio. El método de Tuljarpurkar es más rápido, pero menos robusto que el método de simulación. Pero es recomendable solamente cuando la variación entre las matrices de diferentes periodos sean pequeñas [@caswell2001matrix], aunque Morris y Doak mencionan que el método funciona bastante bien aunque varian las matrices [@morris2002quantitative]. En la próxima sección se muestra cómo calcular $λ_e$. 
+
+
+Es apriopriado tomar el tiempo de entender como se calcula $λ_e$ y cómo se interpreta. La aproximación de Tuljarpurkar es: 
+
+$$log(λ_e) = log(\bar\lambda_1)-\frac{1}{2}(\frac{\tau^2}{\bar\lambda_1^2})$$ ,
+
+
+donde $\tau^2$ es igual a: 
+
+$$\tau^2=\sum_{i=1}^{S}\sum_{j=1}^{S}\sum_{k=1}^{S}\sum_{l=1}^{S}Cov(\alpha_{ij}, \alpha_{kl})\bar{S_{ij}}\bar{S_{kl}}$$
+
+La variable de la ecuación incluye $\bar\lambda_1$, donde representa el log del valoreigen promedio de las matrices de transición $\bar{\text{A}}$, donde es el promedio de cada elemento de la matriz.  Si tenemos 4 matrices de transición, $\bar{\text{A}}$ es la matriz de transición promedio de cada elemento de esta matriz. Por ejemplo, si la transiciones de plántula a juvenil en la matriz 1 es 0.1, en la matriz 2 es 0.2, en la matriz 3 es 0.15 y en la matriz 4 es 0.05, entonces el valor promedio en la $\bar{\text{A}}$ de la transición de plántula a juvenil sería (0.1 + 0.2 + 0.15 + 0.05)/4 = 0.125. Por consecuencia el valor de de $\bar{\alpha}_{1,1}=0.125$ 
+
+
+El componente $\frac{\tau^2}{\bar\lambda_1^2}$ es una aproximado de la variación temporal del crecimiento poblacional por causa de estocasticidad temporal. En este caso, $\tau^2$ es el efecto de la sensitividad de $\lambda$ causado por los cambios en los elementos $\bar{\alpha}_{i,j}$. La covarianza $\text{Cov}$ mide la correlaciones las transiciones de estado $i$ a $j$ y $k$ a $l$ se denota como $Cov(\alpha_{ij}, \alpha_{kl})$. Se espera que algunos de los elementos varia de forma positiva y otros de forma negativa, por lo que la covarianza puede ser positiva o negativa. Por ejemplo, si la transición de plántula a juvenil aumenta, es probable que la transición de juvenil a adulto aumenta tambien en un buen año, y viceversa. Por lo tanto, la covarianza entre estas transiciones es positiva. Considera por ejemplo que la probabilidad de fallecer de un año un otro y posible en un periodo de sequía por consecuencia la probabilidad de sobrevivir de un año a otro sea impactado de forma negativa por la sequía, y la covarianza con otros elementos como transiciones también se vean afectado.
 
 Nota que aquí una vez más, se asume que las condiciones bajo las cuales se construyeron las matrices de transición son constantes en el tiempo. Por lo tanto, $λ_e$ no debe ser interpretado literalmente, ni tampoco como una herramienta predictiva. En adición los valores de ic se resta y se suma al $\lambda$ promedio obtenido para tener el rango de 95% de $\lambda$.
 
