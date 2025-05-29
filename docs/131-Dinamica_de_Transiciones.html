@@ -428,7 +428,7 @@ window.Quarto = {
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Capítulos</a></li><li class="breadcrumb-item"><a href="./131-Dinamica_de_Transiciones.html">Dinámica de Transiciones2</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Capítulos</a></li><li class="breadcrumb-item"><a href="./131-Dinamica_de_Transiciones.html">Dinámica de Transiciones2</a></li></ol></nav><h1 class="title display-7"></h1></header><div class="quarto-title-block"><div class="quarto-title-tools-only"><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Codes</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 
 
 
@@ -1595,6 +1595,8 @@ Warning in is.na(x): is.na() applied to non-(list or vector) of type
 <p>Raventós y colaboradores (2015) estimaron el crecimiento poblacional de corto plazo de dos orquídeas epífitas después del paso de un huracán. Dado que a su paso se pierden individuos, se simuló si la reintroducción de plántulas y adultos mitigaban los efectos de este fenómeno en Cuba. Los resultados sugieren que la reintroducción de adultos tiene un efecto positivo sobre</p>
 
 
+<!-- -->
+
 
 </section>
 </section>
@@ -1859,6 +1861,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       container: window.document.getElementById('quarto-embedded-source-code-modal')
     });
     clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
@@ -2200,7 +2253,721 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         <span class="nav-page-text">Capítulos Asignados</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb92" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Dinámica transitoria 2 {#DinTrans}</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>Autores: "Mariana Hernández Apolinar y Paola Portillo Tzompa"</span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a><span class="fu">## Dinámica poblacional de largo y corto plazo</span></span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a>Los modelos de proyección poblacional (MPP), previamente vistos en la *Sección XX*, son de carácter determinístico; es decir, éstos suponen que las muertes, la reproducción y el crecimiento individual (i.e. tasas vitales) en las distintas categorías de la población no varían en el tiempo; por lo tanto, al mantenerse constantes la población crece a una velocidad constante y la proporción de individuos por categoría de tamaño/estado no cambia en el largo plazo [@bierzychudek1999looking; **Caswell, 2001? es el libro?**]. Sin embargo, en la naturaleza estas variables distan de ser constantes, debido a que las poblaciones experimentan recursos limitados, ambientes heterogéneos tanto abioticos y bioticos y cambiantes que perturban las poblaciones, afectando su dinámica y sugiriendo que la tasa de crecimiento de largo plazo no es un buen predictor de los cambios que enfrentan dichas las poblaciones <span class="co">[</span><span class="ot">@bierzychudek1999looking; Caswell, 2001</span><span class="co">]</span>. De ahí que, se hayan desarrollado modelos que integran dicha variación y que permiten hacer proyecciones más realistas sobre la dinámica poblacional de la especie de estudio, tal es el caso de los modelos de de crecimiento estocástico y los análisis de dinámica transitoria.</span>
+<span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-9"><a href="#cb92-9" aria-hidden="true" tabindex="-1"></a>En particular, los análisis de la dinámica transitoria surgen como una alternativa para analizar cómo cambia la dinámica de una población en el tiempo al presentarse un evento de perturbación (cambios bioticos o abioticos en el tiempo). En este análisis se evalúa la respuesta de la población en el corto plazo; es decir, antes de alcanzar la estructura estable de estadios/edades y de crecer a una tasa constante **(ref)**. Dicha respuesta se determina a través de las discrepancias o diferencias que hay entre la estructura actual (i.e. corto plazo) y la estructura estable (i.e. largo plazo) de la población analizada <span class="co">[</span><span class="ot">@raventos2015transient</span><span class="co">]</span>.</span>
+<span id="cb92-10"><a href="#cb92-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-11"><a href="#cb92-11" aria-hidden="true" tabindex="-1"></a>Debido a que el análisis de la dinámica transitoria es complejo, para facilitar y asimilar su desarrollo, a continuación se listan la serie de pasos que se deben seguir. El análisis se lleva a cabo en el Programa de estadística *R* y la serie de pasos fue definida por Stott y colaboradores <span class="co">[</span><span class="ot">@stott2011framework; @stott2012beyond; @stott2012popdemo</span><span class="co">]</span>.</span>
+<span id="cb92-12"><a href="#cb92-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-13"><a href="#cb92-13" aria-hidden="true" tabindex="-1"></a>&lt;br&gt;</span>
+<span id="cb92-14"><a href="#cb92-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-15"><a href="#cb92-15" aria-hidden="true" tabindex="-1"></a>*Paso 1. Matriz de transición y estructura poblacional inicial*.</span>
+<span id="cb92-16"><a href="#cb92-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-17"><a href="#cb92-17" aria-hidden="true" tabindex="-1"></a>En primer lugar se debe contar con una matriz de proyección poblacional y su vector correspondiente de la estructura poblacional observada al inicio del estudio. En en este caso se usarán los datos obtenidos para *Lepanthes rubripetala* por Tremblay y colaboradores <span class="co">[</span><span class="ot">@tremblay2015stable; @schodelbauerova2010prediction</span><span class="co">]</span>.</span>
+<span id="cb92-18"><a href="#cb92-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-19"><a href="#cb92-19" aria-hidden="true" tabindex="-1"></a><span class="fu">## PROYECTO DE DINAMICA TRANSITORIA O DE CORTO PLAZO</span></span>
+<span id="cb92-20"><a href="#cb92-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-21"><a href="#cb92-21" aria-hidden="true" tabindex="-1"></a><span class="fu">### PART I: DINÁMICA POBLACIONAL DE LARGO PLAZO</span></span>
+<span id="cb92-22"><a href="#cb92-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-23"><a href="#cb92-23" aria-hidden="true" tabindex="-1"></a>Este es un análisis de dinámica transitoria para *Lepanthes rubripetala* (Población 1) con cuatro clases de estado en su ciclo de vida:</span>
+<span id="cb92-24"><a href="#cb92-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-25"><a href="#cb92-25" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>plántula,</span>
+<span id="cb92-26"><a href="#cb92-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-27"><a href="#cb92-27" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>juvenil,</span>
+<span id="cb92-28"><a href="#cb92-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-29"><a href="#cb92-29" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>adultos no reproductivos,</span>
+<span id="cb92-30"><a href="#cb92-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-31"><a href="#cb92-31" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>adultos reproductivos.</span>
+<span id="cb92-32"><a href="#cb92-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-33"><a href="#cb92-33" aria-hidden="true" tabindex="-1"></a>&lt;br&gt;</span>
+<span id="cb92-34"><a href="#cb92-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-35"><a href="#cb92-35" aria-hidden="true" tabindex="-1"></a><span class="fu">### PASO 1. MATRIZ DE PROYECCIÓN POBLACIONAL y ESTRUCTURA POBLACIONAL INICIAL $t_{0}$</span></span>
+<span id="cb92-36"><a href="#cb92-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-37"><a href="#cb92-37" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Extra1, message=FALSE}</span></span>
+<span id="cb92-38"><a href="#cb92-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-39"><a href="#cb92-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-40"><a href="#cb92-40" aria-hidden="true" tabindex="-1"></a><span class="in">#Librerias de R requeridas para el análisis </span></span>
+<span id="cb92-41"><a href="#cb92-41" aria-hidden="true" tabindex="-1"></a><span class="in">library(popdemo)</span></span>
+<span id="cb92-42"><a href="#cb92-42" aria-hidden="true" tabindex="-1"></a><span class="in">library(popbio)</span></span>
+<span id="cb92-43"><a href="#cb92-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-44"><a href="#cb92-44" aria-hidden="true" tabindex="-1"></a><span class="in">#Capturar los datos de la matriz para L. rubripetala (Tremblay et al. 2015)</span></span>
+<span id="cb92-45"><a href="#cb92-45" aria-hidden="true" tabindex="-1"></a><span class="in">Lr &lt;- matrix(c(0.4324, 0,      0,     0.15,</span></span>
+<span id="cb92-46"><a href="#cb92-46" aria-hidden="true" tabindex="-1"></a><span class="in">               0.3784, 0.8459, 0,     0,</span></span>
+<span id="cb92-47"><a href="#cb92-47" aria-hidden="true" tabindex="-1"></a><span class="in">               0,      0.0034, 0.7954,0.2300,</span></span>
+<span id="cb92-48"><a href="#cb92-48" aria-hidden="true" tabindex="-1"></a><span class="in">               0,      0.0890, 0.1841,0.7510), byrow=TRUE,ncol=4)</span></span>
+<span id="cb92-49"><a href="#cb92-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-50"><a href="#cb92-50" aria-hidden="true" tabindex="-1"></a><span class="in">#Capturar las categorias de estado</span></span>
+<span id="cb92-51"><a href="#cb92-51" aria-hidden="true" tabindex="-1"></a><span class="in">categoria &lt;- c("1","2","3","4")</span></span>
+<span id="cb92-52"><a href="#cb92-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-53"><a href="#cb92-53" aria-hidden="true" tabindex="-1"></a><span class="in">#Obtener la matriz L. rubripetala </span></span>
+<span id="cb92-54"><a href="#cb92-54" aria-hidden="true" tabindex="-1"></a><span class="in">Lr1 &lt;- matrix(Lr[1:4, ], nrow = 4, dimnames = list(categoria, categoria))</span></span>
+<span id="cb92-55"><a href="#cb92-55" aria-hidden="true" tabindex="-1"></a><span class="in">Lr1</span></span>
+<span id="cb92-56"><a href="#cb92-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-57"><a href="#cb92-57" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb92-58"><a href="#cb92-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-59"><a href="#cb92-59" aria-hidden="true" tabindex="-1"></a>&lt;br&gt;</span>
+<span id="cb92-60"><a href="#cb92-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-61"><a href="#cb92-61" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Capturar y obtener el vector inicial (datos de campo) de clases de estado población 1</span></span>
+<span id="cb92-62"><a href="#cb92-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-63"><a href="#cb92-63" aria-hidden="true" tabindex="-1"></a>Los datos provienen de la siguiente fuenta: <span class="co">[</span><span class="ot">@tremblay2015stable; @schodelbauerova2010prediction</span><span class="co">]</span> y se refieren a la estructura poblacional inicial de *Lepanthes rubripetala* en la población 1. La estructura poblacional inicial de la población 1 de *L. rubripetala* fue la siguiente:</span>
+<span id="cb92-64"><a href="#cb92-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-65"><a href="#cb92-65" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>plántula, n= 0</span>
+<span id="cb92-66"><a href="#cb92-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-67"><a href="#cb92-67" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>juvenil, n= 46</span>
+<span id="cb92-68"><a href="#cb92-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-69"><a href="#cb92-69" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>adultos no reproductivos, n= 38</span>
+<span id="cb92-70"><a href="#cb92-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-71"><a href="#cb92-71" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>adultos reproductivos, n = 82</span>
+<span id="cb92-72"><a href="#cb92-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-75"><a href="#cb92-75" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb92-76"><a href="#cb92-76" aria-hidden="true" tabindex="-1"></a>n0 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">46</span>, <span class="dv">38</span>, <span class="dv">82</span>) </span>
+<span id="cb92-77"><a href="#cb92-77" aria-hidden="true" tabindex="-1"></a>n0</span>
+<span id="cb92-78"><a href="#cb92-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-79"><a href="#cb92-79" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb92-80"><a href="#cb92-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-81"><a href="#cb92-81" aria-hidden="true" tabindex="-1"></a>&lt;br&gt;</span>
+<span id="cb92-82"><a href="#cb92-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-83"><a href="#cb92-83" aria-hidden="true" tabindex="-1"></a>*Paso 2: Condiciones que debe cumplir la matriz de estudio*.</span>
+<span id="cb92-84"><a href="#cb92-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-85"><a href="#cb92-85" aria-hidden="true" tabindex="-1"></a>Previo al análisis de dinámica transitoria se debe comprobar que la matriz de transición poblacional sea: a) Irreducible, que los elementos de la matriz de análisis y, por lo tanto, los nodos de la gráfica del ciclo de vida, estén fuertemente conectados, tengan una ruta, de modo que formen un ciclo. b) Ergódica, que la dinámica asintótica sea independiente de las condiciones iniciales (i.e. estructura poblacional inicial)\</span>
+<span id="cb92-86"><a href="#cb92-86" aria-hidden="true" tabindex="-1"></a>c) Primitiva, que al elevar a altas potencias una matriz irreducible positiva (i.e. sin elementos negativos) su resultado sea único y tenga un sólo valor positivo (i.e. tasa de crecimiento poblacional). (Caswell, 2001)</span>
+<span id="cb92-87"><a href="#cb92-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-88"><a href="#cb92-88" aria-hidden="true" tabindex="-1"></a>Así que, a continuación se comprueba si la matriz de *L. rubripetala* cumple con estas condiciones o supuestos.</span>
+<span id="cb92-89"><a href="#cb92-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-90"><a href="#cb92-90" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Definición de términos Ergodicidad, Irrecucible y Primitiva</span></span>
+<span id="cb92-91"><a href="#cb92-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-92"><a href="#cb92-92" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>El primer punto para cualquier análisis de dinámica poblacional es que la matriz tiene que ser cuadricular n<span class="sc">\*</span>n y no negativa.</span>
+<span id="cb92-93"><a href="#cb92-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-94"><a href="#cb92-94" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>La matriz tiene que ser **ergódica**: Irrelevante de la estructura de etapas inicial que se usa para proyectar el crecimiento poblacional siempre tendrá el mismo crecimiento asintomático.</span>
+<span id="cb92-95"><a href="#cb92-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-96"><a href="#cb92-96" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>La matriz tiene que ser **irreducible**: El ciclo de vida de la especie tiene las transiciones para que cualquier etapas puede llegar a todas las otras etapas.</span>
+<span id="cb92-97"><a href="#cb92-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-98"><a href="#cb92-98" aria-hidden="true" tabindex="-1"></a>Para una discusión sobre estas condiciones vea a <span class="co">[</span><span class="ot">@stott2010reducibility</span><span class="co">]</span></span>
+<span id="cb92-99"><a href="#cb92-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-100"><a href="#cb92-100" aria-hidden="true" tabindex="-1"></a>Para evaluar si las matrices son ergodica y irreducible se usa las funciones **isErgodic** y **isIrreducible**. Vea que en las cajas siguiente el resultado es "TRUE" por consecuencia cumple con ambas condiciones.</span>
+<span id="cb92-101"><a href="#cb92-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-102"><a href="#cb92-102" aria-hidden="true" tabindex="-1"></a><span class="fu">#### a) Ergodicidad</span></span>
+<span id="cb92-103"><a href="#cb92-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-104"><a href="#cb92-104" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Extra2}</span></span>
+<span id="cb92-105"><a href="#cb92-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-106"><a href="#cb92-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-107"><a href="#cb92-107" aria-hidden="true" tabindex="-1"></a><span class="in">ergo &lt;- isErgodic(Lr1, digits = 5, return.eigvec = FALSE)</span></span>
+<span id="cb92-108"><a href="#cb92-108" aria-hidden="true" tabindex="-1"></a><span class="in">ergo</span></span>
+<span id="cb92-109"><a href="#cb92-109" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb92-110"><a href="#cb92-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-111"><a href="#cb92-111" aria-hidden="true" tabindex="-1"></a><span class="fu">#### b) Irreducible</span></span>
+<span id="cb92-112"><a href="#cb92-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-113"><a href="#cb92-113" aria-hidden="true" tabindex="-1"></a><span class="in">```{r chap10_irreduc}</span></span>
+<span id="cb92-114"><a href="#cb92-114" aria-hidden="true" tabindex="-1"></a><span class="in">irreduc &lt;- isIrreducible(Lr1)</span></span>
+<span id="cb92-115"><a href="#cb92-115" aria-hidden="true" tabindex="-1"></a><span class="in">irreduc</span></span>
+<span id="cb92-116"><a href="#cb92-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-117"><a href="#cb92-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-118"><a href="#cb92-118" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb92-119"><a href="#cb92-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-120"><a href="#cb92-120" aria-hidden="true" tabindex="-1"></a>&lt;br&gt;</span>
+<span id="cb92-121"><a href="#cb92-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-122"><a href="#cb92-122" aria-hidden="true" tabindex="-1"></a>*Paso 3: Análisis demográfico básico*.</span>
+<span id="cb92-123"><a href="#cb92-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-124"><a href="#cb92-124" aria-hidden="true" tabindex="-1"></a>En el análisis de dinámica transitoria necesitamos conocer cómo se comporta una población en el largo plazo, por lo que se proyecta el crecimiento poblacional de tipo asintótico para la matriz de la población seleccionada. Entonces, a partir de la matriz de proyección poblacional y el correspondiente vector de la estructura poblacional observada al inicio del estudio de *L. rubripetala*, calcularemos la tasa de crecimiento poblacional (i.e.*lambda*, de ahora en adelante *lambda-max*), la estructura poblacional estable (*w*, de ahora en adelante *w-max*) y el valor reproductivo (*v*), así como las matrices de sensibilidad y elasticidad. Con este fin, usaremos el procedimiento de la *Sección X*, desarrollado en el *Programa "popbio" de R*.</span>
+<span id="cb92-125"><a href="#cb92-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-126"><a href="#cb92-126" aria-hidden="true" tabindex="-1"></a>Además de esta información, se estimarán dos nuevos términos: el tiempo de convergencia (*convergence-time*) y la relación de amortiguamiento (*damping-ratio*). El primero indica el tiempo esperado en que una población alcanza la estructura estable, mientras que el segundo es una medida de que tan rápido converge una población a la estructura estable (Caswell, 2001).</span>
+<span id="cb92-127"><a href="#cb92-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-128"><a href="#cb92-128" aria-hidden="true" tabindex="-1"></a><span class="fu">### Crecimiento asintótico</span></span>
+<span id="cb92-129"><a href="#cb92-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-130"><a href="#cb92-130" aria-hidden="true" tabindex="-1"></a>La definición del crecimiento asintótico de la población *lambda* se basa en la tasa de crecimiento poblacional cuando la población este a su nivel estable de estructura de edades/estados. Por consecuencia se asume que la población llegue o este a un nivel estructura de edades/estados estable.</span>
+<span id="cb92-131"><a href="#cb92-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-132"><a href="#cb92-132" aria-hidden="true" tabindex="-1"></a>Para la población de *Lepanthes rubripetala* se obtiene una tasa de crecimiento poblacional de 1.007, lo que indica que la población crece a una tasa constante de 1.007 entre $t_{0}$ y $t_{1}$. Entonces si la población tuviese 1000 individuos hubiese 7 individuos más en $t_{1}$.</span>
+<span id="cb92-133"><a href="#cb92-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-134"><a href="#cb92-134" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Extra3}</span></span>
+<span id="cb92-135"><a href="#cb92-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-136"><a href="#cb92-136" aria-hidden="true" tabindex="-1"></a><span class="in">#Análisis asintótico (i.e. largo plazo) del crecimiento poblacional de L. rubripetala</span></span>
+<span id="cb92-137"><a href="#cb92-137" aria-hidden="true" tabindex="-1"></a><span class="in">#La orquídea florece todo el año, por lo que el seguimiento de la población fue mensual. </span></span>
+<span id="cb92-138"><a href="#cb92-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-139"><a href="#cb92-139" aria-hidden="true" tabindex="-1"></a><span class="in">#PARÁMETROS POBLACIONALES</span></span>
+<span id="cb92-140"><a href="#cb92-140" aria-hidden="true" tabindex="-1"></a><span class="in">##lambda: Tasa de crecimiento poblacional</span></span>
+<span id="cb92-141"><a href="#cb92-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-142"><a href="#cb92-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-143"><a href="#cb92-143" aria-hidden="true" tabindex="-1"></a><span class="in">lambda &lt;-lambda(Lr1)</span></span>
+<span id="cb92-144"><a href="#cb92-144" aria-hidden="true" tabindex="-1"></a><span class="in">lambda</span></span>
+<span id="cb92-145"><a href="#cb92-145" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb92-146"><a href="#cb92-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-147"><a href="#cb92-147" aria-hidden="true" tabindex="-1"></a><span class="fu">## Estructura estable</span></span>
+<span id="cb92-148"><a href="#cb92-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-149"><a href="#cb92-149" aria-hidden="true" tabindex="-1"></a>La estructura estable de edades/etapas es un indice de la distribución proporcional de la poblacional que se espera que esta población alcance en el largo plazo. En el caso de *Lepanthes rubripetala* se espera que la población alcance una estructura estable de 0.088, 0.206, 0.369 y 0.337 para las categorías de plántulas, juveniles, adultos no reproductivos y adultos reproductivos, respectivamente. Esta estructura asume que el crecimiento poblacional *lambda* $\lambda$ sigue igual y constante en el tiempo.</span>
+<span id="cb92-150"><a href="#cb92-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-151"><a href="#cb92-151" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Extra4}</span></span>
+<span id="cb92-152"><a href="#cb92-152" aria-hidden="true" tabindex="-1"></a><span class="in">#Estructura estable de estados</span></span>
+<span id="cb92-153"><a href="#cb92-153" aria-hidden="true" tabindex="-1"></a><span class="in">Wmax &lt;- stable.stage(Lr1)</span></span>
+<span id="cb92-154"><a href="#cb92-154" aria-hidden="true" tabindex="-1"></a><span class="in">Wmax</span></span>
+<span id="cb92-155"><a href="#cb92-155" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb92-156"><a href="#cb92-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-157"><a href="#cb92-157" aria-hidden="true" tabindex="-1"></a>Uno puede visualizar la estructura la estructura de la población usando el codigo siguiente.</span>
+<span id="cb92-158"><a href="#cb92-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-161"><a href="#cb92-161" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb92-162"><a href="#cb92-162" aria-hidden="true" tabindex="-1"></a>Wdf<span class="ot">=</span><span class="fu">data.frame</span>(Wmax)</span>
+<span id="cb92-163"><a href="#cb92-163" aria-hidden="true" tabindex="-1"></a>Wdf<span class="sc">$</span>Categorias<span class="ot">=</span><span class="fu">c</span>(<span class="st">"Plántulas"</span>,<span class="st">"Juveniles"</span>,<span class="st">"Adultos no reproductivos"</span>,<span class="st">"Adultos reproductivos"</span>)</span>
+<span id="cb92-164"><a href="#cb92-164" aria-hidden="true" tabindex="-1"></a>Wdf<span class="sc">$</span>Categorias<span class="ot">=</span><span class="fu">factor</span>(Wdf<span class="sc">$</span>Categorias, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">"Plántulas"</span>,<span class="st">"Juveniles"</span>,<span class="st">"Adultos no reproductivos"</span>,<span class="st">"Adultos reproductivos"</span>))</span>
+<span id="cb92-165"><a href="#cb92-165" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb92-166"><a href="#cb92-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-167"><a href="#cb92-167" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Wdf, <span class="fu">aes</span>(<span class="at">y=</span>Wmax, <span class="at">x=</span>Categorias)) <span class="sc">+</span> </span>
+<span id="cb92-168"><a href="#cb92-168" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">"identity"</span>, <span class="at">fill=</span><span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb92-169"><a href="#cb92-169" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Estructura estable de estados"</span>, <span class="at">x=</span><span class="st">"Categoría"</span>, <span class="at">y=</span><span class="st">"Proporción"</span>) <span class="sc">+</span></span>
+<span id="cb92-170"><a href="#cb92-170" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb92-171"><a href="#cb92-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-172"><a href="#cb92-172" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb92-173"><a href="#cb92-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-174"><a href="#cb92-174" aria-hidden="true" tabindex="-1"></a><span class="fu">## Valores reproductivos</span></span>
+<span id="cb92-175"><a href="#cb92-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-176"><a href="#cb92-176" aria-hidden="true" tabindex="-1"></a>El valor reproductivo *v* es un indice de la contribución de cada categoría de edad/estado a la tasa de crecimiento poblacional. En el caso de *Lepanthes rubripetala* se espera que la categoría de adultos reproductivos contribuya más a la tasa de crecimiento poblacional, seguido por la categoría de adultos no reproductivos, juveniles y plántulas. Los valores en la lista de *v* se compara con la primera edad/estado. Por consecuencia un individuo de la 4ta etapa (adulto reproductivo) tiene un potencial de dejar 2.7 individuos al comparar que una plantula tiene solamente tiene un valor de 1.0. La diferencia es que los individuos pequeños tienen que sobrevivir y llegar a las etapas mayores para contribuir a la tasa de crecimiento poblacional.</span>
+<span id="cb92-177"><a href="#cb92-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-178"><a href="#cb92-178" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Extra5}</span></span>
+<span id="cb92-179"><a href="#cb92-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-180"><a href="#cb92-180" aria-hidden="true" tabindex="-1"></a><span class="in">valor_repro=reproductive.value(Lr1)</span></span>
+<span id="cb92-181"><a href="#cb92-181" aria-hidden="true" tabindex="-1"></a><span class="in">valor_repro</span></span>
+<span id="cb92-182"><a href="#cb92-182" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb92-183"><a href="#cb92-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-184"><a href="#cb92-184" aria-hidden="true" tabindex="-1"></a><span class="fu">## Análisis de elasticidad</span></span>
+<span id="cb92-185"><a href="#cb92-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-186"><a href="#cb92-186" aria-hidden="true" tabindex="-1"></a>La elasticidad es un indice de la sensibilidad de la tasa de crecimiento poblacional a los cambios en las tasas de supervivencia, crecimiento y reproducción de cada categoría de edad/estado. La suma de todas las proporciones es 1.0, por consecuencia uno puede comparar el efecto de cambios proporcional en cada parámetro y evaluar su impacto. En el caso de *Lepanthes rubripetala* se espera que la tasa de crecimiento poblacional sea más sensible a los cambios en la supervivencia de los etapas 3 y 4 ya que tienen una elasticidad de 0.313 y 0.311 respectivamente. Si sumamos el componente de supervivencia (la diagonal) de la matriz de transición poblacional, la suma es (0.018 + 0.122 + 0.313 + 0.311) = 0.764. Por consecuencia, las etapas de supervivencia de los individuos contribuyen a 76.4% y son las etapas más sensitivas a los cambios demográficos. Al comparar si uno fuese a hacer un cambio proporcional en la reproducción (los adultos que dejan plántulas) tendría un impacto mucho más pequeño, solamente de 2.3%.</span>
+<span id="cb92-187"><a href="#cb92-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-188"><a href="#cb92-188" aria-hidden="true" tabindex="-1"></a>Los análisis de elasticidad pueden ser usado para evaluar que etapas que pudiese ayudar en enfocar las alternativas de manejo para cambiar la tasa de crecimiento poblacional. Por ejemplo si es una especie en peligro de extinción, uno puede enfocar los trabajos de manejo de la especie en mejorar la supervivencia de los individuos de las etapas más sensitivas. Al contrario si es una especie invasora, uno puede enfocar los trabajos de manejo en reducir la supervivencia de las etapas más sensitivas. En este caso seria reducir la supervivencia de los adultos reproductivos y no reproductivos. Enfocando en las etapas más sensitivas es una forma de maximizar el impacto de los trabajos de manejo con menos recursos. Naturalmente se asume que el manejo de estas etapas es posible, por ejemplo si la elasticidad es alta en una de las tranciciones, por ejemplo juvenil a adultos, pero no se conoce cual son la variables ambientales que impacta esa transiciones no se puede hacer un manejo efectivo.</span>
+<span id="cb92-189"><a href="#cb92-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-190"><a href="#cb92-190" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Extra6}</span></span>
+<span id="cb92-191"><a href="#cb92-191" aria-hidden="true" tabindex="-1"></a><span class="in">#Matriz de elasticidad</span></span>
+<span id="cb92-192"><a href="#cb92-192" aria-hidden="true" tabindex="-1"></a><span class="in">elasticidad &lt;- round(elas(Lr1),digit=3)</span></span>
+<span id="cb92-193"><a href="#cb92-193" aria-hidden="true" tabindex="-1"></a><span class="in">elasticidad</span></span>
+<span id="cb92-194"><a href="#cb92-194" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb92-195"><a href="#cb92-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-196"><a href="#cb92-196" aria-hidden="true" tabindex="-1"></a><span class="fu">## Análisis de Amortiguamiento/Damping Ratio</span></span>
+<span id="cb92-197"><a href="#cb92-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-198"><a href="#cb92-198" aria-hidden="true" tabindex="-1"></a>El análisis de amortiguamiento es un indice de la rapidez con la que una población converge a su estructura estable después de un disturbio <span class="co">[</span><span class="ot">@jiang2020life</span><span class="co">]</span>. El indice de amortiguamiento $d &gt; 0$, y más grande el indice de amortiguamiento más rápido la población converge a la estructura estable. Se ha demostrado que hay una relación entre el indice de amortiguamiento y tiempo de generación de una especie <span class="co">[</span><span class="ot">@jiang2020life</span><span class="co">]</span>. El tiempo de amortiguamiento se calcula $\tau=1/d$. Usando la función *dr* del paquete **popbio**, en el caso de *Lepanthes rubripetala* se espera estima que el indice de amortigamiento es 1.2 y que la población converga a su estructura estable en 12 meses, ya que los datos fueron recolectado y analizado mensualmente. Si los datos son recolectado fueron recolectado una vez al año entonces la población converga a su estructura estable en 12 años. Un supuesto importante es que la tasa de crecimiento intrínseca es igual para todos los periodos subsiguientes.</span>
+<span id="cb92-199"><a href="#cb92-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-200"><a href="#cb92-200" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Extra7}</span></span>
+<span id="cb92-201"><a href="#cb92-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-202"><a href="#cb92-202" aria-hidden="true" tabindex="-1"></a><span class="in">#Relación de amortiguamiento</span></span>
+<span id="cb92-203"><a href="#cb92-203" aria-hidden="true" tabindex="-1"></a><span class="in">dampingratio &lt;- dr(Lr1, return.time=TRUE, x=10)</span></span>
+<span id="cb92-204"><a href="#cb92-204" aria-hidden="true" tabindex="-1"></a><span class="in">dampingratio</span></span>
+<span id="cb92-205"><a href="#cb92-205" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb92-206"><a href="#cb92-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-207"><a href="#cb92-207" aria-hidden="true" tabindex="-1"></a><span class="fu">## Análisis de Convergencia</span></span>
+<span id="cb92-208"><a href="#cb92-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-209"><a href="#cb92-209" aria-hidden="true" tabindex="-1"></a>El tiempo de convergencia puede ser calculado a base de la cantidad de individuos en las diferentes etapas o edades. El tiempo de convergencia es el tiempo esperado en que una población alcanza la estructura estable. En el caso de *Lepanthes rubripetala* se espera que la población alcance la estructura estable en 25 meses si se comienza con una población sesgada de solamente plántulas (n=1000) y ninguno en las etapas subsiguientes.</span>
+<span id="cb92-210"><a href="#cb92-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-211"><a href="#cb92-211" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Extra8}</span></span>
+<span id="cb92-212"><a href="#cb92-212" aria-hidden="true" tabindex="-1"></a><span class="in"># Tiempo de convergencia</span></span>
+<span id="cb92-213"><a href="#cb92-213" aria-hidden="true" tabindex="-1"></a><span class="in">n = c(1000, 0, 0, 0)</span></span>
+<span id="cb92-214"><a href="#cb92-214" aria-hidden="true" tabindex="-1"></a><span class="in">tconvergencia &lt;- convt(Lr1, accuracy = 1e-3, vector = n)</span></span>
+<span id="cb92-215"><a href="#cb92-215" aria-hidden="true" tabindex="-1"></a><span class="in">tconvergencia</span></span>
+<span id="cb92-216"><a href="#cb92-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-217"><a href="#cb92-217" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb92-218"><a href="#cb92-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-219"><a href="#cb92-219" aria-hidden="true" tabindex="-1"></a>Si comenzamos con una población mucho más cerca a la estructura estable, podemos calcular el tiempo de convergencia. Digamos que se comienza con una población de 8, 20, 27 34 individuos en las etapas 1, 2, 3 y 4 respectivamente. En este caso se espera que la población alcance la estructura estable en 6 meses. En este caso vemos que el tiempo de convergencia es mucho más corto que si se comienza con una población sesgada de solamente plántulas.</span>
+<span id="cb92-220"><a href="#cb92-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-221"><a href="#cb92-221" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Extra9}</span></span>
+<span id="cb92-222"><a href="#cb92-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-223"><a href="#cb92-223" aria-hidden="true" tabindex="-1"></a><span class="in">n2 = c(8, 20, 27, 34)</span></span>
+<span id="cb92-224"><a href="#cb92-224" aria-hidden="true" tabindex="-1"></a><span class="in">tconvergencia &lt;- convt(Lr1, accuracy = 1e-3, vector = n2)</span></span>
+<span id="cb92-225"><a href="#cb92-225" aria-hidden="true" tabindex="-1"></a><span class="in">tconvergencia</span></span>
+<span id="cb92-226"><a href="#cb92-226" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb92-227"><a href="#cb92-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-228"><a href="#cb92-228" aria-hidden="true" tabindex="-1"></a><span class="fu">## Dinámica transitoria</span></span>
+<span id="cb92-229"><a href="#cb92-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-230"><a href="#cb92-230" aria-hidden="true" tabindex="-1"></a>En la dinámica transitoria o de corto plazo, Stott y colaboradores (2010, 2012) incorporaron la estocasticidad demográfica para analizar el cambio de la estructura poblacional debido a una perturbación de origen biótico, abiótico o antropogénico (i.e. cambios en la estructura incicial observada). Este tipo de estocasticidad se refiere a la sobrevivencia y reproducción en número entero y finito; es decir, un individuo sobrevive o no, lo cual se representa con 1 ó 0, al igual que puede reproducirse (1) o no (0). La incorporación de esta característica en los individuos genera una variación no cíclica ni predecible en la respuesta de los individuos de una población.</span>
+<span id="cb92-231"><a href="#cb92-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-232"><a href="#cb92-232" aria-hidden="true" tabindex="-1"></a>En el análisis transitorio, el modelo sesgado por etapas (i.e. categorías) es el procedimiento que se usa para evaluar la perturbación de la estructura inicial. La perturbación o sesgo en la estructura inicial se evalúa modificando la proporción de individuos presentes en alguna categoría de la estructura poblacional. Cabe señalar que estas modificaciones representan distintos escenarios o simulaciones que ocurren o pueden ocurrir en nuestra población de estudio.</span>
+<span id="cb92-233"><a href="#cb92-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-234"><a href="#cb92-234" aria-hidden="true" tabindex="-1"></a>Por ejemplo, la estructura inicial en la población 1 de *Lepanthes rubripetala* fue la siguiente: (0,46,38,82). En este caso, al modificar la proporción de individuos presente en una, dos o en todas las categorías de la población se simuló el cambio en la dinámica en el corto plazo; es decir, en un momento previo a que se alcance el crecimiento estable o de largo plazo. En *Lepanthes rubripetala* se hicieron cinco simulaciones o escenarios al suponer las siguientes proporciones de individuos por categoría (Tremblay et al, 2015):</span>
+<span id="cb92-235"><a href="#cb92-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-236"><a href="#cb92-236" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Límite inferior: (1,0,0,0), los individuos de la población se contran en la categoría de plántulas (Lower bound).</span>
+<span id="cb92-237"><a href="#cb92-237" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Inicio I: (0.15, 0.35, 0,30, 0.20), mayor proporción de individuos en las categorías juvenil y adulto no reproductivo.</span>
+<span id="cb92-238"><a href="#cb92-238" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Estructura estable de la población: los individuos de la población tienen una abundancia de acuerdo con *w-max*.</span>
+<span id="cb92-239"><a href="#cb92-239" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>Inicio II: (0.4, 0.2,0.2, 0.2), mayor proporción de plántulas y una proporción similar en las categorías juvenil, adulto no reproductivo y adulto reproductivo.</span>
+<span id="cb92-240"><a href="#cb92-240" aria-hidden="true" tabindex="-1"></a><span class="ss">5.  </span>Límite superior: (0,0,0,1), los individuos de la población se contran en la categoría de adulto reproductivo.</span>
+<span id="cb92-241"><a href="#cb92-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-242"><a href="#cb92-242" aria-hidden="true" tabindex="-1"></a>*Dinámica poblacional absoluta*. Como consecuencia de las perturbaciones o escenarios existen cambios en el crecimiento poblacional, los cuales son evidentes si se grafican. Un aspecto a considerar es que, la gráfica que se genera incluye la influencia de la dinámica trasitoria y asintótica, por lo que se le denomina dinámica poblacional absoluta (Fig. 2A de Tremblay y colaboradores, 2015).</span>
+<span id="cb92-243"><a href="#cb92-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-244"><a href="#cb92-244" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Extra10}</span></span>
+<span id="cb92-245"><a href="#cb92-245" aria-hidden="true" tabindex="-1"></a><span class="in">##PASO 4. DINÁMICA POBLACIONAL ABSOLUTA.    </span></span>
+<span id="cb92-246"><a href="#cb92-246" aria-hidden="true" tabindex="-1"></a><span class="in">#Se proyecta el crecimiento poblacional ante cambios en la estructura </span></span>
+<span id="cb92-247"><a href="#cb92-247" aria-hidden="true" tabindex="-1"></a><span class="in">#inicial debidos a la perturbación (5 escenarios). Esta gráfica incluye la </span></span>
+<span id="cb92-248"><a href="#cb92-248" aria-hidden="true" tabindex="-1"></a><span class="in">#influencia de la dinámica trasitoria y asintótica, por lo que se le denomina </span></span>
+<span id="cb92-249"><a href="#cb92-249" aria-hidden="true" tabindex="-1"></a><span class="in">#dinámica poblacional absoluta. Proyección a 50 meses.</span></span>
+<span id="cb92-250"><a href="#cb92-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-251"><a href="#cb92-251" aria-hidden="true" tabindex="-1"></a><span class="in">#Definir los margenes</span></span>
+<span id="cb92-252"><a href="#cb92-252" aria-hidden="true" tabindex="-1"></a><span class="in">par(mfrow = c(1, 1))</span></span>
+<span id="cb92-253"><a href="#cb92-253" aria-hidden="true" tabindex="-1"></a><span class="in">par(mar = c(3, 3, 3, 3))</span></span>
+<span id="cb92-254"><a href="#cb92-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-255"><a href="#cb92-255" aria-hidden="true" tabindex="-1"></a><span class="in">#Librerias de R requeridas para el análisis </span></span>
+<span id="cb92-256"><a href="#cb92-256" aria-hidden="true" tabindex="-1"></a><span class="in">library(popdemo)</span></span>
+<span id="cb92-257"><a href="#cb92-257" aria-hidden="true" tabindex="-1"></a><span class="in">library(popbio)</span></span>
+<span id="cb92-258"><a href="#cb92-258" aria-hidden="true" tabindex="-1"></a><span class="in">library(ggplot2)</span></span>
+<span id="cb92-259"><a href="#cb92-259" aria-hidden="true" tabindex="-1"></a><span class="in">library(dplyr)</span></span>
+<span id="cb92-260"><a href="#cb92-260" aria-hidden="true" tabindex="-1"></a><span class="in">library(scales)</span></span>
+<span id="cb92-261"><a href="#cb92-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-262"><a href="#cb92-262" aria-hidden="true" tabindex="-1"></a><span class="in">#Vector original</span></span>
+<span id="cb92-263"><a href="#cb92-263" aria-hidden="true" tabindex="-1"></a><span class="in">nLr0 &lt;- c(0, 46, 38, 82)</span></span>
+<span id="cb92-264"><a href="#cb92-264" aria-hidden="true" tabindex="-1"></a><span class="in">#Escenario 1. Límite inferior</span></span>
+<span id="cb92-265"><a href="#cb92-265" aria-hidden="true" tabindex="-1"></a><span class="in">nLr1 &lt;- c(166, 0, 0, 0)</span></span>
+<span id="cb92-266"><a href="#cb92-266" aria-hidden="true" tabindex="-1"></a><span class="in">#Proporción de individuos por categoría</span></span>
+<span id="cb92-267"><a href="#cb92-267" aria-hidden="true" tabindex="-1"></a><span class="in">nLr1 &lt;- nLr1/sum(nLr1)</span></span>
+<span id="cb92-268"><a href="#cb92-268" aria-hidden="true" tabindex="-1"></a><span class="in">nLr1</span></span>
+<span id="cb92-269"><a href="#cb92-269" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de barras del escenario 1 </span></span>
+<span id="cb92-270"><a href="#cb92-270" aria-hidden="true" tabindex="-1"></a><span class="in">barplot(nLr1, names.arg = 1:4)</span></span>
+<span id="cb92-271"><a href="#cb92-271" aria-hidden="true" tabindex="-1"></a><span class="in">title(main = "Escenario 1", xlab = "Categoría", ylab = "Proporción")</span></span>
+<span id="cb92-272"><a href="#cb92-272" aria-hidden="true" tabindex="-1"></a><span class="in">#Proyección de la dinámica escenario 1</span></span>
+<span id="cb92-273"><a href="#cb92-273" aria-hidden="true" tabindex="-1"></a><span class="in">pr1 &lt;- project(Lr1, vector = nLr1, time = 50)</span></span>
+<span id="cb92-274"><a href="#cb92-274" aria-hidden="true" tabindex="-1"></a><span class="in">plot(pr1, log = "y", ylim = c(0.1, 1.6), ann = FALSE)</span></span>
+<span id="cb92-275"><a href="#cb92-275" aria-hidden="true" tabindex="-1"></a><span class="in">title(main = "Proyección de la dinámica (Escenario 1)", xlab = "Time intervals", ylab = "Population size/density")</span></span>
+<span id="cb92-276"><a href="#cb92-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-277"><a href="#cb92-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-278"><a href="#cb92-278" aria-hidden="true" tabindex="-1"></a><span class="in">#Escenario 2. Inicio I</span></span>
+<span id="cb92-279"><a href="#cb92-279" aria-hidden="true" tabindex="-1"></a><span class="in">nLr2 &lt;- c(25, 58, 50, 33)</span></span>
+<span id="cb92-280"><a href="#cb92-280" aria-hidden="true" tabindex="-1"></a><span class="in">#Proporción de individuos por categoría</span></span>
+<span id="cb92-281"><a href="#cb92-281" aria-hidden="true" tabindex="-1"></a><span class="in">nLr2 &lt;- nLr2/sum(nLr2)</span></span>
+<span id="cb92-282"><a href="#cb92-282" aria-hidden="true" tabindex="-1"></a><span class="in">nLr2</span></span>
+<span id="cb92-283"><a href="#cb92-283" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de barras del escenario 1 </span></span>
+<span id="cb92-284"><a href="#cb92-284" aria-hidden="true" tabindex="-1"></a><span class="in">barplot(nLr2, names.arg = 1:4)</span></span>
+<span id="cb92-285"><a href="#cb92-285" aria-hidden="true" tabindex="-1"></a><span class="in">title( main = "Escenario 2", xlab = "Categoría", ylab = "Proporción")</span></span>
+<span id="cb92-286"><a href="#cb92-286" aria-hidden="true" tabindex="-1"></a><span class="in">#Proyección de la dinámica escenario 2 </span></span>
+<span id="cb92-287"><a href="#cb92-287" aria-hidden="true" tabindex="-1"></a><span class="in">pr2 &lt;- project(Lr1, vector = nLr2, time = 50)</span></span>
+<span id="cb92-288"><a href="#cb92-288" aria-hidden="true" tabindex="-1"></a><span class="in">plot(pr2, log = "y", ylim = c(0.1, 1.6), ann = FALSE)</span></span>
+<span id="cb92-289"><a href="#cb92-289" aria-hidden="true" tabindex="-1"></a><span class="in">title(main = "Proyección de la dinámica (Escenario 2)", xlab = "Time intervals", ylab = "Population size/density")</span></span>
+<span id="cb92-290"><a href="#cb92-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-291"><a href="#cb92-291" aria-hidden="true" tabindex="-1"></a><span class="in">#Escenario 3. Estructura estable</span></span>
+<span id="cb92-292"><a href="#cb92-292" aria-hidden="true" tabindex="-1"></a><span class="in">nLr3 &lt;- Wmax</span></span>
+<span id="cb92-293"><a href="#cb92-293" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de barras del escenario 3</span></span>
+<span id="cb92-294"><a href="#cb92-294" aria-hidden="true" tabindex="-1"></a><span class="in">barplot(nLr3, names.arg = 1:4)</span></span>
+<span id="cb92-295"><a href="#cb92-295" aria-hidden="true" tabindex="-1"></a><span class="in">title( main = "Escenario 3", xlab = "Categoría", ylab = "Proporción")</span></span>
+<span id="cb92-296"><a href="#cb92-296" aria-hidden="true" tabindex="-1"></a><span class="in">#Proyección de la dinámica escenario 3 </span></span>
+<span id="cb92-297"><a href="#cb92-297" aria-hidden="true" tabindex="-1"></a><span class="in">Lr1st &lt;- (Lr1/lambda)</span></span>
+<span id="cb92-298"><a href="#cb92-298" aria-hidden="true" tabindex="-1"></a><span class="in">Lr1st</span></span>
+<span id="cb92-299"><a href="#cb92-299" aria-hidden="true" tabindex="-1"></a><span class="in">eigen(Lr1st)</span></span>
+<span id="cb92-300"><a href="#cb92-300" aria-hidden="true" tabindex="-1"></a><span class="in">pr3 &lt;- project(Lr1st, vector = Wmax, time = 50)</span></span>
+<span id="cb92-301"><a href="#cb92-301" aria-hidden="true" tabindex="-1"></a><span class="in">plot(pr3, log = "y", ylim = c(0.1, 1.6), ann = FALSE)</span></span>
+<span id="cb92-302"><a href="#cb92-302" aria-hidden="true" tabindex="-1"></a><span class="in">title(main = "Proyección de la dinámica (Escenario 3)", xlab = "Time intervals", ylab = "Population size/density")</span></span>
+<span id="cb92-303"><a href="#cb92-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-304"><a href="#cb92-304" aria-hidden="true" tabindex="-1"></a><span class="in">#Escenario 4. Inicio II</span></span>
+<span id="cb92-305"><a href="#cb92-305" aria-hidden="true" tabindex="-1"></a><span class="in">nLr4 &lt;- c(66, 33, 33, 33)</span></span>
+<span id="cb92-306"><a href="#cb92-306" aria-hidden="true" tabindex="-1"></a><span class="in">#Proporción de individuos por categoría</span></span>
+<span id="cb92-307"><a href="#cb92-307" aria-hidden="true" tabindex="-1"></a><span class="in">nLr4 &lt;- nLr4/sum(nLr4)</span></span>
+<span id="cb92-308"><a href="#cb92-308" aria-hidden="true" tabindex="-1"></a><span class="in">nLr4</span></span>
+<span id="cb92-309"><a href="#cb92-309" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de barras del escenario 4 </span></span>
+<span id="cb92-310"><a href="#cb92-310" aria-hidden="true" tabindex="-1"></a><span class="in">barplot(nLr4, names.arg = 1:4)</span></span>
+<span id="cb92-311"><a href="#cb92-311" aria-hidden="true" tabindex="-1"></a><span class="in">title( main = "Escenario 4", xlab = "Categoría", ylab = "Proporción")</span></span>
+<span id="cb92-312"><a href="#cb92-312" aria-hidden="true" tabindex="-1"></a><span class="in">#Proyección de la dinámica escenario 4 </span></span>
+<span id="cb92-313"><a href="#cb92-313" aria-hidden="true" tabindex="-1"></a><span class="in">pr4 &lt;- project(Lr1, vector = nLr4, time = 50)</span></span>
+<span id="cb92-314"><a href="#cb92-314" aria-hidden="true" tabindex="-1"></a><span class="in">plot(pr4, log = "y", ylim = c(0.1, 1.6), ann = FALSE)</span></span>
+<span id="cb92-315"><a href="#cb92-315" aria-hidden="true" tabindex="-1"></a><span class="in">title(main = "Proyección de la dinámica (Escenario 4)", xlab = "Time intervals", ylab = "Population size/density")</span></span>
+<span id="cb92-316"><a href="#cb92-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-317"><a href="#cb92-317" aria-hidden="true" tabindex="-1"></a><span class="in">#Escenario 5. Límite superior</span></span>
+<span id="cb92-318"><a href="#cb92-318" aria-hidden="true" tabindex="-1"></a><span class="in">nLr5 &lt;- c(0, 0, 0, 166)</span></span>
+<span id="cb92-319"><a href="#cb92-319" aria-hidden="true" tabindex="-1"></a><span class="in">#Proporción de individuos por categoría</span></span>
+<span id="cb92-320"><a href="#cb92-320" aria-hidden="true" tabindex="-1"></a><span class="in">nLr5 &lt;- nLr5/sum(nLr5)</span></span>
+<span id="cb92-321"><a href="#cb92-321" aria-hidden="true" tabindex="-1"></a><span class="in">nLr5</span></span>
+<span id="cb92-322"><a href="#cb92-322" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de barras del escenario 5 </span></span>
+<span id="cb92-323"><a href="#cb92-323" aria-hidden="true" tabindex="-1"></a><span class="in">barplot(nLr5, names.arg = 1:4)</span></span>
+<span id="cb92-324"><a href="#cb92-324" aria-hidden="true" tabindex="-1"></a><span class="in">title( main = "Escenario 5", xlab = "Categoría", ylab = "Proporción")</span></span>
+<span id="cb92-325"><a href="#cb92-325" aria-hidden="true" tabindex="-1"></a><span class="in">#Proyección de la dinámica escenario 5 </span></span>
+<span id="cb92-326"><a href="#cb92-326" aria-hidden="true" tabindex="-1"></a><span class="in">pr5 &lt;- project(Lr1, vector = nLr5, time = 50)</span></span>
+<span id="cb92-327"><a href="#cb92-327" aria-hidden="true" tabindex="-1"></a><span class="in">plot(pr5, log = "y", ylim = c(0.1, 1.6), ann = FALSE)</span></span>
+<span id="cb92-328"><a href="#cb92-328" aria-hidden="true" tabindex="-1"></a><span class="in">title(main = "Proyección de la dinámica (Escenario 5)", xlab = "Time intervals", ylab = "Population size/density")</span></span>
+<span id="cb92-329"><a href="#cb92-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-330"><a href="#cb92-330" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de la dinámica absoluta </span></span>
+<span id="cb92-331"><a href="#cb92-331" aria-hidden="true" tabindex="-1"></a><span class="in">Population_density &lt;- stack(c(as.data.frame(pr1), as.data.frame(pr2), as.data.frame(pr3), as.data.frame(pr4), as.data.frame(pr5)))</span></span>
+<span id="cb92-332"><a href="#cb92-332" aria-hidden="true" tabindex="-1"></a><span class="in">Population_density[, "time"] &lt;- rep(seq(1, nrow(pr1), 1), 5)</span></span>
+<span id="cb92-333"><a href="#cb92-333" aria-hidden="true" tabindex="-1"></a><span class="in">names(Population_density) &lt;- c("Values", "Projection", "Time")</span></span>
+<span id="cb92-334"><a href="#cb92-334" aria-hidden="true" tabindex="-1"></a><span class="in">#Population_density[, "Projection"] &lt;- c(rep("Projection 1", len), rep("Projection 2", len), rep("Projection 3", len), rep("Projection 4", len), rep("Projection 5", len))</span></span>
+<span id="cb92-335"><a href="#cb92-335" aria-hidden="true" tabindex="-1"></a><span class="in">abs.plot &lt;- ggplot(data = Population_density) +</span></span>
+<span id="cb92-336"><a href="#cb92-336" aria-hidden="true" tabindex="-1"></a><span class="in">theme_classic() +</span></span>
+<span id="cb92-337"><a href="#cb92-337" aria-hidden="true" tabindex="-1"></a><span class="in">theme(panel.border = element_blank()) +</span></span>
+<span id="cb92-338"><a href="#cb92-338" aria-hidden="true" tabindex="-1"></a><span class="in">theme(legend.position = "none") +</span></span>
+<span id="cb92-339"><a href="#cb92-339" aria-hidden="true" tabindex="-1"></a><span class="in">geom_line(aes(x = Time, y = Values, group = Projection, colour = Projection), linewidth = 0.8) +</span></span>
+<span id="cb92-340"><a href="#cb92-340" aria-hidden="true" tabindex="-1"></a><span class="in">geom_hline(yintercept = 1, linewidth = 0.8) +</span></span>
+<span id="cb92-341"><a href="#cb92-341" aria-hidden="true" tabindex="-1"></a><span class="in">scale_colour_manual(values = c("#C6E2FF", "#B9D3EE", "black", "#9FB6CD", "#6C7B8B")) +</span></span>
+<span id="cb92-342"><a href="#cb92-342" aria-hidden="true" tabindex="-1"></a><span class="in">theme(axis.title.x = element_text(vjust = -1, size = 12)) +</span></span>
+<span id="cb92-343"><a href="#cb92-343" aria-hidden="true" tabindex="-1"></a><span class="in">theme(axis.title.y = element_text(vjust = 1, size = 12)) + </span></span>
+<span id="cb92-344"><a href="#cb92-344" aria-hidden="true" tabindex="-1"></a><span class="in">theme(axis.text = element_text(size = 12)) +</span></span>
+<span id="cb92-345"><a href="#cb92-345" aria-hidden="true" tabindex="-1"></a><span class="in">labs(title = "Absolut population dynamics", x = "Projection intervals", y = "Population density relative to lambda max")+ </span></span>
+<span id="cb92-346"><a href="#cb92-346" aria-hidden="true" tabindex="-1"></a><span class="in">theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 12))</span></span>
+<span id="cb92-347"><a href="#cb92-347" aria-hidden="true" tabindex="-1"></a><span class="in">abs.plot </span></span>
+<span id="cb92-348"><a href="#cb92-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-349"><a href="#cb92-349" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb92-350"><a href="#cb92-350" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-351"><a href="#cb92-351" aria-hidden="true" tabindex="-1"></a>##Dinámica transitoria estandarizada: límites</span>
+<span id="cb92-352"><a href="#cb92-352" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-353"><a href="#cb92-353" aria-hidden="true" tabindex="-1"></a>Con el fin de evaluar en el corto plazo los cambios cuantitativos en la población en respuesta a una perturbación determinada se calculan los límites de la dinámica transitoria a través Índices de transferencia y se proyecta el crecimiento de la población en el corto plazo.</span>
+<span id="cb92-354"><a href="#cb92-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-355"><a href="#cb92-355" aria-hidden="true" tabindex="-1"></a>#Dinámica transitoria específica de la población.\</span>
+<span id="cb92-356"><a href="#cb92-356" aria-hidden="true" tabindex="-1"></a>a proyección se hace sin la influencia de la dinámica asintótica. hecho que facilita y hace equitativa la comparación entre los modelos de los distintos escenarios. Se elimina el efecto de la dinámica asintótica al estandarizar la matriz y el vector de la estructura. En el primer caso se usa el comando 'standard.A=T', lo cual supone que en el largo plazo la tasa de crecimiento poblacional tendrá un valor de 1 (unidad) -por lo que la población no crecerá ni declinará, en el segundo caso se usa el comando 'standard.vec=T', que implica que éste suma 1 (Stoot et al., 2010, 2012). DINÁMICA POBLACIONAL TRANSITORIA ESTANDARIZADA</span>
+<span id="cb92-357"><a href="#cb92-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-358"><a href="#cb92-358" aria-hidden="true" tabindex="-1"></a>*Índices de transferencia*. Con el fin de evaluar en el corto plazo qué cambios cuantitativos habría en la población como respuesta ante una perturbación determinada, se calculan los límites de la dinámica transitoria a través de los *Índices de transferencia*, que incluyen los siguiente tres parámetros (Stoot et al. 2012):</span>
+<span id="cb92-359"><a href="#cb92-359" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-360"><a href="#cb92-360" aria-hidden="true" tabindex="-1"></a>a)  *Reactividad alta y Reactividad baja* (Upper reactivity y Lower reactivity) que representan el crecimiento o el decremento inmediato (i.e. primer intervalo de tiempo) de la población antes de alcanzar la tasa constante de crecimiento poblacional.</span>
+<span id="cb92-361"><a href="#cb92-361" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-362"><a href="#cb92-362" aria-hidden="true" tabindex="-1"></a>b)  *Máxima amplificación/Máxima atenuación* (Maximum amplification/Maximum attenuation) que indican,respectivamente, el incremento o decremento máximo futuro del crecimiento poblacional previo a alcanzar la tasa constante de crecimiento poblacional.</span>
+<span id="cb92-363"><a href="#cb92-363" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-364"><a href="#cb92-364" aria-hidden="true" tabindex="-1"></a>c)  *Inercia alta e Inercia baja* (Upper inertia y Lower inertia) que evalúan el límite más alto o el más bajo en el crecimiento de la población antes de alcanzar la tasa constante de crecimiento poblacional, respectivamente.</span>
+<span id="cb92-365"><a href="#cb92-365" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-366"><a href="#cb92-366" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Extra11}</span></span>
+<span id="cb92-367"><a href="#cb92-367" aria-hidden="true" tabindex="-1"></a><span class="in">### PARTE II: DINÁMICA POBLACIONAL TRANSITORIA ESTANDARIZADA.</span></span>
+<span id="cb92-368"><a href="#cb92-368" aria-hidden="true" tabindex="-1"></a><span class="in">#Modelo de Dinámica transitoria específica de la población  </span></span>
+<span id="cb92-369"><a href="#cb92-369" aria-hidden="true" tabindex="-1"></a><span class="in">## La dinámica de corto plazo se projecta a partir de la matriz de transición y el vector inicial previamente definidos</span></span>
+<span id="cb92-370"><a href="#cb92-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-371"><a href="#cb92-371" aria-hidden="true" tabindex="-1"></a><span class="in">#Definir los margenes</span></span>
+<span id="cb92-372"><a href="#cb92-372" aria-hidden="true" tabindex="-1"></a><span class="in">library(popdemo)</span></span>
+<span id="cb92-373"><a href="#cb92-373" aria-hidden="true" tabindex="-1"></a><span class="in">library(ggplot2)</span></span>
+<span id="cb92-374"><a href="#cb92-374" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-375"><a href="#cb92-375" aria-hidden="true" tabindex="-1"></a><span class="in">#Vector de estructura inicial: abundancia por categoría de acuerdo con  el estado </span></span>
+<span id="cb92-376"><a href="#cb92-376" aria-hidden="true" tabindex="-1"></a><span class="in">n0 &lt;- c(0, 46, 38, 82) </span></span>
+<span id="cb92-377"><a href="#cb92-377" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-378"><a href="#cb92-378" aria-hidden="true" tabindex="-1"></a><span class="in">## 1) PROYECCIÓN DE LA DINÁMICA DE CORTO PLAZO. Con la función PROJECT se proyectar la  a 50 meses, tomando en </span></span>
+<span id="cb92-379"><a href="#cb92-379" aria-hidden="true" tabindex="-1"></a><span class="in">#cuenta la matriz de transición poblacional y el vector de la estructura.</span></span>
+<span id="cb92-380"><a href="#cb92-380" aria-hidden="true" tabindex="-1"></a><span class="in">#En esta función se elimina el efecto de la dinámica asintótica al estandarizar: </span></span>
+<span id="cb92-381"><a href="#cb92-381" aria-hidden="true" tabindex="-1"></a><span class="in">#a) la matriz usando el comando 'standard.A=T', lo cual significa que </span></span>
+<span id="cb92-382"><a href="#cb92-382" aria-hidden="true" tabindex="-1"></a><span class="in">#en el largo plazo la tasa de crecimiento poblacional tendrá </span></span>
+<span id="cb92-383"><a href="#cb92-383" aria-hidden="true" tabindex="-1"></a><span class="in">#un valor de 1 (unidad), por lo que la población no crecerá ni declinará. </span></span>
+<span id="cb92-384"><a href="#cb92-384" aria-hidden="true" tabindex="-1"></a><span class="in">#b) el vector de la estructura usando 'standard.vec=T', lo cual supone que éste suma 1, </span></span>
+<span id="cb92-385"><a href="#cb92-385" aria-hidden="true" tabindex="-1"></a><span class="in"># Ambas estandarizaciones facilitan y hacen equitativa la comparación entre modelos </span></span>
+<span id="cb92-386"><a href="#cb92-386" aria-hidden="true" tabindex="-1"></a><span class="in">#con distintos tamaños poblacionales y distintas tasas de crecimiento de largo plazo. </span></span>
+<span id="cb92-387"><a href="#cb92-387" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-388"><a href="#cb92-388" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de la dinámica de corto plazo por escenario. En la graficación se usa la misma matriz pero se cambia el vector de acuerdo con el escenario</span></span>
+<span id="cb92-389"><a href="#cb92-389" aria-hidden="true" tabindex="-1"></a><span class="in">#Escenario 1: Límite inferior</span></span>
+<span id="cb92-390"><a href="#cb92-390" aria-hidden="true" tabindex="-1"></a><span class="in">pr2.1 &lt;- project(Lr1, vector = nLr1, time = 50, </span></span>
+<span id="cb92-391"><a href="#cb92-391" aria-hidden="true" tabindex="-1"></a><span class="in">                 standard.A = T, standard.vec = T)</span></span>
+<span id="cb92-392"><a href="#cb92-392" aria-hidden="true" tabindex="-1"></a><span class="in">#Plot the amplification projection and label it</span></span>
+<span id="cb92-393"><a href="#cb92-393" aria-hidden="true" tabindex="-1"></a><span class="in"># Se atenua (decrece)</span></span>
+<span id="cb92-394"><a href="#cb92-394" aria-hidden="true" tabindex="-1"></a><span class="in">plot(pr2.1, log = "y", main = "Dinámica a corto plazo (Escenario 1)", cex.axis = 0.8)</span></span>
+<span id="cb92-395"><a href="#cb92-395" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-396"><a href="#cb92-396" aria-hidden="true" tabindex="-1"></a><span class="in">#Escenario 2. Inicio I</span></span>
+<span id="cb92-397"><a href="#cb92-397" aria-hidden="true" tabindex="-1"></a><span class="in">pr2.2 &lt;- project(Lr1, vector = nLr2, time = 50, </span></span>
+<span id="cb92-398"><a href="#cb92-398" aria-hidden="true" tabindex="-1"></a><span class="in">                 standard.A = T, standard.vec = T)</span></span>
+<span id="cb92-399"><a href="#cb92-399" aria-hidden="true" tabindex="-1"></a><span class="in">#Plot the amplification projection and label it</span></span>
+<span id="cb92-400"><a href="#cb92-400" aria-hidden="true" tabindex="-1"></a><span class="in">plot(pr2.2, log = "y", main = "Dinámica a corto plazo (Escenario 2)", cex.axis = 0.8) # Se atenua (decrece)</span></span>
+<span id="cb92-401"><a href="#cb92-401" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-402"><a href="#cb92-402" aria-hidden="true" tabindex="-1"></a><span class="in">#Escenario 3. Estructura estable</span></span>
+<span id="cb92-403"><a href="#cb92-403" aria-hidden="true" tabindex="-1"></a><span class="in">pr2.3 &lt;- project(Lr1, vector = nLr3, time = 50, </span></span>
+<span id="cb92-404"><a href="#cb92-404" aria-hidden="true" tabindex="-1"></a><span class="in">                 standard.A = T, standard.vec = T)</span></span>
+<span id="cb92-405"><a href="#cb92-405" aria-hidden="true" tabindex="-1"></a><span class="in">#Plot the amplification projection and label it</span></span>
+<span id="cb92-406"><a href="#cb92-406" aria-hidden="true" tabindex="-1"></a><span class="in">plot(pr2.3, main = "Dinámica a corto plazo (Escenario 3)", cex.axis = 0.8)# Se amplifica (crece)</span></span>
+<span id="cb92-407"><a href="#cb92-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-408"><a href="#cb92-408" aria-hidden="true" tabindex="-1"></a><span class="in">#Escenario 4. Inicio II</span></span>
+<span id="cb92-409"><a href="#cb92-409" aria-hidden="true" tabindex="-1"></a><span class="in">pr2.4 &lt;- project(Lr1, vector = nLr4, time = 50, </span></span>
+<span id="cb92-410"><a href="#cb92-410" aria-hidden="true" tabindex="-1"></a><span class="in">                 standard.A = T, standard.vec = T)</span></span>
+<span id="cb92-411"><a href="#cb92-411" aria-hidden="true" tabindex="-1"></a><span class="in">#Plot the amplification projection and label it</span></span>
+<span id="cb92-412"><a href="#cb92-412" aria-hidden="true" tabindex="-1"></a><span class="in">plot(pr2.4, log = "y", main = "Dinámica a corto plazo (Escenario 4)", cex.axis = 0.8)# Se atenua (decrece)</span></span>
+<span id="cb92-413"><a href="#cb92-413" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-414"><a href="#cb92-414" aria-hidden="true" tabindex="-1"></a><span class="in">#Escenario 5. Límite superior</span></span>
+<span id="cb92-415"><a href="#cb92-415" aria-hidden="true" tabindex="-1"></a><span class="in">pr2.5 &lt;- project(Lr1, vector = nLr5, time = 50, </span></span>
+<span id="cb92-416"><a href="#cb92-416" aria-hidden="true" tabindex="-1"></a><span class="in">                 standard.A = T, standard.vec = T)</span></span>
+<span id="cb92-417"><a href="#cb92-417" aria-hidden="true" tabindex="-1"></a><span class="in">#Plot the amplification projection and label it</span></span>
+<span id="cb92-418"><a href="#cb92-418" aria-hidden="true" tabindex="-1"></a><span class="in">plot(pr2.5, log = "y", main = "Dinámica a corto plazo (Escenario 5)", cex.axis = 0.8)# Se amplifica (crece)</span></span>
+<span id="cb92-419"><a href="#cb92-419" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-420"><a href="#cb92-420" aria-hidden="true" tabindex="-1"></a><span class="in">#2) LIMITES TRANSITORIOS POR ESCENARIO.</span></span>
+<span id="cb92-421"><a href="#cb92-421" aria-hidden="true" tabindex="-1"></a><span class="in">#Escenario 1: Límite inferior</span></span>
+<span id="cb92-422"><a href="#cb92-422" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-423"><a href="#cb92-423" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de los limites transitorios</span></span>
+<span id="cb92-424"><a href="#cb92-424" aria-hidden="true" tabindex="-1"></a><span class="in">library(popdemo)</span></span>
+<span id="cb92-425"><a href="#cb92-425" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-426"><a href="#cb92-426" aria-hidden="true" tabindex="-1"></a><span class="in">lim.trans &lt;- as.data.frame(matrix(NA, 5, 3))</span></span>
+<span id="cb92-427"><a href="#cb92-427" aria-hidden="true" tabindex="-1"></a><span class="in">names(lim.trans) &lt;- c("reac", "maxatt", "inertia")</span></span>
+<span id="cb92-428"><a href="#cb92-428" aria-hidden="true" tabindex="-1"></a><span class="in">reac1&lt;-reac(Lr1, vector = nLr1)</span></span>
+<span id="cb92-429"><a href="#cb92-429" aria-hidden="true" tabindex="-1"></a><span class="in">lim.trans[1, 1] &lt;- reac1</span></span>
+<span id="cb92-430"><a href="#cb92-430" aria-hidden="true" tabindex="-1"></a><span class="in">reac1</span></span>
+<span id="cb92-431"><a href="#cb92-431" aria-hidden="true" tabindex="-1"></a><span class="in">maxatt1&lt;-maxatt(Lr1, vector = nLr1, return.t=T)</span></span>
+<span id="cb92-432"><a href="#cb92-432" aria-hidden="true" tabindex="-1"></a><span class="in">maxatt1</span></span>
+<span id="cb92-433"><a href="#cb92-433" aria-hidden="true" tabindex="-1"></a><span class="in">lim.trans[1, 2] &lt;- maxatt1[1]</span></span>
+<span id="cb92-434"><a href="#cb92-434" aria-hidden="true" tabindex="-1"></a><span class="in">inertia1&lt;-inertia(Lr1, vector = nLr1)</span></span>
+<span id="cb92-435"><a href="#cb92-435" aria-hidden="true" tabindex="-1"></a><span class="in">inertia1</span></span>
+<span id="cb92-436"><a href="#cb92-436" aria-hidden="true" tabindex="-1"></a><span class="in">lim.trans[1, 3] &lt;- inertia1</span></span>
+<span id="cb92-437"><a href="#cb92-437" aria-hidden="true" tabindex="-1"></a><span class="in">#Escenario 2. Inicio I</span></span>
+<span id="cb92-438"><a href="#cb92-438" aria-hidden="true" tabindex="-1"></a><span class="in">reac2&lt;-reac(Lr1, vector = nLr2)</span></span>
+<span id="cb92-439"><a href="#cb92-439" aria-hidden="true" tabindex="-1"></a><span class="in">reac2</span></span>
+<span id="cb92-440"><a href="#cb92-440" aria-hidden="true" tabindex="-1"></a><span class="in">lim.trans[2, 1] &lt;- reac2</span></span>
+<span id="cb92-441"><a href="#cb92-441" aria-hidden="true" tabindex="-1"></a><span class="in">maxatt2&lt;-maxatt(Lr1, vector = nLr2, return.t=T)</span></span>
+<span id="cb92-442"><a href="#cb92-442" aria-hidden="true" tabindex="-1"></a><span class="in">maxatt2</span></span>
+<span id="cb92-443"><a href="#cb92-443" aria-hidden="true" tabindex="-1"></a><span class="in">lim.trans[2, 2] &lt;- maxatt2[1]</span></span>
+<span id="cb92-444"><a href="#cb92-444" aria-hidden="true" tabindex="-1"></a><span class="in">inertia2&lt;-inertia(Lr1, vector = nLr2)</span></span>
+<span id="cb92-445"><a href="#cb92-445" aria-hidden="true" tabindex="-1"></a><span class="in">inertia2</span></span>
+<span id="cb92-446"><a href="#cb92-446" aria-hidden="true" tabindex="-1"></a><span class="in">lim.trans[2, 3] &lt;- inertia2</span></span>
+<span id="cb92-447"><a href="#cb92-447" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-448"><a href="#cb92-448" aria-hidden="true" tabindex="-1"></a><span class="in">#Escenario 3. Estructura estable</span></span>
+<span id="cb92-449"><a href="#cb92-449" aria-hidden="true" tabindex="-1"></a><span class="in">#reac3&lt;-reac(Lr1, vector = nLr3)</span></span>
+<span id="cb92-450"><a href="#cb92-450" aria-hidden="true" tabindex="-1"></a><span class="in">#lim.trans[3, 1] &lt;- reac1</span></span>
+<span id="cb92-451"><a href="#cb92-451" aria-hidden="true" tabindex="-1"></a><span class="in">#reac3</span></span>
+<span id="cb92-452"><a href="#cb92-452" aria-hidden="true" tabindex="-1"></a><span class="in">#maxamp3&lt;-maxamp(Lr1, vector = nLr3, return.t=T)</span></span>
+<span id="cb92-453"><a href="#cb92-453" aria-hidden="true" tabindex="-1"></a><span class="in">#maxamp3</span></span>
+<span id="cb92-454"><a href="#cb92-454" aria-hidden="true" tabindex="-1"></a><span class="in">#lim.trans[3, 2] &lt;- maxamp3[1]</span></span>
+<span id="cb92-455"><a href="#cb92-455" aria-hidden="true" tabindex="-1"></a><span class="in">#inertia3&lt;-inertia(Lr1, vector = nLr3)</span></span>
+<span id="cb92-456"><a href="#cb92-456" aria-hidden="true" tabindex="-1"></a><span class="in">#inertia3</span></span>
+<span id="cb92-457"><a href="#cb92-457" aria-hidden="true" tabindex="-1"></a><span class="in">#lim.trans[3, 3] &lt;- inertia3</span></span>
+<span id="cb92-458"><a href="#cb92-458" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-459"><a href="#cb92-459" aria-hidden="true" tabindex="-1"></a><span class="in">#Escenario 4. Inicio II</span></span>
+<span id="cb92-460"><a href="#cb92-460" aria-hidden="true" tabindex="-1"></a><span class="in">reac4&lt;-reac(Lr1, vector = nLr4)</span></span>
+<span id="cb92-461"><a href="#cb92-461" aria-hidden="true" tabindex="-1"></a><span class="in">lim.trans[4, 1] &lt;- reac1</span></span>
+<span id="cb92-462"><a href="#cb92-462" aria-hidden="true" tabindex="-1"></a><span class="in">reac4</span></span>
+<span id="cb92-463"><a href="#cb92-463" aria-hidden="true" tabindex="-1"></a><span class="in">maxatt4&lt;-maxatt(Lr1, vector = nLr4, return.t=T)</span></span>
+<span id="cb92-464"><a href="#cb92-464" aria-hidden="true" tabindex="-1"></a><span class="in">maxatt4</span></span>
+<span id="cb92-465"><a href="#cb92-465" aria-hidden="true" tabindex="-1"></a><span class="in">lim.trans[4, 2] &lt;- maxatt4[1]</span></span>
+<span id="cb92-466"><a href="#cb92-466" aria-hidden="true" tabindex="-1"></a><span class="in">inertia4&lt;-inertia(Lr1, vector = nLr4)</span></span>
+<span id="cb92-467"><a href="#cb92-467" aria-hidden="true" tabindex="-1"></a><span class="in">inertia4</span></span>
+<span id="cb92-468"><a href="#cb92-468" aria-hidden="true" tabindex="-1"></a><span class="in">lim.trans[4, 3] &lt;- inertia4</span></span>
+<span id="cb92-469"><a href="#cb92-469" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-470"><a href="#cb92-470" aria-hidden="true" tabindex="-1"></a><span class="in">#Escenario 5. Límite superior</span></span>
+<span id="cb92-471"><a href="#cb92-471" aria-hidden="true" tabindex="-1"></a><span class="in">reac5&lt;-reac(Lr1, vector = nLr5)</span></span>
+<span id="cb92-472"><a href="#cb92-472" aria-hidden="true" tabindex="-1"></a><span class="in">lim.trans[5, 1] &lt;- reac5</span></span>
+<span id="cb92-473"><a href="#cb92-473" aria-hidden="true" tabindex="-1"></a><span class="in">reac5</span></span>
+<span id="cb92-474"><a href="#cb92-474" aria-hidden="true" tabindex="-1"></a><span class="in">maxamp5&lt;-maxamp(Lr1, vector = nLr5, return.t=T)</span></span>
+<span id="cb92-475"><a href="#cb92-475" aria-hidden="true" tabindex="-1"></a><span class="in">maxamp5</span></span>
+<span id="cb92-476"><a href="#cb92-476" aria-hidden="true" tabindex="-1"></a><span class="in">lim.trans[5, 2] &lt;- maxamp5[1]</span></span>
+<span id="cb92-477"><a href="#cb92-477" aria-hidden="true" tabindex="-1"></a><span class="in">inertia5&lt;-inertia(Lr1, vector = nLr3)</span></span>
+<span id="cb92-478"><a href="#cb92-478" aria-hidden="true" tabindex="-1"></a><span class="in">inertia5</span></span>
+<span id="cb92-479"><a href="#cb92-479" aria-hidden="true" tabindex="-1"></a><span class="in">lim.trans[5, 3] &lt;- inertia5</span></span>
+<span id="cb92-480"><a href="#cb92-480" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-481"><a href="#cb92-481" aria-hidden="true" tabindex="-1"></a><span class="in"># Dinamica transitoria plot</span></span>
+<span id="cb92-482"><a href="#cb92-482" aria-hidden="true" tabindex="-1"></a><span class="in">len &lt;- nrow(pr2.1)</span></span>
+<span id="cb92-483"><a href="#cb92-483" aria-hidden="true" tabindex="-1"></a><span class="in">Population_density &lt;- stack(c(as.data.frame(pr2.1), as.data.frame(pr2.2), as.data.frame(pr2.3), as.data.frame(pr2.4), as.data.frame(pr2.5)))</span></span>
+<span id="cb92-484"><a href="#cb92-484" aria-hidden="true" tabindex="-1"></a><span class="in">Population_density[, "time"] &lt;- rep(seq(1, len, 1), 5)</span></span>
+<span id="cb92-485"><a href="#cb92-485" aria-hidden="true" tabindex="-1"></a><span class="in">names(Population_density) &lt;- c("Values", "Projection", "Time")</span></span>
+<span id="cb92-486"><a href="#cb92-486" aria-hidden="true" tabindex="-1"></a><span class="in">Population_density[, "Projection"] &lt;- c(rep("Projection 1", len), rep("Projection 2", len), rep("Projection 3", len), rep("Projection 4", len), rep("Projection 5", len))</span></span>
+<span id="cb92-487"><a href="#cb92-487" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-488"><a href="#cb92-488" aria-hidden="true" tabindex="-1"></a><span class="in">trans.plot &lt;- ggplot(data = Population_density) +</span></span>
+<span id="cb92-489"><a href="#cb92-489" aria-hidden="true" tabindex="-1"></a><span class="in">theme_classic() +</span></span>
+<span id="cb92-490"><a href="#cb92-490" aria-hidden="true" tabindex="-1"></a><span class="in">theme(panel.border = element_blank()) +</span></span>
+<span id="cb92-491"><a href="#cb92-491" aria-hidden="true" tabindex="-1"></a><span class="in">theme(legend.position = "none") +</span></span>
+<span id="cb92-492"><a href="#cb92-492" aria-hidden="true" tabindex="-1"></a><span class="in">geom_line(aes(x = Time, y = Values, group = Projection, colour = Projection), linewidth = 0.8) +</span></span>
+<span id="cb92-493"><a href="#cb92-493" aria-hidden="true" tabindex="-1"></a><span class="in">scale_colour_manual(values = c("#C6E2FF", "#B9D3EE", "black", "#9FB6CD", "#6C7B8B")) +</span></span>
+<span id="cb92-494"><a href="#cb92-494" aria-hidden="true" tabindex="-1"></a><span class="in">theme(axis.title.x = element_text(vjust = -1, size = 12)) +</span></span>
+<span id="cb92-495"><a href="#cb92-495" aria-hidden="true" tabindex="-1"></a><span class="in">theme(axis.title.y = element_text(vjust = 1, size = 12)) + </span></span>
+<span id="cb92-496"><a href="#cb92-496" aria-hidden="true" tabindex="-1"></a><span class="in">theme(axis.text = element_text(size = 15)) +</span></span>
+<span id="cb92-497"><a href="#cb92-497" aria-hidden="true" tabindex="-1"></a><span class="in">labs(title = "Transient population dynamics" ,x = "Projection intervals", y = "Population density relative to lambda max") + </span></span>
+<span id="cb92-498"><a href="#cb92-498" aria-hidden="true" tabindex="-1"></a><span class="in">theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 12)) +</span></span>
+<span id="cb92-499"><a href="#cb92-499" aria-hidden="true" tabindex="-1"></a><span class="in">ylim(0.2, 1.5)</span></span>
+<span id="cb92-500"><a href="#cb92-500" aria-hidden="true" tabindex="-1"></a><span class="in">trans.plot + </span></span>
+<span id="cb92-501"><a href="#cb92-501" aria-hidden="true" tabindex="-1"></a><span class="in">geom_text(x = 45, y = 1.09, label = expression(paste(bar(rho) == 0.46)), hjust = 1.0, vjust = -1) +</span></span>
+<span id="cb92-502"><a href="#cb92-502" aria-hidden="true" tabindex="-1"></a><span class="in">geom_text(x = 45, y = 0.74, label = expression(paste(bar(rho) == 0.89)), hjust = 1.0, vjust = -1) +</span></span>
+<span id="cb92-503"><a href="#cb92-503" aria-hidden="true" tabindex="-1"></a><span class="in">geom_text(x = 45, y = 0.64, label =  expression(paste(bar(rho) == 0.70)), hjust = 1.0, vjust = -1) +</span></span>
+<span id="cb92-504"><a href="#cb92-504" aria-hidden="true" tabindex="-1"></a><span class="in">geom_text(x = 45, y = 0.33, label =  expression(paste(bar(rho) == 1)), hjust = 1.0, vjust = -1)</span></span>
+<span id="cb92-505"><a href="#cb92-505" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-506"><a href="#cb92-506" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb92-507"><a href="#cb92-507" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-508"><a href="#cb92-508" aria-hidden="true" tabindex="-1"></a>##Funciones de transferencia Finalmente, el cálculo de las funciones de transferencia representa el último paso en análisis de dinámica transitoria establecido por Stott y colaboradores (2012). A través de estas ecuaciones se evalúa la elasticidad o efecto de la perturbación sobre la dinámica poblacional. A diferencia de las matrices de elasticidad de los modelos de proyección poblacional, estas elasticidades no son lineales y evidencian la importancia relativa de la de la perturbación en la categoría de tamaño/estado sobre el crecimiento de la población en el corto plazo. Estas ecuaciones también están disponibles en el programa *Popdemo* de *R* y sus resultados se representan a través de gráficas.</span>
+<span id="cb92-509"><a href="#cb92-509" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-510"><a href="#cb92-510" aria-hidden="true" tabindex="-1"></a>La perturbación de la estructura está determinada ppor dos vectores *d* y *e*</span>
+<span id="cb92-511"><a href="#cb92-511" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-512"><a href="#cb92-512" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Extra12}</span></span>
+<span id="cb92-513"><a href="#cb92-513" aria-hidden="true" tabindex="-1"></a><span class="in">##PASO 6: ANALISIS DE LAS FUNCIONES DE TRANSFERENCIA </span></span>
+<span id="cb92-514"><a href="#cb92-514" aria-hidden="true" tabindex="-1"></a><span class="in">#Establecer márgenes:</span></span>
+<span id="cb92-515"><a href="#cb92-515" aria-hidden="true" tabindex="-1"></a><span class="in">#Vector original</span></span>
+<span id="cb92-516"><a href="#cb92-516" aria-hidden="true" tabindex="-1"></a><span class="in">library(popdemo)</span></span>
+<span id="cb92-517"><a href="#cb92-517" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-518"><a href="#cb92-518" aria-hidden="true" tabindex="-1"></a><span class="in">nLr0 &lt;- c(0, 46, 38, 82)</span></span>
+<span id="cb92-519"><a href="#cb92-519" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-520"><a href="#cb92-520" aria-hidden="true" tabindex="-1"></a><span class="in">#PERTURBACIÓN DEL VECTOR ORIGINAL</span></span>
+<span id="cb92-521"><a href="#cb92-521" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-522"><a href="#cb92-522" aria-hidden="true" tabindex="-1"></a><span class="in">#1) Entrada de la matriz a(1,1): plántulas a plántulas</span></span>
+<span id="cb92-523"><a href="#cb92-523" aria-hidden="true" tabindex="-1"></a><span class="in">tf1 &lt;- tfa_lambda(Lr1, d = c(1, 0, 0, 0),</span></span>
+<span id="cb92-524"><a href="#cb92-524" aria-hidden="true" tabindex="-1"></a><span class="in">                  e = c(1, 0, 0, 0),</span></span>
+<span id="cb92-525"><a href="#cb92-525" aria-hidden="true" tabindex="-1"></a><span class="in">                  prange = seq(0, 4, 0.01))</span></span>
+<span id="cb92-526"><a href="#cb92-526" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-527"><a href="#cb92-527" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de la dinámica poblacional</span></span>
+<span id="cb92-528"><a href="#cb92-528" aria-hidden="true" tabindex="-1"></a><span class="in">plot(tf1, ann = FALSE)</span></span>
+<span id="cb92-529"><a href="#cb92-529" aria-hidden="true" tabindex="-1"></a><span class="in">title(main = "Dinámica poblacional (Plántulas - Plántulas)", ylab = "Lambda", xlab = "p")</span></span>
+<span id="cb92-530"><a href="#cb92-530" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-531"><a href="#cb92-531" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de lambda-max:</span></span>
+<span id="cb92-532"><a href="#cb92-532" aria-hidden="true" tabindex="-1"></a><span class="in">lambda1 &lt;- Re(eigen(Lr1)$values[1]) </span></span>
+<span id="cb92-533"><a href="#cb92-533" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-534"><a href="#cb92-534" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de la sensibilidad </span></span>
+<span id="cb92-535"><a href="#cb92-535" aria-hidden="true" tabindex="-1"></a><span class="in">sens1 &lt;- tfs_lambda(Lr1, d = c(1, 0, 0, 0), e = c(1, 0, 0, 0))</span></span>
+<span id="cb92-536"><a href="#cb92-536" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-537"><a href="#cb92-537" aria-hidden="true" tabindex="-1"></a><span class="in">#Agregar la línea, especificando el intercepto y la pendiente</span></span>
+<span id="cb92-538"><a href="#cb92-538" aria-hidden="true" tabindex="-1"></a><span class="in">abline(lambda1, sens1, lty = 2, col = "red")</span></span>
+<span id="cb92-539"><a href="#cb92-539" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-540"><a href="#cb92-540" aria-hidden="true" tabindex="-1"></a><span class="in">#2) Entrada de la matriz a(2,1): plántulas y juveniles</span></span>
+<span id="cb92-541"><a href="#cb92-541" aria-hidden="true" tabindex="-1"></a><span class="in">tf2 &lt;- tfa_lambda(Lr1, d = c(0, 1, 0, 0),</span></span>
+<span id="cb92-542"><a href="#cb92-542" aria-hidden="true" tabindex="-1"></a><span class="in">                  e = c(1, 0, 0, 0),</span></span>
+<span id="cb92-543"><a href="#cb92-543" aria-hidden="true" tabindex="-1"></a><span class="in">                  prange = seq(-0.4, 0.6, 0.01))</span></span>
+<span id="cb92-544"><a href="#cb92-544" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-545"><a href="#cb92-545" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de la dinámica poblacional</span></span>
+<span id="cb92-546"><a href="#cb92-546" aria-hidden="true" tabindex="-1"></a><span class="in">plot(tf2, ann = FALSE)</span></span>
+<span id="cb92-547"><a href="#cb92-547" aria-hidden="true" tabindex="-1"></a><span class="in">title(main = "Dinámica poblacional (Plántulas - Juveniles)", ylab = "Lambda", xlab = "p")</span></span>
+<span id="cb92-548"><a href="#cb92-548" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-549"><a href="#cb92-549" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de lambda-max:</span></span>
+<span id="cb92-550"><a href="#cb92-550" aria-hidden="true" tabindex="-1"></a><span class="in">lambda2 &lt;- Re(eigen(Lr1)$values[1]) </span></span>
+<span id="cb92-551"><a href="#cb92-551" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-552"><a href="#cb92-552" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de la sensibilidad </span></span>
+<span id="cb92-553"><a href="#cb92-553" aria-hidden="true" tabindex="-1"></a><span class="in">sens2 &lt;- tfs_lambda(Lr1, d = c(0, 1, 0, 0), e = c(1, 0, 0, 0))</span></span>
+<span id="cb92-554"><a href="#cb92-554" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-555"><a href="#cb92-555" aria-hidden="true" tabindex="-1"></a><span class="in">#Agregar la línea, especificando el intercepto y la pendiente</span></span>
+<span id="cb92-556"><a href="#cb92-556" aria-hidden="true" tabindex="-1"></a><span class="in">abline(lambda2, sens2, lty = 2, col = "red")</span></span>
+<span id="cb92-557"><a href="#cb92-557" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-558"><a href="#cb92-558" aria-hidden="true" tabindex="-1"></a><span class="in">#3) Entrada de la matriz a(2,2): juveniles y juveniles</span></span>
+<span id="cb92-559"><a href="#cb92-559" aria-hidden="true" tabindex="-1"></a><span class="in">tf3 &lt;- tfa_lambda(Lr1, d = c(0, 1, 0, 0),</span></span>
+<span id="cb92-560"><a href="#cb92-560" aria-hidden="true" tabindex="-1"></a><span class="in">                  e = c(0, 1, 0, 0),</span></span>
+<span id="cb92-561"><a href="#cb92-561" aria-hidden="true" tabindex="-1"></a><span class="in">                  prange = seq(-0.8, 0.1, 0.001))</span></span>
+<span id="cb92-562"><a href="#cb92-562" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-563"><a href="#cb92-563" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de la dinámica poblacional</span></span>
+<span id="cb92-564"><a href="#cb92-564" aria-hidden="true" tabindex="-1"></a><span class="in">plot(tf3, ann = FALSE)</span></span>
+<span id="cb92-565"><a href="#cb92-565" aria-hidden="true" tabindex="-1"></a><span class="in">title(main = "Dinámica poblacional (Juveniles - Juveniles)", ylab = "Lambda", xlab = "p")</span></span>
+<span id="cb92-566"><a href="#cb92-566" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-567"><a href="#cb92-567" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de lambda-max:</span></span>
+<span id="cb92-568"><a href="#cb92-568" aria-hidden="true" tabindex="-1"></a><span class="in">lambda3 &lt;- Re(eigen(Lr1)$values[1]) </span></span>
+<span id="cb92-569"><a href="#cb92-569" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-570"><a href="#cb92-570" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de la sensibilidad </span></span>
+<span id="cb92-571"><a href="#cb92-571" aria-hidden="true" tabindex="-1"></a><span class="in">sens3 &lt;- tfs_lambda(Lr1, d = c(0, 1, 0, 0), e = c(0, 1, 0, 0))</span></span>
+<span id="cb92-572"><a href="#cb92-572" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-573"><a href="#cb92-573" aria-hidden="true" tabindex="-1"></a><span class="in">#Agregar la línea, especificando el intercepto y la pendiente</span></span>
+<span id="cb92-574"><a href="#cb92-574" aria-hidden="true" tabindex="-1"></a><span class="in">abline(lambda3, sens3, lty = 2, col = "red")</span></span>
+<span id="cb92-575"><a href="#cb92-575" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-576"><a href="#cb92-576" aria-hidden="true" tabindex="-1"></a><span class="in">#4) Entrada de la matriz a(3,2): juveniles y no reproductivos</span></span>
+<span id="cb92-577"><a href="#cb92-577" aria-hidden="true" tabindex="-1"></a><span class="in">tf4 &lt;- tfa_lambda(Lr1, d = c(0, 0, 1, 0),</span></span>
+<span id="cb92-578"><a href="#cb92-578" aria-hidden="true" tabindex="-1"></a><span class="in">                  e = c(0, 1, 0, 0),</span></span>
+<span id="cb92-579"><a href="#cb92-579" aria-hidden="true" tabindex="-1"></a><span class="in">                  prange = seq(-0.001, 0.03, 0.01))</span></span>
+<span id="cb92-580"><a href="#cb92-580" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-581"><a href="#cb92-581" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de la dinámica poblacional</span></span>
+<span id="cb92-582"><a href="#cb92-582" aria-hidden="true" tabindex="-1"></a><span class="in">plot(tf4, ann = FALSE)</span></span>
+<span id="cb92-583"><a href="#cb92-583" aria-hidden="true" tabindex="-1"></a><span class="in">title(main = "Dinámica poblacional (Juveniles - No reproductivos)", ylab = "Lambda", xlab = "p")</span></span>
+<span id="cb92-584"><a href="#cb92-584" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-585"><a href="#cb92-585" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de lambda-max:</span></span>
+<span id="cb92-586"><a href="#cb92-586" aria-hidden="true" tabindex="-1"></a><span class="in">lambda4 &lt;- Re(eigen(Lr1)$values[1]) </span></span>
+<span id="cb92-587"><a href="#cb92-587" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-588"><a href="#cb92-588" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de la sensibilidad</span></span>
+<span id="cb92-589"><a href="#cb92-589" aria-hidden="true" tabindex="-1"></a><span class="in">sens4 &lt;- tfs_lambda(Lr1, d = c(0,0,1,0), e = c(0, 1, 0, 0))</span></span>
+<span id="cb92-590"><a href="#cb92-590" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-591"><a href="#cb92-591" aria-hidden="true" tabindex="-1"></a><span class="in">#Agregar la línea, especificando el intercepto y la pendiente</span></span>
+<span id="cb92-592"><a href="#cb92-592" aria-hidden="true" tabindex="-1"></a><span class="in">abline(lambda4, sens4, lty = 2, col = "red")</span></span>
+<span id="cb92-593"><a href="#cb92-593" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-594"><a href="#cb92-594" aria-hidden="true" tabindex="-1"></a><span class="in">#5) Entrada de la matriz a(4,2): juveniles a adultos</span></span>
+<span id="cb92-595"><a href="#cb92-595" aria-hidden="true" tabindex="-1"></a><span class="in">tf5 &lt;- tfa_lambda(Lr1, d = c(0,0,0,1),</span></span>
+<span id="cb92-596"><a href="#cb92-596" aria-hidden="true" tabindex="-1"></a><span class="in">                  e = c(0,1,0,0),</span></span>
+<span id="cb92-597"><a href="#cb92-597" aria-hidden="true" tabindex="-1"></a><span class="in">                  prange = seq(0,0.8,0.01))</span></span>
+<span id="cb92-598"><a href="#cb92-598" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-599"><a href="#cb92-599" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de la dinámica poblacional</span></span>
+<span id="cb92-600"><a href="#cb92-600" aria-hidden="true" tabindex="-1"></a><span class="in">plot(tf5, ann = FALSE)</span></span>
+<span id="cb92-601"><a href="#cb92-601" aria-hidden="true" tabindex="-1"></a><span class="in">title(main = "Dinámica poblacional (Juveniles - Adultos)", ylab = "Lambda", xlab = "p")</span></span>
+<span id="cb92-602"><a href="#cb92-602" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-603"><a href="#cb92-603" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de lambda-max:</span></span>
+<span id="cb92-604"><a href="#cb92-604" aria-hidden="true" tabindex="-1"></a><span class="in">lambda5 &lt;- Re(eigen(Lr1)$values[1]) </span></span>
+<span id="cb92-605"><a href="#cb92-605" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-606"><a href="#cb92-606" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de la sensibilidad</span></span>
+<span id="cb92-607"><a href="#cb92-607" aria-hidden="true" tabindex="-1"></a><span class="in">sens5 &lt;- tfs_lambda(Lr1, d = c(0, 0, 0, 1), e = c(0, 1, 0, 0))</span></span>
+<span id="cb92-608"><a href="#cb92-608" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-609"><a href="#cb92-609" aria-hidden="true" tabindex="-1"></a><span class="in">#Agregar la línea, especificando el intercepto y la pendiente</span></span>
+<span id="cb92-610"><a href="#cb92-610" aria-hidden="true" tabindex="-1"></a><span class="in">abline(lambda5, sens5, lty = 2, col = "red")</span></span>
+<span id="cb92-611"><a href="#cb92-611" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-612"><a href="#cb92-612" aria-hidden="true" tabindex="-1"></a><span class="in">#6) Entrada de la matriz a(3,3): adultos no reproductivos a adultos no reproductivos</span></span>
+<span id="cb92-613"><a href="#cb92-613" aria-hidden="true" tabindex="-1"></a><span class="in">tf6 &lt;- tfa_lambda(Lr1, d = c(0, 0, 1, 0),</span></span>
+<span id="cb92-614"><a href="#cb92-614" aria-hidden="true" tabindex="-1"></a><span class="in">                  e = c(0, 0, 1, 0),</span></span>
+<span id="cb92-615"><a href="#cb92-615" aria-hidden="true" tabindex="-1"></a><span class="in">                  prange = seq(-0.8, 0.2, 0.01))</span></span>
+<span id="cb92-616"><a href="#cb92-616" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-617"><a href="#cb92-617" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de la dinámica poblacional</span></span>
+<span id="cb92-618"><a href="#cb92-618" aria-hidden="true" tabindex="-1"></a><span class="in">plot(tf6, ann = FALSE)</span></span>
+<span id="cb92-619"><a href="#cb92-619" aria-hidden="true" tabindex="-1"></a><span class="in">title(main = "Dinámica poblacional (Adultos No rep - Adultos  No reproductivos)", ylab = "Lambda", xlab = "p")</span></span>
+<span id="cb92-620"><a href="#cb92-620" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-621"><a href="#cb92-621" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de lambda-max:</span></span>
+<span id="cb92-622"><a href="#cb92-622" aria-hidden="true" tabindex="-1"></a><span class="in">lambda6 &lt;- Re(eigen(Lr1)$values[1]) </span></span>
+<span id="cb92-623"><a href="#cb92-623" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-624"><a href="#cb92-624" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de la sensibilidad</span></span>
+<span id="cb92-625"><a href="#cb92-625" aria-hidden="true" tabindex="-1"></a><span class="in">sens6 &lt;- tfs_lambda(Lr1, d = c(0,0,0,1), e = c(0,1,0,0))</span></span>
+<span id="cb92-626"><a href="#cb92-626" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-627"><a href="#cb92-627" aria-hidden="true" tabindex="-1"></a><span class="in">#Agregar la línea, especificando el intercepto y la pendiente</span></span>
+<span id="cb92-628"><a href="#cb92-628" aria-hidden="true" tabindex="-1"></a><span class="in">abline(lambda6, sens6, lty = 2, col = "red")</span></span>
+<span id="cb92-629"><a href="#cb92-629" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-630"><a href="#cb92-630" aria-hidden="true" tabindex="-1"></a><span class="in">#7) Entrada de la matriz a(4,3): adultos no reproductivos a adultos reproductivos</span></span>
+<span id="cb92-631"><a href="#cb92-631" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-632"><a href="#cb92-632" aria-hidden="true" tabindex="-1"></a><span class="in">tf7 &lt;- tfa_lambda(Lr1, d = c(0,0,0,1),</span></span>
+<span id="cb92-633"><a href="#cb92-633" aria-hidden="true" tabindex="-1"></a><span class="in">                  e = c(0,0,1,0),</span></span>
+<span id="cb92-634"><a href="#cb92-634" aria-hidden="true" tabindex="-1"></a><span class="in">                  prange = seq(-0.2,0.8,0.001))</span></span>
+<span id="cb92-635"><a href="#cb92-635" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-636"><a href="#cb92-636" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de la dinámica poblacional</span></span>
+<span id="cb92-637"><a href="#cb92-637" aria-hidden="true" tabindex="-1"></a><span class="in">plot(tf7, ann = FALSE)</span></span>
+<span id="cb92-638"><a href="#cb92-638" aria-hidden="true" tabindex="-1"></a><span class="in">title(main = "Dinámica poblacional (Adultos No rep - Adultos No rep)", ylab = "Lambda", xlab = "p")</span></span>
+<span id="cb92-639"><a href="#cb92-639" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-640"><a href="#cb92-640" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de lambda-max:</span></span>
+<span id="cb92-641"><a href="#cb92-641" aria-hidden="true" tabindex="-1"></a><span class="in">lambda7 &lt;- Re(eigen(Lr1)$values[1]) </span></span>
+<span id="cb92-642"><a href="#cb92-642" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-643"><a href="#cb92-643" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de la sensibilidad</span></span>
+<span id="cb92-644"><a href="#cb92-644" aria-hidden="true" tabindex="-1"></a><span class="in">sens7 &lt;- tfs_lambda(Lr1, d = c(0,0,0,1), e = c(0,0,1,0))</span></span>
+<span id="cb92-645"><a href="#cb92-645" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-646"><a href="#cb92-646" aria-hidden="true" tabindex="-1"></a><span class="in">#Agregar la línea, especificando el intercepto y la pendiente</span></span>
+<span id="cb92-647"><a href="#cb92-647" aria-hidden="true" tabindex="-1"></a><span class="in">abline(lambda7, sens7, lty = 2, col = "red")</span></span>
+<span id="cb92-648"><a href="#cb92-648" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-649"><a href="#cb92-649" aria-hidden="true" tabindex="-1"></a><span class="in">#8) Entrada de la matriz a(1,4): adultos reproductivos a plántulas</span></span>
+<span id="cb92-650"><a href="#cb92-650" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-651"><a href="#cb92-651" aria-hidden="true" tabindex="-1"></a><span class="in">tf8 &lt;- tfa_lambda(Lr1, d = c(1,0,0,0),</span></span>
+<span id="cb92-652"><a href="#cb92-652" aria-hidden="true" tabindex="-1"></a><span class="in">                  e = c(0,0,0,1),</span></span>
+<span id="cb92-653"><a href="#cb92-653" aria-hidden="true" tabindex="-1"></a><span class="in">                  prange = seq(-0.2,0.8,0.001))</span></span>
+<span id="cb92-654"><a href="#cb92-654" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-655"><a href="#cb92-655" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de la dinámica poblacional</span></span>
+<span id="cb92-656"><a href="#cb92-656" aria-hidden="true" tabindex="-1"></a><span class="in">plot(tf8, ann = FALSE)</span></span>
+<span id="cb92-657"><a href="#cb92-657" aria-hidden="true" tabindex="-1"></a><span class="in">title(main = "Dinámica poblacional (Adultos reproductivos - Plántulas)", ylab = "Lambda", xlab = "p")</span></span>
+<span id="cb92-658"><a href="#cb92-658" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-659"><a href="#cb92-659" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de lambda-max:</span></span>
+<span id="cb92-660"><a href="#cb92-660" aria-hidden="true" tabindex="-1"></a><span class="in">lambda8 &lt;- Re(eigen(Lr1)$values[1]) </span></span>
+<span id="cb92-661"><a href="#cb92-661" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-662"><a href="#cb92-662" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de la sensibilidad</span></span>
+<span id="cb92-663"><a href="#cb92-663" aria-hidden="true" tabindex="-1"></a><span class="in">sens8 &lt;- tfs_lambda(Lr1, d = c(1,0,0,0), e = c(0,0,0,1))</span></span>
+<span id="cb92-664"><a href="#cb92-664" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-665"><a href="#cb92-665" aria-hidden="true" tabindex="-1"></a><span class="in">#Agregar la línea, especificando el intercepto y la pendiente</span></span>
+<span id="cb92-666"><a href="#cb92-666" aria-hidden="true" tabindex="-1"></a><span class="in">abline(lambda8, sens8, lty = 2, col = "red")</span></span>
+<span id="cb92-667"><a href="#cb92-667" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-668"><a href="#cb92-668" aria-hidden="true" tabindex="-1"></a><span class="in">#9) Entrada de la matriz a(3,4): adultos reproductivos a plántulas</span></span>
+<span id="cb92-669"><a href="#cb92-669" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-670"><a href="#cb92-670" aria-hidden="true" tabindex="-1"></a><span class="in">tf9 &lt;- tfa_lambda(Lr1, d = c(0, 0,1, 0),</span></span>
+<span id="cb92-671"><a href="#cb92-671" aria-hidden="true" tabindex="-1"></a><span class="in">                  e = c(0, 0, 0,1),</span></span>
+<span id="cb92-672"><a href="#cb92-672" aria-hidden="true" tabindex="-1"></a><span class="in">                  prange = seq(-0.2, 0.8, 0.001))</span></span>
+<span id="cb92-673"><a href="#cb92-673" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-674"><a href="#cb92-674" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de la dinámica poblacional</span></span>
+<span id="cb92-675"><a href="#cb92-675" aria-hidden="true" tabindex="-1"></a><span class="in">plot(tf9, ann = FALSE)</span></span>
+<span id="cb92-676"><a href="#cb92-676" aria-hidden="true" tabindex="-1"></a><span class="in">title(main = "Dinámica poblacional (Adultos reproductivos - Plántulas)", ylab = "Lambda", xlab = "p")</span></span>
+<span id="cb92-677"><a href="#cb92-677" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-678"><a href="#cb92-678" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de lambda-max:</span></span>
+<span id="cb92-679"><a href="#cb92-679" aria-hidden="true" tabindex="-1"></a><span class="in">lambda9 &lt;- Re(eigen(Lr1)$values[1]) </span></span>
+<span id="cb92-680"><a href="#cb92-680" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-681"><a href="#cb92-681" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de la sensibilidad</span></span>
+<span id="cb92-682"><a href="#cb92-682" aria-hidden="true" tabindex="-1"></a><span class="in">sens9 &lt;- tfs_lambda(Lr1, d = c(0, 0, 0,1), e = c(0, 0, 1, 0))</span></span>
+<span id="cb92-683"><a href="#cb92-683" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-684"><a href="#cb92-684" aria-hidden="true" tabindex="-1"></a><span class="in">#Agregar la línea, especificando el intercepto y la pendiente</span></span>
+<span id="cb92-685"><a href="#cb92-685" aria-hidden="true" tabindex="-1"></a><span class="in">abline(lambda9, sens9, lty = 2, col = "red")</span></span>
+<span id="cb92-686"><a href="#cb92-686" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-687"><a href="#cb92-687" aria-hidden="true" tabindex="-1"></a><span class="in">#10) Entrada de la matriz a(4,4): adultos reproductivos a adultos reproductivos</span></span>
+<span id="cb92-688"><a href="#cb92-688" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-689"><a href="#cb92-689" aria-hidden="true" tabindex="-1"></a><span class="in">tf10 &lt;- tfa_lambda(Lr1, d = c(0, 0, 0, 1),</span></span>
+<span id="cb92-690"><a href="#cb92-690" aria-hidden="true" tabindex="-1"></a><span class="in">                  e = c(0, 0, 0, 1),</span></span>
+<span id="cb92-691"><a href="#cb92-691" aria-hidden="true" tabindex="-1"></a><span class="in">                  prange = seq(-0.6, 0.2, 0.001))</span></span>
+<span id="cb92-692"><a href="#cb92-692" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-693"><a href="#cb92-693" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráfica de la dinámica poblacional</span></span>
+<span id="cb92-694"><a href="#cb92-694" aria-hidden="true" tabindex="-1"></a><span class="in">plot(tf10, ann = FALSE)</span></span>
+<span id="cb92-695"><a href="#cb92-695" aria-hidden="true" tabindex="-1"></a><span class="in">title(main = "Dinámica poblacional (Adultos rep - Adultos rep)", ylab = "Lambda", xlab = "p")</span></span>
+<span id="cb92-696"><a href="#cb92-696" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-697"><a href="#cb92-697" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de lambda-max:</span></span>
+<span id="cb92-698"><a href="#cb92-698" aria-hidden="true" tabindex="-1"></a><span class="in">lambda10 &lt;- Re(eigen(Lr1)$values[1]) </span></span>
+<span id="cb92-699"><a href="#cb92-699" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-700"><a href="#cb92-700" aria-hidden="true" tabindex="-1"></a><span class="in">#Cálculo de la sensibilidad</span></span>
+<span id="cb92-701"><a href="#cb92-701" aria-hidden="true" tabindex="-1"></a><span class="in">sens10 &lt;- tfs_lambda(Lr1, d = c(0,0,0,1), e = c(0,0,0,1))</span></span>
+<span id="cb92-702"><a href="#cb92-702" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-703"><a href="#cb92-703" aria-hidden="true" tabindex="-1"></a><span class="in">#Agregar la línea, especificando el intercepto y la pendiente</span></span>
+<span id="cb92-704"><a href="#cb92-704" aria-hidden="true" tabindex="-1"></a><span class="in">abline(lambda10, sens10, lty = 2, col = "red")</span></span>
+<span id="cb92-705"><a href="#cb92-705" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-706"><a href="#cb92-706" aria-hidden="true" tabindex="-1"></a><span class="in">#Definir márgenes</span></span>
+<span id="cb92-707"><a href="#cb92-707" aria-hidden="true" tabindex="-1"></a><span class="in">par(mfrow = c(4,4))</span></span>
+<span id="cb92-708"><a href="#cb92-708" aria-hidden="true" tabindex="-1"></a><span class="in">par(mfg = c(1,1))</span></span>
+<span id="cb92-709"><a href="#cb92-709" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-710"><a href="#cb92-710" aria-hidden="true" tabindex="-1"></a><span class="in">#Gráficas de la función de transferencia de la inercia en el ciclo de vida de L. rubripetala (población 1)</span></span>
+<span id="cb92-711"><a href="#cb92-711" aria-hidden="true" tabindex="-1"></a><span class="in">tfmatriz &lt;- tfam_inertia(Lr1,vector = nLr0)</span></span>
+<span id="cb92-712"><a href="#cb92-712" aria-hidden="true" tabindex="-1"></a><span class="in">plot(tfmatriz)</span></span>
+<span id="cb92-713"><a href="#cb92-713" aria-hidden="true" tabindex="-1"></a><span class="in"> </span></span>
+<span id="cb92-714"><a href="#cb92-714" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb92-715"><a href="#cb92-715" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-716"><a href="#cb92-716" aria-hidden="true" tabindex="-1"></a>Raventós y colaboradores (2015) estimaron el crecimiento poblacional de corto plazo de dos orquídeas epífitas después del paso de un huracán. Dado que a su paso se pierden individuos, se simuló si la reintroducción de plántulas y adultos mitigaban los efectos de este fenómeno en Cuba. Los resultados sugieren que la reintroducción de adultos tiene un efecto positivo sobre</span>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -2211,7 +2978,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       &nbsp;
     </div>
     <div class="nav-footer-right">
-<p>This page is built with ❤️ and <a href="https://quarto.org/">Quarto</a>.</p>
+<p>Esta página fue creado ❤️ y <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
   </div>
 </footer>

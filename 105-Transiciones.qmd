@@ -18,7 +18,7 @@ library(DiagrammeR)
 
 En el siguiente capítulo se enseña como calcular las transiciones para la matriz de Lefkovitch (transiciones por etapas). En la primera parte se enseña como calcular las transiciones de manera tradicional y a mano y en la segunda parte veremos como calcular las transiciones de manera más eficiente usando funciones que estén disponibles en algunos paquetes de R. Los métodos presentado aquí son una adaptación de los métodos presentados en [@caswell2000matrix] y pueden ver también una aplicación de estos métodos aplicado a las orquídeas [@tremblay2003population]. Si ha hecho análisis de matrices de transición antes, probablemente ha usado el método tradicional de calcular las transiciones y pueden obviar leer este capítulo. Este método consiste en calcular la proporciones de individuos que transitan de una clase de edad a otra. Este método es tedioso y propenso a errores cuando se hacen a mano. Pero es importante por lo menos hacer el esfuerzo una vez a mano para conocer como es la mecanica de calcular las transiciones. En la segunda parte del capítulo veremos como calcular las transiciones usando la función **projection.matrix** del paquete **popbio**. Esta función es más eficiente y menos propensa a errores que hacerlo a mano.
 
-***
+------------------------------------------------------------------------
 
 ## Métodos tradicional de calcular las transiciones
 
@@ -55,21 +55,21 @@ sum2
 
 Nota que la suma de todas estas transiciones tienen que sumar a 1.000. NO pueden ser mayor que 1 o menor de 1. Si la suma de las transiciones es mayor o menor de 1, significa que hay un error en los cálculos de las proporciones. Una de las causas principales ocurre cuando se redondea excesivamente o incorrectamente. En este caso, nota que la suma da un total de 0.9998, que es suficiente cerca de 1.0.
 
-Ahora calculamos las otras transiciones de juveniles a otras clases 
+Ahora calculamos las otras transiciones de juveniles a otras clases
 
- - 0/6 = 0.0000, transitaron de "juveniles" a "plantas pequeñas" 
- - 3/6 = 0.5000, transitaron de "juveniles" a "juveniles" 
- - 2/6 = 0.3333, transitaron de "juveniles" a "adultos" '
- - 1/6 = 0.1666, fallecieron de las "juveniles" en el primer periodo de tiempo fallecieron en el segundo periodo de tiempo
+-   0/6 = 0.0000, transitaron de "juveniles" a "plantas pequeñas"
+-   3/6 = 0.5000, transitaron de "juveniles" a "juveniles"
+-   2/6 = 0.3333, transitaron de "juveniles" a "adultos" '
+-   1/6 = 0.1666, fallecieron de las "juveniles" en el primer periodo de tiempo fallecieron en el segundo periodo de tiempo
 
 De adultos a otras clases
 
 -   0/6 = 0, transitaron de "adulto" a "plantas pequeñas"
 -   0/6 = 0, transitaron de "adulto" a "juveniles"
 -   4/6 = 0.6667, transitaron de "adulto" a "adulto"
--   2/6 = 0.3333, fallecieron de las "adulto" en el primer periodo de tiempo fallecieron antes del segundo periodo de tiempo. 
+-   2/6 = 0.3333, fallecieron de las "adulto" en el primer periodo de tiempo fallecieron antes del segundo periodo de tiempo.
 
-Aquí la lista completa de las transiciones a todas las etapas posibles. 
+Aquí la lista completa de las transiciones a todas las etapas posibles.
 
 ```{r Trans3, message=FALSE, echo=FALSE}
 
@@ -91,7 +91,7 @@ Orchis_ficticia=tribble(~Num_ind, ~anio_1, ~anio_2, ~transición,
 gt(Orchis_ficticia)                        
 ```
 
-***
+------------------------------------------------------------------------
 
 ### Construyendo la matriz de transiciones
 
@@ -99,8 +99,8 @@ Ahora usamos los valores calculados arriba para construir la matriz de transicio
 
 Nota que en las columnas representa el estado en el tiempo 1 y las filas los estados en el periodo 2. Importante la transiciones a Muerto no se pone en la matriz, automáticamente los análisis reconoce que 1 menos la suma las transiciones en la matriz, sera la proporciones de fallecimiento. Se añade la información usando la función matrix() de R. La función matrix() tiene los siguientes argumentos:
 
-- nrow =: el número de filas y columnas (siempre la mtriz estará cuadrada.
-- byrow =: si se quiere llenar la matriz por filas (byrow) o por columnas (bycol).
+-   nrow =: el número de filas y columnas (siempre la mtriz estará cuadrada.
+-   byrow =: si se quiere llenar la matriz por filas (byrow) o por columnas (bycol).
 
 ```{r Trans4}
 
@@ -112,8 +112,8 @@ ficticia_matrix=matrix(c(0.1428, 0.0000, 0.0000,
 ficticia_matrix
 ```
 
+------------------------------------------------------------------------
 
-***
 ### Añadiendo los nombres de las etapas
 
 Es buena práctica es añadir el nombre de las etapas a la matriz ya que ayuda a encontrar inconsistencia y posible errores. Las dos funciones necesarias son **rownames** y **colnames**.
@@ -127,7 +127,7 @@ ficticia_matrix
 
 ```
 
-***
+------------------------------------------------------------------------
 
 ### Construcción de matriz con funciones en R
 
@@ -152,10 +152,7 @@ Nota que el "output" de la función **projection.matrix** es una lista con dos e
 
 Antes de comenzar hacer los análisis es importante que los nombres de las columnas se cambian a nombres que causan menos problemas para la función **projection.matrix**. En este caso, cambiamos los nombres de las columnas de la tabla de datos de "anio_1" a "stage" y de "anio_2" a "fate". Esos nombres corresponde a las etapas en el primer y segundo periodo de tiempo, *fate* se traduce como "destino" en español.
 
-
 Los datos tienen que estar en formato de tabla de datos, o sea que cada fila es un individuo y cada columna es una variable. En este caso, tenemos 19 filas y 4 columnas. La columna "transición" no es necesaria para la función **projection.matrix**.
-
- 
 
 ```{r}
 library(gt)
@@ -185,7 +182,6 @@ gt(Orchis_ficticia_por_ind)
 
 ```
 
-
 Aqui la función para cambiar los nombres de las columnas a "stage" y "fate".
 
 ```{r Trans6}
@@ -196,9 +192,9 @@ gt(head(Orchis_ficticia_por_ind))
 
 Ahora que tenemos los nombres de las columnas cambiados, podemos usar la función **projection.matrix** para calcular las transiciones y la fertilidad. En este caso, la columna "fertilidad" es la cantidad de individuos que se añaden a cada clase de edad. En este caso, solamente los adultos pueden reproducirse y añadir nuevos individuos a la clase de edad "plantas pequeñas". En este caso, la fertilidad es 1/6 = 0.1666, o sea que un adulto añade un nuevo individuo a la clase de edad "plantas pequeñas" en el segundo periodo de tiempo.
 
- Aquí un ejemplo de la función
- 
- projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=TRUE)
+Aquí un ejemplo de la función
+
+projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=TRUE)
 
 ```{r Trans7}
 
@@ -227,7 +223,7 @@ projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=FALSE)
 
 ```
 
-***
+------------------------------------------------------------------------
 
 ## Matriz con Clonaje
 
@@ -246,7 +242,7 @@ compadre <- cdb_fetch("compadre") # Usar este código para bajar los datos del r
 
 ```
 
-***
+------------------------------------------------------------------------
 
 ### Extraer de COMPADRE las matrices *Cypripedium calceolus*.
 
@@ -254,10 +250,10 @@ Segundo extraer de la base de datos de COMPADRE las matrices de transiciones de 
 
 Los pasos son los siguientes
 
- - Filtrar la base de datos para *Cypripedium calceolus* 
- - Filtrar la base de datos para el DOI del artículo 
- - Filtrar la base de datos para la dimensión de la matriz de transiciones (6x6) 
- - Filtrar la base base de datos para una matriz en particular (242623)
+-   Filtrar la base de datos para *Cypripedium calceolus*
+-   Filtrar la base de datos para el DOI del artículo
+-   Filtrar la base de datos para la dimensión de la matriz de transiciones (6x6)
+-   Filtrar la base base de datos para una matriz en particular (242623)
 
 NOTA que se podría haber filtrado parte la **MatrixID** solamente si uno conoce la identificación de esta matriz en la base de datos.
 
@@ -299,9 +295,7 @@ matC <- matC(Cyp_cal_matC) # extraer la matriz de clonaje a partir de la base de
 matC
 ```
 
-
 ### El ciclo de vida de *Cypripedium calceolus* con clonaje
-
 
 Ahora vemos el ciclo de vida de *Cypripedium calceolus* en este estudio donde las lineas azules son las transiciones de una etapa las transiciones por clonaje.
 
@@ -355,12 +349,11 @@ digraph {
 ) 
 ```
 
-
-***
+------------------------------------------------------------------------
 
 ### Limitaciones de los métodos tradicionales
 
-El uso de estos métodos tradicionales aun que sean calculado a mano o usar la función **projection.matrix** del paquete **popbio** pudiese ser problemático. Los problemas ocurren por condiciones de muestreo, especialmente cuando trabajan con especies raras y los tamaños de muestra están pequeños o que las transiciones son raras de forma natural [@tremblay2021population; @gascoigne2023standard]. En el capitulo XX: **Impacto de datos sin sentidos biológico** se discute los problemas posibles cuando hay datos sin sentidos y como construir matrices más confiable y cuando se debería usar el método Bayesiano para los análisis. En el capitulo **Impacto de datos sin sentido biológico** se discute como resolver asuntos de matrices para que sean más compatible con la biología de la especies estudiada y por consecuencia con más relevancia a la biología de los especies estudiada. 
+El uso de estos métodos tradicionales aun que sean calculado a mano o usar la función **projection.matrix** del paquete **popbio** pudiese ser problemático. Los problemas ocurren por condiciones de muestreo, especialmente cuando trabajan con especies raras y los tamaños de muestra están pequeños o que las transiciones son raras de forma natural [@tremblay2021population; @gascoigne2023standard]. En el capitulo XX: **Impacto de datos sin sentidos biológico** se discute los problemas posibles cuando hay datos sin sentidos y como construir matrices más confiable y cuando se debería usar el método Bayesiano para los análisis. En el capitulo **Impacto de datos sin sentido biológico** se discute como resolver asuntos de matrices para que sean más compatible con la biología de la especies estudiada y por consecuencia con más relevancia a la biología de los especies estudiada.
 
 Revisión:
 

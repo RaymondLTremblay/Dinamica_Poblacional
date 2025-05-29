@@ -27,7 +27,7 @@ Definiciones de las matrices
 
 ![Relación entre matrices; Diseño: Samuel Gascoigne](Figures/Matrices_A_U_F_C.jpg){width="90%"}
 
-***
+------------------------------------------------------------------------
 
 ## MatU: Matriz de transiciones
 
@@ -44,7 +44,7 @@ stages <- c("Plantulas", "Juvenil", "Adulto")
 plot_life_cycle(matU, stages=stages)
 ```
 
-***
+------------------------------------------------------------------------
 
 ## MatF: Matriz de fecundidad
 
@@ -61,8 +61,7 @@ stages <- c("Plantulas", "Ind Pequeños", "Ind Grande")
 plot_life_cycle(matF, stages=stages)
 ```
 
-***
-
+------------------------------------------------------------------------
 
 ## MatC = Matriz de clonación
 
@@ -72,8 +71,7 @@ Cabe destacar que la incorporación de nuevos ramets, no puede ser incorporada l
 
 Es importante enfatizar que añadir el concepto de clonaje dentro de la matriz **matU** de transiciones resulta en estimados de parámetros diferentes, tal como el tamaño efectivo de población, Ne, en adición de evaluar otros conceptos evolutivos. En estudios evolutivos no es el individuo como tal que es la unidad de interés pero el individuo como fuente de diversidad genética, por consecuencia individuos (clones) que son genéticamente igual son evolutivamente el mismo individuos aunque estén separado físicamente. Las poblaciones organizados en clones afecta la interpretación de datos tanto en los estudios ecológico y evolutivos [@cook1983clonal].
 
-
-***
+------------------------------------------------------------------------
 
 ### Ramet y Genet
 
@@ -81,8 +79,7 @@ Cuando se estudia especies con clonación hay que diferenciar entre el crecimien
 
 A continuación vemos un ejemplo de una matriz de clonación. El único ejemplo en la base de datos de COMPADRE es el de *Cypripedium calceolus* [@garcia2010living]. Aprovechamos para demostrar como extraer matriz con característica específica de la base de datos de COMPADRE.
 
-***
-
+------------------------------------------------------------------------
 
 ### Decargar la base de datos de compradre
 
@@ -91,7 +88,7 @@ A continuación vemos un ejemplo de una matriz de clonación. El único ejemplo 
 compadre <- cdb_fetch("compadre")
 ```
 
-*****
+------------------------------------------------------------------------
 
 ## Extraer MPP con matriz de clonaje
 
@@ -114,20 +111,18 @@ head(table(compadre$clonality)) #Se observa la suma de las matrices de clonaje, 
 
 ```
 
-
-*** 
+------------------------------------------------------------------------
 
 ### Control de Calidad de las matriz
 
-Añade control de calidad a la base de datos (por ejemplo, para entradas faltantes en **matA**). En el capítulo de la COMPADRE y las orquídeas que se encuentra en la base de datos @Compadre se describe muchas alternativa para la limpieza y o sea la selección de las matriz con datos específicos.   
+Añade control de calidad a la base de datos (por ejemplo, para entradas faltantes en **matA**). En el capítulo de la COMPADRE y las orquídeas que se encuentra en la base de datos @Compadre se describe muchas alternativa para la limpieza y o sea la selección de las matriz con datos específicos.
 
 ```{r mat6}
 
 compadre_flagged <- cdb_flag(compadre, checks = "check_NA_A") # Evaluar que la matA no es nula
 ```
 
-
-***
+------------------------------------------------------------------------
 
 ## Orquídeas con clonaje
 
@@ -146,7 +141,7 @@ unique(orchid_clonal$SpeciesAuthor) # hay dos poblaciones solamente en toda la b
 
 ```
 
-***
+------------------------------------------------------------------------
 
 ### El estudio de *Cypripedium calceolus*
 
@@ -160,7 +155,7 @@ Cyp_cal_2 <- orchid_clonal %>%
 Cyp_cal_2
 ```
 
-***
+------------------------------------------------------------------------
 
 #### Buscar la población que tiene **matC** máxima.
 
@@ -179,7 +174,7 @@ orchid_clonal %>%
 
 ```
 
-***
+------------------------------------------------------------------------
 
 #### El estudio de *Cypripedium calceolus*
 
@@ -193,22 +188,22 @@ Cyp_cal_2 <- orchid_clonal %>%
 Cyp_cal_2
 ```
 
-***
+------------------------------------------------------------------------
 
 #### Las etapas del ciclo de vida de *Cypripedium calceolus* son:
 
-Aquí visualizamos las etapas del ciclo de vida de *Cypripedium calceolus* y la matriz de transición, fecundidad y clonación. 
+Aquí visualizamos las etapas del ciclo de vida de *Cypripedium calceolus* y la matriz de transición, fecundidad y clonación.
 
 ```{r mat11}
 
 Cyp_cal_2$mat[[1]] #[[1]] ver las etapas del ciclo de vida de esta población con las tres matrices
 ```
 
-***
+------------------------------------------------------------------------
 
 #### Visualizar la transición de las diferentes etapas por clonación
 
-Podemos visualizar las transiciones de las diferentes etapas por clonación. Usa la función `plot_life_cycle` de la librería **Rage** para visualizar el ciclo de vida. En este caso, las etapas son "Dormant", "Smallest", "Small", "Inter", "Large", "ExtraLarge" y la matriz de clonación es la **matC**.  Si se reemplaza la matriz de clonación por la matriz **matA** se puede ver el ciclo de vida con todas las transiciones, fecundidad y clonación.
+Podemos visualizar las transiciones de las diferentes etapas por clonación. Usa la función `plot_life_cycle` de la librería **Rage** para visualizar el ciclo de vida. En este caso, las etapas son "Dormant", "Smallest", "Small", "Inter", "Large", "ExtraLarge" y la matriz de clonación es la **matC**. Si se reemplaza la matriz de clonación por la matriz **matA** se puede ver el ciclo de vida con todas las transiciones, fecundidad y clonación.
 
 ```{r mat13}
 
@@ -224,8 +219,7 @@ plot_life_cycle(matC[[1]], stages = c("Dormant", "Smallest", "Small", "Inter", "
 
 ```
 
-
-***
+------------------------------------------------------------------------
 
 ### Ejemplo de inclusión de matC en otras familias
 
@@ -241,8 +235,7 @@ for (i in 1:dim(compadre)[1]){
 
 ```
 
-
-***
+------------------------------------------------------------------------
 
 ### Clonación en otras especies
 
@@ -258,12 +251,11 @@ Clonal_Species=compadre %>%
 head(Clonal_Species) # ver las primeras 6 poblaciones
 ```
 
-***
-
+------------------------------------------------------------------------
 
 ### Cuantas familias de plantas incluyeron matriz de clonación en sus modelos
 
-Hay 44 familias de plantas donde la **matC** esta incluida en la dinámica. 
+Hay 44 familias de plantas donde la **matC** esta incluida en la dinámica.
 
 ```{r mat16}
 
@@ -273,8 +265,7 @@ Families=(as.data.frame(sort(unique(Clonal_Species$Family))))
 head(Families) # ver las primeras 6 familias
 ```
 
-
-***
+------------------------------------------------------------------------
 
 ### Clonación en las Bromeliaceae
 
@@ -325,5 +316,4 @@ Demetria: Feb 11th, 2025
 
 RLT: Feb 12th, 2025
 
-RLT: Apr 19th, 2025
-RLT: May 27, 2025
+RLT: Apr 19th, 2025 RLT: May 27, 2025

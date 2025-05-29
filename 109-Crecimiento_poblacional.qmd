@@ -10,6 +10,7 @@ library(popbio)
 library(readr)
 library(Rage)
 library(tidyverse)
+library(gt)
 
 ```
 
@@ -19,7 +20,7 @@ En los modelos matriciales, uno de los parámetros más útiles es la tasa de cr
 
 La tasa finita o asintótica del crecimiento poblacional, $\lambda$, es el valor propio dominante de una matriz de transición y corresponde a la solución de dicha matriz. Cuando $\lambda$ \>1 indica que se proyecta que la población crecerá a largo plazo; si $\lambda$ \<1 indica que se proyecta que disminuirá y $\lambda$ = 1 indica que se proyecta que permanecerá estable. Este parámetro se calcula utilizando la función **eigen.analysis** en el paquete **popbio**.
 
-Comenzamos por ingresar dos matrices de transición, una para cada año de monitoreo.
+Comenzamos por ingresar dos matrices de transición, una para cada año de monitoreo de una poblaciones de *Laelia speciosa*.Los datos provienen de Mariana Hernández-Apolinar y son sin publicar.   
 
 Primera matriz
 
@@ -65,12 +66,19 @@ Calcular los $\lambda$ de la población para los años 1 y 2, respectivamente us
 En el primer año se observa que la población tiene un valor de $\lambda$ \> 1.108, lo que indica que la población crecerá a largo plazo de aproximadamente de 11%. En el segundo año, el valor de $\lambda$ también es \>1.084 de 8%, pero es menor que el del primer año, lo que indica que la tasa de crecimiento poblacional disminuyó de un año a otro.
 
 ```{r, cre_pop_2}
-
+options(digits=5) # Ajusta el número de decimales a mostrar
 ##Calcula la lambda asintótica de cada población y año
 eig1.1<-eigen.analysis(mat1.1) 
 eig1.1$lambda
 eig1.2<-eigen.analysis(mat1.2) 
 eig1.2$lambda
+
+t=tribble(  ~Año, ~lambda,
+  "Año 1", eig1.1$lambda,
+  "Año 2", eig1.2$lambda
+)
+
+gt::gt(t)
 
 ```
 
@@ -79,6 +87,44 @@ La tasa de crecimiento asintótica representa la tasa a la que crecería una pob
 También es fundamental tomar en cuenta que, $\lambda$ no es la tasa a la que se espera que la población creciera en el corto plazo. De hecho, una población con $\lambda$ \<1 pudiera crecer en el corto plazo, antes de declinar en el largo plazo y $vice-versa$. Asimismo, cabe señalar que la tasa de crecimiento poblacional de corto plazo es calculada usando los índices de la dinámica transitoria (**Capitulo X**).
 
 Los meta-análisis (Crone et al. 2013), en cambio, han demostrado que $\lambda$ es una medida robusta de las condiciones actuales, ya que ésta explica la dinámica de las poblaciones durante el período de tiempo en el que se parametrizaron los modelos. Asimismo, $\lambda$ es una buena medida del estado de la población, por lo que es una forma apropiada de comparar el comportamiento de las poblaciones bajo diferentes condiciones, incluyendo variación abiótica, biótica y de manejo. Por ejemplo, los valores de $\lambda$ permiten comparar el comportamiento de una población en distintos periodos de tiempo y con ello entender cómo la variación en las condiciones climáticas afecta su dinámica. Las comparaciones también pueden ser entre poblaciones de la misma especie distribuidas en distintos sitios, para entender los efectos de la variación en el manejo, la vegetación u otras diferencias entre sitios (vea el capitulo "Variación temporal y Espacial por simulaciones")
+
+
+## Calcular el incremento de crecimiento poblacional por año
+
+En esta sección demostramos el crecimiento esperado por año, usando la función **pop.projection** en el paquete **popbio**. Esta función requiere que se especifique la matriz de transición, la cantidad de individuos en cada estado y el número de años a proyectar. En nuestro caso, proyectamos 5 años.
+
+El resultado es una listas de resultados
+
+ - el $\lambda$ por los años proyectados
+ - la distribución estable de la población
+ - la cantidad de individuos esperado por cada estapas en cada año proyectado
+ - el tamaño poblacional esperado por cada año proyectado (la suma de los individuos en cada estadio)
+ - el crecimiento intrínsico esperado por cada año proyectado
+ 
+ 
+Después de proyectar la población por 7 iteraciones, podemos ver el $\lambda$ esperado es muy similar al calculado anteriormente, ±11% de crecimiento. Nota el vector de estadios resulta en un cambio la proporciones drástico de los estadios, ya que la población se proyecta a partir de una población inicial de 10 individuos en cada estadio (25% en cada uno)  a ser dominado por una población por juvenil y plántulas. El crecimiento poblacional se mide evaluando la suma de los individuos en cada estadio por año proyectado sobre la cantidad de individuos en el año anterior. Por ejemplo, en el primer año se espera que la población crezca de 40 individuos a 44 individuos, lo que representa un crecimiento de 10% (56.8/40=1.42). En el segundo año se espera que la población crezca de 56.8 a 70.2 individuos, lo que representa un crecimiento de 23% (70.2/56.8=1.24). 
+
+```{r}
+#Proyección de la población 1, año 1
+
+pop_1 <- pop.projection(mat1.1, n=c(10, 10, 10, 10), iterations=7)
+pop_1
+
+```
+
+Siempre se puede visualizar el crecimiento poblacional proyectado por año, usando la función **plot** en el paquete **popbio**. En este caso, se observa que la población crece de forma exponencial, lo que es consistente con el valor de $\lambda$ calculado anteriormente. Usan este mismo codigo y cambian el número de iteraciones para ver como cambia la proyección de la población. Que pasa si cambian el número de individuos en cada estadio inicial? ¿Qué pasa si cambian la la cantidad de iteraciones/time?
+
+```{r}
+popdemo::project(mat1.1, vector=c(10, 10, 10, 10), time=7) |> plot(, 
+  main="Proyección de la población 1, año 1", 
+  xlab="Años", ylab="Tamaño poblacional", 
+  lwd=2, ylim=c(0, 130))
+
+
+
+```
+
+
 
 ## Comparar $\lambda$ entre poblaciones
 
@@ -194,10 +240,10 @@ donde $\tau^2$ es igual a:
 
 $$\tau^2=\sum_{i=1}^{S}\sum_{j=1}^{S}\sum_{k=1}^{S}\sum_{l=1}^{S}Cov(\alpha_{ij}, \alpha_{kl})\bar{S_{ij}}\bar{S_{kl}}$$
 
-La variable de la ecuación incluye $\bar\lambda_1$, donde representa el log del valoreigen promedio de las matrices de transición $\bar{\text{A}}$, donde es el promedio de cada elemento de la matriz.  Si tenemos 4 matrices de transición, $\bar{\text{A}}$ es la matriz de transición promedio de cada elemento de esta matriz. Por ejemplo, si la transiciones de plántula a juvenil en la matriz 1 es 0.1, en la matriz 2 es 0.2, en la matriz 3 es 0.15 y en la matriz 4 es 0.05, entonces el valor promedio en la $\bar{\text{A}}$ de la transición de plántula a juvenil sería (0.1 + 0.2 + 0.15 + 0.05)/4 = 0.125. Por consecuencia el valor de de $\bar{\alpha}_{1,1}=0.125$ 
+La variable de la ecuación incluye $\bar\lambda_1$, donde representa el log del valor propio promedio de las matrices de transición $\bar{\text{A}}$, donde es el promedio de cada elemento de la matriz.  Si tenemos 4 matrices de transición, $\bar{\text{A}}$ es la matriz de transición promedio de cada elemento de esta matriz. Por ejemplo, si la transiciones de plántula a juvenil en la matriz 1 es 0.1, en la matriz 2 es 0.2, en la matriz 3 es 0.15 y en la matriz 4 es 0.05, entonces el valor promedio en la $\bar{\text{A}}$ de la transición de plántula a juvenil sería (0.1 + 0.2 + 0.15 + 0.05)/4 = 0.125. Por consecuencia el valor de de $\bar{\alpha}_{1,1}=0.125$ y así sucesivamente para cada elemento de la matriz.
 
 
-El componente $\frac{\tau^2}{\bar\lambda_1^2}$ es una aproximado de la variación temporal del crecimiento poblacional por causa de estocasticidad temporal. En este caso, $\tau^2$ es el efecto de la sensitividad de $\lambda$ causado por los cambios en los elementos $\bar{\alpha}_{i,j}$. La covarianza $\text{Cov}$ mide la correlaciones las transiciones de estado $i$ a $j$ y $k$ a $l$ se denota como $Cov(\alpha_{ij}, \alpha_{kl})$. Se espera que algunos de los elementos varia de forma positiva y otros de forma negativa, por lo que la covarianza puede ser positiva o negativa. Por ejemplo, si la transición de plántula a juvenil aumenta, es probable que la transición de juvenil a adulto aumenta tambien en un buen año, y viceversa. Por lo tanto, la covarianza entre estas transiciones es positiva. Considera por ejemplo que la probabilidad de fallecer de un año un otro y posible en un periodo de sequía por consecuencia la probabilidad de sobrevivir de un año a otro sea impactado de forma negativa por la sequía, y la covarianza con otros elementos como transiciones también se vean afectado.
+El componente $\frac{\tau^2}{\bar\lambda_1^2}$ es una aproximado de la variación temporal del crecimiento poblacional por causa de estocasticidad temporal. En este caso, $\tau^2$ es el efecto de la sensitividad de $\lambda$ causado por los cambios en los elementos $\bar{\alpha}_{i,j}$. La covarianza $\text{Cov}$ mide la correlaciones entre las transiciones de estado $i$ a $j$ y $k$ a $l$ y se denota como $Cov(\alpha_{ij}, \alpha_{kl})$. Recuerda que no todos los valores en la matriz tienen el mismo impacto si fuesen a cambiar (capítulo de elasticidad). Se espera que algunos de los elementos tenga un impacto relativo y influencia de forma positiva y negativa sobre $\lambda$, por lo que la covarianza puede ser positiva o negativa. Por ejemplo, si la transición de plántula a juvenil aumenta, es probable que la transición de juvenil a adulto aumenta también en un buen año, y viceversa. Por lo tanto, la covarianza entre estas transiciones es positiva. Considera por ejemplo que la probabilidad de fallecer de un año un otro en un periodo de sequía por consecuencia la probabilidad de sobrevivir de un año a otro sea impactado de forma negativa por la sequía, y la covarianza con otros elementos como transiciones también se vean afectado.
 
 Nota que aquí una vez más, se asume que las condiciones bajo las cuales se construyeron las matrices de transición son constantes en el tiempo. Por lo tanto, $λ_e$ no debe ser interpretado literalmente, ni tampoco como una herramienta predictiva. En adición los valores de ic se resta y se suma al $\lambda$ promedio obtenido para tener el rango de 95% de $\lambda$.
 
