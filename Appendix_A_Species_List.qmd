@@ -1,3 +1,8 @@
+---
+bibliography: ftExtra.bib
+
+---
+
 # Appendix A {#AppendixA .unnumbered}
 
 ## Lista completa de todos los trabajos dinámica poblacional en orquídea que han usado matriz {.unnumbered}
@@ -19,6 +24,7 @@ En la siguiente tabla se presentan los estudios de dinámica poblacional en orqu
 
 ```{r lista1, message=FALSE, warning=FALSE}
 library(readr)
+library(tidyverse)
 library(dplyr)
 library(gt)
 library(flextable)
@@ -29,7 +35,7 @@ library(ftExtra)
 
 
 
-list <-dplyr::tribble(
+listsp <-dplyr::tribble(
   ~"Genero", ~Especies, ~Riesgo, ~"Var esp.", ~"Var temp", ~"Lat", ~"Est param", ~"Hist vida", ~Otro, ~Ref, 
 "*Aspasia*" , "*principissa*",  "Si" ,    "-"       ,  "Si"  ,  "-"     ,    "-"          ,   "-"       , "-"  , "@zotz2006population" ,
 "*Brasavolla*", "*cucullata*",  "Si"     , "Si"         , "Si"         ,  "-"   ,         "-"    ,     "-"       , "IPM Transient Dynamics Transfer Function"  , "@ackerman2020small",
@@ -112,11 +118,29 @@ list <-dplyr::tribble(
 
  "*Telipogon*", "*helleri*", "Si", "-" , "-", "-", "-", "Si","Dinámica de transición","@raventos2018comparison",
  "*Tolumnia*", "*variegata*", "Si", "Si" , "Si", "-", "-", "Efecto ","El costo de reproducción","@calvo1993evolutionary",
- "*Trichocentrum*", "*undulatum*", "-", "-" , "-", "-", "-", "Gabriela","Efecto de aislamiento","@borrero2023populations"
+ "*Trichocentrum*", "*undulatum*", "-", "-" , "-", "-", "-", "Gabriela","Efecto de aislamiento","@borrero2023populations" ) %>% 
+  flextable() %>%
+  colformat_md() %>%
+  flextable::autofit(add_w=0.2)
 
-)
 
+listsp
 ```
+
+
+
+
+
+
+
+
+
+```{r}
+
+#### https://cran.r-project.org/web/packages/ftExtra/vignettes/format_columns.html
+```
+
+
 
 Notas para añadir a la tabla
 
@@ -124,26 +148,7 @@ Notas para añadir a la tabla
 -   Transient dynamics
 -   Transfer function
 
-```{r lista3,  flextable, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Lista_orquidea."}
 
-list_fl=list %>%
-  flextable() %>%
-  theme_zebra() %>%
-  theme_box() |> 
-  colformat_md() %>% 
-  set_table_properties(layout = "autofit")
-
-```
-
-------------------------------------------------------------------------
-
-```{r echo= FALSE}
-
-OS=as.data.frame(list)
-gt(OS)
-
-write_csv(OS, "Orchid_Species")
-```
 
 ## Lista parcial de especies de orquídeas que han sido estudiadas que no incluye matrices {.unnumbered}
 
