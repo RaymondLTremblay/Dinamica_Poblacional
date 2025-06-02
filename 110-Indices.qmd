@@ -1,8 +1,6 @@
-# Estimación de Parametros {#Indices}
+# Estimación de Parámetros {#Indices}
 
 ## Por: Mariana Hernández-Apolinar y Paola Portillo Tzompa
-
-
 
 #### Librerías de R requeridas para el siguiente módulo
 
@@ -12,23 +10,28 @@ library(popbio)
 library(ggplot2)
 library(dplyr)
 library(scales)
+library(Rage)
 ```
 
------------------------------------------------------------------------
-
-## En este capitulo se cubrirá varios estimación de parametros.
-
-### Condición beasica de las matrices de transición
 
 
+## En este capitulo se cubrirá varios estimación de parámetros.
+
+En este capitulo revisamos algunos de los indices principales de los análisis de matriz. Algunos de estos indices describe la calidad de la matriz y es primordial evaluar la matriz, ya que si no cumple con algunos de las condiciones los resultados y interpretaciones pudiesen ser invalido. Cubriremos los siguientes indices, **Dimensión cuadrada**, **Ergocidad**, **no Negativa**, **Irreducibilidad**, **Primitividad**. La segunda parte cubrirá, **Análisis de Convergencia**, **Análisis de Amortiguamiento**, **Valor reproductivos**, **Estructura Estable**, que describe el comportamiento de la población en el largo plazo. Estos índices aporta a la diversidad de herramienta para evaluar como la población a largo plazo se comporta y después de un disturbio. 
+
+
+***
+
+
+## Capturar una matriz de transición poblacional para aplicar los índices
 
 ```{r Indice2, message=FALSE}
 
 #Capturar los datos de la matriz para L. rubripetala (Tremblay et al. 2015)
 Lr1 <- matrix(c(0.4324, 0,      0,     0.15,
-               0.3784, 0.8459, 0,     0,
-               0,      0.0034, 0.7954,0.2300,
-               0,      0.0890, 0.1841,0.7510), byrow=TRUE,ncol=4)
+                0.3784, 0.8459, 0,     0,
+                0,      0.0034, 0.7954,0.2300,
+                0,      0.0890, 0.1841,0.7510), byrow=TRUE,ncol=4)
 
 #Capturar las categorias de estado
 estadios <- c("PL", "J", "NR", "AR")
@@ -40,6 +43,115 @@ Lr1
 
 ```
 
+***
+
+
+## Dimensión cuadrada
+
+Las matriz poblacional tienen que tener un número igual de filas y columnas, es decir, ser cuadrada. Esto es importante porque cada fila representa una categoría de edad o etapa de la población y cada columna representa la transición de una categoría a otra. Si la matriz no es cuadrada, entonces no se puede calcular la tasa de crecimiento poblacional, ya que no se puede comparar el número de individuos en cada categoría de edad o etapa con el número de individuos en las otras categorías. En el caso de *Lepanthes rubripetala* la matriz es cuadrada, ya que tiene 4 filas y 4 columnas. Usando la función *dim* de *R* podemos comprobar que la matriz es cuadrada, ya que el número de filas es igual al número de columnas.
+
+```{r}
+dim(Lr1)
+```
+
+
+***
+
+## Ergocidad
+
+Se dice que una población es ergódica si el crecimiento asintótico es independiente de la estructura poblacional al inicio del estudio. En otras palabras, una población ergódica es aquella que, independientemente de su estado inicial, converge a un comportamiento estable a largo plazo. Esto significa que, con el tiempo, la población alcanzará una estructura poblacional estable y una tasa de crecimiento constante. Una población que no estuviese ergódica, podría tener un crecimiento poblacional que depende de la estructura poblacional inicial, lo que significa que el promedio o la tasa de crecimiento poblacional no es un buen predictor del crecimiento poblacional a largo plazo [@mangalam2022ergodic]. Podemos evaluar si la matriz es Ergodiuca applicando la función *isErgodic* del paquete **popbio**. Esta función devuelve un valor lógico que indica si la matriz es ergódica o no. Si la matriz es ergódica, el valor devuelto será "TRUE", de lo contrario será "FALSE". En el caso de *Lepanthes rubripetala* se espera que la matriz sea ergódica, ya que los autores reportan que la población alcanza una estructura estable y una tasa de crecimiento constante a largo plazo [@tremblay2015stable].
+
+
+```{r}
+isErgodic(Lr1, digits=5, return.eigvec=FALSE)
+```
+
+Ahora creemos una matriz no ergódica, que es una matriz que no cumple con la condición de ergodicidad. En este caso, ningun individuo pasa del estadio de plántula al estadio juvenil, o los de adultos.  Usando la misma función *isErgodic* podemos comprobar que la matriz no es ergódica, ya que el valor devuelto será "FALSE". Esto significa que el crecimiento poblacional de la población no es independiente de la estructura poblacional al inicio del estudio y, por lo tanto, no se puede esperar que la población alcance una estructura estable y una tasa de crecimiento constante a largo plazo. 
+
+```{r}
+#Capturar los datos de la matriz para L. rubripetala (Tremblay et al. 2015)
+Lr1_No_erg <- matrix(c(0.4324, 0.,      0.,     0.15,
+               0., 0.8459, 0.,     0.,
+               0.,      0.0034, 0.7954,0.2300,
+               0.,      0.0890, 0.1841,0.7510), byrow=TRUE,ncol=4)
+
+
+plot_life_cycle(Lr1_No_erg, stages=estadios, fontsize = 10)
+
+
+isErgodic(Lr1_No_erg, digits=5, return.eigvec=FALSE)
+```
+
+***
+
+## No negativa
+
+La matriz de población debe ser no negativa, lo que significa que todos sus elementos deben ser mayores o iguales a cero. Esto es importante porque una matriz con elementos negativos no tiene sentido en el contexto de una población, ya que no se pueden tener individuos negativos. Si la matriz tiene elementos negativos, entonces no se puede calcular la tasa de crecimiento poblacional, ya que no se puede comparar el número de individuos en cada categoría de edad o etapa con el número de individuos en las otras categorías. En el caso de *Lepanthes rubripetala* la matriz es no negativa, ya que todos sus elementos son mayores o iguales a cero. Usando la función *IsPositive* creado aquí podemos comprobar que la matriz es no negativa, ya que el valor devuelto será "TRUE".
+
+```{r}
+# No negativa 
+
+IsPositive <- function(mat) {
+  if (all(mat >= 0)) {
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+}
+
+IsPositive(Lr1)
+```
+
+Aquí un ejemplo de una matriz no negativa, que es una matriz que no cumple con la condición de no negatividad. En este caso, el elemento en la posición (4, 3) es negativo, lo que significa que hay una transición negativa de la categoría adulto grande a la categoría adulto pequeños. Usando la misma función *IsPositive* podemos comprobar que la matriz no es no negativa, ya que el valor devuelto será "FALSE". Esto significa que la matriz no es válida para el análisis de dinámica transitoria y no se puede esperar que la población alcance una estructura estable y una tasa de crecimiento constante a largo plazo.
+
+```{r}
+#Capturar los datos de la matriz para L. rubripetala (Tremblay et al. 2015)
+Lr1_No_pos<- matrix(c(0.4324, 0,      0,     0.15,
+               0.3784, 0.8459, 0,     0,
+               0,      0.0034, 0.7954,-0.2300,
+               0,      0.0890, 0.1841,0.7510), byrow=TRUE,ncol=4)
+
+
+
+IsPositive(Lr1_No_pos)
+
+
+```
+
+
+
+***
+
+## Irreducibilidad
+
+La matriz de transición poblacional debe ser irreducible, lo que significa que todos los elementos de la matriz están conectados y hay una ruta desde cualquier estadio o otro estadios. Esto es importante porque si la matriz no es irreducible, entonces no se puede esperar que la población alcance una estructura estable y una tasa de crecimiento constante a largo plazo. En el caso de *Lepanthes rubripetala* la matriz es irreducible, ya que todos sus elementos están conectados y hay una ruta desde cualquier categoría de edad o etapa a todas las otras categorías. Usando la función *isIrreducible* del paquete **popdemo** podemos comprobar que la matriz es irreducible, ya que el valor devuelto será "FALSE". Aun que hay matriz que son reducible y pueden ser aceptable.   Por ejemplo, especies que tiene una etapa de vida que no es importante para el crecimiento poblacional, tal como las etapas por reproductiva en mamíferos (humanos, ballenas, etc.).  
+
+Nota aquí que la función *isIrreducible* devuelve "TRUE" si la matriz es irreducible y "FALSE" si no lo es. En el caso de *Lepanthes rubripetala* la matriz es irreducible. Esto significa que todos los elementos de la matriz están conectados y hay una ruta desde cualquier categoría de edad o etapa a todas las otras categorías, lo que permite que la población alcance una estructura estable y una tasa de crecimiento constante a largo plazo.
+
+```{r}
+isIrreducible(Lr1)
+```
+
+Aquí se añade un ejemplo de una matriz valores de reproducción al cuarto estadio, dando un resultado de "FALSE", lo que significa que la matriz es irreducible. Esto significa que no hay una ruta desde la categoría plántula a la categoría adulto reproductivo y o que no hay reproducción lo que no termina el ciclo de vida.
+
+```{r}
+Lr1_Irr <- matrix(c(0.4324,  0.,       0.0,     0,
+                    0.3784,  0.8459,   0,       0,
+                    0.,      0.0034,   0.7954,  0.2300,
+                    0,       0.0890,   0.1841,  0.7510), byrow=TRUE,ncol=4)
+
+isIrreducible(Lr1_Irr)
+```
+
+
+***
+
+## Primitividad
+
+La matriz de transición poblacional debe ser primitiva, lo que significa que al elevar la matriz a altas potencias, se obtiene un único valor positivo (i.e. tasa de crecimiento poblacional). Esto es importante porque si la matriz no es primitiva, entonces no se puede esperar que la población alcance una estructura estable y una tasa de crecimiento constante a largo plazo. En el caso de *Lepanthes rubripetala* la matriz es primitiva, ya que al elevarla a altas potencias se obtiene un único valor positivo. Usando la función *isPrimitive* del paquete **popdemo** podemos comprobar que la matriz es primitiva, ya que el valor devuelto será "TRUE".
+
+
+
 *Paso 2: Comprobar que se cumplan los supuestos de la matriz de estudio*.
 
 Previo al análisis de dinámica transitoria se debe comprobar que la matriz de transición poblacional sea: a) *Cuadrada*, que tiene igual número de filas que de columnas, b) *No negativa*, que todos sus elementos son positivos, por lo que son iguales o mayores a 0.000; c) *Ergódica*, que el crecimiento asintótico es independiente de la estructura poblacional al inicio del estudio; d) *Irreducible*, que los elementos de la matriz de análisis y, por lo tanto, los nodos de la gráfica del ciclo de vida, estén fuertemente conectados, tengan una ruta y desde cualquiera de las etapas pueda llegar a todas las otras formando un ciclo; e) *Primitiva*, que el resultado de elevar a altas potencias una matriz irreducible positiva (i.e. sin elementos negativos) único y tenga un sólo valor positivo (i.e. tasa de crecimiento poblacional). Para más información sobre estas condiciones revisar: [@stott2010reducibility].
@@ -47,6 +159,12 @@ Previo al análisis de dinámica transitoria se debe comprobar que la matriz de 
 Para evaluar si la matriz es cuadrada, no negativa, ergódica, primitiva e irreducible se usan las siguientes funciones de *R*: *dim*, *isErgodic*, *isPrimitive* y *isIrreducible* respectivamente. A través del comando *positiv* se determinó si todos los elementos de la matriz son positivos, por lo tanto, iguales o mayores a 0.000. A continuación se comprueba si la matriz de *L. rubripetala* cumple con estas condiciones o supuestos.
 
 ## PASO 2: CONDICIONES QUE DEBE CUMPLIR LA MATRIZ DE ESTUDIO
+
+## Ergocidad
+
+## Matriz Primitiva
+
+## Matriz Ireducible
 
 ```{r Indice3}
 
