@@ -8,6 +8,7 @@ Autores: "Mariana Hernández Apolinar y Paola Portillo Tzompa"
 
 library(popdemo)
 library(tidyverse)
+library(cowplot)
 
 ```
 
@@ -269,7 +270,7 @@ tf6 <- tfa_lambda(Lr1, d = c(0, 0, 1, 0),
 
 #Gráfica de la dinámica poblacional
 plot(tf6, ann = FALSE)
-title(main = "Dinámica poblacional (Adultos No rep - Adultos  No reproductivos)", ylab = "Lambda", xlab = "p")
+title(main = "Dinámica poblacional (Adultos No rep - Adultos No reproductivos)", ylab = "Lambda", xlab = "p")
 
 #Cálculo de lambda-max:
 lambda6 <- Re(eigen(Lr1)$values[1]) 
@@ -293,7 +294,7 @@ tf7 <- tfa_lambda(Lr1, d = c(0,0,0,1),
 
 #Gráfica de la dinámica poblacional
 plot(tf7, ann = FALSE)
-title(main = "Dinámica poblacional (Adultos No rep - Adultos No rep)", ylab = "Lambda", xlab = "p")
+title(main = "Dinámica poblacional (Adultos No rep - Adultos rep)", ylab = "Lambda", xlab = "p")
 
 #Cálculo de lambda-max:
 lambda7 <- Re(eigen(Lr1)$values[1]) 
@@ -373,18 +374,124 @@ sens10 <- tfs_lambda(Lr1, d = c(0,0,0,1), e = c(0,0,0,1))
 #Agregar la línea, especificando el intercepto y la pendiente
 abline(lambda10, sens10, lty = 2, col = "red")
 
+```
+
+En esta sección se desarrolla las funciones para crear un gráfico con ggplot2.  Este sección es solamente de utilidad si quiere publicar la visualización de análisis de la funciones de transferencia en un artículo científico o una presentación.
+
+
+
+```{r, mesage=FALSE, warning=FALSE}
+
+tf1df=as.data.frame(tf1)
+tf1tf=ggplot2::ggplot() +
+  ggplot2::geom_line(data = tf1df, aes(x = p, y = lambda), color = "blue") +
+  ggplot2::geom_abline(slope = sens1, intercept = lambda1, linetype = "dashed", color = "red") +
+  #ggplot2::labs(title = "P - P", x = "p", y = "Lambda") +
+  ggplot2::theme_minimal()+
+  ylab("")+xlab("")+
+  theme(axis.text.x = element_text(angle = 45, size=6),
+        axis.text.y = element_text(size=6))
+  
+
+
+tf2df=as.data.frame(tf2)
+tf2tf=ggplot2::ggplot() +
+  ggplot2::geom_line(data = tf2df, aes(x = p, y = lambda), color = "blue") +
+  ggplot2::geom_abline(slope = sens2, intercept = lambda2, linetype = "dashed", color = "red") +
+ # ggplot2::labs(title = "P - J", x = "p", y = "Lambda") +
+  ggplot2::theme_minimal()+
+  ylab("")+xlab("")+
+  theme(axis.text.x = element_text(angle = 45, size=6),
+        axis.text.y = element_text(size=6))
+
+tf3df=as.data.frame(tf3)
+tf3tf=ggplot2::ggplot() +
+  ggplot2::geom_line(data = tf3df, aes(x = p, y = lambda), color = "blue") +
+  ggplot2::geom_abline(slope = sens3, intercept = lambda3, linetype = "dashed", color = "red") +
+  #ggplot2::labs(title = "J - J", x = "p", y = "Lambda") +
+  ggplot2::theme_minimal()+
+  ylab("")+xlab("")+
+  theme(axis.text.x = element_text(angle = 45, size=6),
+        axis.text.y = element_text(size=6))
+
+tf4df=as.data.frame(tf4)
+
+tf4tf=ggplot2::ggplot() +
+  ggplot2::geom_line(data = tf4df, aes(x = p, y = lambda), color = "blue") +
+  ggplot2::geom_abline(slope = sens4, intercept = lambda4, linetype = "dashed", color = "red") +
+ # ggplot2::labs(title = "J - NR", x = "p", y = "Lambda") +
+  ggplot2::theme_minimal()+
+  ylab("")+xlab("")+
+  theme(axis.text.x = element_text(angle = 45, size=6),
+        axis.text.y = element_text(size=6))
+
+tf5df=as.data.frame(tf5)
+
+tf5tf=ggplot2::ggplot() +
+  ggplot2::geom_line(data = tf5df, aes(x = p, y = lambda), color = "blue") +
+  ggplot2::geom_abline(slope = sens5, intercept = lambda5, linetype = "dashed", color = "red") +
+ # ggplot2::labs(title = "J - A", x = "p", y = "Lambda") +
+  ggplot2::theme_minimal()+
+  ylab("")+xlab("")+
+  theme(axis.text.x = element_text(angle = 45, size=6),
+        axis.text.y = element_text(size=6))
+
+tf6df=as.data.frame(tf6)
+
+tf6tf=ggplot2::ggplot() +
+  ggplot2::geom_line(data = tf6df, aes(x = p, y = lambda), color = "blue") +
+  ggplot2::geom_abline(slope = sens6, intercept = lambda6, linetype = "dashed", color = "red") +
+  #ggplot2::labs(title = "NR - NR", x = "p", y = "Lambda") +
+  ggplot2::theme_minimal()+
+  ylab("")+xlab("")+
+  theme(axis.text.x = element_text(angle = 45, size=6),
+        axis.text.y = element_text(size=6))
+
+tf7df=as.data.frame(tf7)
+
+tf7tf=ggplot2::ggplot() +
+  ggplot2::geom_line(data = tf7df, aes(x = p, y = lambda), color = "blue") +
+  ggplot2::geom_abline(slope = sens7, intercept = lambda7, linetype = "dashed", color = "red") +
+ # ggplot2::labs(title = "NR - A", x = "p", y = "Lambda") +
+  ggplot2::theme_minimal()+
+  ylab("")+xlab("")+
+  theme(axis.text.x = element_text(angle = 45, size=6),
+        axis.text.y = element_text(size=6))
+
+tf8df=as.data.frame(tf8)
+
+tf8tf=ggplot2::ggplot() +
+  ggplot2::geom_line(data = tf8df, aes(x = p, y = lambda), color = "blue") +
+  ggplot2::geom_abline(slope = sens8, intercept = lambda8, linetype = "dashed", color = "red") +
+ # ggplot2::labs(title = "A - F", x = "p", y = "Lambda") +
+  ggplot2::theme_minimal()+
+  ylab("")+xlab("")+
+  theme(axis.text.x = element_text(angle = 45, size=6),
+        axis.text.y = element_text(size=6))
+
+tf9df=as.data.frame(tf9)
+
+tf9tf=ggplot2::ggplot() +
+  ggplot2::geom_line(data = tf9df, aes(x = p, y = lambda), color = "blue") +
+  ggplot2::geom_abline(slope = sens9, intercept = lambda9, linetype = "dashed", color = "red") +
+ # ggplot2::labs(title = "A - NR", x = "p", y = "Lambda") +
+  ggplot2::theme_minimal()+
+  ylab("")+xlab("")+
+  theme(axis.text.x = element_text(angle = 45, size=6),
+        axis.text.y = element_text(size=6))
+
+
+
 
 tf10df=as.data.frame(tf10)
-ggplot2::ggplot() +
+tf10tf=ggplot2::ggplot() +
   ggplot2::geom_line(data = tf10df, aes(x = p, y = lambda), color = "blue") +
   ggplot2::geom_abline(slope = sens10, intercept = lambda10, linetype = "dashed", color = "red") +
-  ggplot2::labs(title = "Adultos rep - Adultos rep", x = "p", y = "Lambda") +
-  ggplot2::theme_minimal()
-
-
-tf10i=tfa_inertia(Lr1, vector = nLr0, d = c(0, 0, 0, 1), e = c(0, 0, 1, 1), prange = seq(-0.7, .22, 0.001))
-
-plot(tf10i, ylim = c(0.75, 1.05), main = "Inercia poblacional", cex.axis = 1.4, cex.lab = 1.5)
+  #ggplot2::labs(title = "A - A", x = "p", y = "Lambda") +
+  ggplot2::theme_minimal()+
+  ylab("")+xlab("")+
+  theme(axis.text.x = element_text(angle = 45, size=6),
+        axis.text.y = element_text(size=6))
 
 
 
@@ -392,6 +499,39 @@ plot(tf10i, ylim = c(0.75, 1.05), main = "Inercia poblacional", cex.axis = 1.4, 
 
 
 ```{r}
+
+label <- substitute(
+  paste(rho)
+)
+
+cowplot::plot_grid(tf1tf, NULL, NULL, tf8tf,
+                   tf2tf, tf3tf, NULL, NULL,  
+                   NULL,  tf4tf, tf6tf, tf9tf,
+                   NULL,  tf5tf,tf7tf,  tf10tf, 
+                   ncol = 4, nrow = 4)+
+cowplot::draw_label("Lambda", x = 0.05, y = 0.5, vjust = -1, size = 14, angle = 90, hjust = 0.5)+
+cowplot::draw_label(label, x = 0.5, y = -0.01, vjust = -1, size = 14, hjust = 0.5)
+
+
+```
+
+La misma figura, pero con mucho menos trabajo.  Este script es lo preferido para evaluar la elasticidad no lineal de las funciones de transferencia. Aunque en esta figura no se demuestra el efecto de la sensibilidad, es posible agregarlo con la función `abline` como se hizo en los ejemplos anteriores.
+
+
+```{r}
+tfmat=tfam_lambda(Lr1)
+plot(tfmat)
+```
+
+
+
+
+El siguiente grafico muestra la inercia de la población de *L. rubripetala* en el ciclo de vida. La definici´ron de inercia ....
+
+
+
+```{r}
+
 #Definir márgenes
 par(mfrow = c(4,4))
 par(mfg = c(1,1))
@@ -401,8 +541,7 @@ tfmatriz <- tfam_inertia(Lr1,vector = nLr0)
 plot(tfmatriz,  xlab="Lambda", ylab="Inercia", cex.axis=1.4, cex.lab=1.5)
 
 
-tfmat=tfam_lambda(Lr1)
-plot(tfmat)
+
  
 ```
 
