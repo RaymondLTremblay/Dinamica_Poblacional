@@ -12,39 +12,31 @@ library(cowplot)
 
 ```
 
-
 ## La elasticidad no lineal
 
 La elasticidad no lineal [@hodgson2004methodological] se refiere a que los análisis de elasticidad [@caswell2000matrix; @de2000elasticities] como explicado en el capitulo xx no son estrictamente lineal y que las perturbaciones en una población pueden tener efectos no lineales en las respuestas de los parámetros de densidad o indices de crecimientos [@bialic2018using]. Se asume el capitulo de "Elasticidad" que el efecto de un cambio en los parámetros de la matriz tenga un efecto lineal sobre $\lambda$, por consecuencia los análisis de elasticidad tradicional se pueden aplicar cuando los cambios en la matriz son pequeñas. Cambios más grande pueden resultar en efectos no lineales, y por consecuencia analisis de elasticticidad pueden ser suboptimal cuando la magnitud de las perturbaciones sean más grande [@bialic2018using]. Si las perturbaciones son pequeñas el uso de análisis de elasticidad pudiesen ser aceptable, por consecuencia los efectos no lineales pueden ser ignorados, pero si las perturbaciones son grandes, los efectos no lineales pueden ser importantes y impactar los procesos de dinámica poblacionales. En los análisis de dinámica poblacional estamos interesado a no solamente el crecimiento de la población pero que pudiese pasar si hubiese cambios pequeños y grandes en los parámetros de la matriz sobre los indices de crecimiento y densidad poblacional tal como la supervivencia, crecimiento y fecundidad. La elasticidad no lineal es una herramienta que permite evaluar esos cambios que sean por causa naturales tal como variación ambientales (sucesión, deslizamiento de terreno, mortandad de forófito, cambio climatológico), o antropogénicos (extracción de individuos o hasta manejo del sitio para promover el crecimiento de la población). Es importante reconocer que los análisis de elasticidad y sensitividad ignoran los efectos de la dinámica de transiciones y provee una aproximación linear de cambios que muchas veces no son lineales [@stott2012beyond].
 
 La elasticidad no lineal es una herramienta que permite evaluar esos cambios que sean por causa naturales tal como variación ambientales (sucesión, deslizamiento de terreno, mortandad de forófito, cambio climatológico), o antropogénicos (extracción de individuos o hasta manejo del sitio para promover el crecimiento de la población).
 
-***
+------------------------------------------------------------------------
 
 ## Metodología
 
 El método que presentamos aquí es el desarrollado por Hodgson y Townley (2004) [@hodgson2004methodological; @stott2012beyond], los cuales presentan un método para calcular la elasticidad no lineal. No se discutirá en detalle el método, pero se presentará un ejemplo de como calcular la elasticidad no lineal.
 
-Para describir de un poco la metodología del método de elasticidad no lineal, se debe considerar que la matriz de proyección poblacional $A$ es una matriz de transición que describe el ciclo de vida de una población donde los elementos es perturbado por una magnitud $\delta$ determinado por los vectores $d$ y $e$. donde $e^T$ representa $e$ transposed por una columna a un vector de fila. Cuando $d*e^T$ son multiplicado forma una matriz para determinar cual de los elementos vitales son perturbado. Nota que el acercamiento usado es bien conocido en la literatura de control sistemas. 
+Para describir de un poco la metodología del método de elasticidad no lineal, se debe considerar que la matriz de proyección poblacional $A$ es una matriz de transición que describe el ciclo de vida de una población donde los elementos es perturbado por una magnitud $\delta$ determinado por los vectores $d$ y $e$. donde $e^T$ representa $e$ transposed por una columna a un vector de fila. Cuando $d*e^T$ son multiplicado forma una matriz para determinar cual de los elementos vitales son perturbado. Nota que el acercamiento usado es bien conocido en la literatura de control sistemas.
 
+$$A_{\delta}=\ A\ +\ \delta de^T$$ Tanto como $A$ tiene una propriedades emergentes tal como el crecimiento asimptótico, $\lambda_{max}$ y el eigenvector derecho $v$ y el eigenvector izquierdo $w$ que son asociados con $\lambda_{max}$, $A_{\delta}$ también tiene propriedades emergentes tal como el crecimiento asimptotico, su estructura estable de estadios y valores reproductivos. El valor de $\delta$ representa los valores continuos de perturbaciones que corresponde a los cambios en los elementos de la matriz $\lambda_{max}(A_\delta)$. La relación exacta entre $\delta$ y $\lambda_{max}$ se describe
 
-$$A_{\delta}=\ A\ +\ \delta de^T$$
-Tanto como $A$ tiene una propriedades emergentes tal como el crecimiento asimptótico, $\lambda_{max}$ y el eigenvector derecho $v$ y el eigenvector izquierdo $w$ que son asociados con $\lambda_{max}$, $A_{\delta}$ también tiene propriedades emergentes tal como el crecimiento asimptotico, su estructura estable de estadios y valores reproductivos. El valor de $\delta$ representa los valores continuos de perturbaciones que corresponde a los cambios en los elementos de la matriz $\lambda_{max}(A_\delta)$.  La relación exacta entre $\delta$ y $\lambda_{max}$ se describe 
+$$\delta^{-1}=e^T\left(\lambda I-A\right)^{-1}d$$ donde $I$ es la matriz identidad de la misma dimensión de $A$. Esta es la ecuación de las elasticidades no lineal. Vea el trabajo de Stott et al. (2012) [@stott2012beyond] para una discusión más detallada y pruebas de la metodología.
 
-$$\delta^{-1}=e^T\left(\lambda I-A\right)^{-1}d$$
-donde $I$ es la matriz identidad de la misma dimensión de $A$. Esta es la ecuación de las elasticidades no lineal. Vea el trabajo de Stott et al. (2012) [@stott2012beyond] para una discusión más detallada y pruebas de la metodología.
+Para entender el método de elasticidad no lineal, usaremos un ejemplo de *Lepanthes rupripetala*. Los datos provienen de [@tremblay2015stable], donde se evaluó la ventaja de usar el método que sigue para tener una mejor apreciación de la dinámica de la especie. En este caso, la matriz describe las transiciones entre plántula (PL), juvenil (J), no reproductivo (NR) y adulto reproductivo (AR).
 
-
-
-Para entender el método de elasticidad no lineal, usaremos un ejemplo de *Lepanthes rupripetala*. Los datos provienen de [@tremblay2015stable], donde se evaluó la ventaja de usar el método que sigue para tener una mejor apreciación de la dinámica de la especie.  En este caso, la matriz describe las transiciones entre plántula (PL), juvenil (J), no reproductivo (NR) y adulto reproductivo (AR).
-
-***
+------------------------------------------------------------------------
 
 ## Ejemplo tradicional
 
 Aquícapturamos la matriz de Lefkovitch para la planta *Lepanthes rubripetala*.
-
-
 
 ```{r transF1, message=FALSE}
 
@@ -64,8 +56,7 @@ Lr1
 
 ```
 
-
-***
+------------------------------------------------------------------------
 
 ## Elasticidad Lineal
 
@@ -81,20 +72,17 @@ elasticidad<- round(elas(Lr1), digit = 3)
 elasticidad
 ```
 
-***
+------------------------------------------------------------------------
 
-
-## Métodos funciones de transferencia sobre lambda   
-
-
+## Métodos funciones de transferencia sobre lambda
 
 En el paquete de R `popdemo` se puede calcular la elasticidad no lineal *transfer function* con la función **tfam_lambda**. La función **tfam_lambda** calcula la elasticidad no lineal de la matriz de edad o de etapas de cada elemento de la matriz A que no sean 0 (zero) con respeto al cambio en $\lambda$. Esa función es practica para visualizar como las perturbaciones en las transiciones del ciclo de vida impacto $\lambda$ y observar la no-linealidad de los efectos.
 
-La función **tfam_lambda** calcula la elasticidad no lineal de la matriz de edad o de etapas de cada elemento de la matriz A que no sean 0 (zero) con respeto al cambio en $\lambda$. 
+La función **tfam_lambda** calcula la elasticidad no lineal de la matriz de edad o de etapas de cada elemento de la matriz A que no sean 0 (zero) con respeto al cambio en $\lambda$.
 
 Por cada elemento en la matriz se genera un gráfico en la misma posición de la matriz *matA*. Donde no hay valores de transiciones, estasis o fecundidad no hay presentación de efecto de funciones de transferencia. En esta población de *Lepanthes rupripetala* hay 10 gráficos, de las 10 transiciones, estasis o fecundidad, 9 tienen un efecto no lineal sobre lambda. Nota primero que el rango de los ejes de "x" (efecto de perturbaciones) y la "y" el crecimiento poblacional intrínsico varia por cada gráfico. La transición de plántula a plántula tiene efecto no lineal sobre lambda bastante pronunciado (primer cuadro a la izquierda primera fila). Se observa que aumentar la proporción de individuos que se quedan en esta etapa no tiene mucho efecto hasta que la perturbación aumenta de ± 0.5, y después el efecto es bastante consistente.
 
-El efecto de perturbación de la transición de juvenil a no reproductivo tiene un efecto casi lineal sobre lambda. La transición de juvenil a adulto reproductivo tiene un efecto no lineal sobre lambda. La transición de no reproductivo a adulto reproductivo tiene un efecto no lineal.  
+El efecto de perturbación de la transición de juvenil a no reproductivo tiene un efecto casi lineal sobre lambda. La transición de juvenil a adulto reproductivo tiene un efecto no lineal sobre lambda. La transición de no reproductivo a adulto reproductivo tiene un efecto no lineal.
 
 ```{r transF3}
 
@@ -105,18 +93,17 @@ tfmat_lamb=tfam_lambda(Lr1)
 plot(tfmat_lamb)
 ```
 
-***
+------------------------------------------------------------------------
 
-## Métodos funciones de transferencia sobre la inercia 
+## Métodos funciones de transferencia sobre la inercia
 
-La función **tfam_inertia** calcula cuan grande o pequeña una población que no este a su equilibro estable puede ser perturbada por consecuencia de dinámica de transiciones al comparar con una población estable equivalente. Stott y colegas [@stott2012beyond] presentan no solamente que el efecto de perturbaciones no es lineal sobre el cambio en lambda pero también sobre la inercia, entonces el efecto que tiene sobre poblaciones que no estén a su equilibrio estable.  Cuando una población esta en estado de equilibrio estable se predice que el crecimiento o reducción poblacional sigue una razón de geométrica constante y que la estructura de la población no cambia. Cuando una población no esta en equilibrio estable, el crecimiento poblacional puede ser variable y la estructura de la población puede cambiar. 
+La función **tfam_inertia** calcula cuan grande o pequeña una población que no este a su equilibro estable puede ser perturbada por consecuencia de dinámica de transiciones al comparar con una población estable equivalente. Stott y colegas [@stott2012beyond] presentan no solamente que el efecto de perturbaciones no es lineal sobre el cambio en lambda pero también sobre la inercia, entonces el efecto que tiene sobre poblaciones que no estén a su equilibrio estable. Cuando una población esta en estado de equilibrio estable se predice que el crecimiento o reducción poblacional sigue una razón de geométrica constante y que la estructura de la población no cambia. Cuando una población no esta en equilibrio estable, el crecimiento poblacional puede ser variable y la estructura de la población puede cambiar.
 
 Usamos la misma terminología de Stott [@stott2012beyond] para calcular el efecto de elasticidad sobre la inercia de la matriz de *L. rubripetala*. Se evalúa el efecto del basado en la estructura del vector de estado inicial. En otra palabra si la cantidad de individuos se encuentra en un estado específico. El "upper" seria los individuos en la etapa mayor (en este caso los adultos reproductivos), el "lower" en la etapa menor (en las plántulas) y una estructura de población en al inicio del estudio.
 
-Para evaluar el efecto de no lineal de la inercia poblacional, se usa la función **tfa_inertia**. Esta función calcula la inercia poblacional de una matriz de proyección poblacional y un vector de estado inicial. En la secuencia de análisis que sigue se evalúa el efecto de perturbaciones de cada una de la transiciones, estasis y fecundidades de la matriz de proyección poblacional. 
+Para evaluar el efecto de no lineal de la inercia poblacional, se usa la función **tfa_inertia**. Esta función calcula la inercia poblacional de una matriz de proyección poblacional y un vector de estado inicial. En la secuencia de análisis que sigue se evalúa el efecto de perturbaciones de cada una de la transiciones, estasis y fecundidades de la matriz de proyección poblacional.
 
 Nota que los vectores *e* y *d* son los vectores de perturbación que representan la transición de un estado a otro. En este caso, el vector *d* representa el estado inicial y el vector *e* representa el estado final. Por ejemplo, si se quiere evaluar el efecto de la transición de plántula a plántula, se usa *d = c(1, 0, 0, 0)* y *e = c(1, 0, 0, 0)*, o si quiere el efecto de adultos reproductivos sobre no reproductivos se usa *d = c(0, 0, 0, 1)* y *e = c(0, 0, 1, 0)*.
-
 
 ```{r transF4}
 
@@ -136,18 +123,17 @@ abline(inertia, sens2, lty=2, col="red") # Para añadir el efecto lineal
 
 ```
 
+------------------------------------------------------------------------
 
-***
-
-### Estructura dominado por la primera o última estidios 
+### Estructura dominado por la primera o última estidios
 
 Hay algunas funciones de transferencia que son establecido en los scripts.
 
-- bound ="upper" es para evaluar la inercia poblacional cuando todos los individuos están en el último estadio (en este caso los adultos reproductivos).
-- bound = "lower" es para evaluar la inercia poblacional cuando todos los individuos están en el primer estadio (en este caso las plántulas).
-- vector = n0 es para evaluar la inercia poblacional cuando los individuos están en la estructura de población inicial (en este caso las plántulas, juveniles, no reproductivos y adultos reproductivos) o una distribución especifica.
+-   bound ="upper" es para evaluar la inercia poblacional cuando todos los individuos están en el último estadio (en este caso los adultos reproductivos).
+-   bound = "lower" es para evaluar la inercia poblacional cuando todos los individuos están en el primer estadio (en este caso las plántulas).
+-   vector = n0 es para evaluar la inercia poblacional cuando los individuos están en la estructura de población inicial (en este caso las plántulas, juveniles, no reproductivos y adultos reproductivos) o una distribución especifica.
 
-***
+------------------------------------------------------------------------
 
 En el siguiente ejemplo se evalúa la inercia poblacional de la matriz de *L. rubripetala* cuando todos los individuos están en el último estadio (adultos reproductivos), cuando todos los individuos están en el primer estadio (plántulas) y cuando los individuos están en la estructura de población inicial.
 
@@ -157,9 +143,9 @@ tfmatU=tfam_inertia(Lr1, bound = "upper") # donde todos los individuos están en
 plot(tfmatU, cex.axis=1.4, cex.lab=1.5) # gráfica de la inercia poblacional
 ```
 
-***
+------------------------------------------------------------------------
 
-La inercia poblacional es el límite más alto en el crecimiento de la población antes de alcanzar la tasa constante de crecimiento poblacional. En este caso, la inercia poblacional es de 1.5, lo que significa que la población puede crecer hasta un 50% antes de alcanzar la tasa constante de crecimiento poblacional. 
+La inercia poblacional es el límite más alto en el crecimiento de la población antes de alcanzar la tasa constante de crecimiento poblacional. En este caso, la inercia poblacional es de 1.5, lo que significa que la población puede crecer hasta un 50% antes de alcanzar la tasa constante de crecimiento poblacional.
 
 ```{r transF5}
 n0 <- c(0, 46, 38, 82)
@@ -173,7 +159,7 @@ tfmatL=tfam_inertia(Lr1, bound = "lower") # donde todos los individuos están en
 plot(tfmat_I)
 ```
 
-***
+------------------------------------------------------------------------
 
 La inercia poblacional es el límite más bajo en el crecimiento de la población antes de alcanzar la tasa constante de crecimiento poblacional. En este caso, la inercia poblacional es de 0.5, lo que significa que la población puede decrecer hasta un 50% antes de alcanzar la tasa constante de crecimiento poblacional.
 
@@ -185,17 +171,15 @@ plot(tfmatL)
 
 ```
 
-El efecto de perturbación basado sobre la inercia de las estadios cambia mucho si la población esta dominado por individuos en el primer estadio o el último estadio. En el caso de la inercia poblacional, el efecto de perturbación es más grande cuando la población esta dominado por individuos en el último estadio (adultos reproductivos) que cuando la población esta dominado por individuos en el primer estadio (plántulas). Esto se debe a que los adultos reproductivos tienen un mayor impacto sobre la tasa de crecimiento poblacional que las plántulas. 
+El efecto de perturbación basado sobre la inercia de las estadios cambia mucho si la población esta dominado por individuos en el primer estadio o el último estadio. En el caso de la inercia poblacional, el efecto de perturbación es más grande cuando la población esta dominado por individuos en el último estadio (adultos reproductivos) que cuando la población esta dominado por individuos en el primer estadio (plántulas). Esto se debe a que los adultos reproductivos tienen un mayor impacto sobre la tasa de crecimiento poblacional que las plántulas.
 
-
-***
-
+------------------------------------------------------------------------
 
 ## Funciones de transferencia
 
 En la siguiente sección se presentan las funciones de transferencia para evaluar el efecto de perturbaciones en la matriz de proyección poblacional de *Lepanthes rupripetala* para cada una de la 10 transiciones, estasis y reproducción sobre $\lambda$.
 
-Reiteramos que la perturbación de la estructura está determinada por dos vectores *d* y *e*. El vector *d* representa el estado inicial y el vector *e* representa el estado final. Por ejemplo, si se quiere evaluar el efecto de la transición de plántula a plántula, se usa *d = c(1, 0, 0, 0)* y *e = c(1, 0, 0, 0)*.  Note aquí que la linea de **abline** es la línea de regresión que representa el efecto lineal de la perturbación sobre la tasa de crecimiento poblacional $\lambda$. La pendiente de la línea de regresión es la sensibilidad de la perturbación sobre la tasa de crecimiento poblacional $\lambda$. Es muy claro que 
+Reiteramos que la perturbación de la estructura está determinada por dos vectores *d* y *e*. El vector *d* representa el estado inicial y el vector *e* representa el estado final. Por ejemplo, si se quiere evaluar el efecto de la transición de plántula a plántula, se usa *d = c(1, 0, 0, 0)* y *e = c(1, 0, 0, 0)*. Note aquí que la linea de **abline** es la línea de regresión que representa el efecto lineal de la perturbación sobre la tasa de crecimiento poblacional $\lambda$. La pendiente de la línea de regresión es la sensibilidad de la perturbación sobre la tasa de crecimiento poblacional $\lambda$. Es muy claro que
 
 ```{r transF6}
 
@@ -225,9 +209,9 @@ sens1 <- tfs_lambda(Lr1, d = c(1, 0, 0, 0), e = c(1, 0, 0, 0))
 abline(lambda1, sens1, lty = 2, col = "red")
 ```
 
-***
+------------------------------------------------------------------------
 
-Perturbación de la transición de plántula a juvenil tiene un efecto no lineal sobre lambda, pero esta no linealidad se observa si la perturbaciones son bastante grande. Se observa que aumentar la perturbación es casi no tiene efecto sobre lambda hasta una perturbación de .10 donde el efecto es grande. 
+Perturbación de la transición de plántula a juvenil tiene un efecto no lineal sobre lambda, pero esta no linealidad se observa si la perturbaciones son bastante grande. Se observa que aumentar la perturbación es casi no tiene efecto sobre lambda hasta una perturbación de .10 donde el efecto es grande.
 
 ```{r}
 
@@ -253,9 +237,9 @@ abline(lambda2, sens2, lty = 2, col = "red")
 
 ```
 
-***
+------------------------------------------------------------------------
 
-El efecto de perturbaciones de la transición de juvenil a juvenil tiene un efecto no lineal sobre lambda, el efecto lineal se observa si la perturbaciones son muy pequeñas y en un rango bien limitado (0.05 a 0.0). Se observa que aumentar la proporción de individuos que se quedan en esta etapa no tiene mucho efecto hasta que la perturbación aumenta de -0.2, y después el efecto es drástico y una pequeña perturbación resulta en un efecto grande en $\lambda$, ya que la respuesta parece logarítmica. 
+El efecto de perturbaciones de la transición de juvenil a juvenil tiene un efecto no lineal sobre lambda, el efecto lineal se observa si la perturbaciones son muy pequeñas y en un rango bien limitado (0.05 a 0.0). Se observa que aumentar la proporción de individuos que se quedan en esta etapa no tiene mucho efecto hasta que la perturbación aumenta de -0.2, y después el efecto es drástico y una pequeña perturbación resulta en un efecto grande en $\lambda$, ya que la respuesta parece logarítmica.
 
 ```{r}
 
@@ -280,10 +264,9 @@ abline(lambda3, sens3, lty = 2, col = "red")
 
 ```
 
-***
+------------------------------------------------------------------------
 
-El efecto de perturbaciones de juvenil a no reproductivo casi es lineal por todo el rango.  
-
+El efecto de perturbaciones de juvenil a no reproductivo casi es lineal por todo el rango.
 
 ```{r}
 
@@ -309,7 +292,7 @@ sens4 <- tfs_lambda(Lr1, d = c(0, 1, 0, 0),
 abline(lambda4, sens4, lty = 2, col = "red")
 ```
 
-***
+------------------------------------------------------------------------
 
 El efecto de perturbación de juvenil a adulto tiene un efecto no lineal sobre lambda, pero esta no linealidad se observa y es más pronunciada si la perturbaciones son bastante grande. Se observa que aumentar la pertubación casi no tiene efecto sobre $\lambda$ hasta una perturbación de 0.2 donde el efecto es más pronunciado.
 
@@ -336,10 +319,9 @@ abline(lambda5, sens5, lty = 2, col = "red")
 
 ```
 
-***
+------------------------------------------------------------------------
 
-La perturbación de la transición de no reproductivo a no reproductivo tiene un efecto no lineal sobre lambda, y sumamente drástico. Un cambio menor en perturbación resulta en un cambio drástico en el crecimiento de la porblación. 
-
+La perturbación de la transición de no reproductivo a no reproductivo tiene un efecto no lineal sobre lambda, y sumamente drástico. Un cambio menor en perturbación resulta en un cambio drástico en el crecimiento de la porblación.
 
 ```{r}
 
@@ -366,7 +348,7 @@ abline(lambda6, sens6, lty = 2, col = "red")
 
 ```
 
-***
+------------------------------------------------------------------------
 
 El efecto de perturbación de adultos no reproductivos a adultos reproductivos tiene un efecto casi lineal cuando las perturbaciones son pequeñas, pero demuestra un efecto no lineal sobre lambda cuando las perturbaciones son grandes.
 
@@ -392,10 +374,9 @@ abline(lambda7, sens7, lty = 2, col = "red")
 
 ```
 
-***
+------------------------------------------------------------------------
 
-El efecto de reproducción de adultos reproductivos a plántulas tiene un efecto lineal sobre lambda, pero la pendiente es bien distinta de la de sensitividad. 
-
+El efecto de reproducción de adultos reproductivos a plántulas tiene un efecto lineal sobre lambda, pero la pendiente es bien distinta de la de sensitividad.
 
 ```{r}
 #8) Entrada de la matriz a(1,4): adultos reproductivos a plántulas
@@ -420,9 +401,9 @@ abline(lambda8, sens8, lty = 2, col = "red")
 
 ```
 
-***
+------------------------------------------------------------------------
 
-El efecto de perturbación de adultos reproductivos a no reproductivos tiene un efecto no lineal sobre lambda, pero no cambia mucho cuando las perturbaciones son pequeñas. 
+El efecto de perturbación de adultos reproductivos a no reproductivos tiene un efecto no lineal sobre lambda, pero no cambia mucho cuando las perturbaciones son pequeñas.
 
 ```{r}
 
@@ -448,7 +429,7 @@ abline(lambda9, sens9, lty = 2, col = "red")
 
 ```
 
-***
+------------------------------------------------------------------------
 
 La perturbaciones de adultos reproductivos a adultos reproductivos tiene un efecto no lineal sobre lambda. Nota que a aumentar la supervivencia de adultos reproductivos resulta positivo en el $\lambda$.
 
@@ -475,15 +456,11 @@ abline(lambda10, sens10, lty = 2, col = "red")
 
 ```
 
-
-***
+------------------------------------------------------------------------
 
 ## Matriz de figuras de las funciones de transferencia usando ggplot2
 
-
-En esta sección se desarrolla las funciones para crear un gráfico con ggplot2.  Este sección es solamente de utilidad si quiere publicar la visualización de análisis de la funciones de transferencia en un artículo científico o una presentación.
-
-
+En esta sección se desarrolla las funciones para crear un gráfico con ggplot2. Este sección es solamente de utilidad si quiere publicar la visualización de análisis de la funciones de transferencia en un artículo científico o una presentación.
 
 ```{r, mesage=FALSE, warning=FALSE}
 
@@ -602,7 +579,6 @@ tf10tf=ggplot2::ggplot() +
 
 ```
 
-
 ```{r}
 
 label <- substitute(
@@ -620,27 +596,22 @@ cowplot::draw_label(label, x = 0.5, y = -0.01, vjust = -1, size = 14, hjust = 0.
 
 ```
 
-***
+------------------------------------------------------------------------
+
 ## tfam_Lambda
 
-La misma figura, pero con mucho menos trabajo.  Este script es lo preferido para evaluar la elasticidad no lineal de las funciones de transferencia. Aunque en esta figura no se demuestra el efecto de la sensibilidad, es posible agregarlo con la función `abline` como se hizo en los ejemplos anteriores.
-
+La misma figura, pero con mucho menos trabajo. Este script es lo preferido para evaluar la elasticidad no lineal de las funciones de transferencia. Aunque en esta figura no se demuestra el efecto de la sensibilidad, es posible agregarlo con la función `abline` como se hizo en los ejemplos anteriores.
 
 ```{r}
 tfmat=tfam_lambda(Lr1)
 plot(tfmat)
 ```
 
-
-
-***
+------------------------------------------------------------------------
 
 ## Inercia poblacional de *Lepanthes rubripetala*
 
-
 El siguiente gráfico muestra la inercia de la población de *L. rubripetala* en el ciclo de vida. La definición de inercia ....
-
-
 
 ```{r}
 
@@ -657,19 +628,14 @@ plot(tfmatriz,  xlab="Lambda", ylab="Inercia", cex.axis=1.4, cex.lab=1.5)
  
 ```
 
-***
-
+------------------------------------------------------------------------
 
 Este sección esta como fuera se sitio...
 
-Aquí seria bueno mencionar algunos de los trabajos que usar este metodo y decir los que se observo y interpreto.  
+Aquí seria bueno mencionar algunos de los trabajos que usar este metodo y decir los que se observo y interpreto.
 
-Raventós y colaboradores [@raventos2015] (2015) estimaron el crecimiento poblacional de corto plazo de dos orquídeas epífitas después del paso de un huracán. Dado que a su paso se pierden individuos, se simuló si la re-entroducción de plántulas y adultos mitigaban los efectos de este fenómeno en Cuba. Los resultados sugieren que la re-introducción de adultos tiene un efecto positivo sobre
-
-
+Raventós y colaboradores [@raventos2015transient] (2015) estimaron el crecimiento poblacional de corto plazo de dos orquídeas epífitas después del paso de un huracán. Dado que a su paso se pierden individuos, se simuló si la re-entroducción de plántulas y adultos mitigaban los efectos de este fenómeno en Cuba. Los resultados sugieren que la re-introducción de adultos tiene un efecto positivo sobre
 
 Revisión:
 
 RLT 2025-06-03
-
-
