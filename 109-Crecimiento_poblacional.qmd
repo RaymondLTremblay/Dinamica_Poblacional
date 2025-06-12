@@ -88,7 +88,7 @@ También es fundamental tomar en cuenta que, $\lambda$ no es la tasa a la que se
 
 Los meta-análisis (Crone et al. 2013), en cambio, han demostrado que $\lambda$ es una medida robusta de las condiciones actuales, ya que ésta explica la dinámica de las poblaciones durante el período de tiempo en el que se parametrizaron los modelos. Asimismo, $\lambda$ es una buena medida del estado de la población, por lo que es una forma apropiada de comparar el comportamiento de las poblaciones bajo diferentes condiciones, incluyendo variación abiótica, biótica y de manejo. Por ejemplo, los valores de $\lambda$ permiten comparar el comportamiento de una población en distintos periodos de tiempo y con ello entender cómo la variación en las condiciones climáticas afecta su dinámica. Las comparaciones también pueden ser entre poblaciones de la misma especie distribuidas en distintos sitios, para entender los efectos de la variación en el manejo, la vegetación u otras diferencias entre sitios (vea el capitulo "Variación temporal y Espacial por simulaciones")
 
-***
+------------------------------------------------------------------------
 
 ## Calcular el incremento de crecimiento poblacional por año
 
@@ -128,11 +128,9 @@ plot(cambio$pop.size, type="b", xlab="Año", ylab="Tamaño poblacional", main="P
 
 ```
 
-
 ### Cambio en número de estadios por año proyectado
 
-Se puede gráficar la cantidad esperada de individuos en cada estadio por año proyectado, usando la función **stage.vector.plot** en el paquete **popbio**. En este caso, se observa que la población se proyecta a ser dominada por juveniles y plántulas, lo que es consistente con el valor de $\lambda$ calculado anteriormente.  El gráfico los visualiza por la proporciones de cada estadio en el periodo de tiempo correspondiente. 
-
+Se puede gráficar la cantidad esperada de individuos en cada estadio por año proyectado, usando la función **stage.vector.plot** en el paquete **popbio**. En este caso, se observa que la población se proyecta a ser dominada por juveniles y plántulas, lo que es consistente con el valor de $\lambda$ calculado anteriormente. El gráfico los visualiza por la proporciones de cada estadio en el periodo de tiempo correspondiente.
 
 ```{r}
 
@@ -142,13 +140,9 @@ cambio=pop.projection(mat1.1, n, 7)
 stage.vector.plot(cambio$stage.vectors, col=2:4, ylim=c(0, 0.6))
 ```
 
-
-
 ## Comparar $\lambda$ entre poblaciones
 
 Nuestra segunda población de $Laelia speciosa$ se establece en un hábitat similar a la población 1 y fue monitoreada durante al mismo tiempo. Sin embargo, ésta fue sujeta a la extracción. Si comparamos los valores de $\lambda$ de nuestras dos poblaciones, podemos hacer inferencias sobre los efectos de la extracción. La población 2 no produjo frutos y tampoco se observaron plántulas. Debido a esto, fue necesario incluir el valor de 0.001 para la transición de la matriz adulta2-\> plántula y con esto asegurar que nuestra matriz de estudio sea irreducible y primitive (**Capitulo X**).
-
-
 
 ## Proyección de la población 2, año 1
 
@@ -169,12 +163,11 @@ eig2.1$lambda
 
 La población bajo extracción tiene un valor de $\lambda$ menor (0.990) a aquella en que no se observa esta actividad de manejo. Sin embargo, debemos ser cautelosos con nuestra interpretación sobre los efectos de la extracción, debido a que cualquier diferencia relacionada con la extracción está mezclada o enmascarada con las diferencias entre los dos sitios. Para lograr una comparación robusta, se debe llevar a cabo un experimento de extracción en el mismo sitio o tener varios sitios de extracción y también varios sitios sin extracción.
 
-
-***
+------------------------------------------------------------------------
 
 ## Intervalos de confianza de $\lambda$
 
-Para interpretar $\lambda$ apropiadamente necesitamos calcular los intervalos de confianza (IC). Estos intervalos pueden ser calculados con un método de remuestreo con reemplazo (i.e. bootstrap), utilizando las transiciones de estado de los individuos de un periodo a otro; es decir, los datos (i.e $stage-fate$) usados para construir la matriz de transiciones (Capitulo X). En el remuestro se puede especificar el tamaño de la muestra remuestreada, la cual fue de 1000 en nuestro caso. Cabe señalar que, se tendrán intervalos de confianza amplios cuando se tiene una muestra pequeña de datos originales, o, si se tienen pocas observaciones de aquellas transiciones que contribuyen en mayor medida a $\lambda$. En adición se  puede usar el método en el paquete "raretrans" (no explicado en este capitulo), que es apropiado para tamaño de muestra pequeñas. La diferencia entre los dos métodos es que la simulación usando el paquete "popbio" se selecciona la cantidad de individuos de los estadios al azar, mientras que el paquete "raretrans" usa una simulación de basado en la distribución Dirichlet. 
+Para interpretar $\lambda$ apropiadamente necesitamos calcular los intervalos de confianza (IC). Estos intervalos pueden ser calculados con un método de remuestreo con reemplazo (i.e. bootstrap), utilizando las transiciones de estado de los individuos de un periodo a otro; es decir, los datos (i.e $stage-fate$) usados para construir la matriz de transiciones (Capitulo X). En el remuestro se puede especificar el tamaño de la muestra remuestreada, la cual fue de 1000 en nuestro caso. Cabe señalar que, se tendrán intervalos de confianza amplios cuando se tiene una muestra pequeña de datos originales, o, si se tienen pocas observaciones de aquellas transiciones que contribuyen en mayor medida a $\lambda$. En adición se puede usar el método en el paquete "raretrans" (no explicado en este capitulo), que es apropiado para tamaño de muestra pequeñas. La diferencia entre los dos métodos es que la simulación usando el paquete "popbio" se selecciona la cantidad de individuos de los estadios al azar, mientras que el paquete "raretrans" usa una simulación de basado en la distribución Dirichlet.
 
 En el presente caso, calculamos los intervalos de confianza de $\lambda$ para la población 1, correspondientes al año 1 y 2. En ambos años, los intervalos son amplios.
 
@@ -236,8 +229,7 @@ ic2
 
 ```
 
-
-Note que para la población en el primer año el intervalo de confianza de $\lambda$ es de 1.00 a 1.21, lo que indica que el mejor estimado de la tasa de crecimiento poblacional esperada está entre 0% y 21%. En el segundo año, el intervalo de confianza es de 0.97 a 1.19, lo que indica que la tasa de crecimiento poblacional pudiese ser entre una reducción de ±3% a aumento de 19%. 
+Note que para la población en el primer año el intervalo de confianza de $\lambda$ es de 1.00 a 1.21, lo que indica que el mejor estimado de la tasa de crecimiento poblacional esperada está entre 0% y 21%. En el segundo año, el intervalo de confianza es de 0.97 a 1.19, lo que indica que la tasa de crecimiento poblacional pudiese ser entre una reducción de ±3% a aumento de 19%.
 
 ```{r}
 bind_rows(ic1, ic2) %>%
@@ -247,7 +239,7 @@ bind_rows(ic1, ic2) %>%
   knitr::kable(digits= 3, caption = "Intervalos de confianza de λ")
 ```
 
-***
+------------------------------------------------------------------------
 
 ## Ambiente Variable
 
@@ -302,7 +294,6 @@ ic.2<-exp(estocástico$sim.CI[2])
 #ic.2 # El intervalo de confianza de λs por simulación superior
 ```
 
-
 ```{r}
 
 Tul_NA=NA
@@ -320,14 +311,13 @@ tribble(~Método, ~λ, ~IC_2.5, ~IC_97.5,
 
 ```
 
-
-***
+------------------------------------------------------------------------
 
 ## El impacto de la frecuencia de las matrices en $λ_e$ y los IC
 
 También se puede explorar el efecto de distintos factores que afectan la dinámica poblacional a través de una simulación estocástica, en la que se varia la probabilidad de seleccionar cada una de las matrices con que se cuenta. Por ejemplo, si el año 1 tuvo precipitaciones típicas, mientras que el año 2 fue un año inusualmente seco (uno en diez años), no esperaríamos que la selección de matrices ocurriera con igual probabilidad. En este escenario, podríamos establecer una probabilidad de ocurrencia alta parta el año típico (por ejemplo 0.9) y bajo (por ejemplo 0.1) para el año con sequía.
 
-En nuestro caso, sabemos que es poco frecuente el reclutamiento episódico observado en el segundo muestreo de la población 1, pero también la mortalidad y regresión de adultos observado en ese muestreo es poco frecuente. Por lo tanto, establecimos que la probabilidad de ocurrencia de la matriz 1 (del año 1-año 2) fuera de 0.8, mientras que la probabilidad de ocurrencia de la matriz 2 (del año 2 a año 3) fuera 0.2. De esta forma uno puede similar el efecto de buenos y malos años en la dinámica poblacional, basado en el conocimiento de pratones de variación ambientales que afecte la dinamica de poblaciones. Vemos que $λ_e$ no cambia mucho en el ejercicio anterior. 
+En nuestro caso, sabemos que es poco frecuente el reclutamiento episódico observado en el segundo muestreo de la población 1, pero también la mortalidad y regresión de adultos observado en ese muestreo es poco frecuente. Por lo tanto, establecimos que la probabilidad de ocurrencia de la matriz 1 (del año 1-año 2) fuera de 0.8, mientras que la probabilidad de ocurrencia de la matriz 2 (del año 2 a año 3) fuera 0.2. De esta forma uno puede similar el efecto de buenos y malos años en la dinámica poblacional, basado en el conocimiento de pratones de variación ambientales que afecte la dinamica de poblaciones. Vemos que $λ_e$ no cambia mucho en el ejercicio anterior.
 
 ```{r, cre_pop_6}
 
@@ -357,7 +347,7 @@ tribble(~Método, ~λ, ~IC_2.5, ~IC_97.5,
 
 ```
 
-***
+------------------------------------------------------------------------
 
 ### El impacto de la probabilidad de ocurrencia de las matrices en $λ_e$ y los IC
 
@@ -395,5 +385,8 @@ Reconocer que $\lambda$, el crecimiento poblacional estimado de dos periodos no 
 
 Revisión:
 
-RLT 2025_01_18
+
+
+RLT 2025_01_18 
+
 RLT 2025_06_01
