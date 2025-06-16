@@ -423,6 +423,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#por-tamara-ticktin-y-mariana-hernández-apolinar" id="toc-por-tamara-ticktin-y-mariana-hernández-apolinar" class="nav-link" data-scroll-target="#por-tamara-ticktin-y-mariana-hernández-apolinar">Por: Tamara Ticktin y Mariana Hernández Apolinar</a></li>
   <li><a href="#interpretar-de-la-tasa-de-crecimiento-poblacional-asintótica-lambda" id="toc-interpretar-de-la-tasa-de-crecimiento-poblacional-asintótica-lambda" class="nav-link" data-scroll-target="#interpretar-de-la-tasa-de-crecimiento-poblacional-asintótica-lambda">Interpretar de la tasa de crecimiento poblacional asintótica: <span class="math inline">\(\lambda\)</span></a></li>
+  <li><a href="#primera-matriz" id="toc-primera-matriz" class="nav-link" data-scroll-target="#primera-matriz">Primera matriz</a></li>
   <li><a href="#calcular-lambda-de-la-población" id="toc-calcular-lambda-de-la-población" class="nav-link" data-scroll-target="#calcular-lambda-de-la-población">Calcular <span class="math inline">\(\lambda\)</span> de la población</a></li>
   <li><a href="#calcular-el-incremento-de-crecimiento-poblacional-por-año" id="toc-calcular-el-incremento-de-crecimiento-poblacional-por-año" class="nav-link" data-scroll-target="#calcular-el-incremento-de-crecimiento-poblacional-por-año">Calcular el incremento de crecimiento poblacional por año</a></li>
   <li><a href="#proyección-de-la-población-1-año-1" id="toc-proyección-de-la-población-1-año-1" class="nav-link" data-scroll-target="#proyección-de-la-población-1-año-1">Proyección de la población 1, año 1</a>
@@ -474,27 +475,28 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="interpretar-de-la-tasa-de-crecimiento-poblacional-asintótica-lambda">Interpretar de la tasa de crecimiento poblacional asintótica: <span class="math inline">\(\lambda\)</span></h2>
 <p>La tasa finita o asintótica del crecimiento poblacional, <span class="math inline">\(\lambda\)</span>, es el valor propio dominante de una matriz de transición y corresponde a la solución de dicha matriz. Cuando <span class="math inline">\(\lambda\)</span> &gt;1 indica que se proyecta que la población crecerá a largo plazo; si <span class="math inline">\(\lambda\)</span> &lt;1 indica que se proyecta que disminuirá y <span class="math inline">\(\lambda\)</span> = 1 indica que se proyecta que permanecerá estable. Este parámetro se calcula utilizando la función <strong>eigen.analysis</strong> en el paquete <strong>popbio</strong>.</p>
 <p>Comenzamos por ingresar dos matrices de transición, una para cada año de monitorio de una poblaciones de <em>Laelia speciosa</em>. Los datos provienen de Mariana Hernández-Apolinar y son sin publicar.</p>
-<p>Primera matriz</p>
+</section>
+<section id="primera-matriz" class="level2">
+<h2 class="anchored" data-anchor-id="primera-matriz">Primera matriz</h2>
+<p>Ingresa la matriz de transición o genera la desde el archivo que incorpora la transición de los individuos de un año (o un periodo de tiempo) a otro (“stage-fate dataframe”; vea el capitulo “Calcular transiciones para la matriz de Lefkovitch” y “Método bayesiano de calcular las transiciones y fecundidades”). En nuestras matrices de transición, las clases de estado se basan en el peso total de los pseudobulbos que conforman la planta. Los “Adultos” corresponden a individuos que pueden reproducirse sexualmente.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Ingresa la matriz de transición o genera la desde el archivo que incorpora la transición de los individuos de un año (o un periodo de tiempo) a otro ("stage-fate dataframe"; vea el capitulo "Calcular transiciones para la matriz de Lefkovitch" y "Método bayesiano de calcular las transiciones y fecundidades"). En nuestras matrices de transición, las clases de estado se basan en el peso total de los pseudobulbos que conforman la planta. Los “Adultos” corresponden a individuos que pueden reproducirse sexualmente.</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Define los estadios </span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>estadios <span class="ot">&lt;-</span> <span class="fu">c</span> (<span class="st">"plantula"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto1"</span>, <span class="st">"adulto2"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Matriz de la poblacion 1, año 1</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>mat1<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">matrix</span> (<span class="fu">c</span>(<span class="fl">0.43</span>, <span class="fl">0.00</span>, <span class="fl">1.03</span>,  <span class="fl">0.96</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">0.32</span>, <span class="fl">0.91</span>, <span class="fl">0.00</span>,  <span class="fl">0.00</span>, </span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">0.00</span>, <span class="fl">0.05</span>, <span class="fl">0.82</span>, <span class="fl">0.00</span>,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">0.00</span>, <span class="fl">0.00</span>, <span class="fl">0.17</span>,  <span class="fl">0.99</span>), </span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">ncol=</span><span class="dv">4</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">dimnames =</span> <span class="fu">list</span>(estadios, estadios))</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(mat1<span class="fl">.1</span>, <span class="at">stages=</span>estadios, <span class="at">fontsize =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Define los estadios </span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>estadios <span class="ot">&lt;-</span> <span class="fu">c</span> (<span class="st">"plantula"</span>, <span class="st">"juvenil"</span>, <span class="st">"adulto1"</span>, <span class="st">"adulto2"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Matriz de la poblacion 1, año 1</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>mat1<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">matrix</span> (<span class="fu">c</span>(<span class="fl">0.43</span>, <span class="fl">0.00</span>, <span class="fl">1.03</span>,  <span class="fl">0.96</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">0.32</span>, <span class="fl">0.91</span>, <span class="fl">0.00</span>,  <span class="fl">0.00</span>, </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">0.00</span>, <span class="fl">0.05</span>, <span class="fl">0.82</span>, <span class="fl">0.00</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">0.00</span>, <span class="fl">0.00</span>, <span class="fl">0.17</span>,  <span class="fl">0.99</span>), </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">ncol=</span><span class="dv">4</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">dimnames =</span> <span class="fu">list</span>(estadios, estadios))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(mat1<span class="fl">.1</span>, <span class="at">stages=</span>estadios, <span class="at">fontsize =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-da7a62b6d3953abc1ef4" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-da7a62b6d3953abc1ef4">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plantula\" -> \"juvenil\" -> \"adulto1\" -> \"adulto2\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plantula\" -> \"juvenil\" -> \"adulto1\" -> \"adulto2\" [style=invis] } [style=invis] \"plantula\" -> \"plantula\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.43\"]\n\"plantula\" -> \"juvenil\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.32\"]\n\"juvenil\" -> \"juvenil\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.91\"]\n\"juvenil\" -> \"adulto1\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.05\"]\n\"adulto1\" -> \"plantula\"[minlen=-6,fontsize=10,color=grey,xlabel=\" 1.03\"]\n\"adulto1\" -> \"adulto1\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.82\"]\n\"adulto1\" -> \"adulto2\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.17\"]\n\"adulto2\" -> \"plantula\"[minlen=-9,fontsize=10,color=grey,xlabel=\" 0.96\"]\n\"adulto2\" -> \"adulto2\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.99\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-ed3032486ad9dc7c26df" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-ed3032486ad9dc7c26df">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plantula\" -> \"juvenil\" -> \"adulto1\" -> \"adulto2\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plantula\" -> \"juvenil\" -> \"adulto1\" -> \"adulto2\" [style=invis] } [style=invis] \"plantula\" -> \"plantula\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.43\"]\n\"plantula\" -> \"juvenil\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.32\"]\n\"juvenil\" -> \"juvenil\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.91\"]\n\"juvenil\" -> \"adulto1\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.05\"]\n\"adulto1\" -> \"plantula\"[minlen=-6,fontsize=10,color=grey,xlabel=\" 1.03\"]\n\"adulto1\" -> \"adulto1\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.82\"]\n\"adulto1\" -> \"adulto2\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.17\"]\n\"adulto2\" -> \"plantula\"[minlen=-9,fontsize=10,color=grey,xlabel=\" 0.96\"]\n\"adulto2\" -> \"adulto2\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.99\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p>Segunda matriz</p>
@@ -511,8 +513,8 @@ window.Quarto = {
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(mat1<span class="fl">.2</span>, <span class="at">stages=</span>estadios, <span class="at">fontsize =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-5459596b519b1c064596" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-5459596b519b1c064596">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plantula\" -> \"juvenil\" -> \"adulto1\" -> \"adulto2\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plantula\" -> \"juvenil\" -> \"adulto1\" -> \"adulto2\" [style=invis] } [style=invis] \"plantula\" -> \"plantula\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.43\"]\n\"plantula\" -> \"juvenil\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.32\"]\n\"juvenil\" -> \"juvenil\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.9\"]\n\"juvenil\" -> \"adulto1\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.02\"]\n\"adulto1\" -> \"plantula\"[minlen=-6,fontsize=10,color=grey,xlabel=\" 0.85\"]\n\"adulto1\" -> \"adulto1\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.77\"]\n\"adulto1\" -> \"adulto2\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.19\"]\n\"adulto2\" -> \"plantula\"[minlen=-9,fontsize=10,color=grey,xlabel=\" 3.38\"]\n\"adulto2\" -> \"adulto1\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.11\"]\n\"adulto2\" -> \"adulto2\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.88\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-75874d351e52769a0966" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-75874d351e52769a0966">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plantula\" -> \"juvenil\" -> \"adulto1\" -> \"adulto2\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plantula\" -> \"juvenil\" -> \"adulto1\" -> \"adulto2\" [style=invis] } [style=invis] \"plantula\" -> \"plantula\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.43\"]\n\"plantula\" -> \"juvenil\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.32\"]\n\"juvenil\" -> \"juvenil\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.9\"]\n\"juvenil\" -> \"adulto1\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.02\"]\n\"adulto1\" -> \"plantula\"[minlen=-6,fontsize=10,color=grey,xlabel=\" 0.85\"]\n\"adulto1\" -> \"adulto1\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.77\"]\n\"adulto1\" -> \"adulto2\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.19\"]\n\"adulto2\" -> \"plantula\"[minlen=-9,fontsize=10,color=grey,xlabel=\" 3.38\"]\n\"adulto2\" -> \"adulto1\"[minlen=-3,fontsize=10,color=grey,xlabel=\" 0.11\"]\n\"adulto2\" -> \"adulto2\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.88\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <hr>
@@ -550,23 +552,23 @@ window.Quarto = {
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>gt<span class="sc">::</span><span class="fu">gt</span>(t)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="ehjriqornm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ehjriqornm table {
+<div id="drnonhnnmy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#drnonhnnmy table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ehjriqornm thead, #ehjriqornm tbody, #ehjriqornm tfoot, #ehjriqornm tr, #ehjriqornm td, #ehjriqornm th {
+#drnonhnnmy thead, #drnonhnnmy tbody, #drnonhnnmy tfoot, #drnonhnnmy tr, #drnonhnnmy td, #drnonhnnmy th {
   border-style: none;
 }
 
-#ehjriqornm p {
+#drnonhnnmy p {
   margin: 0;
   padding: 0;
 }
 
-#ehjriqornm .gt_table {
+#drnonhnnmy .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -592,12 +594,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#ehjriqornm .gt_caption {
+#drnonhnnmy .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ehjriqornm .gt_title {
+#drnonhnnmy .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -609,7 +611,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#ehjriqornm .gt_subtitle {
+#drnonhnnmy .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -621,7 +623,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#ehjriqornm .gt_heading {
+#drnonhnnmy .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -633,13 +635,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ehjriqornm .gt_bottom_border {
+#drnonhnnmy .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ehjriqornm .gt_col_headings {
+#drnonhnnmy .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -654,7 +656,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ehjriqornm .gt_col_heading {
+#drnonhnnmy .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -674,7 +676,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#ehjriqornm .gt_column_spanner_outer {
+#drnonhnnmy .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -686,15 +688,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#ehjriqornm .gt_column_spanner_outer:first-child {
+#drnonhnnmy .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ehjriqornm .gt_column_spanner_outer:last-child {
+#drnonhnnmy .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ehjriqornm .gt_column_spanner {
+#drnonhnnmy .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -706,11 +708,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#ehjriqornm .gt_spanner_row {
+#drnonhnnmy .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ehjriqornm .gt_group_heading {
+#drnonhnnmy .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -736,7 +738,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#ehjriqornm .gt_empty_group_heading {
+#drnonhnnmy .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -751,15 +753,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#ehjriqornm .gt_from_md > :first-child {
+#drnonhnnmy .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ehjriqornm .gt_from_md > :last-child {
+#drnonhnnmy .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ehjriqornm .gt_row {
+#drnonhnnmy .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -778,7 +780,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#ehjriqornm .gt_stub {
+#drnonhnnmy .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -791,7 +793,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ehjriqornm .gt_stub_row_group {
+#drnonhnnmy .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -805,15 +807,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#ehjriqornm .gt_row_group_first td {
+#drnonhnnmy .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ehjriqornm .gt_row_group_first th {
+#drnonhnnmy .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ehjriqornm .gt_summary_row {
+#drnonhnnmy .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -823,16 +825,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ehjriqornm .gt_first_summary_row {
+#drnonhnnmy .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ehjriqornm .gt_first_summary_row.thick {
+#drnonhnnmy .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ehjriqornm .gt_last_summary_row {
+#drnonhnnmy .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -842,7 +844,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#ehjriqornm .gt_grand_summary_row {
+#drnonhnnmy .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -852,7 +854,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ehjriqornm .gt_first_grand_summary_row {
+#drnonhnnmy .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -862,7 +864,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#ehjriqornm .gt_last_grand_summary_row_top {
+#drnonhnnmy .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -872,11 +874,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#ehjriqornm .gt_striped {
+#drnonhnnmy .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ehjriqornm .gt_table_body {
+#drnonhnnmy .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -885,7 +887,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#ehjriqornm .gt_footnotes {
+#drnonhnnmy .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -899,7 +901,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ehjriqornm .gt_footnote {
+#drnonhnnmy .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -908,7 +910,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ehjriqornm .gt_sourcenotes {
+#drnonhnnmy .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -922,7 +924,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ehjriqornm .gt_sourcenote {
+#drnonhnnmy .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -930,72 +932,72 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ehjriqornm .gt_left {
+#drnonhnnmy .gt_left {
   text-align: left;
 }
 
-#ehjriqornm .gt_center {
+#drnonhnnmy .gt_center {
   text-align: center;
 }
 
-#ehjriqornm .gt_right {
+#drnonhnnmy .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ehjriqornm .gt_font_normal {
+#drnonhnnmy .gt_font_normal {
   font-weight: normal;
 }
 
-#ehjriqornm .gt_font_bold {
+#drnonhnnmy .gt_font_bold {
   font-weight: bold;
 }
 
-#ehjriqornm .gt_font_italic {
+#drnonhnnmy .gt_font_italic {
   font-style: italic;
 }
 
-#ehjriqornm .gt_super {
+#drnonhnnmy .gt_super {
   font-size: 65%;
 }
 
-#ehjriqornm .gt_footnote_marks {
+#drnonhnnmy .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ehjriqornm .gt_asterisk {
+#drnonhnnmy .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ehjriqornm .gt_indent_1 {
+#drnonhnnmy .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ehjriqornm .gt_indent_2 {
+#drnonhnnmy .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ehjriqornm .gt_indent_3 {
+#drnonhnnmy .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ehjriqornm .gt_indent_4 {
+#drnonhnnmy .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ehjriqornm .gt_indent_5 {
+#drnonhnnmy .gt_indent_5 {
   text-indent: 25px;
 }
 
-#ehjriqornm .katex-display {
+#drnonhnnmy .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#ehjriqornm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#drnonhnnmy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1181,7 +1183,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  2.5%  97.5% 
-1.0000 1.2173 </code></pre>
+1.0000 1.2118 </code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -1206,7 +1208,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   2.5%   97.5% 
-0.96689 1.19793 </code></pre>
+0.96451 1.19867 </code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -1241,12 +1243,12 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
 <tr class="odd">
 <td style="text-align: left;">año 1</td>
 <td style="text-align: right;">1.000</td>
-<td style="text-align: right;">1.217</td>
+<td style="text-align: right;">1.212</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">año 2</td>
-<td style="text-align: right;">0.967</td>
-<td style="text-align: right;">1.198</td>
+<td style="text-align: right;">0.965</td>
+<td style="text-align: right;">1.199</td>
 </tr>
 </tbody>
 </table>
@@ -1309,23 +1311,23 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
 <span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">cols_label</span>(Método <span class="ot">=</span> <span class="st">"Método"</span>, λ <span class="ot">=</span> <span class="st">"λ_e"</span>, <span class="at">IC_2.5 =</span> <span class="st">"IC 2.5%"</span>, <span class="at">IC_97.5 =</span> <span class="st">"IC 97.5%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="qdmbmazgvg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#qdmbmazgvg table {
+<div id="jopqimvjlu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#jopqimvjlu table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#qdmbmazgvg thead, #qdmbmazgvg tbody, #qdmbmazgvg tfoot, #qdmbmazgvg tr, #qdmbmazgvg td, #qdmbmazgvg th {
+#jopqimvjlu thead, #jopqimvjlu tbody, #jopqimvjlu tfoot, #jopqimvjlu tr, #jopqimvjlu td, #jopqimvjlu th {
   border-style: none;
 }
 
-#qdmbmazgvg p {
+#jopqimvjlu p {
   margin: 0;
   padding: 0;
 }
 
-#qdmbmazgvg .gt_table {
+#jopqimvjlu .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1351,12 +1353,12 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#qdmbmazgvg .gt_caption {
+#jopqimvjlu .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#qdmbmazgvg .gt_title {
+#jopqimvjlu .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1368,7 +1370,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-bottom-width: 0;
 }
 
-#qdmbmazgvg .gt_subtitle {
+#jopqimvjlu .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1380,7 +1382,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-top-width: 0;
 }
 
-#qdmbmazgvg .gt_heading {
+#jopqimvjlu .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1392,13 +1394,13 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#qdmbmazgvg .gt_bottom_border {
+#jopqimvjlu .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#qdmbmazgvg .gt_col_headings {
+#jopqimvjlu .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1413,7 +1415,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#qdmbmazgvg .gt_col_heading {
+#jopqimvjlu .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1433,7 +1435,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   overflow-x: hidden;
 }
 
-#qdmbmazgvg .gt_column_spanner_outer {
+#jopqimvjlu .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1445,15 +1447,15 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 4px;
 }
 
-#qdmbmazgvg .gt_column_spanner_outer:first-child {
+#jopqimvjlu .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#qdmbmazgvg .gt_column_spanner_outer:last-child {
+#jopqimvjlu .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#qdmbmazgvg .gt_column_spanner {
+#jopqimvjlu .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1465,11 +1467,11 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   width: 100%;
 }
 
-#qdmbmazgvg .gt_spanner_row {
+#jopqimvjlu .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#qdmbmazgvg .gt_group_heading {
+#jopqimvjlu .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1495,7 +1497,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   text-align: left;
 }
 
-#qdmbmazgvg .gt_empty_group_heading {
+#jopqimvjlu .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1510,15 +1512,15 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   vertical-align: middle;
 }
 
-#qdmbmazgvg .gt_from_md > :first-child {
+#jopqimvjlu .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#qdmbmazgvg .gt_from_md > :last-child {
+#jopqimvjlu .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#qdmbmazgvg .gt_row {
+#jopqimvjlu .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1537,7 +1539,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   overflow-x: hidden;
 }
 
-#qdmbmazgvg .gt_stub {
+#jopqimvjlu .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1550,7 +1552,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 5px;
 }
 
-#qdmbmazgvg .gt_stub_row_group {
+#jopqimvjlu .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1564,15 +1566,15 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   vertical-align: top;
 }
 
-#qdmbmazgvg .gt_row_group_first td {
+#jopqimvjlu .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#qdmbmazgvg .gt_row_group_first th {
+#jopqimvjlu .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#qdmbmazgvg .gt_summary_row {
+#jopqimvjlu .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1582,16 +1584,16 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 5px;
 }
 
-#qdmbmazgvg .gt_first_summary_row {
+#jopqimvjlu .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#qdmbmazgvg .gt_first_summary_row.thick {
+#jopqimvjlu .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#qdmbmazgvg .gt_last_summary_row {
+#jopqimvjlu .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1601,7 +1603,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#qdmbmazgvg .gt_grand_summary_row {
+#jopqimvjlu .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1611,7 +1613,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 5px;
 }
 
-#qdmbmazgvg .gt_first_grand_summary_row {
+#jopqimvjlu .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1621,7 +1623,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#qdmbmazgvg .gt_last_grand_summary_row_top {
+#jopqimvjlu .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1631,11 +1633,11 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#qdmbmazgvg .gt_striped {
+#jopqimvjlu .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#qdmbmazgvg .gt_table_body {
+#jopqimvjlu .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1644,7 +1646,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#qdmbmazgvg .gt_footnotes {
+#jopqimvjlu .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1658,7 +1660,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#qdmbmazgvg .gt_footnote {
+#jopqimvjlu .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1667,7 +1669,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 5px;
 }
 
-#qdmbmazgvg .gt_sourcenotes {
+#jopqimvjlu .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1681,7 +1683,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#qdmbmazgvg .gt_sourcenote {
+#jopqimvjlu .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1689,72 +1691,72 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 5px;
 }
 
-#qdmbmazgvg .gt_left {
+#jopqimvjlu .gt_left {
   text-align: left;
 }
 
-#qdmbmazgvg .gt_center {
+#jopqimvjlu .gt_center {
   text-align: center;
 }
 
-#qdmbmazgvg .gt_right {
+#jopqimvjlu .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#qdmbmazgvg .gt_font_normal {
+#jopqimvjlu .gt_font_normal {
   font-weight: normal;
 }
 
-#qdmbmazgvg .gt_font_bold {
+#jopqimvjlu .gt_font_bold {
   font-weight: bold;
 }
 
-#qdmbmazgvg .gt_font_italic {
+#jopqimvjlu .gt_font_italic {
   font-style: italic;
 }
 
-#qdmbmazgvg .gt_super {
+#jopqimvjlu .gt_super {
   font-size: 65%;
 }
 
-#qdmbmazgvg .gt_footnote_marks {
+#jopqimvjlu .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#qdmbmazgvg .gt_asterisk {
+#jopqimvjlu .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#qdmbmazgvg .gt_indent_1 {
+#jopqimvjlu .gt_indent_1 {
   text-indent: 5px;
 }
 
-#qdmbmazgvg .gt_indent_2 {
+#jopqimvjlu .gt_indent_2 {
   text-indent: 10px;
 }
 
-#qdmbmazgvg .gt_indent_3 {
+#jopqimvjlu .gt_indent_3 {
   text-indent: 15px;
 }
 
-#qdmbmazgvg .gt_indent_4 {
+#jopqimvjlu .gt_indent_4 {
   text-indent: 20px;
 }
 
-#qdmbmazgvg .gt_indent_5 {
+#jopqimvjlu .gt_indent_5 {
   text-indent: 25px;
 }
 
-#qdmbmazgvg .katex-display {
+#jopqimvjlu .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#qdmbmazgvg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#jopqimvjlu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1822,23 +1824,23 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
 <span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">cols_label</span>(Método <span class="ot">=</span> <span class="st">"Método"</span>, λ <span class="ot">=</span> <span class="st">"λ_e"</span>, <span class="at">IC_2.5 =</span> <span class="st">"IC 2.5%"</span>, <span class="at">IC_97.5 =</span> <span class="st">"IC 97.5%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="vlksdjswfu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#vlksdjswfu table {
+<div id="oeinnfmlpl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#oeinnfmlpl table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#vlksdjswfu thead, #vlksdjswfu tbody, #vlksdjswfu tfoot, #vlksdjswfu tr, #vlksdjswfu td, #vlksdjswfu th {
+#oeinnfmlpl thead, #oeinnfmlpl tbody, #oeinnfmlpl tfoot, #oeinnfmlpl tr, #oeinnfmlpl td, #oeinnfmlpl th {
   border-style: none;
 }
 
-#vlksdjswfu p {
+#oeinnfmlpl p {
   margin: 0;
   padding: 0;
 }
 
-#vlksdjswfu .gt_table {
+#oeinnfmlpl .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1864,12 +1866,12 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#vlksdjswfu .gt_caption {
+#oeinnfmlpl .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#vlksdjswfu .gt_title {
+#oeinnfmlpl .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1881,7 +1883,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-bottom-width: 0;
 }
 
-#vlksdjswfu .gt_subtitle {
+#oeinnfmlpl .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1893,7 +1895,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-top-width: 0;
 }
 
-#vlksdjswfu .gt_heading {
+#oeinnfmlpl .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1905,13 +1907,13 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#vlksdjswfu .gt_bottom_border {
+#oeinnfmlpl .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#vlksdjswfu .gt_col_headings {
+#oeinnfmlpl .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1926,7 +1928,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#vlksdjswfu .gt_col_heading {
+#oeinnfmlpl .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1946,7 +1948,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   overflow-x: hidden;
 }
 
-#vlksdjswfu .gt_column_spanner_outer {
+#oeinnfmlpl .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1958,15 +1960,15 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 4px;
 }
 
-#vlksdjswfu .gt_column_spanner_outer:first-child {
+#oeinnfmlpl .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#vlksdjswfu .gt_column_spanner_outer:last-child {
+#oeinnfmlpl .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#vlksdjswfu .gt_column_spanner {
+#oeinnfmlpl .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1978,11 +1980,11 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   width: 100%;
 }
 
-#vlksdjswfu .gt_spanner_row {
+#oeinnfmlpl .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#vlksdjswfu .gt_group_heading {
+#oeinnfmlpl .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2008,7 +2010,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   text-align: left;
 }
 
-#vlksdjswfu .gt_empty_group_heading {
+#oeinnfmlpl .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2023,15 +2025,15 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   vertical-align: middle;
 }
 
-#vlksdjswfu .gt_from_md > :first-child {
+#oeinnfmlpl .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#vlksdjswfu .gt_from_md > :last-child {
+#oeinnfmlpl .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#vlksdjswfu .gt_row {
+#oeinnfmlpl .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2050,7 +2052,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   overflow-x: hidden;
 }
 
-#vlksdjswfu .gt_stub {
+#oeinnfmlpl .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2063,7 +2065,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 5px;
 }
 
-#vlksdjswfu .gt_stub_row_group {
+#oeinnfmlpl .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2077,15 +2079,15 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   vertical-align: top;
 }
 
-#vlksdjswfu .gt_row_group_first td {
+#oeinnfmlpl .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#vlksdjswfu .gt_row_group_first th {
+#oeinnfmlpl .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#vlksdjswfu .gt_summary_row {
+#oeinnfmlpl .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2095,16 +2097,16 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 5px;
 }
 
-#vlksdjswfu .gt_first_summary_row {
+#oeinnfmlpl .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#vlksdjswfu .gt_first_summary_row.thick {
+#oeinnfmlpl .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#vlksdjswfu .gt_last_summary_row {
+#oeinnfmlpl .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2114,7 +2116,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#vlksdjswfu .gt_grand_summary_row {
+#oeinnfmlpl .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2124,7 +2126,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 5px;
 }
 
-#vlksdjswfu .gt_first_grand_summary_row {
+#oeinnfmlpl .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2134,7 +2136,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#vlksdjswfu .gt_last_grand_summary_row_top {
+#oeinnfmlpl .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2144,11 +2146,11 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#vlksdjswfu .gt_striped {
+#oeinnfmlpl .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#vlksdjswfu .gt_table_body {
+#oeinnfmlpl .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2157,7 +2159,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#vlksdjswfu .gt_footnotes {
+#oeinnfmlpl .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2171,7 +2173,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#vlksdjswfu .gt_footnote {
+#oeinnfmlpl .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2180,7 +2182,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 5px;
 }
 
-#vlksdjswfu .gt_sourcenotes {
+#oeinnfmlpl .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2194,7 +2196,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#vlksdjswfu .gt_sourcenote {
+#oeinnfmlpl .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2202,72 +2204,72 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 5px;
 }
 
-#vlksdjswfu .gt_left {
+#oeinnfmlpl .gt_left {
   text-align: left;
 }
 
-#vlksdjswfu .gt_center {
+#oeinnfmlpl .gt_center {
   text-align: center;
 }
 
-#vlksdjswfu .gt_right {
+#oeinnfmlpl .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#vlksdjswfu .gt_font_normal {
+#oeinnfmlpl .gt_font_normal {
   font-weight: normal;
 }
 
-#vlksdjswfu .gt_font_bold {
+#oeinnfmlpl .gt_font_bold {
   font-weight: bold;
 }
 
-#vlksdjswfu .gt_font_italic {
+#oeinnfmlpl .gt_font_italic {
   font-style: italic;
 }
 
-#vlksdjswfu .gt_super {
+#oeinnfmlpl .gt_super {
   font-size: 65%;
 }
 
-#vlksdjswfu .gt_footnote_marks {
+#oeinnfmlpl .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#vlksdjswfu .gt_asterisk {
+#oeinnfmlpl .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#vlksdjswfu .gt_indent_1 {
+#oeinnfmlpl .gt_indent_1 {
   text-indent: 5px;
 }
 
-#vlksdjswfu .gt_indent_2 {
+#oeinnfmlpl .gt_indent_2 {
   text-indent: 10px;
 }
 
-#vlksdjswfu .gt_indent_3 {
+#oeinnfmlpl .gt_indent_3 {
   text-indent: 15px;
 }
 
-#vlksdjswfu .gt_indent_4 {
+#oeinnfmlpl .gt_indent_4 {
   text-indent: 20px;
 }
 
-#vlksdjswfu .gt_indent_5 {
+#oeinnfmlpl .gt_indent_5 {
   text-indent: 25px;
 }
 
-#vlksdjswfu .katex-display {
+#oeinnfmlpl .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#vlksdjswfu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#oeinnfmlpl div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2287,15 +2289,15 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers="Método">Tuljapukar</td>
-<td class="gt_row gt_right" headers="λ">1.111</td>
+<td class="gt_row gt_right" headers="λ">1.1110</td>
 <td class="gt_row gt_right" headers="IC_2.5">NA</td>
 <td class="gt_row gt_right" headers="IC_97.5">NA</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="Método">Simulación</td>
-<td class="gt_row gt_right" headers="λ">1.111</td>
-<td class="gt_row gt_right" headers="IC_2.5">1.1104</td>
-<td class="gt_row gt_right" headers="IC_97.5">1.1116</td>
+<td class="gt_row gt_right" headers="λ">1.1111</td>
+<td class="gt_row gt_right" headers="IC_2.5">1.1105</td>
+<td class="gt_row gt_right" headers="IC_97.5">1.1117</td>
 </tr>
 </tbody>
 </table>
@@ -2332,23 +2334,23 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
 <span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">cols_label</span>(Método <span class="ot">=</span> <span class="st">"Método"</span>, λ <span class="ot">=</span> <span class="st">"λ_e"</span>, <span class="at">IC_2.5 =</span> <span class="st">"IC 2.5%"</span>, <span class="at">IC_97.5 =</span> <span class="st">"IC 97.5%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="ndrmvibcra" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ndrmvibcra table {
+<div id="lzaissgiao" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#lzaissgiao table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ndrmvibcra thead, #ndrmvibcra tbody, #ndrmvibcra tfoot, #ndrmvibcra tr, #ndrmvibcra td, #ndrmvibcra th {
+#lzaissgiao thead, #lzaissgiao tbody, #lzaissgiao tfoot, #lzaissgiao tr, #lzaissgiao td, #lzaissgiao th {
   border-style: none;
 }
 
-#ndrmvibcra p {
+#lzaissgiao p {
   margin: 0;
   padding: 0;
 }
 
-#ndrmvibcra .gt_table {
+#lzaissgiao .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2374,12 +2376,12 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#ndrmvibcra .gt_caption {
+#lzaissgiao .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ndrmvibcra .gt_title {
+#lzaissgiao .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2391,7 +2393,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-bottom-width: 0;
 }
 
-#ndrmvibcra .gt_subtitle {
+#lzaissgiao .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2403,7 +2405,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-top-width: 0;
 }
 
-#ndrmvibcra .gt_heading {
+#lzaissgiao .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2415,13 +2417,13 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#ndrmvibcra .gt_bottom_border {
+#lzaissgiao .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ndrmvibcra .gt_col_headings {
+#lzaissgiao .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2436,7 +2438,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#ndrmvibcra .gt_col_heading {
+#lzaissgiao .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2456,7 +2458,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   overflow-x: hidden;
 }
 
-#ndrmvibcra .gt_column_spanner_outer {
+#lzaissgiao .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2468,15 +2470,15 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 4px;
 }
 
-#ndrmvibcra .gt_column_spanner_outer:first-child {
+#lzaissgiao .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ndrmvibcra .gt_column_spanner_outer:last-child {
+#lzaissgiao .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ndrmvibcra .gt_column_spanner {
+#lzaissgiao .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2488,11 +2490,11 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   width: 100%;
 }
 
-#ndrmvibcra .gt_spanner_row {
+#lzaissgiao .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ndrmvibcra .gt_group_heading {
+#lzaissgiao .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2518,7 +2520,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   text-align: left;
 }
 
-#ndrmvibcra .gt_empty_group_heading {
+#lzaissgiao .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2533,15 +2535,15 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   vertical-align: middle;
 }
 
-#ndrmvibcra .gt_from_md > :first-child {
+#lzaissgiao .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ndrmvibcra .gt_from_md > :last-child {
+#lzaissgiao .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ndrmvibcra .gt_row {
+#lzaissgiao .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2560,7 +2562,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   overflow-x: hidden;
 }
 
-#ndrmvibcra .gt_stub {
+#lzaissgiao .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2573,7 +2575,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 5px;
 }
 
-#ndrmvibcra .gt_stub_row_group {
+#lzaissgiao .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2587,15 +2589,15 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   vertical-align: top;
 }
 
-#ndrmvibcra .gt_row_group_first td {
+#lzaissgiao .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ndrmvibcra .gt_row_group_first th {
+#lzaissgiao .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ndrmvibcra .gt_summary_row {
+#lzaissgiao .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2605,16 +2607,16 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 5px;
 }
 
-#ndrmvibcra .gt_first_summary_row {
+#lzaissgiao .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ndrmvibcra .gt_first_summary_row.thick {
+#lzaissgiao .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ndrmvibcra .gt_last_summary_row {
+#lzaissgiao .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2624,7 +2626,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#ndrmvibcra .gt_grand_summary_row {
+#lzaissgiao .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2634,7 +2636,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 5px;
 }
 
-#ndrmvibcra .gt_first_grand_summary_row {
+#lzaissgiao .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2644,7 +2646,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#ndrmvibcra .gt_last_grand_summary_row_top {
+#lzaissgiao .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2654,11 +2656,11 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#ndrmvibcra .gt_striped {
+#lzaissgiao .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ndrmvibcra .gt_table_body {
+#lzaissgiao .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2667,7 +2669,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#ndrmvibcra .gt_footnotes {
+#lzaissgiao .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2681,7 +2683,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#ndrmvibcra .gt_footnote {
+#lzaissgiao .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2690,7 +2692,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 5px;
 }
 
-#ndrmvibcra .gt_sourcenotes {
+#lzaissgiao .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2704,7 +2706,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#ndrmvibcra .gt_sourcenote {
+#lzaissgiao .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2712,72 +2714,72 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
   padding-right: 5px;
 }
 
-#ndrmvibcra .gt_left {
+#lzaissgiao .gt_left {
   text-align: left;
 }
 
-#ndrmvibcra .gt_center {
+#lzaissgiao .gt_center {
   text-align: center;
 }
 
-#ndrmvibcra .gt_right {
+#lzaissgiao .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ndrmvibcra .gt_font_normal {
+#lzaissgiao .gt_font_normal {
   font-weight: normal;
 }
 
-#ndrmvibcra .gt_font_bold {
+#lzaissgiao .gt_font_bold {
   font-weight: bold;
 }
 
-#ndrmvibcra .gt_font_italic {
+#lzaissgiao .gt_font_italic {
   font-style: italic;
 }
 
-#ndrmvibcra .gt_super {
+#lzaissgiao .gt_super {
   font-size: 65%;
 }
 
-#ndrmvibcra .gt_footnote_marks {
+#lzaissgiao .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ndrmvibcra .gt_asterisk {
+#lzaissgiao .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ndrmvibcra .gt_indent_1 {
+#lzaissgiao .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ndrmvibcra .gt_indent_2 {
+#lzaissgiao .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ndrmvibcra .gt_indent_3 {
+#lzaissgiao .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ndrmvibcra .gt_indent_4 {
+#lzaissgiao .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ndrmvibcra .gt_indent_5 {
+#lzaissgiao .gt_indent_5 {
   text-indent: 25px;
 }
 
-#ndrmvibcra .katex-display {
+#lzaissgiao .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#ndrmvibcra div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#lzaissgiao div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2805,7 +2807,7 @@ adulto2      0.00    0.00    0.21   0.880</code></pre>
 <td class="gt_row gt_left" headers="Método">Simulación</td>
 <td class="gt_row gt_right" headers="λ">1.0969</td>
 <td class="gt_row gt_right" headers="IC_2.5">1.0964</td>
-<td class="gt_row gt_right" headers="IC_97.5">1.0974</td>
+<td class="gt_row gt_right" headers="IC_97.5">1.0973</td>
 </tr>
 </tbody>
 </table>
@@ -3484,368 +3486,370 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>Comenzamos por ingresar dos matrices de transición, una para cada año de monitorio de una poblaciones de *Laelia speciosa*. Los datos provienen de Mariana Hernández-Apolinar y son sin publicar.</span>
 <span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>Primera matriz</span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a><span class="fu">## Primera matriz</span></span>
 <span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_1, warning=FALSE, message=FALSE}</span></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>Ingresa la matriz de transición o genera la desde el archivo que incorpora la transición de los individuos de un año (o un periodo de tiempo) a otro ("stage-fate dataframe"; vea el capitulo "Calcular transiciones para la matriz de Lefkovitch" y "Método bayesiano de calcular las transiciones y fecundidades"). En nuestras matrices de transición, las clases de estado se basan en el peso total de los pseudobulbos que conforman la planta. Los “Adultos” corresponden a individuos que pueden reproducirse sexualmente.</span>
 <span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a><span class="in">#Ingresa la matriz de transición o genera la desde el archivo que incorpora la transición de los individuos de un año (o un periodo de tiempo) a otro ("stage-fate dataframe"; vea el capitulo "Calcular transiciones para la matriz de Lefkovitch" y "Método bayesiano de calcular las transiciones y fecundidades"). En nuestras matrices de transición, las clases de estado se basan en el peso total de los pseudobulbos que conforman la planta. Los “Adultos” corresponden a individuos que pueden reproducirse sexualmente.</span></span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_1, warning=FALSE, message=FALSE}</span></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a><span class="in">#Define los estadios </span></span>
-<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a><span class="in">estadios &lt;- c ("plantula", "juvenil", "adulto1", "adulto2")</span></span>
-<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a><span class="in">#Matriz de la poblacion 1, año 1</span></span>
-<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a><span class="in">mat1.1 &lt;- matrix (c(0.43, 0.00, 1.03,  0.96,</span></span>
-<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.32, 0.91, 0.00,  0.00, </span></span>
-<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.00, 0.05, 0.82, 0.00,</span></span>
-<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.00, 0.00, 0.17,  0.99), </span></span>
-<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a><span class="in">              nrow = 4, ncol=4, byrow = TRUE, dimnames = list(estadios, estadios))</span></span>
-<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-42"><a href="#cb29-42" aria-hidden="true" tabindex="-1"></a><span class="in">plot_life_cycle(mat1.1, stages=estadios, fontsize = 10)</span></span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a><span class="in">#Define los estadios </span></span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a><span class="in">estadios &lt;- c ("plantula", "juvenil", "adulto1", "adulto2")</span></span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a><span class="in">#Matriz de la poblacion 1, año 1</span></span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a><span class="in">mat1.1 &lt;- matrix (c(0.43, 0.00, 1.03,  0.96,</span></span>
+<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.32, 0.91, 0.00,  0.00, </span></span>
+<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.00, 0.05, 0.82, 0.00,</span></span>
+<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.00, 0.00, 0.17,  0.99), </span></span>
+<span id="cb29-42"><a href="#cb29-42" aria-hidden="true" tabindex="-1"></a><span class="in">              nrow = 4, ncol=4, byrow = TRUE, dimnames = list(estadios, estadios))</span></span>
 <span id="cb29-43"><a href="#cb29-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-44"><a href="#cb29-44" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-44"><a href="#cb29-44" aria-hidden="true" tabindex="-1"></a><span class="in">plot_life_cycle(mat1.1, stages=estadios, fontsize = 10)</span></span>
 <span id="cb29-45"><a href="#cb29-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-46"><a href="#cb29-46" aria-hidden="true" tabindex="-1"></a>Segunda matriz</span>
+<span id="cb29-46"><a href="#cb29-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb29-47"><a href="#cb29-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-48"><a href="#cb29-48" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_1b, warning=FALSE, message=FALSE}</span></span>
-<span id="cb29-49"><a href="#cb29-49" aria-hidden="true" tabindex="-1"></a><span class="in">#Matriz de la poblacion 1, año 2</span></span>
-<span id="cb29-50"><a href="#cb29-50" aria-hidden="true" tabindex="-1"></a><span class="in">mat1.2 &lt;- matrix (c(0.43, 0.00,  0.85,  3.38,</span></span>
-<span id="cb29-51"><a href="#cb29-51" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.32, 0.90,  0.00,  0.00, </span></span>
-<span id="cb29-52"><a href="#cb29-52" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.00, 0.02,  0.77,  0.11,</span></span>
-<span id="cb29-53"><a href="#cb29-53" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.00, 0.00,  0.19,  0.88), </span></span>
-<span id="cb29-54"><a href="#cb29-54" aria-hidden="true" tabindex="-1"></a><span class="in">                  nrow = 4, ncol=4, byrow = TRUE, dimnames = list(estadios, estadios))</span></span>
-<span id="cb29-55"><a href="#cb29-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-56"><a href="#cb29-56" aria-hidden="true" tabindex="-1"></a><span class="in">plot_life_cycle(mat1.2, stages=estadios, fontsize = 10)</span></span>
+<span id="cb29-48"><a href="#cb29-48" aria-hidden="true" tabindex="-1"></a>Segunda matriz</span>
+<span id="cb29-49"><a href="#cb29-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-50"><a href="#cb29-50" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_1b, warning=FALSE, message=FALSE}</span></span>
+<span id="cb29-51"><a href="#cb29-51" aria-hidden="true" tabindex="-1"></a><span class="in">#Matriz de la poblacion 1, año 2</span></span>
+<span id="cb29-52"><a href="#cb29-52" aria-hidden="true" tabindex="-1"></a><span class="in">mat1.2 &lt;- matrix (c(0.43, 0.00,  0.85,  3.38,</span></span>
+<span id="cb29-53"><a href="#cb29-53" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.32, 0.90,  0.00,  0.00, </span></span>
+<span id="cb29-54"><a href="#cb29-54" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.00, 0.02,  0.77,  0.11,</span></span>
+<span id="cb29-55"><a href="#cb29-55" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.00, 0.00,  0.19,  0.88), </span></span>
+<span id="cb29-56"><a href="#cb29-56" aria-hidden="true" tabindex="-1"></a><span class="in">                  nrow = 4, ncol=4, byrow = TRUE, dimnames = list(estadios, estadios))</span></span>
 <span id="cb29-57"><a href="#cb29-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-58"><a href="#cb29-58" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-58"><a href="#cb29-58" aria-hidden="true" tabindex="-1"></a><span class="in">plot_life_cycle(mat1.2, stages=estadios, fontsize = 10)</span></span>
 <span id="cb29-59"><a href="#cb29-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-60"><a href="#cb29-60" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb29-60"><a href="#cb29-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb29-61"><a href="#cb29-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-62"><a href="#cb29-62" aria-hidden="true" tabindex="-1"></a><span class="fu">## Calcular $\lambda$ de la población</span></span>
+<span id="cb29-62"><a href="#cb29-62" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb29-63"><a href="#cb29-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-64"><a href="#cb29-64" aria-hidden="true" tabindex="-1"></a>Calcular el $\lambda$ de la población para los años 1 y 2, respectivamente usando la función **eigen.analysis** en **popbio**.</span>
+<span id="cb29-64"><a href="#cb29-64" aria-hidden="true" tabindex="-1"></a><span class="fu">## Calcular $\lambda$ de la población</span></span>
 <span id="cb29-65"><a href="#cb29-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-66"><a href="#cb29-66" aria-hidden="true" tabindex="-1"></a>En el primer año se observa que la población tiene un valor de $\lambda$ <span class="sc">\&gt;</span> 1.108, lo que indica que la población crecerá a largo plazo de aproximadamente de 11%. En el segundo año, el valor de $\lambda$ también es <span class="sc">\&gt;</span>1.084 de 8%, pero es menor que el del primer año, lo que indica que la tasa de crecimiento poblacional disminuyó de un año a otro.</span>
+<span id="cb29-66"><a href="#cb29-66" aria-hidden="true" tabindex="-1"></a>Calcular el $\lambda$ de la población para los años 1 y 2, respectivamente usando la función **eigen.analysis** en **popbio**.</span>
 <span id="cb29-67"><a href="#cb29-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-68"><a href="#cb29-68" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_2}</span></span>
-<span id="cb29-69"><a href="#cb29-69" aria-hidden="true" tabindex="-1"></a><span class="in">options(digits=5) # Ajusta el número de decimales a mostrar</span></span>
-<span id="cb29-70"><a href="#cb29-70" aria-hidden="true" tabindex="-1"></a><span class="in">##Calcula la lambda asintótica de cada población y año</span></span>
-<span id="cb29-71"><a href="#cb29-71" aria-hidden="true" tabindex="-1"></a><span class="in">eig1.1&lt;-eigen.analysis(mat1.1) </span></span>
-<span id="cb29-72"><a href="#cb29-72" aria-hidden="true" tabindex="-1"></a><span class="in">eig1.1$lambda</span></span>
-<span id="cb29-73"><a href="#cb29-73" aria-hidden="true" tabindex="-1"></a><span class="in">eig1.2&lt;-eigen.analysis(mat1.2) </span></span>
-<span id="cb29-74"><a href="#cb29-74" aria-hidden="true" tabindex="-1"></a><span class="in">eig1.2$lambda</span></span>
-<span id="cb29-75"><a href="#cb29-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-76"><a href="#cb29-76" aria-hidden="true" tabindex="-1"></a><span class="in">t=tribble(  ~Año, ~lambda,</span></span>
-<span id="cb29-77"><a href="#cb29-77" aria-hidden="true" tabindex="-1"></a><span class="in">  "Año 1", eig1.1$lambda,</span></span>
-<span id="cb29-78"><a href="#cb29-78" aria-hidden="true" tabindex="-1"></a><span class="in">  "Año 2", eig1.2$lambda</span></span>
-<span id="cb29-79"><a href="#cb29-79" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
-<span id="cb29-80"><a href="#cb29-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-81"><a href="#cb29-81" aria-hidden="true" tabindex="-1"></a><span class="in">gt::gt(t)</span></span>
+<span id="cb29-68"><a href="#cb29-68" aria-hidden="true" tabindex="-1"></a>En el primer año se observa que la población tiene un valor de $\lambda$ <span class="sc">\&gt;</span> 1.108, lo que indica que la población crecerá a largo plazo de aproximadamente de 11%. En el segundo año, el valor de $\lambda$ también es <span class="sc">\&gt;</span>1.084 de 8%, pero es menor que el del primer año, lo que indica que la tasa de crecimiento poblacional disminuyó de un año a otro.</span>
+<span id="cb29-69"><a href="#cb29-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-70"><a href="#cb29-70" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_2}</span></span>
+<span id="cb29-71"><a href="#cb29-71" aria-hidden="true" tabindex="-1"></a><span class="in">options(digits=5) # Ajusta el número de decimales a mostrar</span></span>
+<span id="cb29-72"><a href="#cb29-72" aria-hidden="true" tabindex="-1"></a><span class="in">##Calcula la lambda asintótica de cada población y año</span></span>
+<span id="cb29-73"><a href="#cb29-73" aria-hidden="true" tabindex="-1"></a><span class="in">eig1.1&lt;-eigen.analysis(mat1.1) </span></span>
+<span id="cb29-74"><a href="#cb29-74" aria-hidden="true" tabindex="-1"></a><span class="in">eig1.1$lambda</span></span>
+<span id="cb29-75"><a href="#cb29-75" aria-hidden="true" tabindex="-1"></a><span class="in">eig1.2&lt;-eigen.analysis(mat1.2) </span></span>
+<span id="cb29-76"><a href="#cb29-76" aria-hidden="true" tabindex="-1"></a><span class="in">eig1.2$lambda</span></span>
+<span id="cb29-77"><a href="#cb29-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-78"><a href="#cb29-78" aria-hidden="true" tabindex="-1"></a><span class="in">t=tribble(  ~Año, ~lambda,</span></span>
+<span id="cb29-79"><a href="#cb29-79" aria-hidden="true" tabindex="-1"></a><span class="in">  "Año 1", eig1.1$lambda,</span></span>
+<span id="cb29-80"><a href="#cb29-80" aria-hidden="true" tabindex="-1"></a><span class="in">  "Año 2", eig1.2$lambda</span></span>
+<span id="cb29-81"><a href="#cb29-81" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
 <span id="cb29-82"><a href="#cb29-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-83"><a href="#cb29-83" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-83"><a href="#cb29-83" aria-hidden="true" tabindex="-1"></a><span class="in">gt::gt(t)</span></span>
 <span id="cb29-84"><a href="#cb29-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-85"><a href="#cb29-85" aria-hidden="true" tabindex="-1"></a>La tasa de crecimiento asintótica representa la tasa a la que crecería una población a largo plazo, si no cambiaran las condiciones bajo las cuales se construyó el modelo. Es decir, si no cambiaran en el tiempo las condiciones bióticas, abióticas y de manejo que influyen en las tasas vitales (i.e. tasas de crecimiento, supervivencia y reproducción) de dicha población. Por supuesto, nosotros sabemos que esto no es posible una consistencia de todas las tasas vitales a largo plazo, siempre ocurre cambios temporales determinístico o estocástico. Por ejemplo, en nuestro caso no observamos mortalidad de adultos durante los dos periodos de monitorio, pero redujo de una pequeña facción para que el valor de supervivencia sea menor de 1.0, aunque el efecto sobre el crecimiento poblacional es mínimo. Por lo tanto, es importante que el valor de $\lambda$ nunca se use en sentido estricto.</span>
+<span id="cb29-85"><a href="#cb29-85" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb29-86"><a href="#cb29-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-87"><a href="#cb29-87" aria-hidden="true" tabindex="-1"></a>También es fundamental tomar en cuenta que, $\lambda$ no es la tasa a la que se espera que la población creciera en el corto plazo. De hecho, una población con $\lambda$ <span class="sc">\&lt;</span>1 pudiera crecer en el corto plazo, antes de declinar en el largo plazo y $vice-versa$. Asimismo, cabe señalar que la tasa de crecimiento poblacional de corto plazo es calculada usando los índices de la dinámica transitoria (**Capitulo X**).</span>
+<span id="cb29-87"><a href="#cb29-87" aria-hidden="true" tabindex="-1"></a>La tasa de crecimiento asintótica representa la tasa a la que crecería una población a largo plazo, si no cambiaran las condiciones bajo las cuales se construyó el modelo. Es decir, si no cambiaran en el tiempo las condiciones bióticas, abióticas y de manejo que influyen en las tasas vitales (i.e. tasas de crecimiento, supervivencia y reproducción) de dicha población. Por supuesto, nosotros sabemos que esto no es posible una consistencia de todas las tasas vitales a largo plazo, siempre ocurre cambios temporales determinístico o estocástico. Por ejemplo, en nuestro caso no observamos mortalidad de adultos durante los dos periodos de monitorio, pero redujo de una pequeña facción para que el valor de supervivencia sea menor de 1.0, aunque el efecto sobre el crecimiento poblacional es mínimo. Por lo tanto, es importante que el valor de $\lambda$ nunca se use en sentido estricto.</span>
 <span id="cb29-88"><a href="#cb29-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-89"><a href="#cb29-89" aria-hidden="true" tabindex="-1"></a>Los meta-análisis (Crone et al. 2013), en cambio, han demostrado que $\lambda$ es una medida robusta de las condiciones actuales, ya que ésta explica la dinámica de las poblaciones durante el período de tiempo en el que se parametrizaron los modelos. Asimismo, $\lambda$ es una buena medida del estado de la población, por lo que es una forma apropiada de comparar el comportamiento de las poblaciones bajo diferentes condiciones, incluyendo variación abiótica, biótica y de manejo. Por ejemplo, los valores de $\lambda$ permiten comparar el comportamiento de una población en distintos periodos de tiempo y con ello entender cómo la variación en las condiciones climáticas afecta su dinámica. Las comparaciones también pueden ser entre poblaciones de la misma especie distribuidas en distintos sitios, para entender los efectos de la variación en el manejo, la vegetación u otras diferencias entre sitios (vea el capitulo "Variación temporal y Espacial por simulaciones")</span>
+<span id="cb29-89"><a href="#cb29-89" aria-hidden="true" tabindex="-1"></a>También es fundamental tomar en cuenta que, $\lambda$ no es la tasa a la que se espera que la población creciera en el corto plazo. De hecho, una población con $\lambda$ <span class="sc">\&lt;</span>1 pudiera crecer en el corto plazo, antes de declinar en el largo plazo y $vice-versa$. Asimismo, cabe señalar que la tasa de crecimiento poblacional de corto plazo es calculada usando los índices de la dinámica transitoria (**Capitulo X**).</span>
 <span id="cb29-90"><a href="#cb29-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-91"><a href="#cb29-91" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb29-91"><a href="#cb29-91" aria-hidden="true" tabindex="-1"></a>Los meta-análisis (Crone et al. 2013), en cambio, han demostrado que $\lambda$ es una medida robusta de las condiciones actuales, ya que ésta explica la dinámica de las poblaciones durante el período de tiempo en el que se parametrizaron los modelos. Asimismo, $\lambda$ es una buena medida del estado de la población, por lo que es una forma apropiada de comparar el comportamiento de las poblaciones bajo diferentes condiciones, incluyendo variación abiótica, biótica y de manejo. Por ejemplo, los valores de $\lambda$ permiten comparar el comportamiento de una población en distintos periodos de tiempo y con ello entender cómo la variación en las condiciones climáticas afecta su dinámica. Las comparaciones también pueden ser entre poblaciones de la misma especie distribuidas en distintos sitios, para entender los efectos de la variación en el manejo, la vegetación u otras diferencias entre sitios (vea el capitulo "Variación temporal y Espacial por simulaciones")</span>
 <span id="cb29-92"><a href="#cb29-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-93"><a href="#cb29-93" aria-hidden="true" tabindex="-1"></a><span class="fu">## Calcular el incremento de crecimiento poblacional por año</span></span>
+<span id="cb29-93"><a href="#cb29-93" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb29-94"><a href="#cb29-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-95"><a href="#cb29-95" aria-hidden="true" tabindex="-1"></a>En esta sección demostramos el crecimiento esperado por año, usando la función **pop.projection** en el paquete **popbio**. Esta función requiere que se especifique la matriz de transición, la cantidad de individuos en cada estado y el número de años a proyectar. En nuestro caso, proyectamos 5 años.</span>
+<span id="cb29-95"><a href="#cb29-95" aria-hidden="true" tabindex="-1"></a><span class="fu">## Calcular el incremento de crecimiento poblacional por año</span></span>
 <span id="cb29-96"><a href="#cb29-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-97"><a href="#cb29-97" aria-hidden="true" tabindex="-1"></a>El resultado es una listas de resultados</span>
+<span id="cb29-97"><a href="#cb29-97" aria-hidden="true" tabindex="-1"></a>En esta sección demostramos el crecimiento esperado por año, usando la función **pop.projection** en el paquete **popbio**. Esta función requiere que se especifique la matriz de transición, la cantidad de individuos en cada estado y el número de años a proyectar. En nuestro caso, proyectamos 5 años.</span>
 <span id="cb29-98"><a href="#cb29-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-99"><a href="#cb29-99" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>el $\lambda$ por los años proyectados</span>
-<span id="cb29-100"><a href="#cb29-100" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>la distribución estable de la población</span>
-<span id="cb29-101"><a href="#cb29-101" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>la cantidad de individuos esperado por cada estapas en cada año proyectado</span>
-<span id="cb29-102"><a href="#cb29-102" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>el tamaño poblacional esperado por cada año proyectado (la suma de los individuos en cada estadio)</span>
-<span id="cb29-103"><a href="#cb29-103" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>el crecimiento intrínsico esperado por cada año proyectado</span>
-<span id="cb29-104"><a href="#cb29-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-105"><a href="#cb29-105" aria-hidden="true" tabindex="-1"></a>Después de proyectar la población por 7 iteraciones, podemos ver el $\lambda$ esperado es muy similar al calculado anteriormente, ±11% de crecimiento. Nota el vector de estadios resulta en un cambio de proporciones drástico de los estadios, ya que la población se proyecta a partir de una población inicial de 10 individuos en cada estadio (25% en cada uno) a ser dominado de seis años por juvenil y plántulas. El crecimiento poblacional se mide evaluando la suma de los individuos en cada estadio por año proyectado sobre la cantidad de individuos en el año anterior. Por ejemplo, en el primer año se espera que la población crezca de 40 individuos a 44 individuos, lo que representa un crecimiento de 10% (56.8/40=1.42). En el segundo año se espera que la población crezca de 56.8 a 70.2 individuos, lo que representa un crecimiento de 23% (70.2/56.8=1.24).</span>
+<span id="cb29-99"><a href="#cb29-99" aria-hidden="true" tabindex="-1"></a>El resultado es una listas de resultados</span>
+<span id="cb29-100"><a href="#cb29-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-101"><a href="#cb29-101" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>el $\lambda$ por los años proyectados</span>
+<span id="cb29-102"><a href="#cb29-102" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>la distribución estable de la población</span>
+<span id="cb29-103"><a href="#cb29-103" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>la cantidad de individuos esperado por cada estapas en cada año proyectado</span>
+<span id="cb29-104"><a href="#cb29-104" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>el tamaño poblacional esperado por cada año proyectado (la suma de los individuos en cada estadio)</span>
+<span id="cb29-105"><a href="#cb29-105" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>el crecimiento intrínsico esperado por cada año proyectado</span>
 <span id="cb29-106"><a href="#cb29-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-107"><a href="#cb29-107" aria-hidden="true" tabindex="-1"></a><span class="fu">## Proyección de la población 1, año 1</span></span>
+<span id="cb29-107"><a href="#cb29-107" aria-hidden="true" tabindex="-1"></a>Después de proyectar la población por 7 iteraciones, podemos ver el $\lambda$ esperado es muy similar al calculado anteriormente, ±11% de crecimiento. Nota el vector de estadios resulta en un cambio de proporciones drástico de los estadios, ya que la población se proyecta a partir de una población inicial de 10 individuos en cada estadio (25% en cada uno) a ser dominado de seis años por juvenil y plántulas. El crecimiento poblacional se mide evaluando la suma de los individuos en cada estadio por año proyectado sobre la cantidad de individuos en el año anterior. Por ejemplo, en el primer año se espera que la población crezca de 40 individuos a 44 individuos, lo que representa un crecimiento de 10% (56.8/40=1.42). En el segundo año se espera que la población crezca de 56.8 a 70.2 individuos, lo que representa un crecimiento de 23% (70.2/56.8=1.24).</span>
 <span id="cb29-108"><a href="#cb29-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-111"><a href="#cb29-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb29-112"><a href="#cb29-112" aria-hidden="true" tabindex="-1"></a>pop_1 <span class="ot">&lt;-</span> <span class="fu">pop.projection</span>(mat1<span class="fl">.1</span>, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>), <span class="at">iterations=</span><span class="dv">7</span>)</span>
-<span id="cb29-113"><a href="#cb29-113" aria-hidden="true" tabindex="-1"></a>pop_1</span>
-<span id="cb29-114"><a href="#cb29-114" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-115"><a href="#cb29-115" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-109"><a href="#cb29-109" aria-hidden="true" tabindex="-1"></a><span class="fu">## Proyección de la población 1, año 1</span></span>
+<span id="cb29-110"><a href="#cb29-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-113"><a href="#cb29-113" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-114"><a href="#cb29-114" aria-hidden="true" tabindex="-1"></a>pop_1 <span class="ot">&lt;-</span> <span class="fu">pop.projection</span>(mat1<span class="fl">.1</span>, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>), <span class="at">iterations=</span><span class="dv">7</span>)</span>
+<span id="cb29-115"><a href="#cb29-115" aria-hidden="true" tabindex="-1"></a>pop_1</span>
 <span id="cb29-116"><a href="#cb29-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-117"><a href="#cb29-117" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Visualizar el crecimiento poblacional proyectado por año</span></span>
+<span id="cb29-117"><a href="#cb29-117" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb29-118"><a href="#cb29-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-119"><a href="#cb29-119" aria-hidden="true" tabindex="-1"></a>Siempre se puede visualizar el crecimiento poblacional proyectado por año, usando la función **plot** en el paquete **popbio**. En este caso, se observa que la población crece de forma exponencial, lo que es consistente con el valor de $\lambda$ calculado anteriormente. Usan este mismo código y cambian el número de iteraciones para ver como cambia la proyección de la población. Que pasa si cambian el número de individuos en cada estadio inicial? ¿Qué pasa si cambian la cantidad de iteraciones/time a un número grande?</span>
+<span id="cb29-119"><a href="#cb29-119" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Visualizar el crecimiento poblacional proyectado por año</span></span>
 <span id="cb29-120"><a href="#cb29-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-123"><a href="#cb29-123" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb29-124"><a href="#cb29-124" aria-hidden="true" tabindex="-1"></a>n<span class="ot">=</span><span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>) <span class="co"># Definir el número de individuos en cada estadio inicial</span></span>
-<span id="cb29-125"><a href="#cb29-125" aria-hidden="true" tabindex="-1"></a>cambio<span class="ot">=</span><span class="fu">pop.projection</span>(mat1<span class="fl">.1</span>, n, <span class="dv">7</span>)</span>
-<span id="cb29-126"><a href="#cb29-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-127"><a href="#cb29-127" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cambio<span class="sc">$</span>pop.size, <span class="at">type=</span><span class="st">"b"</span>, <span class="at">xlab=</span><span class="st">"Año"</span>, <span class="at">ylab=</span><span class="st">"Tamaño poblacional"</span>, <span class="at">main=</span><span class="st">"Proyección de la población 1, año 1"</span>)</span>
+<span id="cb29-121"><a href="#cb29-121" aria-hidden="true" tabindex="-1"></a>Siempre se puede visualizar el crecimiento poblacional proyectado por año, usando la función **plot** en el paquete **popbio**. En este caso, se observa que la población crece de forma exponencial, lo que es consistente con el valor de $\lambda$ calculado anteriormente. Usan este mismo código y cambian el número de iteraciones para ver como cambia la proyección de la población. Que pasa si cambian el número de individuos en cada estadio inicial? ¿Qué pasa si cambian la cantidad de iteraciones/time a un número grande?</span>
+<span id="cb29-122"><a href="#cb29-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-125"><a href="#cb29-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-126"><a href="#cb29-126" aria-hidden="true" tabindex="-1"></a>n<span class="ot">=</span><span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>) <span class="co"># Definir el número de individuos en cada estadio inicial</span></span>
+<span id="cb29-127"><a href="#cb29-127" aria-hidden="true" tabindex="-1"></a>cambio<span class="ot">=</span><span class="fu">pop.projection</span>(mat1<span class="fl">.1</span>, n, <span class="dv">7</span>)</span>
 <span id="cb29-128"><a href="#cb29-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-129"><a href="#cb29-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-129"><a href="#cb29-129" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cambio<span class="sc">$</span>pop.size, <span class="at">type=</span><span class="st">"b"</span>, <span class="at">xlab=</span><span class="st">"Año"</span>, <span class="at">ylab=</span><span class="st">"Tamaño poblacional"</span>, <span class="at">main=</span><span class="st">"Proyección de la población 1, año 1"</span>)</span>
 <span id="cb29-130"><a href="#cb29-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-131"><a href="#cb29-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-131"><a href="#cb29-131" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-132"><a href="#cb29-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-133"><a href="#cb29-133" aria-hidden="true" tabindex="-1"></a><span class="fu">### Cambio en número de estadios por año proyectado</span></span>
+<span id="cb29-133"><a href="#cb29-133" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb29-134"><a href="#cb29-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-135"><a href="#cb29-135" aria-hidden="true" tabindex="-1"></a>Se puede gráficar la cantidad esperada de individuos en cada estadio por año proyectado, usando la función **stage.vector.plot** en el paquete **popbio**. En este caso, se observa que la población se proyecta a ser dominada por juveniles y plántulas, lo que es consistente con el valor de $\lambda$ calculado anteriormente. El gráfico los visualiza por la proporciones de cada estadio en el periodo de tiempo correspondiente.</span>
+<span id="cb29-135"><a href="#cb29-135" aria-hidden="true" tabindex="-1"></a><span class="fu">### Cambio en número de estadios por año proyectado</span></span>
 <span id="cb29-136"><a href="#cb29-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-139"><a href="#cb29-139" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb29-140"><a href="#cb29-140" aria-hidden="true" tabindex="-1"></a>n<span class="ot">=</span><span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">1010</span>,<span class="dv">10</span>) <span class="co"># Definir el número de individuos en cada estadio inicial</span></span>
-<span id="cb29-141"><a href="#cb29-141" aria-hidden="true" tabindex="-1"></a>cambio<span class="ot">=</span><span class="fu">pop.projection</span>(mat1<span class="fl">.1</span>, n, <span class="dv">7</span>)</span>
-<span id="cb29-142"><a href="#cb29-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-143"><a href="#cb29-143" aria-hidden="true" tabindex="-1"></a><span class="fu">stage.vector.plot</span>(cambio<span class="sc">$</span>stage.vectors, <span class="at">col=</span><span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.6</span>))</span>
-<span id="cb29-144"><a href="#cb29-144" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb29-145"><a href="#cb29-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-146"><a href="#cb29-146" aria-hidden="true" tabindex="-1"></a><span class="fu">## Comparar $\lambda$ entre poblaciones</span></span>
+<span id="cb29-137"><a href="#cb29-137" aria-hidden="true" tabindex="-1"></a>Se puede gráficar la cantidad esperada de individuos en cada estadio por año proyectado, usando la función **stage.vector.plot** en el paquete **popbio**. En este caso, se observa que la población se proyecta a ser dominada por juveniles y plántulas, lo que es consistente con el valor de $\lambda$ calculado anteriormente. El gráfico los visualiza por la proporciones de cada estadio en el periodo de tiempo correspondiente.</span>
+<span id="cb29-138"><a href="#cb29-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-141"><a href="#cb29-141" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-142"><a href="#cb29-142" aria-hidden="true" tabindex="-1"></a>n<span class="ot">=</span><span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">1010</span>,<span class="dv">10</span>) <span class="co"># Definir el número de individuos en cada estadio inicial</span></span>
+<span id="cb29-143"><a href="#cb29-143" aria-hidden="true" tabindex="-1"></a>cambio<span class="ot">=</span><span class="fu">pop.projection</span>(mat1<span class="fl">.1</span>, n, <span class="dv">7</span>)</span>
+<span id="cb29-144"><a href="#cb29-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-145"><a href="#cb29-145" aria-hidden="true" tabindex="-1"></a><span class="fu">stage.vector.plot</span>(cambio<span class="sc">$</span>stage.vectors, <span class="at">col=</span><span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.6</span>))</span>
+<span id="cb29-146"><a href="#cb29-146" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb29-147"><a href="#cb29-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-148"><a href="#cb29-148" aria-hidden="true" tabindex="-1"></a>Nuestra segunda población de $Laelia speciosa$ se establece en un hábitat similar a la población 1 y fue monitoreada durante al mismo tiempo. Sin embargo, ésta fue sujeta a la extracción. Si comparamos los valores de $\lambda$ de nuestras dos poblaciones, podemos hacer inferencias sobre los efectos de la extracción. La población 2 no produjo frutos y tampoco se observaron plántulas. Debido a esto, fue necesario incluir el valor de 0.001 para la transición de la matriz adulta2-<span class="sc">\&gt;</span> plántula y con esto asegurar que nuestra matriz de estudio sea irreducible y primitive (**Capitulo X**).</span>
+<span id="cb29-148"><a href="#cb29-148" aria-hidden="true" tabindex="-1"></a><span class="fu">## Comparar $\lambda$ entre poblaciones</span></span>
 <span id="cb29-149"><a href="#cb29-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-150"><a href="#cb29-150" aria-hidden="true" tabindex="-1"></a><span class="fu">## Proyección de la población 2, año 1</span></span>
+<span id="cb29-150"><a href="#cb29-150" aria-hidden="true" tabindex="-1"></a>Nuestra segunda población de $Laelia speciosa$ se establece en un hábitat similar a la población 1 y fue monitoreada durante al mismo tiempo. Sin embargo, ésta fue sujeta a la extracción. Si comparamos los valores de $\lambda$ de nuestras dos poblaciones, podemos hacer inferencias sobre los efectos de la extracción. La población 2 no produjo frutos y tampoco se observaron plántulas. Debido a esto, fue necesario incluir el valor de 0.001 para la transición de la matriz adulta2-<span class="sc">\&gt;</span> plántula y con esto asegurar que nuestra matriz de estudio sea irreducible y primitive (**Capitulo X**).</span>
 <span id="cb29-151"><a href="#cb29-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-152"><a href="#cb29-152" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_3}</span></span>
+<span id="cb29-152"><a href="#cb29-152" aria-hidden="true" tabindex="-1"></a><span class="fu">## Proyección de la población 2, año 1</span></span>
 <span id="cb29-153"><a href="#cb29-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-154"><a href="#cb29-154" aria-hidden="true" tabindex="-1"></a><span class="in">#Matriz de la población 2, año 1</span></span>
-<span id="cb29-155"><a href="#cb29-155" aria-hidden="true" tabindex="-1"></a><span class="in">mat2.1 &lt;- matrix (c(0.50, 0.00, 0.00, 0.001,</span></span>
-<span id="cb29-156"><a href="#cb29-156" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.16, 0.79, 0.00, 0.00, </span></span>
-<span id="cb29-157"><a href="#cb29-157" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.00, 0.12, 0.78, 0.11,</span></span>
-<span id="cb29-158"><a href="#cb29-158" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.00, 0.00, 0.21, 0.88), </span></span>
-<span id="cb29-159"><a href="#cb29-159" aria-hidden="true" tabindex="-1"></a><span class="in">                  nrow = 4, ncol=4, byrow = TRUE, dimnames = list(estadios, estadios))</span></span>
-<span id="cb29-160"><a href="#cb29-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-161"><a href="#cb29-161" aria-hidden="true" tabindex="-1"></a><span class="in">  mat2.1</span></span>
+<span id="cb29-154"><a href="#cb29-154" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_3}</span></span>
+<span id="cb29-155"><a href="#cb29-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-156"><a href="#cb29-156" aria-hidden="true" tabindex="-1"></a><span class="in">#Matriz de la población 2, año 1</span></span>
+<span id="cb29-157"><a href="#cb29-157" aria-hidden="true" tabindex="-1"></a><span class="in">mat2.1 &lt;- matrix (c(0.50, 0.00, 0.00, 0.001,</span></span>
+<span id="cb29-158"><a href="#cb29-158" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.16, 0.79, 0.00, 0.00, </span></span>
+<span id="cb29-159"><a href="#cb29-159" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.00, 0.12, 0.78, 0.11,</span></span>
+<span id="cb29-160"><a href="#cb29-160" aria-hidden="true" tabindex="-1"></a><span class="in">                    0.00, 0.00, 0.21, 0.88), </span></span>
+<span id="cb29-161"><a href="#cb29-161" aria-hidden="true" tabindex="-1"></a><span class="in">                  nrow = 4, ncol=4, byrow = TRUE, dimnames = list(estadios, estadios))</span></span>
 <span id="cb29-162"><a href="#cb29-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-163"><a href="#cb29-163" aria-hidden="true" tabindex="-1"></a><span class="in">eig2.1&lt;-eigen.analysis(mat2.1) </span></span>
-<span id="cb29-164"><a href="#cb29-164" aria-hidden="true" tabindex="-1"></a><span class="in">eig2.1$lambda</span></span>
-<span id="cb29-165"><a href="#cb29-165" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb29-166"><a href="#cb29-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-167"><a href="#cb29-167" aria-hidden="true" tabindex="-1"></a>La población bajo extracción tiene un valor de $\lambda$ menor (0.990) a aquella en que no se observa esta actividad de manejo. Sin embargo, debemos ser cautelosos con nuestra interpretación sobre los efectos de la extracción, debido a que cualquier diferencia relacionada con la extracción está mezclada o enmascarada con las diferencias entre los dos sitios. Para lograr una comparación robusta, se debe llevar a cabo un experimento de extracción en el mismo sitio o tener varios sitios de extracción y también varios sitios sin extracción.</span>
+<span id="cb29-163"><a href="#cb29-163" aria-hidden="true" tabindex="-1"></a><span class="in">  mat2.1</span></span>
+<span id="cb29-164"><a href="#cb29-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-165"><a href="#cb29-165" aria-hidden="true" tabindex="-1"></a><span class="in">eig2.1&lt;-eigen.analysis(mat2.1) </span></span>
+<span id="cb29-166"><a href="#cb29-166" aria-hidden="true" tabindex="-1"></a><span class="in">eig2.1$lambda</span></span>
+<span id="cb29-167"><a href="#cb29-167" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb29-168"><a href="#cb29-168" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-169"><a href="#cb29-169" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb29-169"><a href="#cb29-169" aria-hidden="true" tabindex="-1"></a>La población bajo extracción tiene un valor de $\lambda$ menor (0.990) a aquella en que no se observa esta actividad de manejo. Sin embargo, debemos ser cautelosos con nuestra interpretación sobre los efectos de la extracción, debido a que cualquier diferencia relacionada con la extracción está mezclada o enmascarada con las diferencias entre los dos sitios. Para lograr una comparación robusta, se debe llevar a cabo un experimento de extracción en el mismo sitio o tener varios sitios de extracción y también varios sitios sin extracción.</span>
 <span id="cb29-170"><a href="#cb29-170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-171"><a href="#cb29-171" aria-hidden="true" tabindex="-1"></a><span class="fu">## Intervalos de confianza de $\lambda$</span></span>
+<span id="cb29-171"><a href="#cb29-171" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb29-172"><a href="#cb29-172" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-173"><a href="#cb29-173" aria-hidden="true" tabindex="-1"></a>Para interpretar $\lambda$ apropiadamente necesitamos calcular los intervalos de confianza (IC). Estos intervalos pueden ser calculados con un método de remuestreo con reemplazo (i.e. bootstrap), utilizando las transiciones de estado de los individuos de un periodo a otro; es decir, los datos (i.e $stage-fate$) usados para construir la matriz de transiciones (Capitulo X). En el remuestro se puede especificar el tamaño de la muestra remuestreada, la cual fue de 1000 en nuestro caso. Cabe señalar que, se tendrán intervalos de confianza amplios cuando se tiene una muestra pequeña de datos originales, o, si se tienen pocas observaciones de aquellas transiciones que contribuyen en mayor medida a $\lambda$. En adición se puede usar el método en el paquete "raretrans" (no explicado en este capitulo), que es apropiado para tamaño de muestra pequeñas. La diferencia entre los dos métodos es que la simulación usando el paquete "popbio" se selecciona la cantidad de individuos de los estadios al azar, mientras que el paquete "raretrans" usa una simulación de basado en la distribución Dirichlet.</span>
+<span id="cb29-173"><a href="#cb29-173" aria-hidden="true" tabindex="-1"></a><span class="fu">## Intervalos de confianza de $\lambda$</span></span>
 <span id="cb29-174"><a href="#cb29-174" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-175"><a href="#cb29-175" aria-hidden="true" tabindex="-1"></a>En el presente caso, calculamos los intervalos de confianza de $\lambda$ para la población 1, correspondientes al año 1 y 2. En ambos años, los intervalos son amplios.</span>
+<span id="cb29-175"><a href="#cb29-175" aria-hidden="true" tabindex="-1"></a>Para interpretar $\lambda$ apropiadamente necesitamos calcular los intervalos de confianza (IC). Estos intervalos pueden ser calculados con un método de remuestreo con reemplazo (i.e. bootstrap), utilizando las transiciones de estado de los individuos de un periodo a otro; es decir, los datos (i.e $stage-fate$) usados para construir la matriz de transiciones (Capitulo X). En el remuestro se puede especificar el tamaño de la muestra remuestreada, la cual fue de 1000 en nuestro caso. Cabe señalar que, se tendrán intervalos de confianza amplios cuando se tiene una muestra pequeña de datos originales, o, si se tienen pocas observaciones de aquellas transiciones que contribuyen en mayor medida a $\lambda$. En adición se puede usar el método en el paquete "raretrans" (no explicado en este capitulo), que es apropiado para tamaño de muestra pequeñas. La diferencia entre los dos métodos es que la simulación usando el paquete "popbio" se selecciona la cantidad de individuos de los estadios al azar, mientras que el paquete "raretrans" usa una simulación de basado en la distribución Dirichlet.</span>
 <span id="cb29-176"><a href="#cb29-176" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-177"><a href="#cb29-177" aria-hidden="true" tabindex="-1"></a>Usando la función **boot.transitions** del paquete **popbio**, se puede calcular los intervalos de confianza de λ. Esta función requiere que se especifiquen los estadios de la matriz y el número de remuestreos. En nuestro caso, usamos 1000 remuestreos y especificamos los estadios como "pl", "j", "a1" y "a2".</span>
+<span id="cb29-177"><a href="#cb29-177" aria-hidden="true" tabindex="-1"></a>En el presente caso, calculamos los intervalos de confianza de $\lambda$ para la población 1, correspondientes al año 1 y 2. En ambos años, los intervalos son amplios.</span>
 <span id="cb29-178"><a href="#cb29-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-179"><a href="#cb29-179" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**boot.transitions(transitions, iterations, sort = stages)**</span>
+<span id="cb29-179"><a href="#cb29-179" aria-hidden="true" tabindex="-1"></a>Usando la función **boot.transitions** del paquete **popbio**, se puede calcular los intervalos de confianza de λ. Esta función requiere que se especifiquen los estadios de la matriz y el número de remuestreos. En nuestro caso, usamos 1000 remuestreos y especificamos los estadios como "pl", "j", "a1" y "a2".</span>
 <span id="cb29-180"><a href="#cb29-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-181"><a href="#cb29-181" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>transitions: un data frame con las transiciones de los individuos de un periodo a otro (i.e. $stage-fate$).</span>
+<span id="cb29-181"><a href="#cb29-181" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**boot.transitions(transitions, iterations, sort = stages)**</span>
 <span id="cb29-182"><a href="#cb29-182" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-183"><a href="#cb29-183" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>iterations: el número de remuestreos a realizar.</span>
+<span id="cb29-183"><a href="#cb29-183" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>transitions: un data frame con las transiciones de los individuos de un periodo a otro (i.e. $stage-fate$).</span>
 <span id="cb29-184"><a href="#cb29-184" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-185"><a href="#cb29-185" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>sort: un vector con los nombres de los estadios en el orden en que se encuentran en la matriz de transición.</span>
+<span id="cb29-185"><a href="#cb29-185" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>iterations: el número de remuestreos a realizar.</span>
 <span id="cb29-186"><a href="#cb29-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-187"><a href="#cb29-187" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_4}</span></span>
+<span id="cb29-187"><a href="#cb29-187" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>sort: un vector con los nombres de los estadios en el orden en que se encuentran en la matriz de transición.</span>
 <span id="cb29-188"><a href="#cb29-188" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-189"><a href="#cb29-189" aria-hidden="true" tabindex="-1"></a><span class="in">#Intervalos de confianza (IC) de λ para la población 1, año 1</span></span>
-<span id="cb29-190"><a href="#cb29-190" aria-hidden="true" tabindex="-1"></a><span class="in">#Indica el directorio de trabajo y definir los estadios</span></span>
-<span id="cb29-191"><a href="#cb29-191" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-192"><a href="#cb29-192" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-193"><a href="#cb29-193" aria-hidden="true" tabindex="-1"></a><span class="in">laelia1&lt;-read.table("data/laelia1.txt", header=TRUE) # subir los datos de la población 1, año 1 </span></span>
+<span id="cb29-189"><a href="#cb29-189" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_4}</span></span>
+<span id="cb29-190"><a href="#cb29-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-191"><a href="#cb29-191" aria-hidden="true" tabindex="-1"></a><span class="in">#Intervalos de confianza (IC) de λ para la población 1, año 1</span></span>
+<span id="cb29-192"><a href="#cb29-192" aria-hidden="true" tabindex="-1"></a><span class="in">#Indica el directorio de trabajo y definir los estadios</span></span>
+<span id="cb29-193"><a href="#cb29-193" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-194"><a href="#cb29-194" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-195"><a href="#cb29-195" aria-hidden="true" tabindex="-1"></a><span class="in">pop1.1=laelia1 # renombrar el data frame para facilitar su uso </span></span>
+<span id="cb29-195"><a href="#cb29-195" aria-hidden="true" tabindex="-1"></a><span class="in">laelia1&lt;-read.table("data/laelia1.txt", header=TRUE) # subir los datos de la población 1, año 1 </span></span>
 <span id="cb29-196"><a href="#cb29-196" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-197"><a href="#cb29-197" aria-hidden="true" tabindex="-1"></a><span class="in">stages&lt;-c("pl","j","a1","a2") # identificación de los estadios</span></span>
+<span id="cb29-197"><a href="#cb29-197" aria-hidden="true" tabindex="-1"></a><span class="in">pop1.1=laelia1 # renombrar el data frame para facilitar su uso </span></span>
 <span id="cb29-198"><a href="#cb29-198" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-199"><a href="#cb29-199" aria-hidden="true" tabindex="-1"></a><span class="in">n&lt;-nrow(pop1.1) # Crear una variable n que contiene el número de filas del data.frame</span></span>
+<span id="cb29-199"><a href="#cb29-199" aria-hidden="true" tabindex="-1"></a><span class="in">stages&lt;-c("pl","j","a1","a2") # identificación de los estadios</span></span>
 <span id="cb29-200"><a href="#cb29-200" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-201"><a href="#cb29-201" aria-hidden="true" tabindex="-1"></a><span class="in">x&lt;-boot.transitions(pop1.1, 1000, sort=stages) # la boot.transition selecciona al azar la cantidad de individuos en cada estadios: función esta en el paquete "popbio"</span></span>
+<span id="cb29-201"><a href="#cb29-201" aria-hidden="true" tabindex="-1"></a><span class="in">n&lt;-nrow(pop1.1) # Crear una variable n que contiene el número de filas del data.frame</span></span>
 <span id="cb29-202"><a href="#cb29-202" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-203"><a href="#cb29-203" aria-hidden="true" tabindex="-1"></a><span class="in">ic1&lt;-quantile(x$lambda, c(0.025, 0.975))</span></span>
-<span id="cb29-204"><a href="#cb29-204" aria-hidden="true" tabindex="-1"></a><span class="in">ic1</span></span>
-<span id="cb29-205"><a href="#cb29-205" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-206"><a href="#cb29-206" aria-hidden="true" tabindex="-1"></a><span class="in">#IC para la población 1, año 2</span></span>
+<span id="cb29-203"><a href="#cb29-203" aria-hidden="true" tabindex="-1"></a><span class="in">x&lt;-boot.transitions(pop1.1, 1000, sort=stages) # la boot.transition selecciona al azar la cantidad de individuos en cada estadios: función esta en el paquete "popbio"</span></span>
+<span id="cb29-204"><a href="#cb29-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-205"><a href="#cb29-205" aria-hidden="true" tabindex="-1"></a><span class="in">ic1&lt;-quantile(x$lambda, c(0.025, 0.975))</span></span>
+<span id="cb29-206"><a href="#cb29-206" aria-hidden="true" tabindex="-1"></a><span class="in">ic1</span></span>
 <span id="cb29-207"><a href="#cb29-207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-208"><a href="#cb29-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-208"><a href="#cb29-208" aria-hidden="true" tabindex="-1"></a><span class="in">#IC para la población 1, año 2</span></span>
 <span id="cb29-209"><a href="#cb29-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-210"><a href="#cb29-210" aria-hidden="true" tabindex="-1"></a><span class="fu">### Simulación de las transiciones de la población 1, año 2</span></span>
+<span id="cb29-210"><a href="#cb29-210" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb29-211"><a href="#cb29-211" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-212"><a href="#cb29-212" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_4b}</span></span>
+<span id="cb29-212"><a href="#cb29-212" aria-hidden="true" tabindex="-1"></a><span class="fu">### Simulación de las transiciones de la población 1, año 2</span></span>
 <span id="cb29-213"><a href="#cb29-213" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-214"><a href="#cb29-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-215"><a href="#cb29-215" aria-hidden="true" tabindex="-1"></a><span class="in">laelia2&lt;-read.table("data/laelia2.txt", header=TRUE)</span></span>
+<span id="cb29-214"><a href="#cb29-214" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_4b}</span></span>
+<span id="cb29-215"><a href="#cb29-215" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-216"><a href="#cb29-216" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-217"><a href="#cb29-217" aria-hidden="true" tabindex="-1"></a><span class="in">pop1.2=laelia2</span></span>
+<span id="cb29-217"><a href="#cb29-217" aria-hidden="true" tabindex="-1"></a><span class="in">laelia2&lt;-read.table("data/laelia2.txt", header=TRUE)</span></span>
 <span id="cb29-218"><a href="#cb29-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-219"><a href="#cb29-219" aria-hidden="true" tabindex="-1"></a><span class="in">stages&lt;-c("pl","j","a1","a2")</span></span>
+<span id="cb29-219"><a href="#cb29-219" aria-hidden="true" tabindex="-1"></a><span class="in">pop1.2=laelia2</span></span>
 <span id="cb29-220"><a href="#cb29-220" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-221"><a href="#cb29-221" aria-hidden="true" tabindex="-1"></a><span class="in">n&lt;-nrow(pop1.2)</span></span>
-<span id="cb29-222"><a href="#cb29-222" aria-hidden="true" tabindex="-1"></a><span class="in">x2&lt;-boot.transitions(pop1.2, 1000, sort=stages)</span></span>
-<span id="cb29-223"><a href="#cb29-223" aria-hidden="true" tabindex="-1"></a><span class="in">ic2&lt;-quantile(x2$lambda, c(0.025, 0.975))</span></span>
-<span id="cb29-224"><a href="#cb29-224" aria-hidden="true" tabindex="-1"></a><span class="in">ic2</span></span>
-<span id="cb29-225"><a href="#cb29-225" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-226"><a href="#cb29-226" aria-hidden="true" tabindex="-1"></a><span class="in">#Nota:  Los datos de algunas transiciones especificas no siempre se obtienen de los censos poblacionales, por lo que éstos pueden provenir de otros experimentos. Por ejemplo, si las observaciones de campo fueran nulas o escasas para la transición de semilla a plántula, éste dato se puede obtener de la literatura consultada o de experimentos previos o usar el método descrito en "Método bayesiano de calcular las transciones y fecundidades". En estos casos se incorporaron las transiciones a la matriz de la siguiente forma al estimar el IC: </span></span>
+<span id="cb29-221"><a href="#cb29-221" aria-hidden="true" tabindex="-1"></a><span class="in">stages&lt;-c("pl","j","a1","a2")</span></span>
+<span id="cb29-222"><a href="#cb29-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-223"><a href="#cb29-223" aria-hidden="true" tabindex="-1"></a><span class="in">n&lt;-nrow(pop1.2)</span></span>
+<span id="cb29-224"><a href="#cb29-224" aria-hidden="true" tabindex="-1"></a><span class="in">x2&lt;-boot.transitions(pop1.2, 1000, sort=stages)</span></span>
+<span id="cb29-225"><a href="#cb29-225" aria-hidden="true" tabindex="-1"></a><span class="in">ic2&lt;-quantile(x2$lambda, c(0.025, 0.975))</span></span>
+<span id="cb29-226"><a href="#cb29-226" aria-hidden="true" tabindex="-1"></a><span class="in">ic2</span></span>
 <span id="cb29-227"><a href="#cb29-227" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-228"><a href="#cb29-228" aria-hidden="true" tabindex="-1"></a><span class="in"># pl.pl&lt;-0.7 #a la permanencia en plantula se le asigno el valor 0.7 </span></span>
-<span id="cb29-229"><a href="#cb29-229" aria-hidden="true" tabindex="-1"></a><span class="in"># pl.j&lt;-0.1 #a la transicion plantula-juvenil se le asigno el valor 0.1</span></span>
-<span id="cb29-230"><a href="#cb29-230" aria-hidden="true" tabindex="-1"></a><span class="in"># x&lt;-boot.transitions(pop1, 1000, add = c(1,1, pl.pl, 2,1, pl.j), sort=stages)</span></span>
-<span id="cb29-231"><a href="#cb29-231" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-232"><a href="#cb29-232" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-233"><a href="#cb29-233" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-228"><a href="#cb29-228" aria-hidden="true" tabindex="-1"></a><span class="in">#Nota:  Los datos de algunas transiciones especificas no siempre se obtienen de los censos poblacionales, por lo que éstos pueden provenir de otros experimentos. Por ejemplo, si las observaciones de campo fueran nulas o escasas para la transición de semilla a plántula, éste dato se puede obtener de la literatura consultada o de experimentos previos o usar el método descrito en "Método bayesiano de calcular las transciones y fecundidades". En estos casos se incorporaron las transiciones a la matriz de la siguiente forma al estimar el IC: </span></span>
+<span id="cb29-229"><a href="#cb29-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-230"><a href="#cb29-230" aria-hidden="true" tabindex="-1"></a><span class="in"># pl.pl&lt;-0.7 #a la permanencia en plantula se le asigno el valor 0.7 </span></span>
+<span id="cb29-231"><a href="#cb29-231" aria-hidden="true" tabindex="-1"></a><span class="in"># pl.j&lt;-0.1 #a la transicion plantula-juvenil se le asigno el valor 0.1</span></span>
+<span id="cb29-232"><a href="#cb29-232" aria-hidden="true" tabindex="-1"></a><span class="in"># x&lt;-boot.transitions(pop1, 1000, add = c(1,1, pl.pl, 2,1, pl.j), sort=stages)</span></span>
+<span id="cb29-233"><a href="#cb29-233" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-234"><a href="#cb29-234" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-235"><a href="#cb29-235" aria-hidden="true" tabindex="-1"></a>Note que para la población en el primer año el intervalo de confianza de $\lambda$ es de 1.00 a 1.21, lo que indica que el mejor estimado de la tasa de crecimiento poblacional esperada está entre 0% y 21%. En el segundo año, el intervalo de confianza es de 0.97 a 1.19, lo que indica que la tasa de crecimiento poblacional pudiese ser entre una reducción de ±3% a aumento de 19%.</span>
+<span id="cb29-235"><a href="#cb29-235" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb29-236"><a href="#cb29-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-239"><a href="#cb29-239" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb29-240"><a href="#cb29-240" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(ic1, ic2) <span class="sc">%&gt;%</span></span>
-<span id="cb29-241"><a href="#cb29-241" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">c</span>(<span class="st">"año 1"</span>, <span class="st">"año 2"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb29-242"><a href="#cb29-242" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb29-243"><a href="#cb29-243" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"IC 2.5%"</span> <span class="ot">=</span> <span class="st">`</span><span class="at">2.5%</span><span class="st">`</span>, <span class="st">"IC 97.5%"</span> <span class="ot">=</span> <span class="st">`</span><span class="at">97.5%</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb29-244"><a href="#cb29-244" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits=</span> <span class="dv">3</span>, <span class="at">caption =</span> <span class="st">"Intervalos de confianza de λ"</span>)</span>
-<span id="cb29-245"><a href="#cb29-245" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb29-246"><a href="#cb29-246" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-247"><a href="#cb29-247" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb29-237"><a href="#cb29-237" aria-hidden="true" tabindex="-1"></a>Note que para la población en el primer año el intervalo de confianza de $\lambda$ es de 1.00 a 1.21, lo que indica que el mejor estimado de la tasa de crecimiento poblacional esperada está entre 0% y 21%. En el segundo año, el intervalo de confianza es de 0.97 a 1.19, lo que indica que la tasa de crecimiento poblacional pudiese ser entre una reducción de ±3% a aumento de 19%.</span>
+<span id="cb29-238"><a href="#cb29-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-241"><a href="#cb29-241" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-242"><a href="#cb29-242" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(ic1, ic2) <span class="sc">%&gt;%</span></span>
+<span id="cb29-243"><a href="#cb29-243" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">c</span>(<span class="st">"año 1"</span>, <span class="st">"año 2"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb29-244"><a href="#cb29-244" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb29-245"><a href="#cb29-245" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"IC 2.5%"</span> <span class="ot">=</span> <span class="st">`</span><span class="at">2.5%</span><span class="st">`</span>, <span class="st">"IC 97.5%"</span> <span class="ot">=</span> <span class="st">`</span><span class="at">97.5%</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-246"><a href="#cb29-246" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits=</span> <span class="dv">3</span>, <span class="at">caption =</span> <span class="st">"Intervalos de confianza de λ"</span>)</span>
+<span id="cb29-247"><a href="#cb29-247" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb29-248"><a href="#cb29-248" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-249"><a href="#cb29-249" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ambiente Variable</span></span>
+<span id="cb29-249"><a href="#cb29-249" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb29-250"><a href="#cb29-250" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-251"><a href="#cb29-251" aria-hidden="true" tabindex="-1"></a>En el ejemplo anterior, hemos asumido que las condiciones bajo las cuales se construyeron las matrices de transición son constantes en el tiempo. Sin embargo, sabemos que esto no es cierto, ya que las condiciones bióticas y abióticas cambian con el tiempo y espacio. Por lo tanto, $\lambda$ no debe ser interpretado literalmente como un valor específico, ni tampoco como una herramienta predictiva. En trabajos de viabilidad de población uno de los objetivos es evaluar cómo la variabilidad demográfica, biótica y ábiotica impactan las tasas vitales y por consecuencia el crecimiento afecta la dinámica poblacional. Para ello, se puede calcular la tasa estocástica de crecimiento $λ_e$ (ver más adelante).</span>
+<span id="cb29-251"><a href="#cb29-251" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ambiente Variable</span></span>
 <span id="cb29-252"><a href="#cb29-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-253"><a href="#cb29-253" aria-hidden="true" tabindex="-1"></a><span class="fu">## Tasa estocástica de crecimiento $λ_e$</span></span>
+<span id="cb29-253"><a href="#cb29-253" aria-hidden="true" tabindex="-1"></a>En el ejemplo anterior, hemos asumido que las condiciones bajo las cuales se construyeron las matrices de transición son constantes en el tiempo. Sin embargo, sabemos que esto no es cierto, ya que las condiciones bióticas y abióticas cambian con el tiempo y espacio. Por lo tanto, $\lambda$ no debe ser interpretado literalmente como un valor específico, ni tampoco como una herramienta predictiva. En trabajos de viabilidad de población uno de los objetivos es evaluar cómo la variabilidad demográfica, biótica y ábiotica impactan las tasas vitales y por consecuencia el crecimiento afecta la dinámica poblacional. Para ello, se puede calcular la tasa estocástica de crecimiento $λ_e$ (ver más adelante).</span>
 <span id="cb29-254"><a href="#cb29-254" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-255"><a href="#cb29-255" aria-hidden="true" tabindex="-1"></a>La tasa estocástica de crecimiento o $λ_e$ se puede estimar si se cuenta con datos colectados por 2 o más periodos y, por lo tanto, se tienen 2 o más matrices de transición. La tasa estocástica se puede calcular a través del método de simulación de Cohen o por la aproximación de Tuljarpurkar <span class="co">[</span><span class="ot">@caswell2001matrix</span><span class="co">]</span>. En la simulación, las matrices son seleccionadas aleatoriamente para un número específico de intervalos de tiempo (50,000 por omisión en **popbio**). Se calcula $λ_e$ como la tasa media del crecimiento para un lapso de tiempo. En la aproximación de Tuljarpurkar, se calcula $λ_e$ como el valor propio dominante de la matriz de transición promedio. El método de Tuljarpurkar es más rápido, pero menos robusto que el método de simulación. Pero es recomendable solamente cuando la variación entre las matrices de diferentes periodos sean pequeñas <span class="co">[</span><span class="ot">@caswell2001matrix</span><span class="co">]</span>, aunque Morris y Doak mencionan que el método funciona bastante bien aunque varían las matrices <span class="co">[</span><span class="ot">@morris2002quantitative</span><span class="co">]</span>. En la próxima sección se muestra cómo calcular $λ_e$.</span>
+<span id="cb29-255"><a href="#cb29-255" aria-hidden="true" tabindex="-1"></a><span class="fu">## Tasa estocástica de crecimiento $λ_e$</span></span>
 <span id="cb29-256"><a href="#cb29-256" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-257"><a href="#cb29-257" aria-hidden="true" tabindex="-1"></a>Es apropiado tomar el tiempo de entender como se calcula $λ_e$ y cómo se interpreta. La aproximación de Tuljarpurkar es:</span>
+<span id="cb29-257"><a href="#cb29-257" aria-hidden="true" tabindex="-1"></a>La tasa estocástica de crecimiento o $λ_e$ se puede estimar si se cuenta con datos colectados por 2 o más periodos y, por lo tanto, se tienen 2 o más matrices de transición. La tasa estocástica se puede calcular a través del método de simulación de Cohen o por la aproximación de Tuljarpurkar <span class="co">[</span><span class="ot">@caswell2001matrix</span><span class="co">]</span>. En la simulación, las matrices son seleccionadas aleatoriamente para un número específico de intervalos de tiempo (50,000 por omisión en **popbio**). Se calcula $λ_e$ como la tasa media del crecimiento para un lapso de tiempo. En la aproximación de Tuljarpurkar, se calcula $λ_e$ como el valor propio dominante de la matriz de transición promedio. El método de Tuljarpurkar es más rápido, pero menos robusto que el método de simulación. Pero es recomendable solamente cuando la variación entre las matrices de diferentes periodos sean pequeñas <span class="co">[</span><span class="ot">@caswell2001matrix</span><span class="co">]</span>, aunque Morris y Doak mencionan que el método funciona bastante bien aunque varían las matrices <span class="co">[</span><span class="ot">@morris2002quantitative</span><span class="co">]</span>. En la próxima sección se muestra cómo calcular $λ_e$.</span>
 <span id="cb29-258"><a href="#cb29-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-259"><a href="#cb29-259" aria-hidden="true" tabindex="-1"></a>$$log(λ_e) = log(\bar\lambda_1)-\frac{1}{2}(\frac{\tau^2}{\bar\lambda_1^2})$$,</span>
+<span id="cb29-259"><a href="#cb29-259" aria-hidden="true" tabindex="-1"></a>Es apropiado tomar el tiempo de entender como se calcula $λ_e$ y cómo se interpreta. La aproximación de Tuljarpurkar es:</span>
 <span id="cb29-260"><a href="#cb29-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-261"><a href="#cb29-261" aria-hidden="true" tabindex="-1"></a>donde $\tau^2$ es igual a:</span>
+<span id="cb29-261"><a href="#cb29-261" aria-hidden="true" tabindex="-1"></a>$$log(λ_e) = log(\bar\lambda_1)-\frac{1}{2}(\frac{\tau^2}{\bar\lambda_1^2})$$,</span>
 <span id="cb29-262"><a href="#cb29-262" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-263"><a href="#cb29-263" aria-hidden="true" tabindex="-1"></a>$$\tau^2=\sum_{i=1}^{S}\sum_{j=1}^{S}\sum_{k=1}^{S}\sum_{l=1}^{S}Cov(\alpha_{ij}, \alpha_{kl})\bar{S_{ij}}\bar{S_{kl}}$$</span>
+<span id="cb29-263"><a href="#cb29-263" aria-hidden="true" tabindex="-1"></a>donde $\tau^2$ es igual a:</span>
 <span id="cb29-264"><a href="#cb29-264" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-265"><a href="#cb29-265" aria-hidden="true" tabindex="-1"></a>La variable de la ecuación incluye $\bar\lambda_1$, donde representa el log del valor propio promedio de las matrices de transición $\bar{\text{A}}$, donde es el promedio de cada elemento de las matrices. Si tenemos 4 matrices de transición, $\bar{\text{A}}$ es la matriz de transición promedio de cada elemento de esta matriz. Por ejemplo, si la transiciones de plántula a juvenil en la matriz 1 es 0.1, en la matriz 2 es 0.2, en la matriz 3 es 0.15 y en la matriz 4 es 0.05, entonces el valor promedio en la $\bar{\text{A}}$ de la transición de plántula a juvenil sería (0.1 + 0.2 + 0.15 + 0.05)/4 = 0.125. Por consecuencia el valor de de $\bar{\alpha}_{1,1}=0.125$ y así sucesivamente para cada elemento de la matriz.</span>
+<span id="cb29-265"><a href="#cb29-265" aria-hidden="true" tabindex="-1"></a>$$\tau^2=\sum_{i=1}^{S}\sum_{j=1}^{S}\sum_{k=1}^{S}\sum_{l=1}^{S}Cov(\alpha_{ij}, \alpha_{kl})\bar{S_{ij}}\bar{S_{kl}}$$</span>
 <span id="cb29-266"><a href="#cb29-266" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-267"><a href="#cb29-267" aria-hidden="true" tabindex="-1"></a>El componente $\frac{\tau^2}{\bar\lambda_1^2}$ es una aproximado de la variación temporal del crecimiento poblacional por causa de estocasticidad temporal. En este caso, $\tau^2$ es el efecto de la sensitividad de $\lambda$ causado por los cambios en los elementos $\bar{\alpha}_{i,j}$. La covarianza $\text{Cov}$ mide la correlaciones entre las transiciones de estado $i$ a $j$ y $k$ a $l$ y se denota como $Cov(\alpha_{ij}, \alpha_{kl})$. Recuerda que no todos los valores en la matriz tienen el mismo impacto si fuesen a cambiar (capítulo de elasticidad). Se espera que algunos de los elementos tenga un impacto relativo y influencia de forma positiva y negativa sobre $\lambda$, por lo que la covarianza puede ser positiva o negativa. Por ejemplo, si la transición de plántula a juvenil aumenta, es probable que la transición de juvenil a adulto aumenta también en un buen año, y viceversa. Por lo tanto, la covarianza entre estas transiciones es positiva. Considera por ejemplo que la probabilidad de aumento en la transición de plántulas a juvenil es probable que haya una reducción en la cantidad de plántulas que siguen como plántulas en el próximo año, por lo que la covarianza entre estas transiciones es negativa.</span>
+<span id="cb29-267"><a href="#cb29-267" aria-hidden="true" tabindex="-1"></a>La variable de la ecuación incluye $\bar\lambda_1$, donde representa el log del valor propio promedio de las matrices de transición $\bar{\text{A}}$, donde es el promedio de cada elemento de las matrices. Si tenemos 4 matrices de transición, $\bar{\text{A}}$ es la matriz de transición promedio de cada elemento de esta matriz. Por ejemplo, si la transiciones de plántula a juvenil en la matriz 1 es 0.1, en la matriz 2 es 0.2, en la matriz 3 es 0.15 y en la matriz 4 es 0.05, entonces el valor promedio en la $\bar{\text{A}}$ de la transición de plántula a juvenil sería (0.1 + 0.2 + 0.15 + 0.05)/4 = 0.125. Por consecuencia el valor de de $\bar{\alpha}_{1,1}=0.125$ y así sucesivamente para cada elemento de la matriz.</span>
 <span id="cb29-268"><a href="#cb29-268" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-269"><a href="#cb29-269" aria-hidden="true" tabindex="-1"></a>Nota que aquí una vez más, se asume que las condiciones bajo las cuales se construyeron las matrices de transición son constantes en el tiempo. Por lo tanto, $λ_e$ no debe ser interpretado literalmente, ni tampoco como una herramienta predictiva. En adición los valores de IC se resta y se suma al $\lambda$ promedio obtenido para tener el rango de 95% de $\lambda$.</span>
+<span id="cb29-269"><a href="#cb29-269" aria-hidden="true" tabindex="-1"></a>El componente $\frac{\tau^2}{\bar\lambda_1^2}$ es una aproximado de la variación temporal del crecimiento poblacional por causa de estocasticidad temporal. En este caso, $\tau^2$ es el efecto de la sensitividad de $\lambda$ causado por los cambios en los elementos $\bar{\alpha}_{i,j}$. La covarianza $\text{Cov}$ mide la correlaciones entre las transiciones de estado $i$ a $j$ y $k$ a $l$ y se denota como $Cov(\alpha_{ij}, \alpha_{kl})$. Recuerda que no todos los valores en la matriz tienen el mismo impacto si fuesen a cambiar (capítulo de elasticidad). Se espera que algunos de los elementos tenga un impacto relativo y influencia de forma positiva y negativa sobre $\lambda$, por lo que la covarianza puede ser positiva o negativa. Por ejemplo, si la transición de plántula a juvenil aumenta, es probable que la transición de juvenil a adulto aumenta también en un buen año, y viceversa. Por lo tanto, la covarianza entre estas transiciones es positiva. Considera por ejemplo que la probabilidad de aumento en la transición de plántulas a juvenil es probable que haya una reducción en la cantidad de plántulas que siguen como plántulas en el próximo año, por lo que la covarianza entre estas transiciones es negativa.</span>
 <span id="cb29-270"><a href="#cb29-270" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-271"><a href="#cb29-271" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_5}</span></span>
+<span id="cb29-271"><a href="#cb29-271" aria-hidden="true" tabindex="-1"></a>Nota que aquí una vez más, se asume que las condiciones bajo las cuales se construyeron las matrices de transición son constantes en el tiempo. Por lo tanto, $λ_e$ no debe ser interpretado literalmente, ni tampoco como una herramienta predictiva. En adición los valores de IC se resta y se suma al $\lambda$ promedio obtenido para tener el rango de 95% de $\lambda$.</span>
 <span id="cb29-272"><a href="#cb29-272" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-273"><a href="#cb29-273" aria-hidden="true" tabindex="-1"></a><span class="in">matrices&lt;-list(mat1.1, mat1.2) # crear una lista de matrices de las poblaciones 1 de los 2 periodos de estudio</span></span>
-<span id="cb29-274"><a href="#cb29-274" aria-hidden="true" tabindex="-1"></a><span class="in">estocástico&lt;-stoch.growth.rate(matrices, maxt=50000, verbose=FALSE) ##Selección aleatoria de matrices</span></span>
-<span id="cb29-275"><a href="#cb29-275" aria-hidden="true" tabindex="-1"></a><span class="in">#estocástico</span></span>
-<span id="cb29-276"><a href="#cb29-276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-277"><a href="#cb29-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-273"><a href="#cb29-273" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_5}</span></span>
+<span id="cb29-274"><a href="#cb29-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-275"><a href="#cb29-275" aria-hidden="true" tabindex="-1"></a><span class="in">matrices&lt;-list(mat1.1, mat1.2) # crear una lista de matrices de las poblaciones 1 de los 2 periodos de estudio</span></span>
+<span id="cb29-276"><a href="#cb29-276" aria-hidden="true" tabindex="-1"></a><span class="in">estocástico&lt;-stoch.growth.rate(matrices, maxt=50000, verbose=FALSE) ##Selección aleatoria de matrices</span></span>
+<span id="cb29-277"><a href="#cb29-277" aria-hidden="true" tabindex="-1"></a><span class="in">#estocástico</span></span>
 <span id="cb29-278"><a href="#cb29-278" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-279"><a href="#cb29-279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-280"><a href="#cb29-280" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-280"><a href="#cb29-280" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-281"><a href="#cb29-281" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-282"><a href="#cb29-282" aria-hidden="true" tabindex="-1"></a>Se transforma tasa de base log y se obtiene $λ_e$ por dos métodos (Tuljapukar y simulación) y los IC por simulación</span>
+<span id="cb29-282"><a href="#cb29-282" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb29-283"><a href="#cb29-283" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-284"><a href="#cb29-284" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_5b}</span></span>
+<span id="cb29-284"><a href="#cb29-284" aria-hidden="true" tabindex="-1"></a>Se transforma tasa de base log y se obtiene $λ_e$ por dos métodos (Tuljapukar y simulación) y los IC por simulación</span>
 <span id="cb29-285"><a href="#cb29-285" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-286"><a href="#cb29-286" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-287"><a href="#cb29-287" aria-hidden="true" tabindex="-1"></a><span class="in">tuljapukar&lt;-exp(estocástico$approx)</span></span>
-<span id="cb29-288"><a href="#cb29-288" aria-hidden="true" tabindex="-1"></a><span class="in">simulation&lt;-exp(estocástico$sim)</span></span>
-<span id="cb29-289"><a href="#cb29-289" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-290"><a href="#cb29-290" aria-hidden="true" tabindex="-1"></a><span class="in">#tuljapukar # λ  por Tuljapukar </span></span>
-<span id="cb29-291"><a href="#cb29-291" aria-hidden="true" tabindex="-1"></a><span class="in">#simulation # λ  por simulación</span></span>
-<span id="cb29-292"><a href="#cb29-292" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-293"><a href="#cb29-293" aria-hidden="true" tabindex="-1"></a><span class="in">ic.1&lt;-exp(estocástico$sim.CI[1])</span></span>
-<span id="cb29-294"><a href="#cb29-294" aria-hidden="true" tabindex="-1"></a><span class="in">ic.2&lt;-exp(estocástico$sim.CI[2])</span></span>
-<span id="cb29-295"><a href="#cb29-295" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-296"><a href="#cb29-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-286"><a href="#cb29-286" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_5b}</span></span>
+<span id="cb29-287"><a href="#cb29-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-288"><a href="#cb29-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-289"><a href="#cb29-289" aria-hidden="true" tabindex="-1"></a><span class="in">tuljapukar&lt;-exp(estocástico$approx)</span></span>
+<span id="cb29-290"><a href="#cb29-290" aria-hidden="true" tabindex="-1"></a><span class="in">simulation&lt;-exp(estocástico$sim)</span></span>
+<span id="cb29-291"><a href="#cb29-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-292"><a href="#cb29-292" aria-hidden="true" tabindex="-1"></a><span class="in">#tuljapukar # λ  por Tuljapukar </span></span>
+<span id="cb29-293"><a href="#cb29-293" aria-hidden="true" tabindex="-1"></a><span class="in">#simulation # λ  por simulación</span></span>
+<span id="cb29-294"><a href="#cb29-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-295"><a href="#cb29-295" aria-hidden="true" tabindex="-1"></a><span class="in">ic.1&lt;-exp(estocástico$sim.CI[1])</span></span>
+<span id="cb29-296"><a href="#cb29-296" aria-hidden="true" tabindex="-1"></a><span class="in">ic.2&lt;-exp(estocástico$sim.CI[2])</span></span>
 <span id="cb29-297"><a href="#cb29-297" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-298"><a href="#cb29-298" aria-hidden="true" tabindex="-1"></a><span class="in">#ic.1 # El intervalo de confianza de λs por simulación inferior</span></span>
-<span id="cb29-299"><a href="#cb29-299" aria-hidden="true" tabindex="-1"></a><span class="in">#ic.2 # El intervalo de confianza de λs por simulación superior</span></span>
-<span id="cb29-300"><a href="#cb29-300" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb29-301"><a href="#cb29-301" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-304"><a href="#cb29-304" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb29-305"><a href="#cb29-305" aria-hidden="true" tabindex="-1"></a>Tul_NA<span class="ot">=</span><span class="cn">NA</span></span>
-<span id="cb29-306"><a href="#cb29-306" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-307"><a href="#cb29-307" aria-hidden="true" tabindex="-1"></a><span class="fu">tribble</span>(<span class="sc">~</span>Método, <span class="sc">~</span>λ, <span class="sc">~</span>IC_2<span class="fl">.5</span>, <span class="sc">~</span>IC_97<span class="fl">.5</span>,</span>
-<span id="cb29-308"><a href="#cb29-308" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Tuljapukar"</span>, tuljapukar, Tul_NA, Tul_NA,</span>
-<span id="cb29-309"><a href="#cb29-309" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Simulación"</span>, simulation, ic<span class="fl">.1</span>, ic<span class="fl">.2</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb29-310"><a href="#cb29-310" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb29-311"><a href="#cb29-311" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_header</span>(<span class="at">title =</span> <span class="fu">md</span>(<span class="st">"Tasa estocástica de crecimiento $λ_e$ y IC"</span>) )<span class="sc">%&gt;%</span></span>
-<span id="cb29-312"><a href="#cb29-312" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">cols_label</span>(Método <span class="ot">=</span> <span class="st">"Método"</span>, λ <span class="ot">=</span> <span class="st">"λ_e"</span>, <span class="at">IC_2.5 =</span> <span class="st">"IC 2.5%"</span>, <span class="at">IC_97.5 =</span> <span class="st">"IC 97.5%"</span>)</span>
-<span id="cb29-313"><a href="#cb29-313" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-314"><a href="#cb29-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-298"><a href="#cb29-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-299"><a href="#cb29-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-300"><a href="#cb29-300" aria-hidden="true" tabindex="-1"></a><span class="in">#ic.1 # El intervalo de confianza de λs por simulación inferior</span></span>
+<span id="cb29-301"><a href="#cb29-301" aria-hidden="true" tabindex="-1"></a><span class="in">#ic.2 # El intervalo de confianza de λs por simulación superior</span></span>
+<span id="cb29-302"><a href="#cb29-302" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-303"><a href="#cb29-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-306"><a href="#cb29-306" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-307"><a href="#cb29-307" aria-hidden="true" tabindex="-1"></a>Tul_NA<span class="ot">=</span><span class="cn">NA</span></span>
+<span id="cb29-308"><a href="#cb29-308" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-309"><a href="#cb29-309" aria-hidden="true" tabindex="-1"></a><span class="fu">tribble</span>(<span class="sc">~</span>Método, <span class="sc">~</span>λ, <span class="sc">~</span>IC_2<span class="fl">.5</span>, <span class="sc">~</span>IC_97<span class="fl">.5</span>,</span>
+<span id="cb29-310"><a href="#cb29-310" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Tuljapukar"</span>, tuljapukar, Tul_NA, Tul_NA,</span>
+<span id="cb29-311"><a href="#cb29-311" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Simulación"</span>, simulation, ic<span class="fl">.1</span>, ic<span class="fl">.2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-312"><a href="#cb29-312" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb29-313"><a href="#cb29-313" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_header</span>(<span class="at">title =</span> <span class="fu">md</span>(<span class="st">"Tasa estocástica de crecimiento $λ_e$ y IC"</span>) )<span class="sc">%&gt;%</span></span>
+<span id="cb29-314"><a href="#cb29-314" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">cols_label</span>(Método <span class="ot">=</span> <span class="st">"Método"</span>, λ <span class="ot">=</span> <span class="st">"λ_e"</span>, <span class="at">IC_2.5 =</span> <span class="st">"IC 2.5%"</span>, <span class="at">IC_97.5 =</span> <span class="st">"IC 97.5%"</span>)</span>
 <span id="cb29-315"><a href="#cb29-315" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-316"><a href="#cb29-316" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-317"><a href="#cb29-317" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-318"><a href="#cb29-318" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-318"><a href="#cb29-318" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-319"><a href="#cb29-319" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-320"><a href="#cb29-320" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb29-320"><a href="#cb29-320" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb29-321"><a href="#cb29-321" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-322"><a href="#cb29-322" aria-hidden="true" tabindex="-1"></a><span class="fu">## El impacto de la frecuencia de las matrices en $λ_e$ y los IC</span></span>
+<span id="cb29-322"><a href="#cb29-322" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb29-323"><a href="#cb29-323" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-324"><a href="#cb29-324" aria-hidden="true" tabindex="-1"></a>También se puede explorar el efecto de distintos factores que afectan la dinámica poblacional a través de una simulación estocástica, en la que se varia la probabilidad de seleccionar cada una de las matrices con que se cuenta. Por ejemplo, si el año 1 tuvo precipitaciones típicas, mientras que el año 2 fue un año inusualmente seco (uno en diez años), no esperaríamos que la selección de matrices ocurriera con igual probabilidad. En este escenario, podríamos establecer una probabilidad de ocurrencia alta parta el año típico (por ejemplo 0.9) y bajo (por ejemplo 0.1) para el año con sequía.</span>
+<span id="cb29-324"><a href="#cb29-324" aria-hidden="true" tabindex="-1"></a><span class="fu">## El impacto de la frecuencia de las matrices en $λ_e$ y los IC</span></span>
 <span id="cb29-325"><a href="#cb29-325" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-326"><a href="#cb29-326" aria-hidden="true" tabindex="-1"></a>En nuestro caso, sabemos que es poco frecuente el reclutamiento episódico observado en el segundo muestreo de la población 1, pero también la mortalidad y regresión de adultos observado en ese muestreo es poco frecuente. Por lo tanto, establecimos que la probabilidad de ocurrencia de la matriz 1 (del año 1-año 2) fuera de 0.8, mientras que la probabilidad de ocurrencia de la matriz 2 (del año 2 a año 3) fuera 0.2. De esta forma uno puede similar el efecto de buenos y malos años en la dinámica poblacional, basado en el conocimiento de pratones de variación ambientales que afecte la dinamica de poblaciones. Vemos que $λ_e$ no cambia mucho en el ejercicio anterior.</span>
+<span id="cb29-326"><a href="#cb29-326" aria-hidden="true" tabindex="-1"></a>También se puede explorar el efecto de distintos factores que afectan la dinámica poblacional a través de una simulación estocástica, en la que se varia la probabilidad de seleccionar cada una de las matrices con que se cuenta. Por ejemplo, si el año 1 tuvo precipitaciones típicas, mientras que el año 2 fue un año inusualmente seco (uno en diez años), no esperaríamos que la selección de matrices ocurriera con igual probabilidad. En este escenario, podríamos establecer una probabilidad de ocurrencia alta parta el año típico (por ejemplo 0.9) y bajo (por ejemplo 0.1) para el año con sequía.</span>
 <span id="cb29-327"><a href="#cb29-327" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-328"><a href="#cb29-328" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_6}</span></span>
+<span id="cb29-328"><a href="#cb29-328" aria-hidden="true" tabindex="-1"></a>En nuestro caso, sabemos que es poco frecuente el reclutamiento episódico observado en el segundo muestreo de la población 1, pero también la mortalidad y regresión de adultos observado en ese muestreo es poco frecuente. Por lo tanto, establecimos que la probabilidad de ocurrencia de la matriz 1 (del año 1-año 2) fuera de 0.8, mientras que la probabilidad de ocurrencia de la matriz 2 (del año 2 a año 3) fuera 0.2. De esta forma uno puede similar el efecto de buenos y malos años en la dinámica poblacional, basado en el conocimiento de pratones de variación ambientales que afecte la dinamica de poblaciones. Vemos que $λ_e$ no cambia mucho en el ejercicio anterior.</span>
 <span id="cb29-329"><a href="#cb29-329" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-330"><a href="#cb29-330" aria-hidden="true" tabindex="-1"></a><span class="in">estocástico.desigual.9&lt;-stoch.growth.rate(matrices, prob=c(0.9,0.1),verbose=FALSE) ## Selección de acuerdo con probabilidades definidas</span></span>
-<span id="cb29-331"><a href="#cb29-331" aria-hidden="true" tabindex="-1"></a><span class="in">#estocástico.desigual.9</span></span>
-<span id="cb29-332"><a href="#cb29-332" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-333"><a href="#cb29-333" aria-hidden="true" tabindex="-1"></a><span class="in">#Se transforma tasa de base log y se obtiene $λ_e$ por dos métodos </span></span>
-<span id="cb29-334"><a href="#cb29-334" aria-hidden="true" tabindex="-1"></a><span class="in">tuljapukar&lt;-exp(estocástico.desigual.9$approx)</span></span>
-<span id="cb29-335"><a href="#cb29-335" aria-hidden="true" tabindex="-1"></a><span class="in">simulation&lt;-exp(estocástico.desigual.9$sim)</span></span>
-<span id="cb29-336"><a href="#cb29-336" aria-hidden="true" tabindex="-1"></a><span class="in">ic.1&lt;-exp(estocástico.desigual.9$sim.CI[1])</span></span>
-<span id="cb29-337"><a href="#cb29-337" aria-hidden="true" tabindex="-1"></a><span class="in">ic.2&lt;-exp(estocástico.desigual.9$sim.CI[2])</span></span>
-<span id="cb29-338"><a href="#cb29-338" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-339"><a href="#cb29-339" aria-hidden="true" tabindex="-1"></a><span class="in">#tuljapukar</span></span>
-<span id="cb29-340"><a href="#cb29-340" aria-hidden="true" tabindex="-1"></a><span class="in">#simulation</span></span>
-<span id="cb29-341"><a href="#cb29-341" aria-hidden="true" tabindex="-1"></a><span class="in">#ic.1</span></span>
-<span id="cb29-342"><a href="#cb29-342" aria-hidden="true" tabindex="-1"></a><span class="in">#ic.2</span></span>
-<span id="cb29-343"><a href="#cb29-343" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-344"><a href="#cb29-344" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-345"><a href="#cb29-345" aria-hidden="true" tabindex="-1"></a><span class="in">tribble(~Método, ~λ, ~IC_2.5, ~IC_97.5,</span></span>
-<span id="cb29-346"><a href="#cb29-346" aria-hidden="true" tabindex="-1"></a><span class="in">  "Tuljapukar", tuljapukar, Tul_NA, Tul_NA,</span></span>
-<span id="cb29-347"><a href="#cb29-347" aria-hidden="true" tabindex="-1"></a><span class="in">  "Simulación", simulation, ic.1, ic.2) %&gt;%</span></span>
-<span id="cb29-348"><a href="#cb29-348" aria-hidden="true" tabindex="-1"></a><span class="in">  gt::gt() %&gt;%</span></span>
-<span id="cb29-349"><a href="#cb29-349" aria-hidden="true" tabindex="-1"></a><span class="in">  gt::tab_header(title = md("Tasa estocástica de crecimiento $λ_e$ y IC") )%&gt;%</span></span>
-<span id="cb29-350"><a href="#cb29-350" aria-hidden="true" tabindex="-1"></a><span class="in">  gt::cols_label(Método = "Método", λ = "λ_e", IC_2.5 = "IC 2.5%", IC_97.5 = "IC 97.5%")</span></span>
-<span id="cb29-351"><a href="#cb29-351" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-352"><a href="#cb29-352" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-330"><a href="#cb29-330" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_6}</span></span>
+<span id="cb29-331"><a href="#cb29-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-332"><a href="#cb29-332" aria-hidden="true" tabindex="-1"></a><span class="in">estocástico.desigual.9&lt;-stoch.growth.rate(matrices, prob=c(0.9,0.1),verbose=FALSE) ## Selección de acuerdo con probabilidades definidas</span></span>
+<span id="cb29-333"><a href="#cb29-333" aria-hidden="true" tabindex="-1"></a><span class="in">#estocástico.desigual.9</span></span>
+<span id="cb29-334"><a href="#cb29-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-335"><a href="#cb29-335" aria-hidden="true" tabindex="-1"></a><span class="in">#Se transforma tasa de base log y se obtiene $λ_e$ por dos métodos </span></span>
+<span id="cb29-336"><a href="#cb29-336" aria-hidden="true" tabindex="-1"></a><span class="in">tuljapukar&lt;-exp(estocástico.desigual.9$approx)</span></span>
+<span id="cb29-337"><a href="#cb29-337" aria-hidden="true" tabindex="-1"></a><span class="in">simulation&lt;-exp(estocástico.desigual.9$sim)</span></span>
+<span id="cb29-338"><a href="#cb29-338" aria-hidden="true" tabindex="-1"></a><span class="in">ic.1&lt;-exp(estocástico.desigual.9$sim.CI[1])</span></span>
+<span id="cb29-339"><a href="#cb29-339" aria-hidden="true" tabindex="-1"></a><span class="in">ic.2&lt;-exp(estocástico.desigual.9$sim.CI[2])</span></span>
+<span id="cb29-340"><a href="#cb29-340" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-341"><a href="#cb29-341" aria-hidden="true" tabindex="-1"></a><span class="in">#tuljapukar</span></span>
+<span id="cb29-342"><a href="#cb29-342" aria-hidden="true" tabindex="-1"></a><span class="in">#simulation</span></span>
+<span id="cb29-343"><a href="#cb29-343" aria-hidden="true" tabindex="-1"></a><span class="in">#ic.1</span></span>
+<span id="cb29-344"><a href="#cb29-344" aria-hidden="true" tabindex="-1"></a><span class="in">#ic.2</span></span>
+<span id="cb29-345"><a href="#cb29-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-346"><a href="#cb29-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-347"><a href="#cb29-347" aria-hidden="true" tabindex="-1"></a><span class="in">tribble(~Método, ~λ, ~IC_2.5, ~IC_97.5,</span></span>
+<span id="cb29-348"><a href="#cb29-348" aria-hidden="true" tabindex="-1"></a><span class="in">  "Tuljapukar", tuljapukar, Tul_NA, Tul_NA,</span></span>
+<span id="cb29-349"><a href="#cb29-349" aria-hidden="true" tabindex="-1"></a><span class="in">  "Simulación", simulation, ic.1, ic.2) %&gt;%</span></span>
+<span id="cb29-350"><a href="#cb29-350" aria-hidden="true" tabindex="-1"></a><span class="in">  gt::gt() %&gt;%</span></span>
+<span id="cb29-351"><a href="#cb29-351" aria-hidden="true" tabindex="-1"></a><span class="in">  gt::tab_header(title = md("Tasa estocástica de crecimiento $λ_e$ y IC") )%&gt;%</span></span>
+<span id="cb29-352"><a href="#cb29-352" aria-hidden="true" tabindex="-1"></a><span class="in">  gt::cols_label(Método = "Método", λ = "λ_e", IC_2.5 = "IC 2.5%", IC_97.5 = "IC 97.5%")</span></span>
 <span id="cb29-353"><a href="#cb29-353" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-354"><a href="#cb29-354" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-354"><a href="#cb29-354" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-355"><a href="#cb29-355" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-356"><a href="#cb29-356" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb29-356"><a href="#cb29-356" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb29-357"><a href="#cb29-357" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-358"><a href="#cb29-358" aria-hidden="true" tabindex="-1"></a><span class="fu">### El impacto de la probabilidad de ocurrencia de las matrices en $λ_e$ y los IC</span></span>
+<span id="cb29-358"><a href="#cb29-358" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb29-359"><a href="#cb29-359" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-360"><a href="#cb29-360" aria-hidden="true" tabindex="-1"></a>A continuación, podemos evaluar cómo se ve afectada $λ_e$ al disminuir o aumentar la probabilidad de que ocurran las diferentes matrices. En nuestro ejemplo aumentamos a 0.8 la probabilidad de ocurrencia de la matriz 2 (la que represente reclutamiento episódico y mortalidad/regresión de adultos), y observamos que $λ_e$ decrece. Este método es útil porque permite explorar cómo la variabilidad en las condiciones afecta la dinámica poblacional dentro de un escenario representativo de la estructura de la diversidad de poblaciones. Por ejemplo considera que originalmente la especie se encontraba en un hábitat continuo, pero que debido a la deforestación, la población se ha fragmentado y ahora se encuentra en hábitats con condiciones subóptimas, y que domina ahora estas poblaciones fragmentados versus pocas poblaciones en un hábitat de mejor calidad.</span>
+<span id="cb29-360"><a href="#cb29-360" aria-hidden="true" tabindex="-1"></a><span class="fu">### El impacto de la probabilidad de ocurrencia de las matrices en $λ_e$ y los IC</span></span>
 <span id="cb29-361"><a href="#cb29-361" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-362"><a href="#cb29-362" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_7}</span></span>
+<span id="cb29-362"><a href="#cb29-362" aria-hidden="true" tabindex="-1"></a>A continuación, podemos evaluar cómo se ve afectada $λ_e$ al disminuir o aumentar la probabilidad de que ocurran las diferentes matrices. En nuestro ejemplo aumentamos a 0.8 la probabilidad de ocurrencia de la matriz 2 (la que represente reclutamiento episódico y mortalidad/regresión de adultos), y observamos que $λ_e$ decrece. Este método es útil porque permite explorar cómo la variabilidad en las condiciones afecta la dinámica poblacional dentro de un escenario representativo de la estructura de la diversidad de poblaciones. Por ejemplo considera que originalmente la especie se encontraba en un hábitat continuo, pero que debido a la deforestación, la población se ha fragmentado y ahora se encuentra en hábitats con condiciones subóptimas, y que domina ahora estas poblaciones fragmentados versus pocas poblaciones en un hábitat de mejor calidad.</span>
 <span id="cb29-363"><a href="#cb29-363" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-364"><a href="#cb29-364" aria-hidden="true" tabindex="-1"></a><span class="in">estocástico.desigual.2&lt;-stoch.growth.rate(matrices, prob=c(0.2,0.8),verbose=FALSE) </span></span>
-<span id="cb29-365"><a href="#cb29-365" aria-hidden="true" tabindex="-1"></a><span class="in">#estocástico.desigual.2</span></span>
-<span id="cb29-366"><a href="#cb29-366" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-367"><a href="#cb29-367" aria-hidden="true" tabindex="-1"></a><span class="in">tuljapukar&lt;-exp(estocástico.desigual.2$approx)</span></span>
-<span id="cb29-368"><a href="#cb29-368" aria-hidden="true" tabindex="-1"></a><span class="in">simulation&lt;-exp(estocástico.desigual.2$sim)</span></span>
-<span id="cb29-369"><a href="#cb29-369" aria-hidden="true" tabindex="-1"></a><span class="in">ic.1&lt;-exp(estocástico.desigual.2$sim.CI[1])</span></span>
-<span id="cb29-370"><a href="#cb29-370" aria-hidden="true" tabindex="-1"></a><span class="in">ic.2&lt;-exp(estocástico.desigual.2$sim.CI[2])</span></span>
-<span id="cb29-371"><a href="#cb29-371" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-372"><a href="#cb29-372" aria-hidden="true" tabindex="-1"></a><span class="in">#tuljapukar</span></span>
-<span id="cb29-373"><a href="#cb29-373" aria-hidden="true" tabindex="-1"></a><span class="in">#simulation</span></span>
-<span id="cb29-374"><a href="#cb29-374" aria-hidden="true" tabindex="-1"></a><span class="in">#ic.1</span></span>
-<span id="cb29-375"><a href="#cb29-375" aria-hidden="true" tabindex="-1"></a><span class="in">#ic.2</span></span>
-<span id="cb29-376"><a href="#cb29-376" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-377"><a href="#cb29-377" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-378"><a href="#cb29-378" aria-hidden="true" tabindex="-1"></a><span class="in">tribble(~Método, ~λ, ~IC_2.5, ~IC_97.5,</span></span>
-<span id="cb29-379"><a href="#cb29-379" aria-hidden="true" tabindex="-1"></a><span class="in">  "Tuljapukar", tuljapukar, Tul_NA, Tul_NA,</span></span>
-<span id="cb29-380"><a href="#cb29-380" aria-hidden="true" tabindex="-1"></a><span class="in">  "Simulación", simulation, ic.1, ic.2) %&gt;%</span></span>
-<span id="cb29-381"><a href="#cb29-381" aria-hidden="true" tabindex="-1"></a><span class="in">  gt::gt() %&gt;%</span></span>
-<span id="cb29-382"><a href="#cb29-382" aria-hidden="true" tabindex="-1"></a><span class="in">  gt::tab_header(title = md("Tasa estocástica de crecimiento $λ_e$ y IC") )%&gt;%</span></span>
-<span id="cb29-383"><a href="#cb29-383" aria-hidden="true" tabindex="-1"></a><span class="in">  gt::cols_label(Método = "Método", λ = "λ_e", IC_2.5 = "IC 2.5%", IC_97.5 = "IC 97.5%")</span></span>
-<span id="cb29-384"><a href="#cb29-384" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb29-385"><a href="#cb29-385" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-386"><a href="#cb29-386" aria-hidden="true" tabindex="-1"></a>En general, $λ_e$, al igual que $λ$, es útil para caracterizar las condiciones, ya sea actuales o pasadas del periodo de tiempo en que se monitorea a las poblaciones. También es una herramienta poderosa para explorar la fuerza relativa de diferentes factores en el crecimiento poblacional. Sin embargo, al igual que $λ$, $λ_e$ no debe interpretarse literalmente para predecir el futuro.</span>
+<span id="cb29-364"><a href="#cb29-364" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, cre_pop_7}</span></span>
+<span id="cb29-365"><a href="#cb29-365" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-366"><a href="#cb29-366" aria-hidden="true" tabindex="-1"></a><span class="in">estocástico.desigual.2&lt;-stoch.growth.rate(matrices, prob=c(0.2,0.8),verbose=FALSE) </span></span>
+<span id="cb29-367"><a href="#cb29-367" aria-hidden="true" tabindex="-1"></a><span class="in">#estocástico.desigual.2</span></span>
+<span id="cb29-368"><a href="#cb29-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-369"><a href="#cb29-369" aria-hidden="true" tabindex="-1"></a><span class="in">tuljapukar&lt;-exp(estocástico.desigual.2$approx)</span></span>
+<span id="cb29-370"><a href="#cb29-370" aria-hidden="true" tabindex="-1"></a><span class="in">simulation&lt;-exp(estocástico.desigual.2$sim)</span></span>
+<span id="cb29-371"><a href="#cb29-371" aria-hidden="true" tabindex="-1"></a><span class="in">ic.1&lt;-exp(estocástico.desigual.2$sim.CI[1])</span></span>
+<span id="cb29-372"><a href="#cb29-372" aria-hidden="true" tabindex="-1"></a><span class="in">ic.2&lt;-exp(estocástico.desigual.2$sim.CI[2])</span></span>
+<span id="cb29-373"><a href="#cb29-373" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-374"><a href="#cb29-374" aria-hidden="true" tabindex="-1"></a><span class="in">#tuljapukar</span></span>
+<span id="cb29-375"><a href="#cb29-375" aria-hidden="true" tabindex="-1"></a><span class="in">#simulation</span></span>
+<span id="cb29-376"><a href="#cb29-376" aria-hidden="true" tabindex="-1"></a><span class="in">#ic.1</span></span>
+<span id="cb29-377"><a href="#cb29-377" aria-hidden="true" tabindex="-1"></a><span class="in">#ic.2</span></span>
+<span id="cb29-378"><a href="#cb29-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-379"><a href="#cb29-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-380"><a href="#cb29-380" aria-hidden="true" tabindex="-1"></a><span class="in">tribble(~Método, ~λ, ~IC_2.5, ~IC_97.5,</span></span>
+<span id="cb29-381"><a href="#cb29-381" aria-hidden="true" tabindex="-1"></a><span class="in">  "Tuljapukar", tuljapukar, Tul_NA, Tul_NA,</span></span>
+<span id="cb29-382"><a href="#cb29-382" aria-hidden="true" tabindex="-1"></a><span class="in">  "Simulación", simulation, ic.1, ic.2) %&gt;%</span></span>
+<span id="cb29-383"><a href="#cb29-383" aria-hidden="true" tabindex="-1"></a><span class="in">  gt::gt() %&gt;%</span></span>
+<span id="cb29-384"><a href="#cb29-384" aria-hidden="true" tabindex="-1"></a><span class="in">  gt::tab_header(title = md("Tasa estocástica de crecimiento $λ_e$ y IC") )%&gt;%</span></span>
+<span id="cb29-385"><a href="#cb29-385" aria-hidden="true" tabindex="-1"></a><span class="in">  gt::cols_label(Método = "Método", λ = "λ_e", IC_2.5 = "IC 2.5%", IC_97.5 = "IC 97.5%")</span></span>
+<span id="cb29-386"><a href="#cb29-386" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb29-387"><a href="#cb29-387" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-388"><a href="#cb29-388" aria-hidden="true" tabindex="-1"></a>Es importante recalcar algunos puntos importante sobre el crecimiento poblacional. Primero, la tasa de crecimiento poblacional es una medida robusta de las condiciones actuales, ya que explica la dinámica de las poblaciones durante el período de tiempo en que se parametrizaron los modelos. Segundo, la tasa de crecimiento poblacional es una buena medida del estado de la población, por lo que es una forma apropiada de comparar el comportamiento de las poblaciones bajo diferentes condiciones, incluyendo variación abiótica, biótica y de manejo. Por último, la tasa de crecimiento poblacional es una medida útil para comparar el comportamiento de las poblaciones en distintos periodos de tiempo y con ello entender cómo la variación en las condiciones climáticas afecta su dinámica. Las comparaciones también pueden ser entre poblaciones de la misma especie distribuidas en distintos sitios, para entender los efectos de la variación en el manejo, la vegetación u otras diferencias entre sitios.</span>
+<span id="cb29-388"><a href="#cb29-388" aria-hidden="true" tabindex="-1"></a>En general, $λ_e$, al igual que $λ$, es útil para caracterizar las condiciones, ya sea actuales o pasadas del periodo de tiempo en que se monitorea a las poblaciones. También es una herramienta poderosa para explorar la fuerza relativa de diferentes factores en el crecimiento poblacional. Sin embargo, al igual que $λ$, $λ_e$ no debe interpretarse literalmente para predecir el futuro.</span>
 <span id="cb29-389"><a href="#cb29-389" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-390"><a href="#cb29-390" aria-hidden="true" tabindex="-1"></a>Reconocer que $\lambda$, el crecimiento poblacional estimado de dos periodos no considera la variabilidad en las tasas vitales por cause de procesos estocásticos, espacial ni temporal , por lo que es importante que se realicen análisis de sensibilidad para evaluar el impacto de la variabilidad en las tasas vitales en la estimación de $\lambda$.</span>
+<span id="cb29-390"><a href="#cb29-390" aria-hidden="true" tabindex="-1"></a>Es importante recalcar algunos puntos importante sobre el crecimiento poblacional. Primero, la tasa de crecimiento poblacional es una medida robusta de las condiciones actuales, ya que explica la dinámica de las poblaciones durante el período de tiempo en que se parametrizaron los modelos. Segundo, la tasa de crecimiento poblacional es una buena medida del estado de la población, por lo que es una forma apropiada de comparar el comportamiento de las poblaciones bajo diferentes condiciones, incluyendo variación abiótica, biótica y de manejo. Por último, la tasa de crecimiento poblacional es una medida útil para comparar el comportamiento de las poblaciones en distintos periodos de tiempo y con ello entender cómo la variación en las condiciones climáticas afecta su dinámica. Las comparaciones también pueden ser entre poblaciones de la misma especie distribuidas en distintos sitios, para entender los efectos de la variación en el manejo, la vegetación u otras diferencias entre sitios.</span>
 <span id="cb29-391"><a href="#cb29-391" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-392"><a href="#cb29-392" aria-hidden="true" tabindex="-1"></a>Revisión:</span>
+<span id="cb29-392"><a href="#cb29-392" aria-hidden="true" tabindex="-1"></a>Reconocer que $\lambda$, el crecimiento poblacional estimado de dos periodos no considera la variabilidad en las tasas vitales por cause de procesos estocásticos, espacial ni temporal , por lo que es importante que se realicen análisis de sensibilidad para evaluar el impacto de la variabilidad en las tasas vitales en la estimación de $\lambda$.</span>
 <span id="cb29-393"><a href="#cb29-393" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-394"><a href="#cb29-394" aria-hidden="true" tabindex="-1"></a>RLT 2025_01_18</span>
+<span id="cb29-394"><a href="#cb29-394" aria-hidden="true" tabindex="-1"></a>Revisión:</span>
 <span id="cb29-395"><a href="#cb29-395" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-396"><a href="#cb29-396" aria-hidden="true" tabindex="-1"></a>RLT 2025_06_01</span>
+<span id="cb29-396"><a href="#cb29-396" aria-hidden="true" tabindex="-1"></a>RLT 2025_01_18</span>
+<span id="cb29-397"><a href="#cb29-397" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-398"><a href="#cb29-398" aria-hidden="true" tabindex="-1"></a>RLT 2025_06_01</span>
 </code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
