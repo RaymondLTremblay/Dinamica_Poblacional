@@ -1,3 +1,8 @@
+---
+bibliography: ftExtra.bib
+---
+
+
 # Como recopilar datos en el campo {#Recopilacion}
 
 Por: Aucencia Emeterio-Lara, Mariana Hernández-Apolinar y Raymond L. Tremblay
@@ -8,9 +13,13 @@ Por: Aucencia Emeterio-Lara, Mariana Hernández-Apolinar y Raymond L. Tremblay
 
 library(knitr)
 library(tidyverse)
-library(flextable)
-library(ftExtra)
+library(dplyr)
 library(gt)
+library(ftExtra)
+library(flextable)
+
+
+
 
 
 ```
@@ -61,16 +70,13 @@ iii. En las rupícolas se han reconocido dos grupos:
 -   con pseudobulbos e.g. *Cattleya*, *Hoffmannsegella*, *Laelia* y *Paphiopedillum*;
 -   sin pseudobulbo, e.g. *Lepanthes*.
 
-
 ::: img-float
-![*Trichocentrum undulatum*. Foto: Hong Liu](Species/Trichocentrum undulatum 9 Hong Liu.jpeg){style="float: left; style=margin: 10px; border-right: 4px solid transparent; width: 50% ; "}
+![*Trichocentrum undulatum*. Foto: Hong Liu](Species/Trichocentrum%20undulatum%209%20Hong%20Liu.jpeg){style="float: left; style=margin: 10px; border-right: 4px solid transparent; width: 50% ; "}
 :::
 
 ::: img-float
-![*Trichocentrum undulatum*. Foto: Hong Liu](Species/Trichocentrum undulatum 1 Hong Liu.jpg){style="float: right; style=margin: 10px; border-right: 4px solid transparent; width: 50% ; "}
+![*Trichocentrum undulatum*. Foto: Hong Liu](Species/Trichocentrum%20undulatum%201%20Hong%20Liu.jpg){style="float: right; style=margin: 10px; border-right: 4px solid transparent; width: 50% ; "}
 :::
-
-
 
 Cabe señalar que, si bien esta clasificación es de utilidad y brinda una idea de la amplia diversidad en la morfología vegetativa de las orquídeas, hay que considerar que solo se basa en su apariencia y facilita su identificación visual *grosso modo*, por lo que es cualitativa y poco rigurosa desde el punto de vista botánico.
 
@@ -78,7 +84,7 @@ B)  *Identificación botánica de la especie*. Cuando se carece de trabajo previ
 
 Por otra parte, el apoyo de un experto es necesario cuando dos o más especies del mismo género comparten el hábitat. En estos casos, es posible confundir o mezclar individuos de distintas especies, debido a que pueden presentar características morfológicas o florales muy similares. Por ejemplo, en el género *Lepanthes* es difícil diferenciar la especie de los individuos recién germinados (Tremblay *comm. pers.*), ya que morfológicamente son muy similares, por lo que el apoyo de un botánico es de gran ayuda para resolver este y otros dilemas. Esta similitud en la morfología de la primeras etapas de vida puede que sean tan similares que las Bromeliads y Orquídeas se pueden confundir para una persona sin experiencia.
 
-***
+------------------------------------------------------------------------
 
 ### Etapas o estados de desarrollo en orquídeas
 
@@ -162,7 +168,7 @@ Debido a que la copa de los árboles no es un ambiente homogéneo [@johansson197
 
 <br/> <br/>
 
-## Zona de distibución de orquídeas en árboles
+## Zona de distribución de orquídeas en árboles
 
 Figura de las zonas de vidas de epifitas basado en Johansson (1974) y Catling (1986).
 
@@ -189,13 +195,14 @@ zones=tribble(
 gt(zones)
 ```
 
-Es la siguiente tabla damos unos ejemplos de orquídeas en cada una de las zonas. Nota que no es una lista exhaustiva, ya que hay muchas más especies que pueden encontrarse en cada una de las zonas. En adición la arquitectura de cada árbol, va influenciar la presencia de cada zona y hay orquídeas que se encuentra en más una zona. Hay especies que se van a encontrar en más de una zona.
+Es la siguiente tabla damos unos ejemplos de orquídeas en cada una de las zonas. Nota que no es una lista exhaustiva, ya que hay muchas más especies que pueden encontrarse en cada una de las zonas. En adición la arquitectura de cada árbol, va influenciar la presencia de cada zona y hay orquídeas que se encuentra en más una zona. Hay especies que se van a encontrar en más de una zona. [@tremblay1997lepanthes]
 
-```{r, Datos_3, echo=FALSE}
-Epifitas_zonas=tribble(
+```{r, Datos_3,  message=FALSE, warning=FALSE}
+
+Epifitas_zonas=dplyr::tribble(
   ~Zona, ~"Epífita dominant", ~"Orquídea predominante", ~Especie, ~Referencia,
   "I", "Capa de musgo", "raramente", "*Lepanthes caritensis*", "@tremblay1997lepanthes",
-  "II", "Plantas trepadoras", "Orquídeas miniatura y grandes", "*Oncidium altissimum*", "Tremblay observación personal",
+  "II", "Plantas trepadoras", "Orquídeas miniatura y grandes", "*Vanilla*", "",
   "III", "Pteridophytas y otras epífitas vasculares", "Orquídeas miniatura y grandes","*Campylocentrum faciola*" ,"Tremblay observación personal" , 
   "IV", "Orquídeas", "Mayor concentración y diversidad de orquídeas grandes y miniatura", "*Laelia autumnalis*", "@emeterio2021does",
   
@@ -203,24 +210,41 @@ Epifitas_zonas=tribble(
   "VI", "Líquenes", "Pocas orquídeas, miniatura", "*Tolumnia variegata*", "@ackerman1996seedling"
   
 )
+
+# Epifitas_zonas
 ```
 
-```{r Datos_4, echo=FALSE}
-#gt(Epifitas_zonas)
+```{r Datos_4, warning=FALSE, message=FALSE}
 
-list_epi=Epifitas_zonas %>%
+list_epi= Epifitas_zonas %>%
   flextable() %>%
-  theme_zebra() %>% 
+  theme_zebra() %>%
   theme_box() |> 
-  ftExtra::colformat_md() 
-  #autofit()
-  #set_table_properties(layout = "autofit")
+  colformat_md() %>% 
+  set_table_properties(layout = "autofit")
 
 list_epi
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ::: img-float
 ![Distribución tri-dimensional de las orquídeas en los árboles](Figures/Ls_xyz.png){style="float: left; margin: 30px;width: 60% ; "}
+
+
 :::
 
 4)  El Método de triangulación es un método con área que complementa el uso de las técnicas de escalera y de ascenso con una cuerda. Se trata de una técnica no invasiva que permite registrar la ubicación espacial de las orquídeas sobre los árboles [@hernandez1992dinamica]. El método consiste en definir el área de muestreo (e.g. 20 x 10 m), que corresponde a aquella en la que se ubican los árboles con mayor número de orquídeas. Las esquinas del cuadro o rectángulo definido se marcan con estacas permanentes y se colocan cintas métricas sobre los lados, las cuales se tomarán como referencia para ubicar espacialmente a las orquídeas en ejes de coordenadas **x**, **y**, **z**, siendo ésta última la altura del suelo a la orquídea sobre el tronco o alguna rama (*Figures/Triangulation_epífita.pdf*). Esta técnica tiene cierto grado de dificultad; sin embargo, es muy precisa, permite estimar la abundancia de la especie por superficie y se tiene la opción de evitar el etiquetado de plantas para su seguimiento. Además, en caso de robo de plantas y/o etiquetas es posible reconocer con facilidad a los individuos faltantes.
@@ -371,7 +395,7 @@ Las variables esenciales (Tabla 2), junto con las características definidas en 
 ```{r DC1, echo=FALSE, message=FALSE}
 
 Variable_Censo=tribble(
-  ~"Tiempo inicial t_0",                       ~"Muestreo posterior t+1",
+  ~"Tiempo inicial t_0", ~"Muestreo posterior t+1",
   "Etapa del individuo",                     "Etapa del individuo",
   "",                                        "Presencia/ausencia del individuo",
   "Presencia/ausencia de flores/inflorescencia y/o frutos",                         "Presencia/ausencia de flores/inflorescencia y/o frutos",
