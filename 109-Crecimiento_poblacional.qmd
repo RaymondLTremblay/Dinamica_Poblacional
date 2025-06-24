@@ -1,6 +1,6 @@
 # Crecimiento Poblacional {#Crecimiento_Poblacional}
 
-## Por: Tamara Ticktin y Mariana Hernández Apolinar
+## Por: Tamara TicktinMariana Hernández Apolinar
 
 #### Librerías de R requeridas para el siguiente módulo
 
@@ -65,7 +65,7 @@ plot_life_cycle(mat1.2, stages=estadios, fontsize = 10)
 
 Calcular el $\lambda$ de la población para los años 1 y 2, respectivamente usando la función **eigen.analysis** en **popbio**.
 
-En el primer año se observa que la población tiene un valor de $\lambda$ \> 1.108, lo que indica que la población crecerá a largo plazo de aproximadamente de 11%. En el segundo año, el valor de $\lambda$ también es \>1.084 de 8%, pero es menor que el del primer año, lo que indica que la tasa de crecimiento poblacional disminuyó de un año a otro.
+En el primer año se observa que la población tiene un valor de $\lambda$ \> 1.108, lo que indica que la población crecerá a largo plazo de aproximadamente de 11%. En el segundo año, el valor de $\lambda$ también es mayor de 1, con un estimado de 1.08 o sea de crecimiento de 8%, como es menor que el del primer año, indica que la tasa de crecimiento poblacional disminuyó de un año a otro.
 
 ```{r, cre_pop_2}
 options(digits=5) # Ajusta el número de decimales a mostrar
@@ -86,7 +86,7 @@ gt::gt(t)
 
 La tasa de crecimiento asintótica representa la tasa a la que crecería una población a largo plazo, si no cambiaran las condiciones bajo las cuales se construyó el modelo. Es decir, si no cambiaran en el tiempo las condiciones bióticas, abióticas y de manejo que influyen en las tasas vitales (i.e. tasas de crecimiento, supervivencia y reproducción) de dicha población. Por supuesto, nosotros sabemos que esto no es posible una consistencia de todas las tasas vitales a largo plazo, siempre ocurre cambios temporales determinístico o estocástico. Por ejemplo, en nuestro caso no observamos mortalidad de adultos durante los dos periodos de monitorio, pero redujo de una pequeña facción para que el valor de supervivencia sea menor de 1.0, aunque el efecto sobre el crecimiento poblacional es mínimo. Por lo tanto, es importante que el valor de $\lambda$ nunca se use en sentido estricto.
 
-También es fundamental tomar en cuenta que, $\lambda$ no es la tasa a la que se espera que la población creciera en el corto plazo. De hecho, una población con $\lambda$ \<1 pudiera crecer en el corto plazo, antes de declinar en el largo plazo y $vice-versa$. Asimismo, cabe señalar que la tasa de crecimiento poblacional de corto plazo es calculada usando los índices de la dinámica transitoria (**Capitulo X**).
+También es fundamental tomar en cuenta que, $\lambda$ no es la tasa a la que se espera que la población creciera en el corto plazo. De hecho, una población con $\lambda$ \<1 pudiera crecer en el corto plazo, antes de declinar en el largo plazo y $vice-versa$. Asimismo, cabe señalar que la tasa de crecimiento poblacional de corto plazo es calculada usando los índices de la dinámica transitoria.
 
 Los meta-análisis (Crone et al. 2013), en cambio, han demostrado que $\lambda$ es una medida robusta de las condiciones actuales, ya que ésta explica la dinámica de las poblaciones durante el período de tiempo en el que se parametrizaron los modelos. Asimismo, $\lambda$ es una buena medida del estado de la población, por lo que es una forma apropiada de comparar el comportamiento de las poblaciones bajo diferentes condiciones, incluyendo variación abiótica, biótica y de manejo. Por ejemplo, los valores de $\lambda$ permiten comparar el comportamiento de una población en distintos periodos de tiempo y con ello entender cómo la variación en las condiciones climáticas afecta su dinámica. Las comparaciones también pueden ser entre poblaciones de la misma especie distribuidas en distintos sitios, para entender los efectos de la variación en el manejo, la vegetación u otras diferencias entre sitios (vea el capitulo "Variación temporal y Espacial por simulaciones")
 
@@ -144,7 +144,7 @@ stage.vector.plot(cambio$stage.vectors, col=2:4, ylim=c(0, 0.6))
 
 ## Comparar $\lambda$ entre poblaciones
 
-Nuestra segunda población de $Laelia speciosa$ se establece en un hábitat similar a la población 1 y fue monitoreada durante al mismo tiempo. Sin embargo, ésta fue sujeta a la extracción. Si comparamos los valores de $\lambda$ de nuestras dos poblaciones, podemos hacer inferencias sobre los efectos de la extracción. La población 2 no produjo frutos y tampoco se observaron plántulas. Debido a esto, fue necesario incluir el valor de 0.001 para la transición de la matriz adulta2-\> plántula y con esto asegurar que nuestra matriz de estudio sea irreducible y primitive (**Capitulo X**).
+Nuestra segunda población de $Laelia speciosa$ se establece en un hábitat similar a la población 1 y fue monitoreada durante al mismo tiempo. Sin embargo, ésta fue sujeta a la extracción. Si comparamos los valores de $\lambda$ de nuestras dos poblaciones, podemos hacer inferencias sobre los efectos de la extracción. La población 2 no produjo frutos y tampoco se observaron plántulas. Debido a esto, fue necesario incluir el valor de 0.001 para la transición de la matriz adulta2-\> plántula y con esto asegurar que nuestra matriz de estudio sea irreducible y primitive.
 
 ## Proyección de la población 2, año 1
 
@@ -169,7 +169,7 @@ La población bajo extracción tiene un valor de $\lambda$ menor (0.990) a aquel
 
 ## Intervalos de confianza de $\lambda$
 
-Para interpretar $\lambda$ apropiadamente necesitamos calcular los intervalos de confianza (IC). Estos intervalos pueden ser calculados con un método de remuestreo con reemplazo (i.e. bootstrap), utilizando las transiciones de estado de los individuos de un periodo a otro; es decir, los datos (i.e $stage-fate$) usados para construir la matriz de transiciones (Capitulo X). En el remuestro se puede especificar el tamaño de la muestra remuestreada, la cual fue de 1000 en nuestro caso. Cabe señalar que, se tendrán intervalos de confianza amplios cuando se tiene una muestra pequeña de datos originales, o, si se tienen pocas observaciones de aquellas transiciones que contribuyen en mayor medida a $\lambda$. En adición se puede usar el método en el paquete "raretrans" (no explicado en este capitulo), que es apropiado para tamaño de muestra pequeñas. La diferencia entre los dos métodos es que la simulación usando el paquete "popbio" se selecciona la cantidad de individuos de los estadios al azar, mientras que el paquete "raretrans" usa una simulación de basado en la distribución Dirichlet.
+Para interpretar $\lambda$ apropiadamente necesitamos calcular los intervalos de confianza (IC). Estos intervalos pueden ser calculados con un método de remuestreo con reemplazo (i.e. bootstrap), utilizando las transiciones de estado de los individuos de un periodo a otro; es decir, los datos (i.e $stage-fate$) usados para construir la matriz de transiciones. En el remuestro se puede especificar el tamaño de la muestra remuestreada, la cual fue de 1000 en nuestro caso. Cabe señalar que, se tendrán intervalos de confianza amplios cuando se tiene una muestra pequeña de datos originales, o, si se tienen pocas observaciones de aquellas transiciones que contribuyen en mayor medida a $\lambda$. En adición se puede usar el método en el paquete "raretrans" (no explicado en este capitulo), que es apropiado para tamaño de muestra pequeñas. La diferencia entre los dos métodos es que la simulación usando el paquete "popbio" se selecciona la cantidad de individuos de los estadios al azar, mientras que el paquete "raretrans" usa una simulación de basado en la distribución Dirichlet.
 
 En el presente caso, calculamos los intervalos de confianza de $\lambda$ para la población 1, correspondientes al año 1 y 2. En ambos años, los intervalos son amplios.
 
