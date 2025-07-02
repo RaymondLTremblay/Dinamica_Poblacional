@@ -10,16 +10,16 @@ library(tidyverse)
 library(gt)
 library(Rage)
 library(DiagrammeR)
-library (popbio)
+library(popbio)
 library(popdemo)
 
 ```
 
 ## Introducción a **Experimento de Respuesta de Tabla de Vida**
 
-La variación en los estimados de los parámetros de la matriz son inherentes a la biología. Esa variación puede ser a consecuencia de múltiples factores individuales y en combinaciones, incluyendo efectos de tiempo, espacio, genético, tamaño de muestra y suerte [@hernandez2024natural]. La variación en las parámetros de la historia de vida de una especie y las causas de estas diferencias se pueden evaluar a diferentes niveles: genético, demográfico, espacial o temporal. La variación en ecología es la norma. La variación se encuentra en todos aspectos desde la parte genética de los individuos que compone una población, la variación ambiental y las interacciones bióticas y abióticas; además de la plasticidad fenotípica que es la interacción entre la genética y el ambiente. ¿Cuál es esa variación? ¿en otra palabra qué es lo que varía? y ¿cómo los individuos responden a las variables bióticas y abióticas? son aspectos importantes para determinar la ecología, evolución y conservación de las especies. La causa de la variación en una población se puede resumir a tres componentes principales, la genética, el efecto del ambiente y la interacción entre ambiente y genética (plasticidad fenotípica) [@hastings2021effects; @sun2019multivariate]. Se asume que el tamaño de muestra es suficiente grande para no ser la causa de la variación. Dentro de un contexto de dinámica poblacional las condiciones que los individuos en las poblaciones experimentan varían, ya sea durante tratamientos manipulados, localidades o periodos de tiempo, y por consecuencia los datos que colectamos con diferencias en espacio/tiempo también varían y pudieran tener efecto sobre la matriz de proyección poblacional $matA$. Por tanto, las entradas (los parámetros) de esa matriz **A** variarán en tiempo/espacio o experimento y esto tendría un impacto sobre la tasa de crecimiento poblacional $\lambda$ y en los estimados de dispersión (Intervalo de confianza o credibilidad\]; [@caswell2000matrix; @caswell2010life].
+La variación en los estimados de los parámetros de la matriz son inherentes a la biología. Esa variación puede ser a consecuencia de múltiples factores individuales y en combinaciones, incluyendo efectos de tiempo, espacio, genético, tamaño de muestra y suerte [@hernandez2024natural]. La variación en las parámetros de la historia de vida de una especie y las causas de estas diferencias se pueden evaluar a diferentes niveles: genético, demográfico, espacial o temporal. La variación en ecología es la norma. La variación se encuentra en todos aspectos desde la parte genética de los individuos que compone una población, la variación ambiental y las interacciones bióticas y abióticas; además de la plasticidad fenotípica que es la interacción entre la genética y el ambiente. ¿Cuál es esa variación? ¿en otra palabra qué es lo que varía? y ¿cómo los individuos responden a las variables bióticas y abióticas? son aspectos importantes para determinar la ecología, evolución y conservación de las especies. La causa de la variación en una población se puede resumir a tres componentes principales, la genética, el efecto del ambiente y la interacción entre ambiente y genética (plasticidad fenotípica) [@hastings2021effects; @sun2019multivariate]. En general se asume que el tamaño de muestra es suficiente grande para no ser la causa de la variación. Dentro de un contexto de dinámica poblacional las condiciones que los individuos en las poblaciones experimentan varían, ya sea durante tratamientos manipulados, localidades o periodos de tiempo, y por consecuencia los datos que colectamos con diferencias en espacio/tiempo también varían y pudieran tener efecto sobre la matriz de proyección poblacional $matA$. Por tanto, las entradas (los parámetros) de esa matriz **A** variarán en tiempo/espacio o experimento y esto tendría un impacto sobre la tasa de crecimiento poblacional $\lambda$ y en los estimados de dispersión (Intervalo de confianza o credibilidad); [@caswell2000matrix; @caswell2010life].
 
-Tomando en cuenta lo anterior un Experimento de Respuesta de Tabla de Vida (**ERTV**\] conocido también como *Life Table Response Experiment* (LTRE, por sus siglas en inglés\] descompone la diferencia o varianza en *λ* entre múltiples poblaciones o tiempo dentro de las contribuciones de los elementos de la matriz y sus interacciones [@caswell1989analysis]. Entonces al realizar este análisis podemos tener una apreciación de cómo los cambios en la matriz de datos recolectados en diferentes tiempos y espacio impactan las tasas vitales y a su vez que causan cambios en el crecimiento intrínseco $\lambda$ y otros parámetros poblacionales [@caswell1989analysis; @caswell2010life].
+Tomando en cuenta lo anterior un Experimento de Respuesta de Tabla de Vida (**ERTV**) conocido también como *Life Table Response Experiment* (LTRE, por sus siglas en inglés) descompone la diferencia o varianza en *λ* entre múltiples poblaciones o tiempo dentro de las contribuciones de los elementos de la matriz y sus interacciones [@caswell1989analysis]. Entonces al realizar este análisis podemos tener una apreciación de cómo los cambios en la matriz de datos recolectados en diferentes tiempos y espacio impactan las tasas vitales y a su vez que causan cambios en el crecimiento intrínseco $\lambda$ y otros parámetros poblacionales [@caswell1989analysis; @caswell2010life].
 
 Desde la aplicación del primer ERTV por [@birch1953experimental] en su estudio sobre el efecto de la temperatura, humedad y el alimento sobre tres especies de escarabajos de harina, las aplicaciones de estos análisis han sido variadas con diversos fines en las últimas dos décadas [@caswell1989analysis; @caswell2010life]. Tanto en diseños fijos en los que se manipulan uno o más factores, como en diseños aleatorios en los que se analizan parámetros demográficos en condiciones naturales no manipuladas a lo largo del tiempo o del espacio [@horvitz1997relative; @teitel2016assessing]. Los diseños fijos se han utilizado en poblaciones de animales para investigar las consecuencias demográficas de la exposición a contaminantes, la manipulación del alimento o la manipulación de la densidad poblacional [@hansen1999multiannual; @levin1996demographic; @oli2001effect]. En plantas, los análisis ERTV se han utilizado para evaluar las consecuencias demográficas de la disponibilidad de polinizadores o de la herbívora, competencia, efectos en intensidades de cosecha y de fenómenos naturales e inducidos por el humano [@davison2010demographic; @gaoue2010effects; @garcia2002reproductive; @hart2021simulated; @jacquemyn2012stochastic; @miriti2001effects; @mondragon2009population; @nordbakken2004demography; @schmidt2011matrix].
 
@@ -39,7 +39,7 @@ Para ejemplificar el cálculo de los ERTV utilizaremos los datos recabados por R
 
 Como el ERTV es una forma de análisis retrospectivo y es análogo al ANOVA (porque cuantifica los efectos observados de los elementos individuales de matriz sobre la variación observada en *λ*, en contraposición a los efectos esperados) se requiere de un valor de referencia para realizar las comparaciones, por lo que se toma la matriz con el valor más alto de *λ* como valor de referencia [@caswell2010life; @timsina2021six].
 
-A continuación, se muestran dos matrices de tipo Lefkovitch (matrices construidas a base de estadíos) para las poblaciones de *O. brachyandrum* y sus valores respectivos de λ en los dos hospederos, *Q. martinezii* (λ=1.3; I.C: 1.11-1.45) y *Q. rugosa* (λ=0.98; I.C: 0.87-0.99) (Cuadro 1). Notamos claramente que el valor de λ era mayor en *Q. martinezii* por lo que la matriz de esta especie fue la matriz de referencia para calcular los ERTV.
+A continuación, se muestran dos matrices de tipo Lefkovitch (matrices construidas a base de estadíos) para las poblaciones de *O. brachyandrum* y sus valores respectivos de λ en los dos hospederos, *Q. martinezii* (λ=1.3; IC: 1.11-1.45) y *Q. rugosa* (λ=0.98; IC: 0.87-0.99) (Cuadro 1). Notamos claramente que el valor de λ era mayor en *Q. martinezii* por lo que la matriz de esta especie fue la matriz de referencia para calcular los ERTV.
 
 ------------------------------------------------------------------------
 
@@ -67,6 +67,7 @@ matmart <- rbind(
   c(0.0, 0.13, 0.53, 0.58),
   c(0.0, 0.0, 0.17, 0.38))
 
+colSums(matmart) # sumar las filas de la matriz
 stages <- c("plántula", "infantil", "juvenil", "adulto") # asignar los nombres de los estadíos
 title <- NULL # título del diagrama ninguno
 graph <- expand.grid(to = stages, from = stages) # crear un data frame con los estadíos
@@ -124,6 +125,8 @@ matrug <- rbind(
   c(0.27, 0.75, 0.27, 0.0),
   c(0.0, 0.08, 0.47, 0.28),
   c(0.0, 0.0, 0.27, 0.68))
+
+
 stages <- c("plántula", "infantil", "juvenil", "adulto")
 title <- NULL
 graph <- expand.grid(to = stages, from = stages)
@@ -168,7 +171,7 @@ El ciclo de vida de *Oncidium brachyandrum* creciendo sobre *Quercus rugosa*. La
 
 ## Procedimiento para ERTV en Excel
 
-Para facilitar el entendimiento de cómo se calcula ERTV se creó la matriz con los términos de referencia (Cuadro 2).
+Para facilitar el entendimiento de cómo se calcula ERTV se creó la matriz con los términos de referencia (Cuadro 2). En la sección **Apéndice C** se encuentra una hoja de Excel para poder realizar los cálculos de ERTV. En esta sección se explica cómo se construye la matriz de términos y cómo se calculan las tasas vitales para cada una de las especies de hospedero.
 
 Cuadro 2. Matriz de términos para el entendimiento de los ERTV.
 
@@ -199,25 +202,24 @@ En un archivo nuevo de Excel se arma la base, con la columna de vital_rate al pr
 matmart
 matrug
 
-Oncidium=tribble(~"names.vitalrate", ~"martinezzi", ~"rugosa", ~"matrix",
-             "lambda",1.30, 0.93,  "",
-             "s1",    0.8961, .8636,  "0",
-             "g12",   0.2463, 0.2631, "s1*g12",
-             "s2",    0.90163, 0.8888,  "0",
-             "g21",   0.01818,	0.0625,  "0",
-             "g23",   0.1454, 0.0937, "s2*g21",
-             "s3",    0.9375, 1.00, "2*(1-g23-g21)",
-             "g32",   0.2500, 0.2667, "s2*g23",
-             "g34",   0.1833, 0.2667,  "0" ,
-             "s4",    0.9667, 0.9545, "f31",
-             "g43",   0.6034, 0.2857, "s3*g32",
-            # "g44",    0.38, 0.68,     "s4*g44",
-             "f31",   3.88, 0.0001, "3*(1-g34-g32)",
-             "f41",  16.53, 0.0045, "s3*g34",
-             NA,      NA,   NA ,   "f41",
-             NA,      NA,   NA,    "0",
-             NA,      NA,   NA,   "s4*g43",
-             NA,      NA,   NA,   "s4*(1-g43)"
+Oncidium=tribble(~"names.vitalrate", ~"martinezzi", ~"rugosa",   ~"matrix",
+                   "lambda",           1.30,          0.93,         "",
+                    "s1",              0.8961,        0.8636,       "s1*(1-g12)",
+                    "g12",             0.24637681,	  0.263157896,  "s1*g12",
+                    "s2",              0.90163934,	  0.88888889,   "0",
+                    "g21",             0.018181815,	  0.062500005,  "0",
+                    "g23",             0.1454545,     0.0937499,    "s2*g21",
+                    "s3",              0.9375,        0.99999,      "s2*(1-g23-g21)",
+                    "g32",             0.2500,        0.266667,     "s2*g23",
+                    "g34",             0.183333,      0.266667,     "0" ,
+                    "s4",              0.966667,      0.95454545,   "f31",
+                    "g43",             0.603448,      0.285714,     "s3*g32",
+                    "f31",             3.875,         0.0001,       "s3*(1-g34-g32)",
+                    "f41",            16.53,          0.0045,       "s3*g34",
+                     NA,                 NA,          NA,           "f41",
+                     NA,                 NA,          NA,           "0",
+                     NA,                 NA,          NA,           "s4*g43",
+                     NA,                 NA,          NA,           "s4*(1-g43)"
              )
 
 gt(Oncidium)
@@ -314,19 +316,19 @@ matmart
 
 Martinezzi.se<-vitalsens(matrix.el, Martinezzi)
 Martinezzi.se
-```
 
-```         
-  s1      g12       s2      g21      g23       s3      g32      g34       s4      g43      f31      f41 
-```
 
-0.89610 0.24630 0.90163 0.01818 0.14540 0.93750 0.25000 0.18330 0.96670 0.60340 3.88000 16.53000 s1 g12 s2 g21 g23 s3 g32 g34 s4 g43 f31 f41 0.8636 0.2631 0.8888 0.0625 0.0937 1.0000 0.2667 0.2667 0.9545 0.2857 0.0001 0.0045
+
+
+```
 
 #### *Quercus rugosa* elasticidad y sensitividad
 
 ```{r chap12_9}
 elas(matrug)
+```
 
+```{r LTRE12_9a}
 Rugosa.se<-vitalsens(matrix.el, Rugosa)
 Rugosa.se
 ```
@@ -389,7 +391,7 @@ gt(LTRE.resultados.Martinezzi.Rugosa)
 
 ------------------------------------------------------------------------
 
-Se puede crear un gráfico de la contribucioón de cada tasa vitales sobre la historia de vida de la especies comparando las dos matrix
+Se puede crear un gráfico de la contribución de cada tasa vitales sobre la historia de vida de la especies comparando las dos matrix
 
 ```{r LTRE15}
 
