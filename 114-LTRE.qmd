@@ -17,17 +17,26 @@ library(popdemo)
 
 ## Introducción a **Experimento de Respuesta de Tabla de Vida**
 
-La variación en los estimados de los parámetros de la matriz son inherentes a la biología. Esa variación puede ser a consecuencia de múltiples factores individuales y en combinaciones, incluyendo efectos de tiempo, espacio, genético, tamaño de muestra y suerte [@hernandez2024natural]. La variación en las parámetros de la historia de vida de una especie y las causas de estas diferencias se pueden evaluar a diferentes niveles: genético, demográfico, espacial o temporal. La variación en ecología es la norma. La variación se encuentra en todos aspectos desde la parte genética de los individuos que compone una población, la variación ambiental y las interacciones bióticas y abióticas; además de la plasticidad fenotípica que es la interacción entre la genética y el ambiente. ¿Cuál es esa variación? ¿en otra palabra qué es lo que varía? y ¿cómo los individuos responden a las variables bióticas y abióticas? son aspectos importantes para determinar la ecología, evolución y conservación de las especies. La causa de la variación en una población se puede resumir a tres componentes principales, la genética, el efecto del ambiente y la interacción entre ambiente y genética (plasticidad fenotípica) [@hastings2021effects; @sun2019multivariate]. En general se asume que el tamaño de muestra es suficiente grande para no ser la causa de la variación. Dentro de un contexto de dinámica poblacional las condiciones que los individuos en las poblaciones experimentan varían, ya sea durante tratamientos manipulados, localidades o periodos de tiempo, y por consecuencia los datos que colectamos con diferencias en espacio/tiempo también varían y pudieran tener efecto sobre la matriz de proyección poblacional $matA$. Por tanto, las entradas (los parámetros) de esa matriz **A** variarán en tiempo/espacio o experimento y esto tendría un impacto sobre la tasa de crecimiento poblacional $\lambda$ y en los estimados de dispersión (Intervalo de confianza o credibilidad); [@caswell2000matrix; @caswell2010life].
+La variación en los valores estimados de los parámetros de la matriz son inherentes a la biología. Esa variación puede ser consecuencia de múltiples factores individuales y/o de combinaciones, incluyendo efectos de tiempo, espaciales, genéticos, de tamaño de muestra y por su puesto suerte [@hernandez2024natural]. La variación en los parámetros de la historia de vida de una especie se pueden evaluar a diferentes niveles: genético, demográfico, espacial o temporal. En ecología la variación es la norma ¿Cuál es esta variación? ¿en otra palabras qué es lo que varía? y ¿cómo los individuos responden a las variables bióticas y abióticas? son aspectos importantes para determinar la ecología, evolución y conservación de las especies. La causa de la variación en una población se puede resumir en tres componentes principales: la genética, el efecto del ambiente y la interacción entre ambiente y genética (plasticidad fenotípica) [@hastings2021effects; @sun2019multivariate]. En general se asume que el tamaño de muestra es lo suficientemente grande para no ser la causa de la variación, pero dentro de un contexto de dinámica poblacional las condiciones en las que se encuentran los individuos en las poblaciones varían, ya sea durante tratamientos manipulados, entre localidades o periodos de tiempo, y por consecuencia los datos que colectamos con diferencias en espacio/tiempo también varían y pudieran tener efecto sobre la matriz de proyección poblacional $matA$. Por tanto, las entradas (los parámetros) de esa matriz **A** variarán en tiempo/espacio o experimento y esto tendría un impacto sobre la tasa de crecimiento poblacional $\lambda$ y en los estimados de dispersión (Intervalo de confianza o credibilidad); [@caswell2000matrix; @caswell2010life].
+
+
 
 Tomando en cuenta lo anterior un Experimento de Respuesta de Tabla de Vida (**ERTV**) conocido también como *Life Table Response Experiment* (LTRE, por sus siglas en inglés) descompone la diferencia o varianza en *λ* entre múltiples poblaciones o tiempo dentro de las contribuciones de los elementos de la matriz y sus interacciones [@caswell1989analysis]. Entonces al realizar este análisis podemos tener una apreciación de cómo los cambios en la matriz de datos recolectados en diferentes tiempos y espacio impactan las tasas vitales y a su vez que causan cambios en el crecimiento intrínseco $\lambda$ y otros parámetros poblacionales [@caswell1989analysis; @caswell2010life].
+
+
+Desde la aplicación del primer ERTV por [@birch1953experimental] en su estudio sobre el efecto de la temperatura, humedad y el alimento sobre tres especies de escarabajos de harina, las aplicaciones de estos análisis han sido variadas con diversos fines en las últimas dos décadas [@caswell1989analysis; @caswell2010life]. Tanto en diseños fijos en los que se manipulan uno o más factores, como en diseños aleatorios en los que se analizan parámetros demográficos en condiciones naturales no manipuladas a lo largo del tiempo o del espacio [@horvitz1997relative; @teitel2016assessing]. Los diseños fijos se han utilizado en poblaciones de animales para investigar las consecuencias demográficas de la exposición a contaminantes, la manipulación del alimento o la manipulación de la densidad poblacional [@hansen1999multiannual; @levin1996demographic; @oli2001effect]. En plantas, los análisis ERTV se han utilizado para evaluar las consecuencias demográficas de la disponibilidad de polinizadores o de la herbívora, competencia, efectos en intensidades de cosecha y de fenómenos naturales e inducidos por el humano [@davison2010demographic; @gaoue2010effects; @garcia2002reproductive; @hart2021simulated; @jacquemyn2012stochastic; @miriti2001effects; @mondragon2009population; @nordbakken2004demography; @schmidt2011matrix].
 
 Desde la aplicación del primer ERTV por [@birch1953experimental] en su estudio sobre el efecto de la temperatura, humedad y el alimento sobre tres especies de escarabajos de harina, las aplicaciones de estos análisis han sido variadas con diversos fines en las últimas dos décadas [@caswell1989analysis; @caswell2010life]. Tanto en diseños fijos en los que se manipulan uno o más factores, como en diseños aleatorios en los que se analizan parámetros demográficos en condiciones naturales no manipuladas a lo largo del tiempo o del espacio [@horvitz1997relative; @teitel2016assessing]. Los diseños fijos se han utilizado en poblaciones de animales para investigar las consecuencias demográficas de la exposición a contaminantes, la manipulación del alimento o la manipulación de la densidad poblacional [@hansen1999multiannual; @levin1996demographic; @oli2001effect]. En plantas, los análisis ERTV se han utilizado para evaluar las consecuencias demográficas de la disponibilidad de polinizadores o de la herbívora, competencia, efectos en intensidades de cosecha y de fenómenos naturales e inducidos por el humano [@davison2010demographic; @gaoue2010effects; @garcia2002reproductive; @hart2021simulated; @jacquemyn2012stochastic; @miriti2001effects; @mondragon2009population; @nordbakken2004demography; @schmidt2011matrix].
 
 Los métodos para calcular los ERTV están constantemente actualizándose y de acuerdo con [@hernandez2023exact] existen 186 análisis de ERTV para 75 especies de animales y 1487 para 200 especies de plantas. Aunque en este trabajo no utilizamos la metodología expuesta por dichos autores mostramos una forma práctica de la aplicación de este análisis.
 
+
+
 ### ¿Cómo se diferencia la elasticidad de ERTV?
 
 A diferencia de la elasticidad, el cual es un tipo de análisis de perturbación que examina cuánto cambiaría el crecimiento de la población si se cambiaran una de las entradas de la matriz comparando múltiples matriz, el análisis ERTV examina cuánto cambió hay en $\lambda$ en función de la variación observada en las entradas de la matriz [@caswell2000matrix; @caswell2010life; @horvitz1997relative]; y por consecuencia es un análisis que toma en cuenta el cambio de las variaciones individualmente registradas en matrices en diferentes poblaciones/ tiempo / experimentos, etc. [@caswell2010life]. Nota que ERTV es una herramienta suplementaria para evaluar el efecto de perturbaciones como los de elasticidad [@caswell1989analysis], dinámica de transiciones [@stott2011framework] y funciones de transferencias [@stott2012beyond] y no un reemplazos. Cada una de estas herramientas tiene un propósito y una interpretación diferente con sus supuestos.
+
+
 
 ------------------------------------------------------------------------
 
@@ -39,7 +48,32 @@ Para ejemplificar el cálculo de los ERTV utilizaremos los datos recabados por R
 
 Como el ERTV es una forma de análisis retrospectivo y es análogo al ANOVA (porque cuantifica los efectos observados de los elementos individuales de matriz sobre la variación observada en *λ*, en contraposición a los efectos esperados) se requiere de un valor de referencia para realizar las comparaciones, por lo que se toma la matriz con el valor más alto de *λ* como valor de referencia [@caswell2010life; @timsina2021six].
 
-A continuación, se muestran dos matrices de tipo Lefkovitch (matrices construidas a base de estadíos) para las poblaciones de *O. brachyandrum* y sus valores respectivos de λ en los dos hospederos, *Q. martinezii* (λ=1.3; IC: 1.11-1.45) y *Q. rugosa* (λ=0.98; IC: 0.87-0.99) (Cuadro 1). Notamos claramente que el valor de λ era mayor en *Q. martinezii* por lo que la matriz de esta especie fue la matriz de referencia para calcular los ERTV.
+
+A continuación, se muestran dos matrices de tipo Lefkovitch (matrices construidas con base en estadíos) para las poblaciones de *O. brachyandrum* y sus valores respectivos de λ en los dos hospederos, A) *Q. martinezii* (λ=1.3; IC: 1.11-1.45) y B) *Q. rugosa* (λ=0.98; IC: 0.87-0.99). El valor de λ fue mayor en *Q. martinezii* por lo que la matriz de esta especie fue la matriz de referencia para calcular los ERTV.
+
+**A)**
+
+|          	| Plántula  |  Infantil |  Juvenil  |  Adulto |
+|----------	|----------	|----------	|---------	|--------	|
+| Plántula 	|   0.68   	|   0.02   	|  3.88    	|  16.53	|
+| Infantil 	|   0.23  	|   0.75   	|  0.23    	|    0   	|
+| Juvenil  	|    0    	|   0.13  	|  0.53    	|   0.58	|
+| Adulto   	|    0    	|    0     	|  0.17    	|   0.38  |
+            
+
+**B)**
+
+|          	| Plántula 	| Infantil 	| Juvenil 	| Adulto 	|
+|----------	|----------	|----------	|---------	|--------	|
+| Plántula 	|   0.64   	|   0.06   	|    0     	|  0.005	|
+| Infantil 	|   0.23   	|   0.75   	|   0.27  	|    0  	|
+| Juvenil  	|    0     	|   0.08   	|   0.47  	|  0.27  	|
+| Adulto   	|    0    	|    0    	|   0.27  	|  0.68  	|
+
+            
+--------------------------------------------------------------------
+---------------------------------------------------------------------
+
 
 ------------------------------------------------------------------------
 
@@ -111,11 +145,15 @@ digraph {
 )
 ```
 
+
 \vspace{-5truemm}
 
 El ciclo de vida de *Oncidium brachyandrum* creciendo sobre *Quercus martinezii*. Las flechas representan las transiciones entre estadíos, estasis y fecundidades y los números son las tasas vitales de fecundidad, supervivencia y crecimiento. El color $\color{#ffc125}{\text{amarillo}}$ para fecundidad, $\color{#36648b}{\text{azul}}$ para supervivencia y $\color{#548b54}{\text{verde}}$ para crecimiento, $\color{#7a378b}{\text{violeta}}$ para retroceso y azul oscuro para permanencia.
 
-### Diagrama para Quercus rugosa
+
+***
+
+### Diagrama para *Quercus rugosa*
 
 ```{r LTRE3_Quercus_rugosa, echo=TRUE}
 
@@ -171,36 +209,36 @@ El ciclo de vida de *Oncidium brachyandrum* creciendo sobre *Quercus rugosa*. La
 
 ## Procedimiento para ERTV en Excel
 
-Para facilitar el entendimiento de cómo se calcula ERTV se creó la matriz con los términos de referencia (Cuadro 2). En la sección **Apéndice C** se encuentra una hoja de Excel para poder realizar los cálculos de ERTV. En esta sección se explica cómo se construye la matriz de términos y cómo se calculan las tasas vitales para cada una de las especies de hospedero.
+Para facilitar e entendimiento de cómo se calcula ERTV se creó la matriz con los términos de referencia (Cuadro 1). 
 
-Cuadro 2. Matriz de términos para el entendimiento de los ERTV.
+| Estadío | Plántulas (1) | Infantiles (2) | Juveniles (3) | Adultos (4) |
+|---|---|---|---|---|
+| Plántulas (1) | p~11~ (permanencia de plántulas) | g~21~ (retroceso de infantiles a plántulas) | f~31~ (plántulas generadas)<br>g~31~ (retroceso de juveniles a plántulas) | f~41~(plántulas generadas) |
 
-Donde:
+| Infantiles (2) | g~12~ (crecimiento de estadio de plántulas a infantiles) | p~22~ (permanencia de infantiles) | g~32~ (retroceso de juveniles a infantiles) | g~42~(retroceso de adultos a infantiles) |
 
--   f= fecundidad
--   g= crecimiento o retrogresión
--   p= permanencia
--   s=supervivencia
+| Juveniles (3) | g~13~ (crecimiento de estadio de plántulas a juveniles) | g~23~ (crecimiento del estadio de infantiles a juveniles) | p~33~ (permanencia de juveniles) | g~43~ (retroceso de adultos a juveniles) |
 
-Los subíndices se refieren a las transiciones entre estadíos. Nota que los parámetros de juvenil que retrogresan a plántula y y esa etapa produciendo plántulas se suman.
+| Adultos (4) | g~14~ (crecimiento del estadio de plántulas a adultos) | g~24~ (crecimieno del estadio de infantiles a adultos) | g~34~ (crecimiento del estadio de juveniles a adultos) | p~44~ (permanencia de adultos) |
 
-![](Figures/imagen2.jpg)
+| Supervivencia | s~1~ (de plántulas) | s~2~ (de infantiles) | s~3~ (de juveniles) | s~4~ (de adultos) |
+                                                              |
+**Cuadro 1.** Matriz de términos para el entendimiento de los ERTV. Donde: f= fecundidad, g= crecimiento o retrogresión, p= permanencia y s=supervivencia. Los subíndices se refieren a las transiciones entre estadíos.Nota que los parámetros de juvenil que retrogresan a plántula y esa etapa produciendo plántulas se suman.
 
-Una vez colocadas las matrices en la hoja de trabajo el primer paso será sumar las columnas para cada estadio, esto significará la supervivencia (s) por estadío (s1, s2, s3, s4); para el caso de *Q. martinezii* en plántulas sería s1= 0.68+0.22= 0.90 (Figura 3). Después se tienen que calcular las transiciones con respecto a la supervivencia; por lo que para el caso de la transición g12 para la matriz de *Q. martinezii* tenemos g12= 0.22/0.90=0.25; este cálculo se realiza para todas las transiciones. Los valores de fecundidad (f) se tomarán tal cual de la matriz de fecundidad $matF$. Una vez obtenido esto se procederá a realizar los cálculos con las ecuaciones que se muestran del lado derecho para cada una de las celdas y, además, esto nos sirve para verificar que hayamos calculado bien cada una de las tasas vitales. Por ejemplo, observamos que una proporción de plántulas en *Q. martinezii* se mantuvo (0.67) este valor se obtiene de multiplicar la supervivencia de plántulas (s1) por la sustracción de 1 menos el crecimiento de plántulas a infantiles 0.89 (1-0.25) = 0.68 (ecuación s1\* (1-g12)).
+En la sección **Apéndice C** se encuentra una hoja de Excel para poder realizar los cálculos de ERTV. En esta sección se explica cómo se construye la matriz de términos y cómo se calculan las tasas vitales para cada una de las especies de hospedero.
 
-![](Figures/imagen3.jpg)
 
-Figura 3. Forma de calcular las ecuaciones para la base de ERTV.
+
+Una vez colocadas las matrices en la hoja de trabajo el primer paso será sumar las columnas para cada estadio, esto significará la supervivencia (s) por estadío (s~1~, s~2~, s~3~, s~4~); para el caso de *Q. martinezii* en plántulas sería s~1~= 0.68+0.22= 0.90 (Figura 3). Después se tienen que calcular las transiciones con respecto a la supervivencia; por lo que para el caso de la transición g~12~ para la matriz de *Q. martinezii* tenemos g~12~= 0.22/0.90=0.25; este cálculo se realiza para todas las transiciones. Los valores de fecundidad (f) se tomarán tal cual de la matriz de fecundidad $matF$. Una vez obtenido esto se procederá a realizar los cálculos con las ecuaciones que se muestran del lado derecho para cada una de las celdas y, además, esto nos sirve para verificar que hayamos calculado bien cada una de las tasas vitales. Por ejemplo, observamos que una proporción de plántulas en *Q. martinezii* se mantuvo (0.67) este valor se obtiene de multiplicar la supervivencia de plántulas (s~1~) por la sustracción de 1 menos el crecimiento de plántulas a infantiles 0.89 (1-0.25) = 0.68 (ecuación s~1~\* (1-g~12~)).
+
 
 ------------------------------------------------------------------------
 
 ### Método usando Excel
 
-En un archivo nuevo de Excel se arma la base, con la columna de vital_rate al principio, seguido por las especies de hospederos (tratamientos) poniendo primeramente el control y después la columna de matrix (Figura 4). Esta base contendrá las ecuaciones de la matriz de referencia. Como la matriz de *Q. martinezii* tuvo los valores más altos de lambda está ultima de colocará en nuestra base que utilizaremos para correr el análisis ERTV.
+En un archivo nuevo de Excel se arma la base, con la columna de vital_rate al principio, seguido por las especies de hospederos (tratamientos) poniendo primeramente el control y después la columna de matrix. Esta base contendrá las ecuaciones de la matriz de referencia. Como la matriz de *Q. martinezii* tuvo los valores más altos de lambda está se colocará primero en nuestra base que utilizaremos para correr el análisis ERTV.
 
 ```{r LTRE4, echo=FALSE}
-matmart
-matrug
 
 Oncidium=tribble(~"names.vitalrate", ~"martinezzi", ~"rugosa",   ~"matrix",
                    "lambda",           1.30,          0.93,         "",
@@ -225,12 +263,11 @@ Oncidium=tribble(~"names.vitalrate", ~"martinezzi", ~"rugosa",   ~"matrix",
 gt(Oncidium)
 
 
-
 ```
 
-Figura 4. Ejemplo de base para poder calcular los ERTV.
+**Cuadro 2.** Ejemplo de base para poder calcular los ERTV.
 
-Es importante colocar en la segunda fila la palabra lambda en la primera columna y después los valores según corresponda a cada tratamiento. Debido a que en *Q. rugosa* no hubo producción de plántulas (f31) pero en *Q. martinezii* si hubo se coloca una cantidad muy pequeña pero mayor a cero (e.g. 0.00001) para que se pueda correr el análisis, para las otras transiciones en valor puede ser 0. Una vez culminada la base se guarda el archivo en formato de texto, para continuar en R. Es importante comenzar a colocar las ecuaciones a partir de la segunda fila en la columna matrix.
+Es importante colocar en la segunda fila la palabra lambda en la primera columna y después los valores según corresponda a cada tratamiento. Debido a que en *Q. rugosa* no hubo producción de plántulas (f~31~) pero en *Q. martinezii* si hubo se coloca una cantidad muy pequeña pero mayor a cero (e.g. 0.00001) para que se pueda correr el análisis, para las otras transiciones en valor puede ser 0. Una vez culminada la base se guarda el archivo en formato de texto, para continuar en R. Es importante comenzar a colocar las ecuaciones a partir de la segunda fila en la columna matrix.
 
 ------------------------------------------------------------------------
 
@@ -241,11 +278,11 @@ Subir la base de datos de la carpeta de trabajo y cargarla en R.
 -   Nota que debería observar la base de datos en la consola de R para verificar que se haya cargado correctamente con los mismos valores que en la hoja de Excel.
 
 ```{r LTRE5, echo=TRUE}
-
 # Asegurarse de tener instalado y cargado el paquete 'popbio' package 
 
 # oncidium<-read.table("data/vitalratesoncidium.txt", sep="\t", header=TRUE, stringsAsFactors=FALSE, fill=TRUE) 
      # Aqui la alternativa si tiene los datos en una hoja de Excel
+
 #oncidium 
 
 Oncidium
@@ -303,26 +340,29 @@ expression(s1*(1-g12), s1*g12, 0, 0,
           f41, 0, s4*g43, s4*(1-g43))
 ```
 
-### Calcular las sensibilidades y elasticidades de *Onciudium brachyandrum* de ambas matrices
+### Calcular las sensibilidades y elasticidades del ERTV para cada una de las matrices de *Oncidium brachyandrum* 
 
 Nota que usando la función vitalsens se pueden calcular las sensibilidades y elasticidades de las tasas vitales de las matrices de *Oncidium brachyandrum* creciendo sobre *Q. martinezii* y *Q. rugosa* en un mismo objeto.
 
-#### *Quercus matinezzi* elasticidad y sensitividad
 
-Hay algo extraño en la matriz de sensibilidades y elasticidades, no se ve bien., hay elasticidad negativas, y esto no es posible. Hay que revisar el código.
+
+#### *Quercus matinezzi*
+
+
 
 ```{r LTRE10}
 matmart
 
 Martinezzi.se<-vitalsens(matrix.el, Martinezzi)
-Martinezzi.se
+
+Martinezzi.se # observar los resultados
 
 
 
 
 ```
 
-#### *Quercus rugosa* elasticidad y sensitividad
+#### *Quercus rugosa* 
 
 ```{r chap12_9}
 elas(matrug)
@@ -333,7 +373,7 @@ Rugosa.se<-vitalsens(matrix.el, Rugosa)
 Rugosa.se
 ```
 
-### Calcular las diferencias en tasas vitales entre las especies
+### Calcular las diferencias en tasas vitales entre las especies de hospederos
 
 En esta parte se calculará la diferencia entre las tasas vitales de *Oncidium brachyandrum* creciendo sobre *Q. martinezii* y *Q. rugosa*. ¿Como se interpreta estos resultados?
 
@@ -346,6 +386,7 @@ vr.dif.Martinezzi.Rugosa
 ### Calcular las tasas vitales para la matriz media
 
 En este paso se calculará la tasa vital media para *Oncidium brachyandrum* creciendo sobre *Q. martinezii* y *Q. rugosa*. La tasa vital media se calcula sumando las tasas vitales de las dos matrices y dividiendo entre 2.
+
 
 ```{r LTRE12}
 
@@ -376,6 +417,8 @@ LTRE.contrib.Martinezzi.Rugosa
 
 ### Resultados de ERTV
 
+En esta sección se une todos los resultados en un solo objeto para poder observarlos de manera conjunta. 
+
 ```{r LTRE14}
 
 LTRE.resultados.Martinezzi.Rugosa<- data.frame(razonvital=razonvital,
@@ -390,6 +433,8 @@ gt(LTRE.resultados.Martinezzi.Rugosa)
 ```
 
 ------------------------------------------------------------------------
+
+### Graficar los resultados de ERTV
 
 Se puede crear un gráfico de la contribución de cada tasa vitales sobre la historia de vida de la especies comparando las dos matrix
 
@@ -406,7 +451,7 @@ ggplot(LTRE.resultados.Martinezzi.Rugosa, aes(y=contribucion, x=razonvital, fill
 
 Figure 5. Resultados de un Experimento de Respuesta de la Tabla de Vida (ERTV) llevado a cabo para evaluar las contribuciones de las entradas de la matriz a la variación observada en *λ*.
 
-De acuerdo con el análisis de elasticidad para cada una de las poblaciones de *O. brachyandrum*, tanto en *Q. martinezii* como en *Q. rugosa* la permanencia de individuos infantiles es la que tiene un mayor impacto sobre los valores de la tasa de crecimiento poblacional (Figura 6). De acuerdo al ERTV, el cual toma en cuenta las diferencias en las tasas vitales y la sensibilidad de lambda que es una función no linear de esas tasas vitales, podemos observar que la fecundidad (fsa) y el crecimiento de plantulas a juveniles (gsj), de juveniles a adultos (gja) y el retroceso de adultos a juveniles (gaj) tiene las mayores contribuciones a las diferencias en lambda entre Q. martinezii y Q. rugosa que la permanencia de plántulas.
+De acuerdo con el análisis de elasticidad para cada una de las poblaciones de *O. brachyandrum*, tanto en *Q. martinezii* como en *Q. rugosa* la permanencia de individuos infantiles es la que tiene un mayor impacto sobre los valores de la tasa de crecimiento poblacional (Figura 6). De acuerdo al ERTV, el cual toma en cuenta las diferencias en las tasas vitales y la sensibilidad de lambda que es una función no linear de esas tasas vitales, podemos observar que la fecundidad ($f_{sa}$) y el crecimiento de plántulas a juveniles ($g_{sj}$), de juveniles a adultos ($g_{ja}$) y el retroceso de adultos a juveniles ($g_{aj}$) tiene las mayores contribuciones a las diferencias en lambda entre *Q. martinezii* y *Q. rugosa* que la permanencia de plántulas.
 
 Figure 6. Resultados de los análisis de elasticidad, para dos poblaciones de *Oncidium brachyandrum* creciendo sobre *Quercus martinezii* y *Q. rugosa*. Por proceso demográfico (a) y por estadío (b).
 
@@ -416,16 +461,19 @@ ggplot(LTRE.resultados.Martinezzi.Rugosa, aes(y=media.sens, x=razonvital, fill=r
   geom_bar(stat="identity")+
   theme_minimal()+
   theme(axis.text.x = element_text(angle = 90, hjust = 1))+
-  labs(title="Media Sensitividad ????", x="razonvital", y="contribución")+
+  labs(title="Promedio de la Sensitividad", x="razonvital", y="contribución")+
   geom_hline(yintercept=0, linetype="dashed", color = "red")+
   xlab("Tasa vitales")
 ```
 
 ------------------------------------------------------------------------
 
+
+## Análisis con R
+
 Ahora enseñar como hacer estos análisis sin tener que usar Excel, aquí un set de script para aplicar a *Oncidium brachyandrum*.
 
-Sugiero que cambie las gráficas a ggplot2 para que se vean más bonitas y consistencia en el libro de herramientas. YO TE AYUDO CON ESTE PASO
+
 
 ------------------------------------------------------------------------
 
@@ -433,7 +481,7 @@ En esta sección se muestra cómo hacer los análisis de ERTV sin tener que usar
 
 Calcular la matriz promedio
 
-```{r}
+```{r LTRE17}
 mat.promedio <- (matmart + matrug) / 2
 
 mat.promedio
@@ -442,24 +490,22 @@ mat.promedio
 
 ```
 
-How to convert a matrix unto a list with each element being a vector of the matrix row, append each row to the previous one
+Convertir la matriz en un vector
 
-convert a matrix all elements to one row vector
-
-```{r}
+```{r LTRE18}
 mat.promedio.vector <- as.vector(mat.promedio)
 
 mat.promedio.vector
 
-mat_rug.vector <- as.vector(matrug)
-mat_mart.vector <- as.vector(matmart)
+mat_rug.vector <- as.vector(matrug) # vector para O. rugosa
+mat_mart.vector <- as.vector(matmart) # vector para O. martinezii
 
 ```
 
-Unir los vectores de las matrices rugosa y martinezii
+Unir los vectores de las matrices *O. rugosa* y *O. martinezii*
 
-```{r}
-matrug
+```{r LTRE19}
+
 
 Unido=rbind(mat_rug.vector, mat_mart.vector)
 
@@ -470,7 +516,7 @@ Unido
 
 Añadir los nombres a las columnas de la matriz promedio
 
-```{r}
+```{r LTRE20}
 colnames(Unido)<-expression(a11, a21, a31, a41, 
                             a12, a22, a32, a42, 
                             a13, a23, a33, a43,
@@ -482,9 +528,10 @@ Unido$Site <- c("Q. rugosa", "Q. martinezii")
 Unido
 ```
 
-Extract the matrix elements from the data frame and convert them into a list of matrices
+Extraer los elementos del data frame y convertirlos en una lista de matrices
 
-```{r}
+
+```{r LTRE21}
 Ob_Atrt <- lapply(split(as.matrix(Unido[,1:16]), 1:2),  matrix, nrow=4, byrow=TRUE) 
 
 
@@ -493,35 +540,52 @@ names(Ob_Atrt) <- Unido$Site
 Ob_Atrt
 ```
 
-# LTRE analysis for *Oncidium brachyandrum*
+## Analisis de ERTV para *Oncidium brachyandrum*
 
-```{r, eval=FALSE}
+Gráfico de contribución de ERTV para la matriz promedio de *Oncidium brachyandrum* creciendo sobre *Quercus martinezii* y *Q. rugosa*.
+
+```{r LTRE22, eval=FALSE}
+
 #plots <- lapply(plots, mean)
-Ob <- LTRE(Ob_Atrt, mat.promedio)
-Ob$`Q. martinezii`
-x_Ob <- matrix(unlist(Ob), nrow=4, byrow=TRUE)
-x_Ob
-colnames(x_Ob) <-colnames(Unido)<-expression(a11, a21, a31, a41, 
+Ob <- LTRE(Ob_Atrt, mat.promedio) # usando la matriz promedio
+#Ob$`Q. martinezii`
+#x_Ob <- matrix(unlist(Ob), nrow=4, byrow=TRUE)
+#x_Ob
+x_Ob <- matrix(unlist(Ob$`Q. martinezii`), nrow=4, byrow=TRUE)
+colnames(x_Ob) <-expression(a11, a21, a31, a41, 
                                              a12, a22, a32, a42, 
                                              a13, a23, a33, a43,
-                                             a14, a24, a43, a44)
+                                             a14, a24, a34, a44)
 
-Ob_bp <- barplot(x_Ob[1:2,], beside=TRUE, ylim=c(-.2,.15), las=1, xlab="Transition", ylab="", xaxt='n')
+Ob_bp <- barplot(x_Ob[1:2,], beside=TRUE, ylim=c(-.05,.25), las=1, xlab="Transition", ylab="", xaxt='n')
 
 
 mtext(expression(paste("Contribution of ", a[ij], "to variation in ", lambda)), 2, 3.5)
 ## rotate labels
-text(Ob_bp[1,]-0.5, -.22, labels=colnames(x), srt=45, xpd=TRUE)
+text(Ob_bp[1,]-0.5, -.22, labels=colnames(x_Ob), srt=45, xpd=TRUE)
 title(expression(italic("Oncidium brachyandrum")))
 box()
 
 ```
 
-Try to do ggplot figure
 
-how to convert the matrix to a data frame for ggplot
+```{r LTRE23}
+Ob <- LTRE(Ob_Atrt, mat.promedio)
+Ob
+```
 
-```{r}
+
+
+
+
+
+```{r LTRE24,  echo=FALSE}
+
+## Analisis de ERTV para *Oncidium brachyandrum* por hospedero
+
+#Convertir los resultados de ERTV en un data frame para facilitar la visualización y manipulación de los datos para usar con ggplot2
+
+
 Ob <- LTRE(Ob_Atrt, mat.promedio)
 
 Ob_df_mart <- as.data.frame(t(Ob$`Q. martinezii`))
@@ -545,21 +609,31 @@ pivot_long$Transitions2 <- c("a11", "a21", "a31", "a41", "a12", "a22", "a32", "a
 
 ```
 
-```{r}
+
+
+
+
+
+```{r LRE25 }
 library(ggplot2)
 
 ggplot(pivot_long, aes(x = Transitions2, y = Contribution, fill = Species)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Contributions of Transitions to Variation in Lambda",
-       x = "Transition",
-       y = "Contribution") +
+  labs(title = "Contribución de la variación  en las transiciones sobre lambda",
+       x = "Transiciones",
+       y = "Contribuciones") +
   theme_minimal() +
   facet_wrap(~ Species, scales = "free") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   geom_hline(yintercept=0, linetype="dashed", color = "red")
 ```
 
-Enlace sobre LTRE https://bookdown.org/cdorm/lefko3gentle/ltre.html
+Aquí se observa el efecto de las transiciones de las tasas vitales sobre la variación en *λ* para las dos especies de hospedero. Las barras positivas indican contribuciones positivas a la variación en $\lambda$, mientras que las barras negativas indican contribuciones negativas sobre $\lambda$. NOTA importante que la escala de las barras (le eje de $Y$) es diferente para cada especie de hospedero. El efecto de las transiciones de las tasas vitales sobre la variación en *λ* es diferente para cada especie de hospedero, no solamente el efecto sobre las tasa vitales son diferentes pero entre hospedero pero los cambios relativos.  Lo que indica que las dinámicas poblacionales de *Oncidium brachyandrum* son influenciadas por el hospedero en el que crece.
+
+
+
+
+Enlace sobre ERTV https://bookdown.org/cdorm/lefko3gentle/ltre.html
 
 Revisión:
 
