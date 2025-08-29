@@ -77,6 +77,8 @@ plot_life_cycle(matA, stages = stages)
 
 Tomando en cuenta los ejemplos anteriores podemos concluir que es importante considerar la biología de la especie, el método de muestreo y el tamaño de muestra para llevar a cabo un análisis de datos correcto.
 
+***
+
 ## El paquete "raretrans"
 
 El manuscrito [@tremblay2021population, @raretrans2024] contiene los datos originales y el uso del paquete. Para tener acceso a los documentos siguen el siguiente enlace https://doi.org/10.1016/j.ecolmodel.2021.109526.
@@ -127,7 +129,7 @@ rlt_theme <- theme(axis.title.y = element_text(colour="grey20",size=15,face="bol
 
 Podemos utilizar la función `popbio::projection.matrix` para obtener los datos necesarios. Hacemos una demostración con los datos de transición y fertilidad de *Lepanthes eltoroensis* **POPNUM 250** en el **periodo 5**. *Lepanthes eltoroensis* es una orquídea epífita, endémica de Puerto Rico y con una distribución limitada a una pequeña región de la isla.
 
-## Paso 1: Descargar los datos de la una población de *L. elto* del paquete **raretrans**
+## Descargar los datos de la una población de *L. elto* del paquete **raretrans**
 
 ```{r bayes6}
 
@@ -172,9 +174,9 @@ TF <- popbio::projection.matrix(as.data.frame(onepop),
 TF # Este es la estructura de etapas de vida para esa población.  Nota que tenemos dos matrices, una de transiciones **T** y otra de fertilidad **F**. 
 ```
 
-------------------------------------------------------------------------
+***
 
-## Paso 2: Obtener el número inicial de individuos por etapa
+## Obtener el número inicial de individuos por etapa
 
 Dado que nuestros conteos (número de individuos, $N$ y el tamaño de *muestra equivalente* *a priori* se expresan como múltiplos del número de individuos observados, necesitamos obtener el número de individuos en cada etapa ($N$) en el primer periodo de tiempo. Para esto utilizamos la función `raretrans::get_state_vector()`. Se observa que la cantidad de individuos iniciales por etapa es el número de individuos en el primer muestreo es muy limitada, con 11 plántulas, 47 juveniles y 34 adultos.
 
@@ -220,6 +222,7 @@ TF2
 N2
 ```
 
+
 ¿Cómo se ve el ciclo de vida de la población en ese periodo?
 
 A la matriz mostrada le falta la transición de plántula a juvenil. Ademas dado que ninguno de los 6 juveniles murió hay una sobrestimación de su supervivencia. La tasa de crecimiento asintótica de la población observada es $\lambda$. La matriz no es ergódica (no se puede llegar a cualquier otro estado desde uno o más estados), y es reducible, lo que significa que una o más columnas y filas se pueden descartar y tienen las mismas propiedades en términos de sus eigenvalores y eigenvectores.
@@ -232,6 +235,8 @@ stages2 <- c("plantulas", "juveniles", "adultos")
 title <- NULL
 plot_life_cycle(Tmat, stages=stages2)
 ```
+
+***
 
 ### Incorporar previas informativas
 
@@ -255,6 +260,8 @@ A hora usando la función de **fill_transitions** donde se agregan los valores d
 fill_transitions(TF, N, P = RLT_Tprior)
 ```
 
+***
+
 ### Modificar el peso de los valores *a priori*
 
 Podemos especificar el peso de los valores **a priori** modificando el tamaño de muestra de cada etapa. Si tenemos poca confianza en los valores **a priori** le damos un peso pequeño para que los datos del campo dominen más los resultados.
@@ -268,9 +275,9 @@ En este caso, el `priorweight` se pondera con la mitad del número observado de 
 
 Note que ahora tenemos una matriz de transición que es ergódica y reducible. En adición la tasa de mortandad y la tasa de transiciones son más realista.
 
-------------------------------------------------------------------------
+***
 
-## Intervalos de credibilidad de los parámetros
+## Intervalos de credibilidad de las transiciones
 
 A continuación obtendremos los intervalos de credibilidad (ICr) para cada entrada de la matriz. Como la distribución posterior marginal de un elemento en una multinomial es una distribución beta es posible utilizar estas distribuciones beta para calcular los intervalos de credibilidad de las tasas de transición. Para esto podemos usar el tipo de retorno **TN** para obtener los parámetros deseados. Esas son las estimaciones puntuales (comparar con la primera columna anterior), inferior y superior $95\%$ de los intervalos de credibilidad simétricos para transiciones de la etapa de plántula. Sin embargo, existe un alto grado de incertidumbre debido al tamaño de muestra pequeño ($2$) y al bajo peso que tienen los *priors* ($1$), lo que implica a un tamaño de muestra efectivo de 3.
 
@@ -289,7 +296,7 @@ knitr::kable(sprintf("%.4f (%.4f, %.4f)", p, lcl, ucl)) # Crear una tabla con lo
 
 Una de la gran ventaja de usar el paquete `raretrans` es que podemos calcular los intervalos de credibilidad de las tasas de transición y fertilidad de manera rápida y sencilla. Ademas que los intervalos de credibilidad están limitado a los valores entre 0 y 1, lo que es importante para las tasas de transición y fertilidad. Esto es especialmente útil cuando se trabaja con datos de campo donde el tamaño de muestra es pequeño y las transiciones raras son comunes. Muchos métodos estadísticos no pueden calcular intervalos de confianza para tasas de transición y fertilidad, y cuando lo hacen tienen valores ilógicos como proporciones negativa o mayores a 1.
 
-------------------------------------------------------------------------
+***
 
 ### El efecto del tamaño de muestra sobre los intervalos de credibilidad
 
@@ -318,14 +325,15 @@ ggplot(data = alltogethernow,
              position = position_dodge(width =0.5)) + 
   geom_errorbar(mapping = aes(ymin = lcl, ymax = ucl),
                 position = position_dodge(width = 0.5)) + 
+  theme_bw() +
   rlt_theme
 ```
 
-------------------------------------------------------------------------
+***
 
-## Simulación de la distribución posterior
 
-### Intervalo de credibilidad de $\lambda$
+
+## Intervalo de credibilidad de $\lambda$
 
 Obtener intervalos de credibilidad para la tasa de crecimiento asintótica, $\lambda$, requiere simular matrices a partir de las distribuciones posteriores. Estas simulaciones usualmente son complicadas de hacer, por lo que hemos incorporado en el paquete la función `raretrans::sim_transitions()` para generar una lista de matrices simuladas dada la matriz observada y las previas. En otras palabras, esta función se calcula múltiples veces de las matrices de transición y fertilidad basándose en los datos observados y en los valores *a priori* especificados pero variando los valores de los parámetros de las distribuciones beta y gamma.
 
@@ -345,6 +353,8 @@ fill_fertility(TF, N, alpha = alpha, beta = beta)
 ```
 
 El cambio en la fertilidad es \< 0,0001 en comparación con el valor observado.
+
+### UNA simulación de la matriz de transición
 
 Corra el script múltiples veces, y verá que los valores cambian en cada simulación. En este script la simulación es solamente de una vez (samples = 1). Este script es para que visualizan lo que hace la función `sim_transitions()`.
 
@@ -378,25 +388,24 @@ RLT_0.5 <- tibble(lposterior = map_dbl(RLT_0.5, lambda)) # convertir la lista en
 ggplot(data = RLT_0.5,
        mapping = aes(x = lposterior)) + 
   geom_histogram(binwidth = 0.01, colour="white") + 
+  theme_bw() +
   rlt_theme+ geom_vline(xintercept = 1, 
                 color = "blue", linewidth=1.5)
 ```
 
-------------------------------------------------------------------------
+***
 
 ## Determinar si el $\lambda$ es significativamente diferente de 1
 
-Esta prueba está basada en la simulación de la distribución posterior.
-
-Se calcula la distribución de las $\lambda$ y se determina si $\lambda$ observada es significativamente más grande que 1. También podemos calcular algunas estadísticas descriptivos, donde `p_increase` es el probabilidad de que $\lambda > 1$. En este caso el valor de $\lambda$ no es significativamente más grande que 1 ya que se obtuvo un valor de 0.14. Aunque el histograma sugiere que el crecimiento es menor de 1, la probabilidad de que $\lambda$ sea mayor que 1 es de 0.14, lo que indica que hay una probabilidad del 14% de que la población esté creciendo. Dando poca apoyo que la población este creciendo.
+Esta prueba está basada en la simulación de la distribución posterior. Se calcula la distribución de las $\lambda$ y se determina si $\lambda$ observada es significativamente más grande que 1. También podemos calcular algunas estadísticas descriptivos, donde `p_increase` es el probabilidad de que $\lambda > 1$. En este caso el valor de $\lambda$ no es significativamente más grande que 1 ya que se obtuvo un valor de 0.14. Aunque el histograma sugiere que el crecimiento es menor de 1, la probabilidad de que $\lambda$ sea mayor que 1 es de 0.14, lo que indica que hay una probabilidad del 14% de que la población esté creciendo. Dando poca apoyo que la población este creciendo.
 
 ```{r bayes20}
 
 RLT_0.5_summary <- summarize(RLT_0.5,
-                             medianL = median(lposterior),
-                             meanL = mean(lposterior),
-                             lcl = quantile(lposterior, probs = 0.025),
-                             ucl = quantile(lposterior, probs = 0.975),
+                             medianaL = median(lposterior),
+                             promedioL = mean(lposterior),
+                             ICrBajo = quantile(lposterior, probs = 0.025),
+                             ICrAlto = quantile(lposterior, probs = 0.975),
                              p_increase = sum(lposterior > 1.)/n())
 ```
 
@@ -408,7 +417,8 @@ RLT_0.5_summary <- summarize(RLT_0.5,
 gt::gt(signif(RLT_0.5_summary, digits = 2))
 ```
 
-------------------------------------------------------------------------
+
+***
 
 ## ADDENDUM
 
