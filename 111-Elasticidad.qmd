@@ -58,7 +58,8 @@ ec <- matrix (c(0, 0, 0.004, 0.062,
                 0.195, 0, 0, 0, 
                 0.171, 0.120, 0.053, 0.04,
                 0.073, 0.10, 0.435, 0.447), 
-              nrow = 4, ncol=4, byrow = TRUE, dimnames = list(etapas, etapas))
+      nrow = 4, ncol=4, byrow = TRUE, 
+      dimnames = list(etapas, etapas))
 
 # ec
 
@@ -69,33 +70,31 @@ ec <- matrix (c(0, 0, 0.004, 0.062,
 
 # Convertir la matriz de elasticidad en un data frame
 
-ec_df=as.data.frame(elas(ec)) |> round(3)
+ec_df = as.data.frame(elas(ec)) |> round(3)
 
 # Sumar las elasticidades por etapas y añadir una fila con las sumas
 
-ec_df=ec_df %>% 
-  bind_rows(summarise_all(., ~if(is.numeric(.)) sum(.) else "Total")
-            )
-
-
+ec_df = ec_df %>%
+  bind_rows(summarise_all(., ~ if (is.numeric(.)) sum(.) else "Total"))
 ```
 
 ```{r, Elas3b, echo=FALSE, warning = FALSE, message= FALSE}
 
 
-ec_df %>% 
-  gt() %>% 
+ec_df %>%
+  gt() %>%
   data_color(
     columns = c(adulto2),
-    colors =  c("blue"),
-      domain = NULL
-    ) %>% 
+    colors = c("blue"),
+    domain = NULL
+  ) %>%
   tab_style(
     style = cell_fill('black'),
     locations = cells_body(
-      columns = c(adulto2), 
+      columns = c(adulto2),
       rows = 5
-    ))
+    )
+  )
   
 ```
 
@@ -117,82 +116,92 @@ La suma de cada grupo:
 #elas(ec)
 
 # Convertir la matriz de elasticidad en un data frame
-ec_df=as.data.frame(elas(ec)) |> round(3)
+ec_df = as.data.frame(elas(ec)) |> round(3)
 
 # Sumar las elasticidades por procesos (crecimiento, permanencia y fecundidad)
 ec_df
 
 
-
-ec_df %>% 
-  gt() %>% 
+ec_df %>%
+  gt() %>%
   tab_style(
     style = cell_fill(color = 'lightgreen'),
     locations = cells_body(
-      columns = c(4), 
+      columns = c(4),
       rows = c(1)
-    )) %>% 
-      tab_style(
+    )
+  ) %>%
+  tab_style(
     style = cell_fill(color = 'lightblue'),
     locations = cells_body(
-      columns = c(1), 
+      columns = c(1),
       rows = c(2)
-    )) %>% 
-      tab_style(
+    )
+  ) %>%
+  tab_style(
     style = cell_fill(color = 'lightblue'),
     locations = cells_body(
-      columns = c(1), 
+      columns = c(1),
       rows = c(3)
-    ))%>% 
-      tab_style(
+    )
+  ) %>%
+  tab_style(
     style = cell_fill(color = 'lightblue'),
     locations = cells_body(
-      columns = c(1), 
+      columns = c(1),
       rows = c(4)
-    ))%>% 
-      tab_style(
+    )
+  ) %>%
+  tab_style(
     style = cell_fill(color = 'lightblue'),
     locations = cells_body(
-      columns = c(2), 
+      columns = c(2),
       rows = c(3)
-    ))%>% 
-      tab_style(
+    )
+  ) %>%
+  tab_style(
     style = cell_fill(color = 'lightblue'),
     locations = cells_body(
-      columns = c(2), 
+      columns = c(2),
       rows = c(4)
-    )) %>% 
-      tab_style(
+    )
+  ) %>%
+  tab_style(
     style = cell_fill(color = 'yellow'),
     locations = cells_body(
-      columns = c(3), 
+      columns = c(3),
       rows = c(1)
-    )) %>% 
-      tab_style(
+    )
+  ) %>%
+  tab_style(
     style = cell_fill(color = 'lightblue'),
     locations = cells_body(
-      columns = c(3), 
+      columns = c(3),
       rows = c(4)
-    )) %>% 
-      tab_style(
+    )
+  ) %>%
+  tab_style(
     style = cell_fill(color = 'yellow'),
     locations = cells_body(
-      columns = c(4), 
+      columns = c(4),
       rows = c(3)
-    )) %>% 
+    )
+  ) %>%
 
-      tab_style(
+  tab_style(
     style = cell_fill(color = 'red'),
     locations = cells_body(
-      columns = c(3), 
+      columns = c(3),
       rows = c(3)
-    ))%>% 
-      tab_style(
+    )
+  ) %>%
+  tab_style(
     style = cell_fill(color = 'red'),
     locations = cells_body(
-      columns = c(4), 
+      columns = c(4),
       rows = c(4)
-    ))
+    )
+  )
 
 
 
@@ -247,23 +256,32 @@ Elasticidad_estadios %>%
 ```
 
 ```{r, Elas7, echo=TRUE}
-EE=Elasticidad_estadios %>% 
+EE = Elasticidad_estadios %>%
   select(Especie, Fecundidad, Estasis, Crecimiento) %>%
-  pivot_longer(cols = -Especie, names_to = "Estadios", values_to = "Elasticidad")
+  pivot_longer(
+    cols = -Especie,
+    names_to = "Estadios",
+    values_to = "Elasticidad"
+  )
 
-EE$Estadios=factor(EE$Estadios, levels = c("Fecundidad", "Estasis", "Crecimiento"))
+EE$Estadios = factor(
+  EE$Estadios,
+  levels = c("Fecundidad", "Estasis", "Crecimiento")
+)
 
 
-
-  ggplot(EE, aes(x = Estadios, y = Elasticidad, fill = Especie)) +
-  geom_bar(stat = "identity", position = "dodge", color="white") +
+ggplot(EE, aes(x = Estadios, y = Elasticidad, fill = Especie)) +
+  geom_bar(stat = "identity", position = "dodge", color = "white") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(title = "Elasticidad por proceso demográfico",
-       x = "Estadios",
-       y = "Elasticidad")+
-  scale_fill_discrete(guide =
-      guide_legend(label.theme = element_text(angle = 0, face = "italic")))
+  labs(
+    title = "Elasticidad por proceso demográfico",
+    x = "Estadios",
+    y = "Elasticidad"
+  ) +
+  scale_fill_discrete(
+    guide = guide_legend(label.theme = element_text(angle = 0, face = "italic"))
+  )
 
 
 
@@ -274,22 +292,32 @@ En la siguiente figura se observa la elasticidad agrupado por plántulas, indivi
 ```{r Elas8}
 
 
-EE1=Elasticidad_estadios %>% 
+EE1 = Elasticidad_estadios %>%
   select(Especie, Plántulas, No_reproductivos, Reproductivos) %>%
-  pivot_longer(cols = -Especie, names_to = "Estadios", values_to = "Elasticidad")
+  pivot_longer(
+    cols = -Especie,
+    names_to = "Estadios",
+    values_to = "Elasticidad"
+  )
 
-EE1$Estadios2=factor(EE1$Estadios, levels = c("Plántulas", "No_reproductivos", "Reproductivos"))
+EE1$Estadios2 = factor(
+  EE1$Estadios,
+  levels = c("Plántulas", "No_reproductivos", "Reproductivos")
+)
 
- 
-  ggplot(EE1, aes(x = Estadios2, y = Elasticidad, fill = Especie)) +
-  geom_bar(stat = "identity", position = "dodge", color="white") +
+
+ggplot(EE1, aes(x = Estadios2, y = Elasticidad, fill = Especie)) +
+  geom_bar(stat = "identity", position = "dodge", color = "white") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(title = "Elasticidad por proceso demográfico",
-       x = "Etapas",
-       y = "Elasticidad")+
-  scale_fill_discrete(guide =
-      guide_legend(label.theme = element_text(angle = 0, face = "italic")))
+  labs(
+    title = "Elasticidad por proceso demográfico",
+    x = "Etapas",
+    y = "Elasticidad"
+  ) +
+  scale_fill_discrete(
+    guide = guide_legend(label.theme = element_text(angle = 0, face = "italic"))
+  )
 
 ```
 
@@ -325,8 +353,8 @@ ec <- matrix (c(0, 0, 0.004, 0.062,
                 0.195, 0, 0, 0, 
                 0.171, 0.120, 0.053, 0.04,
                 0.073, 0.10, 0.435, 0.447), 
-              nrow = 4, ncol=4, byrow = TRUE, 
-              dimnames = list(etapas, etapas))
+      nrow = 4, ncol=4, byrow = TRUE, 
+      dimnames = list(etapas, etapas))
 
 ec
 ```
@@ -338,10 +366,9 @@ Introducir los valores iniciales por estadío (vector N): Cuantos individuos hay
 ```{r Elas9b, message=FALSE, warning=FALSE}
 
 
-N0_ec<- matrix(c(41,50,246,226), ncol = 1)
+N0_ec <- matrix(c(41, 50, 246, 226), ncol = 1)
 
 N0_ec
-
 
 ```
 
@@ -352,7 +379,7 @@ Para calcular los autovalores y autovectores de la matriz se usa la función `ei
 ```{r Elas10}
 
 
-eigen.analysis(ec, zero=FALSE) # la función es del paquete popbio
+eigen.analysis(ec, zero = FALSE) # la función es del paquete popbio
 ```
 
 Revisión:

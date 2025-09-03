@@ -29,7 +29,7 @@ Una matriz de proyección poblacional (MPP) es una matriz cuadrada que permite d
 
 La MPP se utiliza para proyectar la estructura de una población en el futuro, a partir de su composición actual. Así, constituye la base para calcular tasas de crecimiento poblacional, estructuras estables, valores reproductivos y otros índices demográficos fundamentales.
 
-A continuación se construye la matriz poblacional de *Lepanthes rubripetala*. Esta matriz se compone de cuatro estados: plántulas (PL), juveniles (J), adultos no reproductivos (NR) y adultos reproductivos (AR). 
+A continuación se construye la matriz poblacional de *Lepanthes rubripetala*. Esta matriz se compone de cuatro estados: plántulas (PL), juveniles (J), adultos no reproductivos (NR) y adultos reproductivos (AR).
 
 ```{r Indice2, message=FALSE}
 
@@ -43,7 +43,7 @@ Lr1 <- matrix(c(0.4324, 0,      0,     0.15,
 estadios <- c("PL", "J", "NR", "AR")
 colnames(Lr1) <- rownames(Lr1) <- estadios
 
-# Obtener la matriz L. rubripetala 
+# Obtener la matriz L. rubripetala
 Lr1 <- matrix(Lr1[1:4, ], nrow = 4, dimnames = list(estadios, estadios))
 Lr1
 
@@ -81,11 +81,10 @@ Lr1_No_erg <- matrix(c(0.4324, 0.,      0.,     0.150,
                0.,      0.0890, 0.1841,0.7510), byrow=TRUE,ncol=4)
 
 
-plot_life_cycle(Lr1_No_erg, stages=estadios, fontsize = 8)
+plot_life_cycle(Lr1_No_erg, stages = estadios, fontsize = 8)
 
 
-isErgodic(Lr1_No_erg, digits=4, return.eigvec=FALSE)
-
+isErgodic(Lr1_No_erg, digits = 4, return.eigvec = FALSE)
 ```
 
 ------------------------------------------------------------------------
@@ -145,7 +144,7 @@ Lr1_Irr <- matrix(c(0.4324,  0.,       0.0,     0,
                     0,       0.0890,   0.1841,  0.7510), byrow=TRUE,ncol=4)
 
 
-plot_life_cycle(Lr1_Irr, stages=estadios, fontsize = 8)
+plot_life_cycle(Lr1_Irr, stages = estadios, fontsize = 8)
 
 isIrreducible(Lr1_Irr)
 ```
@@ -154,7 +153,7 @@ isIrreducible(Lr1_Irr)
 
 ### Primitividad
 
-La matriz de transición poblacional debe ser primitiva, es decir, al elevarla a altas potencias, se obtiene un único valor positivo (i.e. tasa de crecimiento poblacional). Esta propiedad es importante porque garantiza que la población alcance una estructura estable y una tasa de crecimiento constante a largo plazo. En el caso de *L. rubripetala*, la matriz es primitiva, ya que al elevarla a altas potencias se obtiene un único valor positivo. Esto puede comprobarse en **R** con la función *isPrimitive* del paquete **popdemo**, cuya respuesta es "TRUE" si la matriz cumple con esta propiedad. Una matriz no primitiva, en contraste, tendría una dinámica poblacional inestable a largo plazo cuando, por ejemplo, la población presente un comportamiento cíclico, caracterizado por oscilaciones entre categorías de edad o estado que nunca se estabiliza. Es importante señalar que, por definición, toda matriz irreducible es primitiva; sin embargo, no toda matriz primitiva es irreducible. Por ejemplo, una matriz podría ser primitiva sin ser irreducible, si presenta un ciclo de vida completo en el que alguna edad/estado no es relevante para el crecimiento poblacional. 
+La matriz de transición poblacional debe ser primitiva, es decir, al elevarla a altas potencias, se obtiene un único valor positivo (i.e. tasa de crecimiento poblacional). Esta propiedad es importante porque garantiza que la población alcance una estructura estable y una tasa de crecimiento constante a largo plazo. En el caso de *L. rubripetala*, la matriz es primitiva, ya que al elevarla a altas potencias se obtiene un único valor positivo. Esto puede comprobarse en **R** con la función *isPrimitive* del paquete **popdemo**, cuya respuesta es "TRUE" si la matriz cumple con esta propiedad. Una matriz no primitiva, en contraste, tendría una dinámica poblacional inestable a largo plazo cuando, por ejemplo, la población presente un comportamiento cíclico, caracterizado por oscilaciones entre categorías de edad o estado que nunca se estabiliza. Es importante señalar que, por definición, toda matriz irreducible es primitiva; sin embargo, no toda matriz primitiva es irreducible. Por ejemplo, una matriz podría ser primitiva sin ser irreducible, si presenta un ciclo de vida completo en el que alguna edad/estado no es relevante para el crecimiento poblacional.
 
 ```{r Indice8}
 isPrimitive(Lr1)
@@ -170,9 +169,9 @@ En esta sección se revisan los índices poblacionales obtenidos a partir del an
 
 ### Estructura Estable
 
-La estructura poblacional estable (*W*, también llamada eigenvector derecho) describe la proporción de individuos en cada categoría de edad o estado que se espera alcanzar a largo plazo. En el caso de *L. rubripetala*, se espera que la población alcance una estructura estable de 0.088, 0.206, 0.369 y 0.337 para las categorías de plántulas, juveniles, adultos no reproductivos y adultos reproductivos, respectivamente. 
+La estructura poblacional estable (*W*, también llamada eigenvector derecho) describe la proporción de individuos en cada categoría de edad o estado que se espera alcanzar a largo plazo. En el caso de *L. rubripetala*, se espera que la población alcance una estructura estable de 0.088, 0.206, 0.369 y 0.337 para las categorías de plántulas, juveniles, adultos no reproductivos y adultos reproductivos, respectivamente.
 
-Este índice supone que la tasa de crecimiento poblacional, $\lambda$, se mantiene constante en el tiempo, lo cual sólo es posible bajo condiciones ambientales constantes. Sin embargo, en la naturaleza esto es poco frecuente. Además, la estructura estable supone que el periodo de muestreo y las condiciones abióticas y bióticas son típicas y constantes. En la revisión bibliográfica de Williams y colaboradores [@williams2011distance] se reporta que más del 80% de las poblaciones analizadas no cumplieron con la condición de estructura estable, situación que que fue más evidente en poblaciones descritas con matrices grandes (n x n) y tiempo de generacional prolongado. De manera similar, Tremblay (*com.pers.*), en una revisión bibliográfica rápida, reconoció que la mayoría de las orquídeas analizadas no se encontraban en la estructura estable al inicio de su muestreo  poblacional.
+Este índice supone que la tasa de crecimiento poblacional, $\lambda$, se mantiene constante en el tiempo, lo cual sólo es posible bajo condiciones ambientales constantes. Sin embargo, en la naturaleza esto es poco frecuente. Además, la estructura estable supone que el periodo de muestreo y las condiciones abióticas y bióticas son típicas y constantes. En la revisión bibliográfica de Williams y colaboradores [@williams2011distance] se reporta que más del 80% de las poblaciones analizadas no cumplieron con la condición de estructura estable, situación que que fue más evidente en poblaciones descritas con matrices grandes (n x n) y tiempo de generacional prolongado. De manera similar, Tremblay (*com.pers.*), en una revisión bibliográfica rápida, reconoció que la mayoría de las orquídeas analizadas no se encontraban en la estructura estable al inicio de su muestreo poblacional.
 
 ```{r Indice9}
 #Estructura estable de estados
@@ -184,14 +183,31 @@ Uno puede visualizar la estructura poblacional usando el código siguiente.
 
 ```{r Indice10}
 Wmax <- stable.stage(Lr1)
-Wdf=data.frame(Wmax)
-Wdf$Categorias=c("Plántulas","Juveniles","Adultos no reproductivos","Adultos reproductivos")
-Wdf$Categorias=factor(Wdf$Categorias, levels=c("Plántulas","Juveniles","Adultos no reproductivos","Adultos reproductivos"))
+Wdf = data.frame(Wmax)
+Wdf$Categorias = c(
+  "Plántulas",
+  "Juveniles",
+  "Adultos no reproductivos",
+  "Adultos reproductivos"
+)
+Wdf$Categorias = factor(
+  Wdf$Categorias,
+  levels = c(
+    "Plántulas",
+    "Juveniles",
+    "Adultos no reproductivos",
+    "Adultos reproductivos"
+  )
+)
 library(ggplot2)
 
-ggplot(Wdf, aes(y=Wmax, x=Categorias)) + 
-  geom_bar(stat="identity", fill="blue") +
-  labs(title="Estructura estable de estados esperada", x="Etapas", y="Proporción") +
+ggplot(Wdf, aes(y = Wmax, x = Categorias)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  labs(
+    title = "Estructura estable de estados esperada",
+    x = "Etapas",
+    y = "Proporción"
+  ) +
   theme_minimal()
 
 ```
@@ -203,7 +219,6 @@ ggplot(Wdf, aes(y=Wmax, x=Categorias)) +
 ::: img-float
 ![*Spathoglottis plicata*. Foto: Tremblay](Species/Spathoglottis%20plicata%20Tremblay.jpeg){style="float: left; margin: 10px;width: 40% ; "}
 :::
-
 
 El valor reproductivo (*v*, también denominado el eigenvector izquierdo) describe la contribución esperada de cada categoría de edad o estado a la reproducción de la población. En el caso de *L. rubripetala* se espera que los valores reproductivos sean 1.00, 1.52, 2.32 y 2.66 para las categorías de plántulas, juveniles, adultos no reproductivos y adultos reproductivos, respectivamente. Este índice es relevante porque permite identificar cómo se distribuye la reproducción en la población y qué etapas son más importantes para el crecimiento poblacional a largo plazo. La primera categoría siempre tiene un valor reproductivo de 1.00, ya que representa el inicio del ciclo de vida y sirve como referencia para calcular el valor reproductivo de los demás estados.
 
@@ -238,19 +253,16 @@ Es importante señalar que la interpretación de este índice depende de la esca
 
 eigen(Lr1)$values # la lista de valores propios de la matriz Lr1
 
-DR= eigen(Lr1)$values[1]/abs(eigen(Lr1)$values[2])
+DR = eigen(Lr1)$values[1] / abs(eigen(Lr1)$values[2])
 
 DR
 
 dr(Lr1) # usando la función "dr" para "damping ratio" en el paquete "popdemo"
-
-
 ```
 
 ### Graficación del Índice de amortiguamiento
 
-El comportamiento del Índice de amortiguamiento se visualiza a través de una gráfica de líneas, la cual muestra la respuesta de un sistema a un paso de entrada (un cambio súbito) y cuya respuesta en el tiempo varía ante distintos niveles de amortiguamiento. Para facilitar la comprensión visual del concepto, en el siguiente recuadro se presenta el códico que resulta en una gráfica en la que se muestra el comportamiento de una población perturbada.      
-
+El comportamiento del Índice de amortiguamiento se visualiza a través de una gráfica de líneas, la cual muestra la respuesta de un sistema a un paso de entrada (un cambio súbito) y cuya respuesta en el tiempo varía ante distintos niveles de amortiguamiento. Para facilitar la comprensión visual del concepto, en el siguiente recuadro se presenta el códico que resulta en una gráfica en la que se muestra el comportamiento de una población perturbada.
 
 ```{r Indice13, message=FALSE, warning=FALSE}
 
@@ -290,15 +302,22 @@ for (zeta in amortigamento) {
   if (zeta < 1) {
     # Underdamped case: damped sine wave
     omega_d <- frecuencia * sqrt(1 - zeta^2)
-    population_data <- poblacion_inicial * (1 - exp(-zeta * frecuencia * time_points) * (cos(omega_d * time_points) + (zeta / sqrt(1 - zeta^2)) * sin(omega_d * time_points)))
+    population_data <- poblacion_inicial *
+      (1 -
+        exp(-zeta * frecuencia * time_points) *
+          (cos(omega_d * time_points) +
+            (zeta / sqrt(1 - zeta^2)) * sin(omega_d * time_points)))
   } else if (zeta == 1) {
     # Critically Damped case
-    population_data <- poblacion_inicial * (1 - exp(-frecuencia * time_points) * (1 + frecuencia * time_points))
+    population_data <- poblacion_inicial *
+      (1 - exp(-frecuencia * time_points) * (1 + frecuencia * time_points))
   } else {
     # Overdamped case
     s1 <- -zeta * frecuencia + frecuencia * sqrt(zeta^2 - 1)
     s2 <- -zeta * frecuencia - frecuencia * sqrt(zeta^2 - 1)
-    population_data <- poblacion_inicial * (1 - (s2 * exp(s1 * time_points) - s1 * exp(s2 * time_points)) / (s2 - s1))
+    population_data <- poblacion_inicial *
+      (1 -
+        (s2 * exp(s1 * time_points) - s1 * exp(s2 * time_points)) / (s2 - s1))
   }
 
   # Add the data for the current damping ratio to a temporary data frame
@@ -307,7 +326,7 @@ for (zeta in amortigamento) {
     Population = population_data,
     DampingRatio = factor(zeta) # Store damping ratio as a factor for coloring
   )
-  
+
   # Bind the temporary data frame to the main data frame
   todo_data_df <- rbind(todo_data_df, temp_df)
 }
@@ -315,7 +334,7 @@ for (zeta in amortigamento) {
 # --- Create the Plot using ggplot2 ---
 ggplot(todo_data_df, aes(x = Time, y = Population, color = DampingRatio)) +
   # Add the lines for each damping ratio
-  geom_line(linewidth= 1.2) +
+  geom_line(linewidth = 1.2) +
   # Set the title and labels
   labs(
     title = "El efecto de amortigamento \n sobre el tamaño de población",
@@ -332,27 +351,25 @@ ggplot(todo_data_df, aes(x = Time, y = Population, color = DampingRatio)) +
     axis.title = element_text(face = "bold")
   )
 
-
 ```
-
 
 ### Intepretación del gráfico de amortiguamiento
 
-La figura resultante ilustra el efecto de diferentes coeficientes de amortiguamiento en la respuesta de una población a un cambio súbito. El gráfico muestra cuatro comportamientos distintos para la población perturbada y su retorno a un estado de equilibrio, correspondiente a un tamaño poblacional de 1000 individuos. 
+La figura resultante ilustra el efecto de diferentes coeficientes de amortiguamiento en la respuesta de una población a un cambio súbito. El gráfico muestra cuatro comportamientos distintos para la población perturbada y su retorno a un estado de equilibrio, correspondiente a un tamaño poblacional de 1000 individuos.
 
 La respuesta de la población ante cuatro índices de amortiguamiento es la siguiente:
 
-•	Subamortiguado (ζ=0.3): Esta es la respuesta oscilante. El sistema sobrepasa el punto de equilibrio y luego oscila, con el tiempo la amplitud de las oscilaciones disminuyen gradualmente hasta estabilizarse en el equilibrio. 
+• Subamortiguado (ζ=0.3): Esta es la respuesta oscilante. El sistema sobrepasa el punto de equilibrio y luego oscila, con el tiempo la amplitud de las oscilaciones disminuyen gradualmente hasta estabilizarse en el equilibrio.
 
-•	Amortiguado críticamente (ζ=1.0): Esta es la respuesta más rápida, la cual alcanza el equilibrio sin oscilaciones ni sobreamortiguaciones. Se considera la respuesta ideal para sistemas que requieren un retorno rápido y estable al valor objetivo.
+• Amortiguado críticamente (ζ=1.0): Esta es la respuesta más rápida, la cual alcanza el equilibrio sin oscilaciones ni sobreamortiguaciones. Se considera la respuesta ideal para sistemas que requieren un retorno rápido y estable al valor objetivo.
 
-•	Sobreamortiguado (ζ=2.0): Esta respuesta es lenta y se aproxima al punto de equilibrio sin oscilaciones. En comparación con el caso críticamente amortiguado, tarda mucho más en estabilizarse, ya que la fuerza de amortiguamiento es muy grande.
+• Sobreamortiguado (ζ=2.0): Esta respuesta es lenta y se aproxima al punto de equilibrio sin oscilaciones. En comparación con el caso críticamente amortiguado, tarda mucho más en estabilizarse, ya que la fuerza de amortiguamiento es muy grande.
 
-•	Sobreamortiguado (ζ=3.0): Similar al caso anterior, pero con un amortiguamiento aún mayor. La respuesta es muy lenta y se acerca al equilibrio de manera gradual sin oscilaciones.
+• Sobreamortiguado (ζ=3.0): Similar al caso anterior, pero con un amortiguamiento aún mayor. La respuesta es muy lenta y se acerca al equilibrio de manera gradual sin oscilaciones.
 
 #### Tiempo de Convergencia
 
-El tiempo de convergencia es el periodo estimado que tarda la población en alcanzar su estructura estable. Este índice es relevante porque facilita entender el comportamiento poblacional a largo plazo. En **R** este cálculo puede realizarse con dos funciones del paquete **popdemo**: **dr** y  **convt**. La función **dr** calcula el amortiguamiento y a partir de éste puede estimarse el tiempo de la convergencia de la siguiente manera:
+El tiempo de convergencia es el periodo estimado que tarda la población en alcanzar su estructura estable. Este índice es relevante porque facilita entender el comportamiento poblacional a largo plazo. En **R** este cálculo puede realizarse con dos funciones del paquete **popdemo**: **dr** y **convt**. La función **dr** calcula el amortiguamiento y a partir de éste puede estimarse el tiempo de la convergencia de la siguiente manera:
 
 $$
 t = \frac{\log(dr)}{\log(x)}
@@ -364,7 +381,7 @@ El análisis de amortiguamiento estima la rapidez con la que una población conv
 
 ```{r Incidex14}
 
-dr(Lr1, return.time = TRUE, x=10) # cuanto tiempo toma aumentar la población de veces 
+dr(Lr1, return.time = TRUE, x = 10) # cuanto tiempo toma aumentar la población de veces 
 
 
 ```
@@ -377,14 +394,11 @@ Por ejemplo, si se comienza con una población inicial de 8, 20, 27 y 34 individ
 n0 <- c(8, 20, 27, 34) # la estructura de la población inicial
 
 convt(Lr1, accuracy = 1e-4, vector = n0, iterations = 10000) # la estructura poblacional inicial
-
-
 ```
 
-Dado que el tiempo de convergencia es un índice que representa el periodo esperado para que una población alcance su estructura estable, se puede calcular variando la cantidad de individuos en las diferentes edades o estados al llevar a cabo una simulación. 
+Dado que el tiempo de convergencia es un índice que representa el periodo esperado para que una población alcance su estructura estable, se puede calcular variando la cantidad de individuos en las diferentes edades o estados al llevar a cabo una simulación.
 
 Por ejemplo, se estima que *L. rubripetala* alcanzaría la estructura estable en 25 meses, si la población inicia con una población sesgada a plántulas (n = 1000) y, por lo tanto, sin la presencia de individuos de los estados posteriores.
-
 
 ### Graficación del tiempo de convergencia al estado estable de cada etapa de vida
 
@@ -411,20 +425,22 @@ total_time_steps <- 22
 
 # --- Definir la Matriz de Transición de la Población (Leslie Matrix) ---
 # Se utiliza la matriz proporcionada por el usuario.
-transition_matrix <- matrix(
-  c(
-    0.4324, 0, 0, 0.15,
-    0.3784, 0.8459, 0, 0,
-    0, 0.0034, 0.7954, 0.2300,
-    0, 0.0890, 0.1841, 0.7510
-  ),
-  nrow = 4,
-  byrow = TRUE
+transition_matrix <- matrix(c(0.4324, 0, 0, 0.15,
+                              0.3784, 0.8459, 0, 0,
+                              0, 0.0034, 0.7954, 0.2300,
+                              0, 0.0890, 0.1841, 0.7510),
+                    nrow = 4,
+                    byrow = TRUE
 )
 
 # --- Simular la Dinámica de la Población y Calcular Proporciones ---
 # Nombres de las etapas en el orden especificado
-stage_names <- c("juvenil", "plántula", "adulto no reproductivo", "adulto reproductivo")
+stage_names <- c(
+  "juvenil",
+  "plántula",
+  "adulto no reproductivo",
+  "adulto reproductivo"
+)
 
 # Crear un data frame para almacenar los resultados de la simulación
 all_data_df <- data.frame(
@@ -440,23 +456,22 @@ n_current <- initial_population
 for (t in 0:total_time_steps) {
   # Calcular la proporción de la población en cada etapa
   current_proportions <- n_current / sum(n_current)
-  
+
   # Crear un data frame temporal para este paso de tiempo
   temp_df <- data.frame(
     Time = rep(t, 4),
     Proportion = current_proportions,
     Stage = factor(stage_names, levels = stage_names) # Se usa factor para ordenar las etapas
   )
-  
+
   # Añadir los datos al data frame principal
   all_data_df <- rbind(all_data_df, temp_df)
-  
+
   # Proyectar la población al siguiente paso de tiempo
   # Multiplicación de la matriz de transición por el vector de población
   n_next <- transition_matrix %*% n_current
   n_current <- n_next
 }
-
 # --- Calcular la Distribución de Etapa Estable (SSD) ---
 # Se calcula el vector propio derecho (eigenvector) del valor propio dominante.
 # Este vector representa la proporción de individuos en cada etapa en el estado estable.
@@ -466,10 +481,13 @@ eigen_results <- eigen(transition_matrix)
 dominant_eigenvalue <- max(Re(eigen_results$values))
 
 # Encontrar el vector propio derecho correspondiente (eigenvector)
-stable_stage_distribution_raw <- Re(eigen_results$vectors[, which.max(Re(eigen_results$values))])
+stable_stage_distribution_raw <- Re(eigen_results$vectors[, which.max(Re(
+  eigen_results$values
+))])
 
 # Normalizar el vector propio para que sume 1
-stable_stage_distribution <- stable_stage_distribution_raw / sum(stable_stage_distribution_raw)
+stable_stage_distribution <- stable_stage_distribution_raw /
+  sum(stable_stage_distribution_raw)
 stable_stage_distribution_df <- data.frame(
   Stage = factor(stage_names, levels = stage_names),
   Proportion = stable_stage_distribution
@@ -489,19 +507,27 @@ convergence_times_df <- data.frame(
 # la proporción está dentro de la tolerancia de la SSD
 for (i in 1:length(stage_names)) {
   stage_name <- stage_names[i]
-  ssd_proportion <- stable_stage_distribution_df[stable_stage_distribution_df$Stage == stage_name, "Proportion"]
-  
+  ssd_proportion <- stable_stage_distribution_df[
+    stable_stage_distribution_df$Stage == stage_name,
+    "Proportion"
+  ]
+
   # Filtrar los datos para la etapa actual
   stage_data <- all_data_df[all_data_df$Stage == stage_name, ]
-  
+
   # Encontrar la primera fila donde la proporción está dentro de la banda de tolerancia
-  convergence_time <- stage_data$Time[which(abs(stage_data$Proportion - ssd_proportion) <= tolerance)[1]]
-  
+  convergence_time <- stage_data$Time[which(
+    abs(stage_data$Proportion - ssd_proportion) <= tolerance
+  )[1]]
+
   if (!is.na(convergence_time)) {
-    convergence_times_df <- rbind(convergence_times_df, data.frame(
-      Stage = stage_name,
-      Time = convergence_time
-    ))
+    convergence_times_df <- rbind(
+      convergence_times_df,
+      data.frame(
+        Stage = stage_name,
+        Time = convergence_time
+      )
+    )
   }
 }
 
@@ -511,7 +537,10 @@ convergence_times_df$Stage <- factor(convergence_times_df$Stage, levels = stage_
 
 
 # --- Crear el Trazado Usando ggplot2 ---
-population_plot <- ggplot(all_data_df, aes(x = Time, y = Proportion, color = Stage)) +
+population_plot <- ggplot(
+  all_data_df,
+  aes(x = Time, y = Proportion, color = Stage)
+) +
   geom_line(linewidth = 1.2) +
   # Añadir líneas horizontales para la distribución de etapa estable
   geom_hline(
@@ -529,7 +558,10 @@ population_plot <- ggplot(all_data_df, aes(x = Time, y = Proportion, color = Sta
   ) +
   labs(
     title = "Convergencia a la distribución estable ",
-    subtitle = paste("El crecimiento anual de la población es λ =", round(dominant_eigenvalue, 4)),
+    subtitle = paste(
+      "El crecimiento anual de la población es λ =",
+      round(dominant_eigenvalue, 4)
+    ),
     x = "Paso de Tiempo",
     y = "Proporción de la Población",
     color = "Etapa de Vida"

@@ -21,10 +21,12 @@ library(gt)
 
 ```{r, echo=FALSE, message=FALSE}
 # Mi tema de formato de las gráficas de ggplot2 personal
-rlt_theme <- theme(axis.title.y = element_text(colour="grey20",size=15,face="bold"),
-        axis.text.x = element_text(colour="grey20",size=15, face="bold"),
-        axis.text.y = element_text(colour="grey20",size=15,face="bold"),  
-        axis.title.x = element_text(colour="grey20",size=15,face="bold"))
+rlt_theme <- theme(
+  axis.title.y = element_text(colour = "grey20", size = 15, face = "bold"),
+  axis.text.x = element_text(colour = "grey20", size = 15, face = "bold"),
+  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
+  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
+)
 ```
 
 ## Dinámica poblacional de largo y corto plazo
@@ -76,13 +78,14 @@ En el siguiente recuadro incorporamos la información de *L. rubripetala* en *R*
 Lr1 <- matrix(c(0.4324, 0,      0,     0.15,
                0.3784, 0.8459, 0,     0,
                0,      0.0034, 0.7954,0.2300,
-               0,      0.0890, 0.1841,0.7510), byrow=TRUE,ncol=4)
+               0,      0.0890, 0.1841,0.7510), 
+      byrow=TRUE,ncol=4)
 
 #Capturar las categorias de estado
 estadios <- c("PL", "J", "NR", "AR")
 colnames(Lr1) <- rownames(Lr1) <- estadios
 
-#Obtener la matriz L. rubripetala 
+#Obtener la matriz L. rubripetala
 Lr1 <- matrix(Lr1[1:4, ], nrow = 4, dimnames = list(estadios, estadios))
 Lr1
 
@@ -91,7 +94,7 @@ Lr1
 ```{r trans2, echo=FALSE}
 
 #Estructura de estados inicial
-n0=c(0, 46, 38, 82)
+n0 = c(0, 46, 38, 82)
 
 n0
 ```
@@ -112,8 +115,7 @@ En el siguiente recuadro se calcula $λ_{max}$ para la población 1 de *L. rubri
 #PARÁMETROS POBLACIONALES
 ##lambda: Tasa de crecimiento poblacional
 
-
-lambda <-lambda(Lr1)
+lambda <- lambda(Lr1)
 lambda
 ```
 
@@ -165,9 +167,9 @@ nLr0 <- c(0, 46, 38, 82)
 #Escenario 1. Límite inferior # Límite inferior (1,0,0,0)
 nLr1 <- c(166, 0, 0, 0)
 #Proporción de individuos por categoría
-nLr1 <- nLr1/sum(nLr1)
+nLr1 <- nLr1 / sum(nLr1)
 # nLr1
-#Gráfica de barras del escenario 1 
+#Gráfica de barras del escenario 1
 #barplot(nLr1, names.arg = 1:4)
 #title(main = "Escenario 1", xlab = "Categoría", ylab = "Proporción")
 #Proyección de la dinámica escenario 1
@@ -177,12 +179,12 @@ pr1df <- as.data.frame(pr1)
 
 pr1df$time <- seq(1, nrow(pr1df), 1)
 
-ggplot(pr1df, aes(time, pr1))+
-  geom_line(color = "blue", size = 1)+
-  geom_hline(yintercept = 1, linetype = "dashed", color = "red")+
-  xlab("Time intervals")+
-  ylab("Relative population size/density")+
-  theme_minimal()+
+ggplot(pr1df, aes(time, pr1)) +
+  geom_line(color = "blue", size = 1) +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "red") +
+  xlab("Time intervals") +
+  ylab("Relative population size/density") +
+  theme_minimal() +
   rlt_theme
 
 
@@ -200,10 +202,10 @@ En este escenario, se supone que la población tiene una mayor proporción de in
 ```{r trans5, echo = FALSE}
 
 
-# DINÁMICA POBLACIONAL ABSOLUTA.    
+# DINÁMICA POBLACIONAL ABSOLUTA.
 
 nLr2 <- c(25, 58, 50, 33)
-nLr2 <- nLr2/sum(nLr2)
+nLr2 <- nLr2 / sum(nLr2)
 
 pr2 <- project(Lr1, vector = nLr2, time = 50)
 pr2df <- as.data.frame(pr2)
@@ -226,19 +228,19 @@ nLr3 <- Wmax
 #Gráfica de barras del escenario 3
 #barplot(nLr3, names.arg = 1:4)
 #title( main = "Escenario 3", xlab = "Categoría", ylab = "Proporción")
-#Proyección de la dinámica escenario 3 
-Lr1st <- (Lr1/lambda)
+#Proyección de la dinámica escenario 3
+Lr1st <- (Lr1 / lambda)
 #Lr1st
 #eigen(Lr1st)
 pr3 <- project(Lr1st, vector = Wmax, time = 50)
 pr3df <- as.data.frame(pr3)
 pr3df$time <- seq(1, nrow(pr3df), 1)
-ggplot(pr3df, aes(time, pr3))+
-  geom_line(color = "blue", size = 1)+
-  geom_hline(yintercept = 1, linetype = "dashed", color = "red")+
-  xlab("Time intervals")+
-  ylab("Relative population size/density")+
-  theme_minimal()+
+ggplot(pr3df, aes(time, pr3)) +
+  geom_line(color = "blue", size = 1) +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "red") +
+  xlab("Time intervals") +
+  ylab("Relative population size/density") +
+  theme_minimal() +
   rlt_theme
 
 
@@ -256,10 +258,10 @@ ggplot(pr3df, aes(time, pr3))+
 En este escenario, se supone que la población tiene una mayor proporción de plántulas y una proporción similar en las categorías juvenil, adulto no reproductivo y adulto reproductivo (0.4, 0.2, 0.2, 0.2). En este caso, la población decrece rápidamente en los primeros periodos pero y después de unos ±7 periodos de tiempo la población comienza a crecer y tiene un tamaño población relativo al comienzo después de ±36 periodos de tiempo. Esto indica que la población se recupera rápidamente y alcanza un tamaño poblacional estable en un periodo relativamente corto, si la población comienza con esta estructura demográfica.
 
 ```{r trans7, message=FALSE}
-# DINÁMICA POBLACIONAL ABSOLUTA.    
+# DINÁMICA POBLACIONAL ABSOLUTA.
 
 nLr4 <- c(66, 33, 33, 33)
-nLr4 <- nLr4/sum(nLr4)
+nLr4 <- nLr4 / sum(nLr4)
 
 pr4 <- project(Lr1, vector = nLr4, time = 50)
 pr4df <- as.data.frame(pr4)
@@ -278,23 +280,22 @@ En este escenario, se supone que la población tiene una mayor proporción de in
 #Escenario 5. Límite superior
 nLr5 <- c(0, 0, 0, 166)
 #Proporción de individuos por categoría
-nLr5 <- nLr5/sum(nLr5)
+nLr5 <- nLr5 / sum(nLr5)
 #nLr5
-#Gráfica de barras del escenario 5 
+#Gráfica de barras del escenario 5
 #barplot(nLr5, names.arg = 1:4)
 #title( main = "Escenario 5", xlab = "Categoría", ylab = "Proporción")
-#Proyección de la dinámica escenario 5 
+#Proyección de la dinámica escenario 5
 pr5 <- project(Lr1, vector = nLr5, time = 50)
 pr5df <- as.data.frame(pr5)
 pr5df$time <- seq(1, nrow(pr5df), 1)
-ggplot(pr5df, aes(time, pr5))+
-  geom_line(color = "blue", size = 1)+
-  geom_hline(yintercept = 1, linetype = "dashed", color = "red")+
-  xlab("Time intervals")+
-  ylab("Relative population size/density")+
-  theme_minimal()+
+ggplot(pr5df, aes(time, pr5)) +
+  geom_line(color = "blue", size = 1) +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "red") +
+  xlab("Time intervals") +
+  ylab("Relative population size/density") +
+  theme_minimal() +
   rlt_theme
-
 
 #plot(pr5, log = "y", ylim = c(0.1, 1.6), ann = FALSE)
 #title(main = "Proyección de la dinámica (Escenario 5)", xlab = "Time intervals", ylab = "Population size/density")
@@ -308,16 +309,16 @@ En el siguiente recuadro se integran en una sola gráfica los resultados de la d
 
 ```{r trans9, echo=FALSE}
 
-pr1df <- rename(pr1df, Pop=pr1) # renombrar la columna con el nombre de la proyección
+pr1df <- rename(pr1df, Pop = pr1) # renombrar la columna con el nombre de la proyección
 pr1df$Escenario <- "Límite inferior" # añadir una columna con el nombre de la proyección
 
-pr3df <- rename(pr3df, Pop=pr3) 
-pr3df$Escenario <- "Estable" 
+pr3df <- rename(pr3df, Pop = pr3)
+pr3df$Escenario <- "Estable"
 
-pr5df <- rename(pr5df, Pop=pr5) 
-pr5df$Escenario <- "Límite superior" 
+pr5df <- rename(pr5df, Pop = pr5)
+pr5df$Escenario <- "Límite superior"
 
-Population_density <- bind_rows(pr1df, pr3df, pr5df)# combine the data frames into one
+Population_density <- bind_rows(pr1df, pr3df, pr5df) # combine the data frames into one
 
 # Population_density
 ```
@@ -330,12 +331,14 @@ Population_density <- bind_rows(pr1df, pr3df, pr5df)# combine the data frames in
 
 ```{r trans10,  message=FALSE}
 
-ggplot(Population_density, aes(time, Pop, color=Escenario)) +
-  geom_line(size=1) +
+ggplot(Population_density, aes(time, Pop, color = Escenario)) +
+  geom_line(size = 1) +
   geom_hline(yintercept = 1, linetype = "dashed", color = "red") +
-  labs(title = "Population dynamics projections",
-       x = "Time intervals",
-       y = "Relative population size/density") +
+  labs(
+    title = "Population dynamics projections",
+    x = "Time intervals",
+    y = "Relative population size/density"
+  ) +
   scale_color_manual(values = c("orange", "purple", "brown")) +
   theme_minimal() +
   rlt_theme
@@ -347,7 +350,13 @@ ggplot(Population_density, aes(time, Pop, color=Escenario)) +
 
 ### Segunda alternativa de gráfica de la dinámica absoluta
 
-Population_density <- stack(c(as.data.frame(pr1), as.data.frame(pr2), as.data.frame(pr3), as.data.frame(pr4), as.data.frame(pr5)))
+Population_density <- stack(c(
+  as.data.frame(pr1),
+  as.data.frame(pr2),
+  as.data.frame(pr3),
+  as.data.frame(pr4),
+  as.data.frame(pr5)
+))
 
 Population_density[, "time"] <- rep(seq(1, nrow(pr1), 1), 5)
 
@@ -355,18 +364,27 @@ names(Population_density) <- c("Values", "Projection", "Time")
 
 
 abs.plot <- ggplot(data = Population_density) +
-theme_classic() +
-theme(panel.border = element_blank()) +
-theme(legend.position = "none") +
-geom_line(aes(x = Time, y = Values, group = Projection, colour = Projection), linewidth = 0.8) +
-geom_hline(yintercept = 1, linewidth = 0.8) +
-scale_colour_manual(values = c("#C6E2FF", "#B9D3EE", "black", "#9FB6CD", "#6C7B8B")) +
-theme(axis.title.x = element_text(vjust = -1, size = 12)) +
-theme(axis.title.y = element_text(vjust = 1, size = 12)) + 
-theme(axis.text = element_text(size = 12)) +
-labs(title = "Dinamica poblacional absoluta", x = "Intervalos de Proyección", y = "Densidad poblacional relativa \n de lambda max")+ 
-theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 12))
-abs.plot 
+  theme_classic() +
+  theme(panel.border = element_blank()) +
+  theme(legend.position = "none") +
+  geom_line(
+    aes(x = Time, y = Values, group = Projection, colour = Projection),
+    linewidth = 0.8
+  ) +
+  geom_hline(yintercept = 1, linewidth = 0.8) +
+  scale_colour_manual(
+    values = c("#C6E2FF", "#B9D3EE", "black", "#9FB6CD", "#6C7B8B")
+  ) +
+  theme(axis.title.x = element_text(vjust = -1, size = 12)) +
+  theme(axis.title.y = element_text(vjust = 1, size = 12)) +
+  theme(axis.text = element_text(size = 12)) +
+  labs(
+    title = "Dinamica poblacional absoluta",
+    x = "Intervalos de Proyección",
+    y = "Densidad poblacional relativa \n de lambda max"
+  ) +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 12))
+abs.plot
 
 ```
 
@@ -383,20 +401,35 @@ En el siguiente recuadro se estima el crecimiento poblacional de *L. rubripetala
 ```{r trans12}
 ## PROYECCIÓN DE LA DINÁMICA DE CORTO PLAZO. 
 
-#Vector de estructura inicial: abundancia por categoría de acuerdo con  el estado 
-n0 <- c(166, 0, 0, 0) 
+#Vector de estructura inicial: abundancia por categoría de acuerdo con  el estado
+n0 <- c(166, 0, 0, 0)
 
 #Escenario 1: Límite inferior
-pr2.1 <- project(Lr1, vector = nLr1, time = 50, 
-                 standard.A = T, standard.vec = T)
+pr2.1 <- project(
+  Lr1,
+  vector = nLr1,
+  time = 50,
+  standard.A = T,
+  standard.vec = T
+)
 
 #Escenario 3. Estructura estable
-pr2.3 <- project(Lr1, vector = nLr3, time = 50, 
-                 standard.A = T, standard.vec = T)
+pr2.3 <- project(
+  Lr1,
+  vector = nLr3,
+  time = 50,
+  standard.A = T,
+  standard.vec = T
+)
 
 #Escenario 5. Límite superior
-pr2.5 <- project(Lr1, vector = nLr5, time = 50, 
-                 standard.A = T, standard.vec = T)
+pr2.5 <- project(
+  Lr1,
+  vector = nLr5,
+  time = 50,
+  standard.A = T,
+  standard.vec = T
+)
 ```
 
 ```{r, trans13, echo =FALSE, results=FALSE}
@@ -406,12 +439,22 @@ pr2.5 <- project(Lr1, vector = nLr5, time = 50,
 n0 <- c(166, 0, 0, 0)
 
 #Escenario 2. Inicio I
-pr2.2 <- project(Lr1, vector = nLr2, time = 50, 
-                 standard.A = T, standard.vec = T)
+pr2.2 <- project(
+  Lr1,
+  vector = nLr2,
+  time = 50,
+  standard.A = T,
+  standard.vec = T
+)
 
 #Escenario 4. Inicio II
-pr2.4 <- project(Lr1, vector = nLr4, time = 50, 
-                 standard.A = T, standard.vec = T)
+pr2.4 <- project(
+  Lr1,
+  vector = nLr4,
+  time = 50,
+  standard.A = T,
+  standard.vec = T
+)
 ```
 
 ------------------------------------------------------------------------
@@ -424,17 +467,23 @@ La proyección de la dinámica transitoria para los tres escenarios definidos (1
 # DINÁMICA POBLACIONAL TRANSITORIA ESTANDARIZADA ---------- #
 # Gráfica de la Dinámica transitoria específica de la población  
 
-layout(matrix(c(1,2, 3), ncol = 3))
+layout(matrix(c(1, 2, 3), ncol = 3))
 #par(mfrow=c(3,1))
 
 # Gráfica dinámica corto plazo: Inicio I
-plot(pr2.2, log = "y", main = "Escenario 2", xlab = "",  ylab = "Densidad poblacional")
+plot(
+  pr2.2,
+  log = "y",
+  main = "Escenario 2",
+  xlab = "",
+  ylab = "Densidad poblacional"
+)
 
 # Gráfica dinámica corto plazo: Estructura Estable
-plot(pr2.3, log = "y",  main = "Escenario 3", xlab = "", ylab = "") 
+plot(pr2.3, log = "y", main = "Escenario 3", xlab = "", ylab = "")
 
 # Gráfica dinámica corto plazo: Límite superior
-plot(pr2.5, log = "y",main = "Escenario 5", xlab = "",  ylab = "")
+plot(pr2.5, log = "y", main = "Escenario 5", xlab = "", ylab = "")
 
 
 
@@ -448,19 +497,28 @@ En el siguiente recuadro se integran en una sola gráfica los resultados de la d
 
 ```{r trans15, echo = FALSE}
 len <- nrow(pr2.1)
-Population_density <- rbind(data.frame(Projection = pr2.1, Escenario = "Límite inferior"), data.frame(Projection = pr2.3, Escenario = "Estable"), data.frame(Projection = pr2.5, Escenario = "Límite superior"))
+Population_density <- rbind(
+  data.frame(Projection = pr2.1, Escenario = "Límite inferior"),
+  data.frame(Projection = pr2.3, Escenario = "Estable"),
+  data.frame(Projection = pr2.5, Escenario = "Límite superior")
+)
 Population_density$Time <- rep(seq(1, len, 1), 3)
 
 trans.plot <- ggplot(data = Population_density) +
-theme_minimal() +
-geom_line(aes(x = Time, y = Projection, group = Escenario, colour = Escenario), linewidth = 0.8) +
-scale_colour_manual(values = c("green4", "black", "orange2")) +
-labs(title = "Dinámica poblacional transitoria",
-     x = "Intervalo de proyección (meses)", 
-     y = "Densidad poblacional \n relativa a lambda max") + 
-ylim(0.3, 1.3) + 
+  theme_minimal() +
+  geom_line(
+    aes(x = Time, y = Projection, group = Escenario, colour = Escenario),
+    linewidth = 0.8
+  ) +
+  scale_colour_manual(values = c("green4", "black", "orange2")) +
+  labs(
+    title = "Dinámica poblacional transitoria",
+    x = "Intervalo de proyección (meses)",
+    y = "Densidad poblacional \n relativa a lambda max"
+  ) +
+  ylim(0.3, 1.3) +
   rlt_theme
-trans.plot 
+trans.plot
 ```
 
 ```{r trans16, echo=FALSE, eval=FALSE}
@@ -469,21 +527,37 @@ trans.plot
 
 len <- nrow(pr2.1)
 
-Population_density_complete <- rbind(data.frame(Projection = pr2.1, Escenario = "Límite inferior"), data.frame(Projection = pr2.2, Escenario = "Dominado por etapas tempranas"), data.frame(Projection = pr2.3, Escenario = "Estable"), data.frame(Projection = pr2.4, Escenario = "Dominado por etapas tempranas II"), data.frame(Projection = pr2.5, Escenario = "Límite superior"))
+Population_density_complete <- rbind(
+  data.frame(Projection = pr2.1, Escenario = "Límite inferior"),
+  data.frame(Projection = pr2.2, Escenario = "Dominado por etapas tempranas"),
+  data.frame(Projection = pr2.3, Escenario = "Estable"),
+  data.frame(
+    Projection = pr2.4,
+    Escenario = "Dominado por etapas tempranas II"
+  ),
+  data.frame(Projection = pr2.5, Escenario = "Límite superior")
+)
 
 Population_density_complete$Time <- rep(seq(1, len, 1), 5)
 
 trans.plot <- ggplot(data = Population_density_complete) +
-theme_minimal() +
-#theme(legend.position = "bottom") +
-geom_line(aes(x = Time, y = Projection, group = Escenario, colour = Escenario), linewidth = 0.8) +
-scale_colour_manual(values = c("green3", "purple4", "black", "pink", "orange2")) +
-labs(title = "Dinámica poblacional transitoria", 
-     x = "Intervalo de proyección (meses)", 
-     y = "Densidad poblacional relativa a lambda max") + 
-#theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 12)) +
-ylim(0.3, 1.3) +
-rlt_theme
+  theme_minimal() +
+  #theme(legend.position = "bottom") +
+  geom_line(
+    aes(x = Time, y = Projection, group = Escenario, colour = Escenario),
+    linewidth = 0.8
+  ) +
+  scale_colour_manual(
+    values = c("green3", "purple4", "black", "pink", "orange2")
+  ) +
+  labs(
+    title = "Dinámica poblacional transitoria",
+    x = "Intervalo de proyección (meses)",
+    y = "Densidad poblacional relativa a lambda max"
+  ) +
+  #theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 12)) +
+  ylim(0.3, 1.3) +
+  rlt_theme
 
 
 trans.plot
@@ -515,7 +589,7 @@ reac1 <- reac(Lr1, vector = nLr1)
 lim.trans[1, 1] <- reac1
 reac1
 
-maxatt1 <- maxatt(Lr1, vector = nLr1, return.t=T)
+maxatt1 <- maxatt(Lr1, vector = nLr1, return.t = T)
 maxatt1
 lim.trans[1, 2] <- maxatt1[1]
 
@@ -550,7 +624,7 @@ lim.trans[3, 3] <- inertia3
 reac5 <- reac(Lr1, vector = nLr5)
 lim.trans[5, 1] <- reac5
 reac5
-maxamp5 <- maxamp(Lr1, vector = nLr5, return.t=T, conv.accuracy = 0.01)
+maxamp5 <- maxamp(Lr1, vector = nLr5, return.t = T, conv.accuracy = 0.01)
 maxamp5
 lim.trans[5, 2] <- maxamp5[1]
 inertia5 <- inertia(Lr1, vector = nLr5)
@@ -562,12 +636,11 @@ lim.trans[5, 3] <- inertia5
 #### Crear una tabla de los indices transitorios
 
 ```{r trans20,  results = FALSE, message=FALSE, warning=FALSE}
-
 #Escenario 2 (inicio I):
 reac2 <- reac(Lr1, vector = nLr2)
 reac2
 lim.trans[2, 1] <- reac2
-maxatt2 <- maxatt(Lr1, vector = nLr2, return.t=T)
+maxatt2 <- maxatt(Lr1, vector = nLr2, return.t = T)
 maxatt2
 lim.trans[2, 2] <- maxatt2[1]
 inertia2 <- inertia(Lr1, vector = nLr2)
@@ -578,7 +651,7 @@ lim.trans[2, 3] <- inertia2
 reac4 <- reac(Lr1, vector = nLr4)
 lim.trans[4, 1] <- reac4
 reac4
-maxatt4 <- maxatt(Lr1, vector = nLr4, return.t=T)
+maxatt4 <- maxatt(Lr1, vector = nLr4, return.t = T)
 maxatt4
 lim.trans[4, 2] <- maxatt4[1]
 inertia4 <- inertia(Lr1, vector = nLr4)
@@ -594,7 +667,6 @@ lim.trans[4, 3] <- inertia4
 En la tabla del siguiente recuadro se resumen los valores estimados por escenario.
 
 ```{r trans21, message=FALSE, warning=FALSE}
-
 gt(lim.trans)
 
 
@@ -609,25 +681,48 @@ En el siguiente recuadro se integran en una sola gráfica los resultados de la d
 ```{r trans22,   message=FALSE, warning=FALSE}
 
 len <- nrow(pr2.1)
-Population_density <- rbind(data.frame(Projection = pr2.1, Escenario = "Límite inferior"), data.frame(Projection = pr2.3, Escenario = "Estable"), data.frame(Projection = pr2.5, Escenario = "Límite superior"))
+Population_density <- rbind(
+  data.frame(Projection = pr2.1, Escenario = "Límite inferior"),
+  data.frame(Projection = pr2.3, Escenario = "Estable"),
+  data.frame(Projection = pr2.5, Escenario = "Límite superior")
+)
 Population_density$Time <- rep(seq(1, len, 1), 3)
 
 trans.plot <- ggplot(data = Population_density) +
-theme_minimal() +
-# theme(panel.border = element_blank()) +
-#theme(legend.position = "none") +
-geom_line(aes(x = Time, y = Projection, group = Escenario, colour = Escenario), linewidth = 0.8) +
-scale_colour_manual(values = c("green4", "black", "orange2")) +
-labs(title = "Dinámica poblacional transitoria",
-     x = "Intervalo de proyección (meses)", 
-     y = "Densidad poblacional relativa \n a lambda max") + 
-ylim(0.3, 1.3) + 
+  theme_minimal() +
+  # theme(panel.border = element_blank()) +
+  #theme(legend.position = "none") +
+  geom_line(
+    aes(x = Time, y = Projection, group = Escenario, colour = Escenario),
+    linewidth = 0.8
+  ) +
+  scale_colour_manual(values = c("green4", "black", "orange2")) +
+  labs(
+    title = "Dinámica poblacional transitoria",
+    x = "Intervalo de proyección (meses)",
+    y = "Densidad poblacional relativa \n a lambda max"
+  ) +
+  ylim(0.3, 1.3) +
   rlt_theme
 
 
-trans.plot + 
-annotate("text", x = 49, y = maxatt1$maxatt, label = expression(paste(underline(rho) == 0.46)), hjust = 1.0, vjust = -1) +
-annotate("text", x = 49, y = maxamp5$maxamp, label =  expression(paste(bar(rho) == 1)), hjust = 1.22, vjust = -1)
+trans.plot +
+  annotate(
+    "text",
+    x = 49,
+    y = maxatt1$maxatt,
+    label = expression(paste(underline(rho) == 0.46)),
+    hjust = 1.0,
+    vjust = -1
+  ) +
+  annotate(
+    "text",
+    x = 49,
+    y = maxamp5$maxamp,
+    label = expression(paste(bar(rho) == 1)),
+    hjust = 1.22,
+    vjust = -1
+  )
 
 ```
 
@@ -639,27 +734,71 @@ len <- nrow(pr2.1)
 #La gráfica a continuación corresponde a los cinco escenarios planteados para la población 1 de *L. rubripetala*, equivalente a la figura 2B del artículo de Tremblay y colaboradores ([@tremblay2015stable]). Esta permitirá comparar tus resultados y verificar que los escenarios que haz desarrollado estén correctos.
 
 
-Population_density_complete <- rbind(data.frame(Projection = pr2.1, Escenario = "Límite inferior"), data.frame(Projection = pr2.2, Escenario = "Dominado por etapas tempranas"), data.frame(Projection = pr2.3, Escenario = "Estable"), data.frame(Projection = pr2.4, Escenario = "Dominado por etapas tempranas II"), data.frame(Projection = pr2.5, Escenario = "Límite superior"))
+Population_density_complete <- rbind(
+  data.frame(Projection = pr2.1, Escenario = "Límite inferior"),
+  data.frame(Projection = pr2.2, Escenario = "Dominado por etapas tempranas"),
+  data.frame(Projection = pr2.3, Escenario = "Estable"),
+  data.frame(
+    Projection = pr2.4,
+    Escenario = "Dominado por etapas tempranas II"
+  ),
+  data.frame(Projection = pr2.5, Escenario = "Límite superior")
+)
 
 Population_density_complete$Time <- rep(seq(1, len, 1), 5)
 
 trans.plot <- ggplot(data = Population_density_complete) +
-theme_minimal() +
-#theme(legend.position = "none") +
-geom_line(aes(x = Time, y = Projection, group = Escenario, colour = Escenario), linewidth = 0.8) +
-scale_colour_manual(values = c("green3", "purple4", "black", "pink", "orange2")) +
-labs(title = "Dinámica poblacional transitoria", 
-     x = "Intervalo de proyección (Meses)", 
-     y = "Densidad poblacional relativa a lambda max") + 
-#theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 12)) +
-ylim(0.3, 1.3) +
-rlt_theme
+  theme_minimal() +
+  #theme(legend.position = "none") +
+  geom_line(
+    aes(x = Time, y = Projection, group = Escenario, colour = Escenario),
+    linewidth = 0.8
+  ) +
+  scale_colour_manual(
+    values = c("green3", "purple4", "black", "pink", "orange2")
+  ) +
+  labs(
+    title = "Dinámica poblacional transitoria",
+    x = "Intervalo de proyección (Meses)",
+    y = "Densidad poblacional relativa a lambda max"
+  ) +
+  #theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 12)) +
+  ylim(0.3, 1.3) +
+  rlt_theme
 
-trans.plot + 
-annotate("text", x = 49, y = maxatt1$maxatt, label = expression(paste(underline(rho) == 0.46)), hjust = 0.5, vjust = -0.8) +
-annotate("text", x = 49, y = maxatt2$maxatt, label = expression(paste(underline(rho) == 0.89)), hjust = 0.5, vjust = -0.1) +
-annotate("text", x = 49, y = maxatt4$maxatt, label =  expression(paste(underline(rho) == 0.79)), hjust = 0.5, vjust = 0) +
-annotate("text", x = 49, y = maxamp5$maxamp, label =  expression(paste(bar(rho) == 1.22)), hjust = 0.5, vjust = -0.8)
+trans.plot +
+  annotate(
+    "text",
+    x = 49,
+    y = maxatt1$maxatt,
+    label = expression(paste(underline(rho) == 0.46)),
+    hjust = 0.5,
+    vjust = -0.8
+  ) +
+  annotate(
+    "text",
+    x = 49,
+    y = maxatt2$maxatt,
+    label = expression(paste(underline(rho) == 0.89)),
+    hjust = 0.5,
+    vjust = -0.1
+  ) +
+  annotate(
+    "text",
+    x = 49,
+    y = maxatt4$maxatt,
+    label = expression(paste(underline(rho) == 0.79)),
+    hjust = 0.5,
+    vjust = 0
+  ) +
+  annotate(
+    "text",
+    x = 49,
+    y = maxamp5$maxamp,
+    label = expression(paste(bar(rho) == 1.22)),
+    hjust = 0.5,
+    vjust = -0.8
+  )
 
 ```
 

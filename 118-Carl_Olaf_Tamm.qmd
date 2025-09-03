@@ -26,10 +26,12 @@ library(DiagrammeR)
 library(raretrans)
 
 # Mi tema de formato de las gráficas de ggplot2 personal
-rlt_theme <- theme(axis.title.y = element_text(colour="grey20",size=15,face="bold"),
-        axis.text.x = element_text(colour="grey20",size=15, face="bold"),
-        axis.text.y = element_text(colour="grey20",size=15,face="bold"),  
-        axis.title.x = element_text(colour="grey20",size=15,face="bold"))
+rlt_theme <- theme(
+  axis.title.y = element_text(colour = "grey20", size = 15, face = "bold"),
+  axis.text.x = element_text(colour = "grey20", size = 15, face = "bold"),
+  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
+  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
+)
 
 
 ```
@@ -99,13 +101,13 @@ En la publicación de 1972 [@tamm1972survival], Tamm describe la dinámica de m�
               "Orchis mascula", 24, 1943, 1956,
               "Listera ovata", 48, 1944, 1971)
 
-Tamm |> 
-  gt() |> 
-tab_style(
+Tamm |>
+  gt() |>
+  tab_style(
     style = list(
       cell_fill(color = "lightcyan"),
       cell_text(style = "italic")
-      ),
+    ),
     locations = cells_body(
       columns = Especies
     )
@@ -172,7 +174,9 @@ El primer paso es encontrar una matriz de valores *prior* para añadir al modelo
 Dacty_apriori=matrix(c(0.637, 0.571, 0.740,
                        0.273, 0.271, 0.049,
                        0.090, 0.158, 0.059,
-                       0,     0,     0.152),  nrow = 4, ncol = 3, byrow=TRUE) # la última fila es la proporción de individuos en esta etapa que fallece. 
+                       0,     0,     0.152),  
+              nrow = 4, ncol = 3, 
+              byrow=TRUE) # la última fila es la proporción de individuos en esta etapa que fallece. 
 
 Dacty_apriori
 
@@ -197,23 +201,25 @@ Dacty_apriori
 
 ```{r OCTamm_9}
 
-Tmat_D <- Tamm_1972_column %>% 
-  dplyr::select(Year, stage, next_stage, Fertility) %>% 
-  mutate(stage = factor(stage, levels=c("V","F","D","m")),
-         fate = factor(next_stage, levels=c("V","F","D","m"))) %>%
+Tmat_D <- Tamm_1972_column %>%
+  dplyr::select(Year, stage, next_stage, Fertility) %>%
+  mutate(
+    stage = factor(stage, levels = c("V", "F", "D", "m")),
+    fate = factor(next_stage, levels = c("V", "F", "D", "m"))
+  ) %>%
   drop_na(stage, fate) %>%
-  as.data.frame() %>% 
-  xtabs(~fate + stage, data = .) %>% 
-  as.matrix() 
+  as.data.frame() %>%
+  xtabs(~ fate + stage, data = .) %>%
+  as.matrix()
 
 Tmat_D # se contabiliza la cantidad de individuos que pasan de una etapa a otra para todos los años (no se considerá la variación inter anual).
 
-Tmat2 <- Tmat_D[,-4] # remover la columna para transiciones de la muerte (es imposible pasar de fallecido a otra etapas)
+Tmat2 <- Tmat_D[, -4] # remover la columna para transiciones de la muerte (es imposible pasar de fallecido a otra etapas)
 Tmat2
 
 N2_D <- colSums(Tmat2) # obtener el número total de una etapa.
 N2_D
-Tmat <- sweep(Tmat2[-4,], 2, N2_D, "/") # normalizar las transiciones, nota que el "2" es para decir que haga los cálculos por columna (en este caso división por la cantidad total de individuos en la etapa)
+Tmat <- sweep(Tmat2[-4, ], 2, N2_D, "/") # normalizar las transiciones, nota que el "2" es para decir que haga los cálculos por columna (en este caso división por la cantidad total de individuos en la etapa)
 Tmat # la matriz de transición final normalizada con los datos del campo
 ```
 
@@ -235,8 +241,8 @@ Para tomar en cuenta la fecundidad, se necesita una matriz de fertilidad. En est
 
 ```{r OCTamm_10}
 
-Fmat <- matrix(0, nrow=3, ncol=3) # crear una matriz de ceros. 
-Fmat[1,2] <- 15/9 # contar 9 adultos reproductivos en el tiempo t y 15 nuevos individuos en el tiempo t+i en la población. Añadir el valor en la posición correcta de la matriz de fertilidad (nnota es la primera fila, segunda columna). 
+Fmat <- matrix(0, nrow = 3, ncol = 3) # crear una matriz de ceros.
+Fmat[1, 2] <- 15 / 9 # contar 9 adultos reproductivos en el tiempo t y 15 nuevos individuos en el tiempo t+i en la población. Añadir el valor en la posición correcta de la matriz de fertilidad (nnota es la primera fila, segunda columna).
 
 TF2 <- list(Tmat = Tmat, Fmat = Fmat) # crear una lista con las matrices de transiciones y de fertilidad.
 TF2
@@ -340,12 +346,16 @@ Las matrices alpha2 y beta2, representan los parámetros de la distribución gam
 
 
 
-alpha2 <- matrix(c(NA_real_, 1e-5, NA_real_,
+alpha2 <- matrix(c(NA_real_, 1e-5,     NA_real_,
                    NA_real_, NA_real_, NA_real_,
-                   NA_real_, NA_real_, NA_real_), nrow=3, ncol = 3, byrow = TRUE) # la matriz de los valores alpha
-beta2 <- matrix(c( NA_real_, 1e-5, NA_real_,
+                   NA_real_, NA_real_, NA_real_), 
+          nrow=3, ncol = 3, 
+          byrow = TRUE) # la matriz de los valores alpha
+beta2 <- matrix(c( NA_real_, 1e-5,     NA_real_,
                    NA_real_, NA_real_, NA_real_,
-                   NA_real_, NA_real_, NA_real_), nrow=3, ncol = 3, byrow = TRUE) # la matriz de los valores beta
+                   NA_real_, NA_real_, NA_real_), 
+          nrow=3, ncol = 3, 
+          byrow = TRUE) # la matriz de los valores beta
 ```
 
 Ahora unimos todos los valores, para simular el crecimiento poblacional de *Dactylorhiza incarnata* con la función **sim_transitions** muestreado por Tamm desde 1944 a 1971.
@@ -359,9 +369,15 @@ Ahora unimos todos los valores, para simular el crecimiento poblacional de *Dact
 
 ```{r OCTamm_15, eval=TRUE, echo=TRUE, warning=FALSE, message=FALSE}
 
-Dacty_0.1 <- sim_transitions(TF2, N2_D, P = Dacty_apriori, alpha = alpha2, beta = beta2,
-                priorweight = 0.1, samples = 5000) # generar 5000 matrices basado en las previas de transiciones y de fertilidades, el tamaño de muestra, en adición de los datos
-
+Dacty_0.1 <- sim_transitions(
+  TF2,
+  N2_D,
+  P = Dacty_apriori,
+  alpha = alpha2,
+  beta = beta2,
+  priorweight = 0.1,
+  samples = 5000
+) # generar 5000 matrices basado en las previas de transiciones y de fertilidades, el tamaño de muestra, en adición de los datos
 
 ```
 
@@ -379,28 +395,25 @@ Se nota claramente que la población de *Dactylorhiza incarnata* muestreado por 
 
 ```{r OCTamm_17, message=FALSE, warning=FALSE}
 
-ggplot(data = Dacty_0.1b,
-     mapping = aes(x = lposterior)) + 
-  geom_histogram(binwidth = 0.01, colour="white") + 
-  rlt_theme+ 
-  geom_vline(xintercept = 1, 
-                color = "blue", size=1.5)
+ggplot(data = Dacty_0.1b, mapping = aes(x = lposterior)) +
+  geom_histogram(binwidth = 0.01, colour = "white") +
+  rlt_theme +
+  geom_vline(xintercept = 1, color = "blue", size = 1.5)
 ```
 
 Para concluir, la población de *Dactylorhiza incarnata* muestreado por Tamm desde 1944 a 1971 tiene un crecimiento poblacional menor que 1.0 (lambda promedio de 0.84), con un intervalo de confianza de 0.79 a 0.89. Esto indica que la población esta reduciendo en el tiempo por aproximadamente 16%, pero que realmente la reducción pudiese ser entre 21% a 11%. El índice de *pincrease* es el valor de *p* para evaluar si la población esta creciendo o decreciendo. En este caso el valor es \<0.001, lo que indica que la población está decreciendo.
 
 ```{r OCTamm_18, eval=T}
 
-Dacty_0.1bdf=as.data.frame(Dacty_0.1b)
-Dacty_0.1_summary <- dplyr::summarize(Dacty_0.1bdf,
-                            medianL = median(lposterior),
-                             meanL = mean(lposterior),
-                             lcl = quantile(lposterior, probs = 0.025),
-                             ucl = quantile(lposterior, probs = 0.975),
-                             pincrease = sum(lposterior > 1.)/n()
-                            )
-
-
+Dacty_0.1bdf = as.data.frame(Dacty_0.1b)
+Dacty_0.1_summary <- dplyr::summarize(
+  Dacty_0.1bdf,
+  medianL = median(lposterior),
+  meanL = mean(lposterior),
+  lcl = quantile(lposterior, probs = 0.025),
+  ucl = quantile(lposterior, probs = 0.975),
+  pincrease = sum(lposterior > 1.) / n()
+)
 ```
 
 ```{r OCTamm_19, eval=T}

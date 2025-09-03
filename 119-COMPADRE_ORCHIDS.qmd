@@ -33,28 +33,48 @@ En este capítulo se aprende a utiliza la base de datos de COMPADRE para evaluar
 
 
 
-rlt_theme <- theme(axis.title.y = element_text(colour="grey20",size=10,face="bold"),
-        axis.text.x = element_text(colour="grey20",size=10, face="bold"),
-        axis.text.y = element_text(colour="grey20",size=15,face="bold"),  
-        axis.title.x = element_text(colour="grey20",size=15,face="bold"))+
+rlt_theme <- theme(
+  axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
+  axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
+  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
+  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
+) +
   theme(
-  # Remover los border
-  panel.border = element_blank(),  
-  # Remover las lineas
-  panel.grid.major = element_blank(),
-  panel.grid.minor = element_blank(),
-  # Remove el fondo del panel
-  panel.background = element_blank(),
-  # añadir lineas más gruesas
-    axis.line.x = element_line(colour = "black", linewidth  = 1),
-    axis.line.y = element_line(colour = "black", linewidth  = 1)
+    # Remover los border
+    panel.border = element_blank(),
+    # Remover las lineas
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Remove el fondo del panel
+    panel.background = element_blank(),
+    # añadir lineas más gruesas
+    axis.line.x = element_line(colour = "black", linewidth = 1),
+    axis.line.y = element_line(colour = "black", linewidth = 1)
   )
 
 # Una paleta de color comenzando el gris:
-cbPalette1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+cbPalette1 <- c(
+  "#999999",
+  "#E69F00",
+  "#56B4E9",
+  "#009E73",
+  "#F0E442",
+  "#0072B2",
+  "#D55E00",
+  "#CC79A7"
+)
 
 # Una paleta de color comenzando el negro:
-cbPalette2 <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+cbPalette2 <- c(
+  "#000000",
+  "#E69F00",
+  "#56B4E9",
+  "#009E73",
+  "#F0E442",
+  "#0072B2",
+  "#D55E00",
+  "#CC79A7"
+)
 
 ```
 
@@ -123,9 +143,9 @@ dim(TodasSp) # La base de datos de COMPADRE tiene 8994 filas y 59 columnas (vari
 
 ```{r Compr6}
 
-Epi = TodasSp %>% 
+Epi = TodasSp %>%
   filter(Genus %in% c("Epipactis")) # Filtrar la información de *Epipactis* en la base de datos.
-Epi # Nota que en el genero *Epipactis*, tenemos 51 fila, pero todas son de la misma especie de dos estudios distintos. 
+Epi # Nota que en el genero *Epipactis*, tenemos 51 fila, pero todas son de la misma especie de dos estudios distintos.
 ```
 
 ------------------------------------------------------------------------
@@ -136,11 +156,10 @@ Epi # Nota que en el genero *Epipactis*, tenemos 51 fila, pero todas son de la m
 
 ```{r Compr7}
 
-index_O=TodasSp %>% 
- filter(Family %in% c("Orchidaceae")) # Extraer la orquídeas de la base de datos. 
+index_O = TodasSp %>%
+  filter(Family %in% c("Orchidaceae")) # Extraer la orquídeas de la base de datos.
 
-head(index_O, n=3) # para visualizar las primera 3 filas de la base de datos de COMPADRE para las orquídeas.
-
+head(index_O, n = 3) # para visualizar las primera 3 filas de la base de datos de COMPADRE para las orquídeas.
 ```
 
 ------------------------------------------------------------------------
@@ -171,7 +190,7 @@ Note que al momento hay 46 especies con nombres únicos en la base de datos
 
 ```{r Compr9}
 
-Especies_unicas=as.data.frame(sort(unique(index_O$SpeciesAccepted)))
+Especies_unicas = as.data.frame(sort(unique(index_O$SpeciesAccepted)))
 
 kbl(Especies_unicas)
 ```
@@ -196,9 +215,14 @@ Para saber cuantos especies distintas y los manuscritos asociado a los estudios.
 
 ```{r Compr11}
 
-index_O |> select(mat, SpeciesAccepted, DOI_ISBN) |>
-  filter(!duplicated(paste0(pmax(SpeciesAccepted, DOI_ISBN), pmin(SpeciesAccepted, DOI_ISBN))))
-
+index_O |>
+  select(mat, SpeciesAccepted, DOI_ISBN) |>
+  filter(
+    !duplicated(paste0(
+      pmax(SpeciesAccepted, DOI_ISBN),
+      pmin(SpeciesAccepted, DOI_ISBN)
+    ))
+  )
 ```
 
 ## Frecuencia de autores unicos en la base de datos
@@ -219,8 +243,8 @@ unique(index_O$Authors)
 En el siguiente script se enseña como extraer la información de una especie específica. En este caso se selecciona la especie **Telipogon helleri**.
 
 ```{r Compr14}
-
-Th=index_O %>% select(SpeciesAccepted, mat, Authors, DOI_ISBN, MatrixDimension) %>% 
+Th = index_O %>%
+  select(SpeciesAccepted, mat, Authors, DOI_ISBN, MatrixDimension) %>%
   filter(SpeciesAccepted %in% c("Telipogon helleri"))
 
 Th
@@ -233,9 +257,14 @@ En el siguiente script se enseña la matrices de **Telipogon helleri** y las eta
 
 La información incluye la clases/etapas que los autores usaron. El ciclo de vida incluyo 3 etapas, 1 inmaduras (S1-2) y 2 etapas de adultos (S3 y S4).
 
-```{r Compr15}
+extract the matrix of Telipogon helleri
 
-Th$mat
+```{r Compr15}
+Thmat = matA(Th) # Extraer la matriz de transición de estados de la población (matA) de la primera fila del objeto Th
+
+Thmat
+
+#Thmat # Extraer la matriz de transición de estados de la población (matU) de la primera fila del objeto Th
 ```
 
 ## Cuantos estudios unicos?
@@ -248,16 +277,32 @@ NOTA: OrganismType es una variable que indica si la orquídea es un epifita o te
 ```{r chap16}
 
 #names(index_O) Los nombres de las variables
-SPECIES_O=index_O %>% select(StudyStart, StudyEnd, SpeciesAccepted, YearPublication, Authors, DOI_ISBN, OrganismType, MatrixPopulation, mat) %>% 
-  group_by(SpeciesAccepted, YearPublication, OrganismType, StudyStart, StudyEnd) %>% 
-  summarize(n_populations = length(unique(MatrixPopulation))) %>% 
-  arrange(SpeciesAccepted) %>% 
-  mutate(StudyStart=as.numeric(StudyStart)) %>% 
-  mutate(StudyEnd=as.numeric(StudyEnd)) %>% 
+SPECIES_O = index_O %>%
+  select(
+    StudyStart,
+    StudyEnd,
+    SpeciesAccepted,
+    YearPublication,
+    Authors,
+    DOI_ISBN,
+    OrganismType,
+    MatrixPopulation,
+    mat
+  ) %>%
+  group_by(
+    SpeciesAccepted,
+    YearPublication,
+    OrganismType,
+    StudyStart,
+    StudyEnd
+  ) %>%
+  summarize(n_populations = length(unique(MatrixPopulation))) %>%
+  arrange(SpeciesAccepted) %>%
+  mutate(StudyStart = as.numeric(StudyStart)) %>%
+  mutate(StudyEnd = as.numeric(StudyEnd)) %>%
   drop_na(StudyStart, StudyEnd)
 
 SPECIES_O
-
 
 #write_csv(SPECIES_O, "DATA/Species_O.csv")
 ```
@@ -284,19 +329,53 @@ Hay estudios que duraron pocos tiempos. El mínimo es de dos periodos de tiempo 
 
 ```{r Compr18}
 
-SPECIES_O$SpeciesAccepted <- fct_reorder(SPECIES_O$SpeciesAccepted, SPECIES_O$StudyStart, .desc = FALSE)
+SPECIES_O$SpeciesAccepted <- fct_reorder(
+  SPECIES_O$SpeciesAccepted,
+  SPECIES_O$StudyStart,
+  .desc = FALSE
+)
 
-ggplot(SPECIES_O, aes(SpeciesAccepted, color=OrganismType))+
-  geom_linerange(aes(x= SpeciesAccepted  , ymin=StudyStart, ymax=StudyEnd))+
-  coord_flip()+
-  theme(legend.position = c(0.2, 0.8))+
-  ylab("")+
-  xlab("")+
-  rlt_theme+
-  theme(axis.text.x = element_text(color = "grey20", size = 9, angle = 90, hjust = .5, vjust = .5, face = "plain"),
-        axis.text.y = element_text(color = "grey20", size = 7, angle = 0, hjust = 1, vjust = 0, face = "plain"),  
-        axis.title.x = element_text(color = "grey20", size = 12, angle = 0, hjust = .5, vjust = 0, face = "plain"),
-        axis.title.y = element_text(color = "grey20", size = 12, angle = 90, hjust = .5, vjust = .5, face = "plain"))
+ggplot(SPECIES_O, aes(SpeciesAccepted, color = OrganismType)) +
+  geom_linerange(aes(x = SpeciesAccepted, ymin = StudyStart, ymax = StudyEnd)) +
+  coord_flip() +
+  theme(legend.position.inside = c(0.2, 0.8)) +
+  ylab("") +
+  xlab("") +
+  rlt_theme +
+  theme(
+    axis.text.x = element_text(
+      color = "grey20",
+      size = 9,
+      angle = 90,
+      hjust = .5,
+      vjust = .5,
+      face = "plain"
+    ),
+    axis.text.y = element_text(
+      color = "grey20",
+      size = 7,
+      angle = 0,
+      hjust = 1,
+      vjust = 0,
+      face = "plain"
+    ),
+    axis.title.x = element_text(
+      color = "grey20",
+      size = 12,
+      angle = 0,
+      hjust = .5,
+      vjust = 0,
+      face = "plain"
+    ),
+    axis.title.y = element_text(
+      color = "grey20",
+      size = 12,
+      angle = 90,
+      hjust = .5,
+      vjust = .5,
+      face = "plain"
+    )
+  )
 
 
 ggsave("Figures/Lenght_survey.png")
@@ -311,18 +390,18 @@ ggsave("Figures/Lenght_survey.png")
 
 ```{r Compr19}
 
-index_O=index_O %>% 
-  mutate(StudyDuration=as.numeric(StudyDuration))
+index_O = index_O %>%
+  mutate(StudyDuration = as.numeric(StudyDuration))
 
 #table(index_O$StudyDuration)
 #table(index_O$OrganismType)
 
-ggplot(index_O, aes(StudyDuration, fill=OrganismType))+
-         geom_histogram(colour="white")+
-  facet_wrap(~OrganismType)+
-  theme(legend.position = "none")+
-  xlab("Study duration")+
-  ylab("Frequency")+
+ggplot(index_O, aes(StudyDuration, fill = OrganismType)) +
+  geom_histogram(colour = "white") +
+  facet_wrap(~OrganismType) +
+  theme(legend.position = "none") +
+  xlab("Study duration") +
+  ylab("Frequency") +
   rlt_theme
 
 #ggsave("Duración_Epi_Ter.pdf")
@@ -384,15 +463,24 @@ En los siguientes scripts se filtra para las matrices con ciertas condiciones pa
 
 ```{r Compr21}
 
-Mat_ergodic <- subset(Compadre_flagged, check_NA_A == FALSE & check_ergodic == TRUE) # para evaluar si las matrices son ergódicas
-Mat_ergodic 
+Mat_ergodic <- subset(
+  Compadre_flagged,
+  check_NA_A == FALSE & check_ergodic == TRUE
+) # para evaluar si las matrices son ergódicas
+Mat_ergodic
 
-Mat_irred <- subset(Compadre_flagged, check_NA_A == FALSE & check_irreducible == TRUE) # para evaluar si las matrices son irreducibles
+Mat_irred <- subset(
+  Compadre_flagged,
+  check_NA_A == FALSE & check_irreducible == TRUE
+) # para evaluar si las matrices son irreducibles
 Mat_irred
 
 
-Mat_erg_irred <- subset(Compadre_flagged, check_NA_A == FALSE & check_irreducible == TRUE & check_ergodic == TRUE) # para evaluar si las matrices son ergódicas e irreducibles al mismo tiempo
-Mat_erg_irred 
+Mat_erg_irred <- subset(
+  Compadre_flagged,
+  check_NA_A == FALSE & check_irreducible == TRUE & check_ergodic == TRUE
+) # para evaluar si las matrices son ergódicas e irreducibles al mismo tiempo
+Mat_erg_irred
 
 
 ```
@@ -407,7 +495,7 @@ Mat_erg_irred
 
 ```{r Compr22}
 
-lambdaVals <- sapply(matA(Mat_erg_irred), popdemo::eigs, what="lambda")
+lambdaVals <- sapply(matA(Mat_erg_irred), popdemo::eigs, what = "lambda")
 summary(lambdaVals) # la distribuciones de los lambdas
 hist(lambdaVals, main = "Lambda values")
 ```
@@ -420,12 +508,15 @@ Una segunda alternativa es usar la función **map_dbl** de la librería **purrr*
 
 
 ## con el paquete popdemo
-lambdaVals1 <- map_dbl(matA(Mat_erg_irred), ~popdemo::eigs(.x, what="lambda"))
- 
- 
+lambdaVals1 <- map_dbl(
+  matA(Mat_erg_irred),
+  ~ popdemo::eigs(.x, what = "lambda")
+)
+
+
 ##O con el paquete popbio, que evita algunos mensajes de advertencia
 
-lambdaVals2 <- map_dbl(matA(Mat_erg_irred), ~popbio::lambda(.x))
+lambdaVals2 <- map_dbl(matA(Mat_erg_irred), ~ popbio::lambda(.x))
 ```
 
 ### Cambiar el estado de algunas variables
@@ -436,23 +527,26 @@ lambdaVals2 <- map_dbl(matA(Mat_erg_irred), ~popbio::lambda(.x))
 
 ```{r Compr24}
 
-New_Data=Mat_erg_irred %>% 
-  mutate(OrganismType = case_when(
-    Genus ==  "Caladenia" & OrganismType == "Epiphyte" ~ "Herbaceous perennial",
-    TRUE ~ OrganismType
-  ))
+New_Data = Mat_erg_irred %>%
+  mutate(
+    OrganismType = case_when(
+      Genus == "Caladenia" & OrganismType == "Epiphyte" ~
+        "Herbaceous perennial",
+      TRUE ~ OrganismType
+    )
+  )
 
-epifitas=New_Data %>% 
-  filter(OrganismType=="Epiphyte")
+epifitas = New_Data %>%
+  filter(OrganismType == "Epiphyte")
 
-terrestres=New_Data %>% 
-  filter(OrganismType=="Herbaceous perennial")
+terrestres = New_Data %>%
+  filter(OrganismType == "Herbaceous perennial")
 
 
 
 ```
 
-## Variación en crecimiento de la popblación en *Epifitas*
+## Variación en crecimiento de la población en *Epífitas*
 
 Aqui seleccionamos las especies de *Epifitas* con todas las poblaciones muestradas
 
@@ -460,15 +554,17 @@ Aqui seleccionamos las especies de *Epifitas* con todas las poblaciones muestrad
 
 Compadre_flagged_epif <- cdb_flag(epifitas)
 
-x_epif <- subset(Compadre_flagged_epif, check_NA_A == FALSE & check_ergodic == TRUE)
+x_epif <- subset(
+  Compadre_flagged_epif,
+  check_NA_A == FALSE & check_ergodic == TRUE
+)
 
 #sapply(matA(x_epi), popdemo::eigs, what="lambda")
 
-
-lambda_epif <- map_dbl(matA(x_epif), ~popdemo::eigs(.x, what="lambda"))
+lambda_epif <- map_dbl(matA(x_epif), ~ popdemo::eigs(.x, what = "lambda"))
 
 #Or with popbio, which avoids some warning messages…
-lambda_terr <- map_dbl(matA(terrestres), ~popbio::lambda(.x))
+lambda_terr <- map_dbl(matA(terrestres), ~ popbio::lambda(.x))
 ```
 
 Con la función evaluando las especies terrestres y epifitas uno observa que las especies terrestres tienen valores propios de lambda más dispersos que las especies epifitas, y aunque los promedios son distintos la mediana es similar.
@@ -486,26 +582,26 @@ Para visualizar loa datos en una figura de **ggplot2**, hay que convertir estas 
 
 ```{r Compr27}
 
-df_Lamb_epif=as.data.frame(lambda_epif)
-df_Lamb_epi=df_Lamb_epif %>% 
-  add_column(Habit_Type = "Epífitas") %>% 
-  rename(lambda=lambda_epif)
+df_Lamb_epif = as.data.frame(lambda_epif)
+df_Lamb_epi = df_Lamb_epif %>%
+  add_column(Habit_Type = "Epífitas") %>%
+  rename(lambda = lambda_epif)
 
 
-df_Lamb_terr=as.data.frame(lambda_terr)
-df_Lamb_terr=df_Lamb_terr %>% 
-  add_column(Habit_Type = "Terrestre")%>% 
-  rename(lambda=lambda_terr)
+df_Lamb_terr = as.data.frame(lambda_terr)
+df_Lamb_terr = df_Lamb_terr %>%
+  add_column(Habit_Type = "Terrestre") %>%
+  rename(lambda = lambda_terr)
 
 
-ALL_Lambdas=rbind(df_Lamb_epi, df_Lamb_terr) # unir los dos data frame en uno
+ALL_Lambdas = rbind(df_Lamb_epi, df_Lamb_terr) # unir los dos data frame en uno
 ```
 
 ```{r Compr28}
 
-ggplot(ALL_Lambdas, aes(lambda, fill=Habit_Type ))+
-  geom_histogram(colour="white") + 
-  facet_wrap( ~Habit_Type)+
+ggplot(ALL_Lambdas, aes(lambda, fill = Habit_Type)) +
+  geom_histogram(colour = "white") +
+  facet_wrap(~Habit_Type) +
   rlt_theme
 
 ggsave("Figures/Terr_Epi_lambda.png")
@@ -515,11 +611,11 @@ Para calcular los coeficientes (el promedio) y determinar si estos son significa
 
 ```{r Compr29}
 
-model_lambda=lm(lambda ~ Habit_Type-1, data=ALL_Lambdas)
+model_lambda = lm(lambda ~ Habit_Type - 1, data = ALL_Lambdas)
 summary(model_lambda)
 
 
-tidy(model_lambda) 
+tidy(model_lambda)
 
 ```
 
@@ -532,7 +628,13 @@ model_lambda %>%
   tidy() %>%
   ggplot(aes(y = term)) +
   stat_halfeye(
-    aes(xdist = dist_student_t(df = df.residual(model_lambda), mu = estimate, sigma = std.error))
+    aes(
+      xdist = dist_student_t(
+        df = df.residual(model_lambda),
+        mu = estimate,
+        sigma = std.error
+      )
+    )
   )
 ```
 
@@ -543,12 +645,24 @@ La gráfica anterior puede esconder la dispersión de los datos, específicament
 ALL_Lambdas %>%
   expand(Habit_Type) %>%
   augment(model_lambda, newdata = ., se_fit = TRUE) %>%
-  ggplot(aes(y = Habit_Type, colour=Habit_Type)) +
+  ggplot(aes(y = Habit_Type, colour = Habit_Type)) +
   stat_halfeye(
-    aes(xdist = dist_student_t(df = df.residual(model_lambda), mu = .fitted, sigma = .se.fit)),
+    aes(
+      xdist = dist_student_t(
+        df = df.residual(model_lambda),
+        mu = .fitted,
+        sigma = .se.fit
+      )
+    ),
     scale = .5
   ) +
-  geom_point(aes(x = lambda), data = ALL_Lambdas, pch = "|", size = 2, position = position_nudge(y = -.15))
+  geom_point(
+    aes(x = lambda),
+    data = ALL_Lambdas,
+    pch = "|",
+    size = 2,
+    position = position_nudge(y = -.15)
+  )
 
 ```
 
@@ -572,19 +686,18 @@ Orchid_data_DOI_Diana_3a <- read_excel("data/Orchid_data_DOI_Diana_3a.xlsx")
 
 ```{r Compr32}
 
-Lat_Long=Orchid_data_DOI_Diana_3a %>% 
-  select(SpeciesAccepted, Lon, Lat, OrganismType) |> 
+Lat_Long = Orchid_data_DOI_Diana_3a %>%
+  select(SpeciesAccepted, Lon, Lat, OrganismType) |>
   distinct(SpeciesAccepted, Lon, Lat, OrganismType)
 
 #write_csv(Lat_Long, "data/Orchid_data_DOI_Diana_3a.csv")
-
 ```
 
 Usamos el paquete ggplot2 para visualizar la distribución de las orquídeas en la base de datos de COMPADRE. En este caso se usa la función **borders** para añadir los bordes de los países al mapa. La función **borders** usa funciones en el paquete **maps** para añadir los bordes de los países al mapa.
 
 ```{r Compr35}
 
-ggplot2::ggplot(Lat_Long, aes(Lon, Lat,colour=OrganismType)) +
+ggplot2::ggplot(Lat_Long, aes(Lon, Lat, colour = OrganismType)) +
   borders(database = "world", fill = "grey80", col = NA) +
   geom_point(size = 1.0, alpha = 0.5)
 
@@ -600,17 +713,19 @@ Se observa una disparidad en la cantidad de sitios de muestreo entre las especie
 ```{r Compr35a}
 
 
-PointUsePalette <- leaflet::colorFactor(palette = c("blue", "red"),
-                               domain = c("Epiphyte", "Herbaceous perennial")) # para asignar los colores a los factores (clase de Vida)
+PointUsePalette <- leaflet::colorFactor(
+  palette = c("blue", "red"),
+  domain = c("Epiphyte", "Herbaceous perennial")
+) # para asignar los colores a los factores (clase de Vida)
 
-Orchid_map=leaflet(Lat_Long) %>% # los datos
-addTiles() %>% 
-  addCircleMarkers(lng = ~Lon, # la longitud
-             lat = ~Lat, # la latitud
-             radius = 2, # el tamaño del punto
-             color= ~PointUsePalette(OrganismType), # Para colorear los puntos por el tipo clase de vida
-             popup= ~paste0( "<I>", SpeciesAccepted, "</I>") # para poner los nombres cientificos en italicos
-          
+Orchid_map = leaflet(Lat_Long) %>% # los datos
+  addTiles() %>%
+  addCircleMarkers(
+    lng = ~Lon, # la longitud
+    lat = ~Lat, # la latitud
+    radius = 2, # el tamaño del punto
+    color = ~ PointUsePalette(OrganismType), # Para colorear los puntos por el tipo clase de vida
+    popup = ~ paste0("<I>", SpeciesAccepted, "</I>") # para poner los nombres cientificos en italicos
   )
 
 Orchid_map
@@ -634,48 +749,101 @@ lifeExpectancy <- function(matU, startLife) {
   return(colSums(N)[startLife])
 }
 
-compadre_life_expect <- New_Data %>% 
-  filter(ProjectionInterval == 1.0) |> # filtrar para matriz de un año solamente 
-  filter(MatrixComposite == "Mean", # filtrar para la matriz promedia
-         MatrixTreatment == "Unmanipulated", # filtrar para la matriz sin manipulación
-         MatrixCaptivity == "W" # filtrar para poblaciones naturales (no en cautiverio)
-         ) %>% 
+compadre_life_expect <- New_Data %>%
+  filter(ProjectionInterval == 1.0) |> # filtrar para matriz de un año solamente
+  filter(
+    MatrixComposite == "Mean", # filtrar para la matriz promedia
+    MatrixTreatment == "Unmanipulated", # filtrar para la matriz sin manipulación
+    MatrixCaptivity == "W" # filtrar para poblaciones naturales (no en cautiverio)
+  ) %>%
   mutate(StageID = cdb_id_stages(.)) %>% # crear un ID para las etapas
   cdb_collapse(columns = "StageID") %>% # colapsar las etapas
   cdb_flag() %>% # evaluar las matrices y crear una columna para cada evaluación
-  filter(check_NA_U == FALSE, # filtrar para matrices sin valores faltantes
-         check_zero_U == FALSE, # filtrar para matrices sin valores cero
-         check_singular_U == FALSE) %>% # filtrar para matrices no singulares
+  filter(
+    check_NA_U == FALSE, # filtrar para matrices sin valores faltantes
+    check_zero_U == FALSE, # filtrar para matrices sin valores cero
+    check_singular_U == FALSE
+  ) %>% # filtrar para matrices no singulares
   mutate(matU = matU(.), start_life = mpm_first_active(.)) %>% # extraer la matriz de transición y la etapa de inicio de la vida
   mutate(life_expectancy = mapply(lifeExpectancy, matU, start_life)) %>% # calcular el largo de vida
-  mutate(var_life_expectancy = mapply(life_expect_var, matU, start= 1)) %>% # calcular la varianza del largo de vida
-  mutate(low_CI_var_LS= life_expectancy-1.96*sqrt(var_life_expectancy)) %>% # calcular el intervalo de confianza inferior
-  mutate(high_CI_var_LS= life_expectancy+1.96*sqrt(var_life_expectancy)) %>%  # calcular el intervalo de confianza superior
+  mutate(var_life_expectancy = mapply(life_expect_var, matU, start = 1)) %>% # calcular la varianza del largo de vida
+  mutate(low_CI_var_LS = life_expectancy - 1.96 * sqrt(var_life_expectancy)) %>% # calcular el intervalo de confianza inferior
+  mutate(
+    high_CI_var_LS = life_expectancy + 1.96 * sqrt(var_life_expectancy)
+  ) %>% # calcular el intervalo de confianza superior
   mutate(OrganismType = reorder(OrganismType, life_expectancy, median)) # ordenar las especies por el largo de vida
 
+```
 
 
+```{r, eval=FALSE}
+sort(names(New_Data))
+compadre_life_expect <- New_Data %>%
+  # Filter based on metadata first to reduce the size of the database
+  filter(ProjectionInterval == 1.0) %>%
+  filter(
+    MatrixComposite == "Mean",
+    MatrixTreatment == "Unmanipulated",
+    MatrixCaptivity == "W"
+  ) %>%
+  
+  # Then perform checks and data preparation
+  cdb_flag() %>% # Check for missing values in matrices (returns check_NA_*)
+  filter(
+    check_NA_U == FALSE # Ensure no missing values in the survival matrix
+  ) %>%
+  
+  # Then work on the matrices themselves
+  cdb_collapse(columns = "StageID") %>%
+  mutate(matU = matU(.), start_life = mpm_first_active(.)) %>%
+  
+  # Perform further checks on the matrices
+  filter(
+    map_lgl(matU, ~ all(. > 0)), # Check for zero values in the survival matrix
+    map_lgl(matU, ~ is_invertible(.)) # Check for singularity
+  ) %>%
+  
+  # Finally, perform calculations and mutations
+  mutate(life_expectancy = mapply(lifeExpectancy, matU, start_life)) %>%
+  mutate(var_life_expectancy = mapply(life_expect_var, matU, start = 1)) %>%
+  mutate(low_CI_var_LS = life_expectancy - 1.96 * sqrt(var_life_expectancy)) %>%
+  mutate(high_CI_var_LS = life_expectancy + 1.96 * sqrt(var_life_expectancy)) %>%
+  mutate(OrganismType = reorder(OrganismType, life_expectancy, median))
+```
 
+```{r, eval=FALSE}
 
-OrchidLS=compadre_life_expect %>% 
-  select(mat, SpeciesAccepted, OrganismType, SpeciesAccepted, life_expectancy, low_CI_var_LS, high_CI_var_LS) %>% 
+OrchidLS = compadre_life_expect %>%
+  select(
+    mat,
+    SpeciesAccepted,
+    OrganismType,
+    SpeciesAccepted,
+    life_expectancy,
+    low_CI_var_LS,
+    high_CI_var_LS
+  ) %>%
   arrange(desc(life_expectancy)) # tabla de los resultados
 
 ```
 
-```{r Compr37}
+```{r Compr37, eval=FALSE}
 
-New_Data %>% 
+New_Data@data %>%
   filter(ProjectionInterval == 1.0) |> # filtrar para matriz de un año
-  filter(MatrixComposite == "Mean", # filtrar para la matriz promedia
-         MatrixTreatment == "Unmanipulated", # filtrar para la matriz sin manipulación
-         MatrixCaptivity == "W" # filtrar para poblaciones naturales (no en cautiverio)
-         ) %>% 
+  filter(
+    MatrixComposite == "Mean", # filtrar para la matriz promedia
+    MatrixTreatment == "Unmanipulated", # filtrar para la matriz sin manipulación
+    MatrixCaptivity == "W" # filtrar para poblaciones naturales (no en cautiverio)
+  ) %>%
   mutate(StageID = cdb_id_stages(.)) %>% # crear un ID para las etapas
   cdb_collapse(columns = "StageID") %>% # colapsar las etapas
   cdb_flag() %>% # evaluar las matrices y crear una columna para cada evaluación
   filter(check_zero_C == FALSE) # filtrar para matrices sin valores faltantes
-          # filtrar para matrices sin valores cero
+# filtrar para matrices sin valores cero
+
+
+
          
 ```
 
@@ -683,24 +851,30 @@ Visualizar el largo de vida por plantas epifitas versus terrestres. Nota aquí q
 
 Calculando el promedio y la desviación estándar de la esperanza de vida de las orquídeas.
 
-```{r Compr38}
+```{r Compr38, eval=FALSE}
 
-OrchidLS |> 
-  group_by(OrganismType) |> 
-  summarize(mean_LS= mean(life_expectancy, na.rm=TRUE),
-            sd_LS = sd(life_expectancy, na.rm=TRUE))
+OrchidLS |>
+  group_by(OrganismType) |>
+  summarize(
+    mean_LS = mean(life_expectancy, na.rm = TRUE),
+    sd_LS = sd(life_expectancy, na.rm = TRUE)
+  )
 ```
 
 Haciendo una figura del largo de vida de las especies epífitas y terrestres. Nota que la escala es logarítmica.
 
-```{r}
+```{r, eval=FALSE}
 
-ggplot2::ggplot(OrchidLS, aes(OrganismType, life_expectancy, colour=OrganismType)) +
-  geom_boxplot() +geom_point()+
+ggplot2::ggplot(
+  OrchidLS,
+  aes(OrganismType, life_expectancy, colour = OrganismType)
+) +
+  geom_boxplot() +
+  geom_point() +
   scale_y_log10() +
   coord_flip() +
-  labs(x = NULL, y = "Life expectancy (log(years))")+
-  rlt_theme+
+  labs(x = NULL, y = "Life expectancy (log(years))") +
+  rlt_theme +
   theme(legend.position = "none")
 
 ggsave("Figures/Life_Span.png")
@@ -716,22 +890,28 @@ low_CI_var_LS high_CI_var_LS
 
 ```{r Compr39}
 
-#SPECIES_O$SpeciesAccepted <- fct_reorder(SPECIES_O$SpeciesAccepted, SPECIES_O$StudyStart, .desc = FALSE) # Ordenar por fecha de inicio del estudio 
+#SPECIES_O$SpeciesAccepted <- fct_reorder(SPECIES_O$SpeciesAccepted, SPECIES_O$StudyStart, .desc = FALSE) # Ordenar por fecha de inicio del estudio
 
-#compadre_life_expect |> select(mat, Genus, SpeciesAccepted, life_expectancy) |> 
-#  group_by(SpeciesAccepted) |> 
- # summarize(low_CI_var_LS= life_expectancy-1.96*sqrt(var_life_expectancy),
+#compadre_life_expect |> select(mat, Genus, SpeciesAccepted, life_expectancy) |>
+#  group_by(SpeciesAccepted) |>
+# summarize(low_CI_var_LS= life_expectancy-1.96*sqrt(var_life_expectancy),
 #            high_CI_var_LS= life_expectancy+1.96*sqrt(var_life_expectancy))
 
-
-ggplot(compadre_life_expect, aes(x=reorder(SpeciesAccepted, life_expectancy), life_expectancy, colour=OrganismType)) +
- # geom_boxplot() +
-  geom_point()+
+ggplot(
+  compadre_life_expect,
+  aes(
+    x = reorder(SpeciesAccepted, life_expectancy),
+    life_expectancy,
+    colour = OrganismType
+  )
+) +
+  # geom_boxplot() +
+  geom_point() +
   scale_y_log10() +
   coord_flip() +
   labs(x = NULL, y = "Life expectancy (log(years))")
 #  rlt_theme+
-  #theme(legend.position = "none")
+#theme(legend.position = "none")
 
 #ggsave("Figures/Genus_Life_Span.png")
 ```
@@ -744,20 +924,26 @@ Evaluando el largo de vida de las especies de *Caladenia* solamente
 
 #SPECIES_O$SpeciesAccepted <- fct_reorder(SPECIES_O$SpeciesAccepted, SPECIES_O$StudyStart, .desc = FALSE)
 
-compadre_life_expect |> 
-  group_by(Genus) |> 
-  summarize(mean_LS= mean(life_expectancy, na.rm=TRUE),
-            sd_LS = sd(life_expectancy, na.rm=TRUE)) |> 
+compadre_life_expect |>
+  group_by(Genus) |>
+  summarize(
+    mean_LS = mean(life_expectancy, na.rm = TRUE),
+    sd_LS = sd(life_expectancy, na.rm = TRUE)
+  ) |>
   filter(Genus %in% c("Caladenia"))
 
-compadre_life_expect |> 
-  filter(Genus %in% c("Caladenia")) |> 
-ggplot( aes(x=reorder(SpeciesAccepted, life_expectancy), life_expectancy, colour=OrganismType)) +
-  geom_point()+
+compadre_life_expect |>
+  filter(Genus %in% c("Caladenia")) |>
+  ggplot(aes(
+    x = reorder(SpeciesAccepted, life_expectancy),
+    life_expectancy,
+    colour = OrganismType
+  )) +
+  geom_point() +
   scale_y_log10() +
   coord_flip() +
-  labs(x = NULL, y = "Life expectancy (years)")+
-  rlt_theme+
+  labs(x = NULL, y = "Life expectancy (years)") +
+  rlt_theme +
   theme(legend.position = "none")
 
 ggsave("Figures/Caladenia_Life_Span.png")
@@ -767,15 +953,13 @@ ggsave("Figures/Caladenia_Life_Span.png")
 
 unique(compadre_life_expect$OrganismType) #Test difference in life span.
 
-t.test(life_expectancy~OrganismType, data=compadre_life_expect)
+t.test(life_expectancy ~ OrganismType, data = compadre_life_expect)
 
 
 shapiro.test(compadre_life_expect$life_expectancy) # Not normaly distributed
 
 
-
-
-leveneTest(life_expectancy~OrganismType, data=compadre_life_expect) # equal variance but not notmaly distributed
+leveneTest(life_expectancy ~ OrganismType, data = compadre_life_expect) # equal variance but not notmaly distributed
 
 ```
 
@@ -787,7 +971,10 @@ Y se necesita cargar el archivo de funciones de **Rallfun-v38.txt** que se encue
 
 ```{r Compr42, echo=FALSE, eval=FALSE}
 
-source("/Users/rlt/Library/CloudStorage/Dropbox/GitHub_Dropbox_Drive/GitHub/Diagnostico_Poblacional/Diagnostico_Poblacional/Rallfun-v38.txt", chdir = T) # Home computer
+source(
+  "/Users/rlt/Library/CloudStorage/Dropbox/GitHub_Dropbox_Drive/GitHub/Diagnostico_Poblacional/Diagnostico_Poblacional/Rallfun-v38.txt",
+  chdir = T
+ # Home computer
 #source("/Users/rlt/Dropbox/METAS+COHORT_D/Rallfun-v38.txt", chdir = T)
 #source("/Users/rlt/Dropbox/Ackermanstuff/Pollinator_Interaction/Specificity_Index_pollinators/Rallfun-v38.txt", chdir = T) ## Work laptop Computer
 #source("/Users/raymondtremblay/Dropbox/METAS+COHORT_D/Rallfun-v38.txt", chdir = T) #When used on Monique
@@ -797,19 +984,25 @@ source("/Users/rlt/Library/CloudStorage/Dropbox/GitHub_Dropbox_Drive/GitHub/Diag
 
 unique(compadre_life_expect$OrganismType)
 
-Cf=cdb_flatten(compadre_life_expect)
+Cf = cdb_flatten(compadre_life_expect)
 
 
-YSEC_T=Cf %>% 
-  dplyr::select("life_expectancy", "OrganismType") %>% 
-  filter(OrganismType== "Herbaceous perennial")
+YSEC_T = Cf %>%
+  dplyr::select("life_expectancy", "OrganismType") %>%
+  filter(OrganismType == "Herbaceous perennial")
 
 YSEC_T
-YSEC_E=Cf %>% 
-  dplyr::select("life_expectancy", "OrganismType") %>% 
-  filter(OrganismType== "Epiphyte")
+YSEC_E = Cf %>%
+  dplyr::select("life_expectancy", "OrganismType") %>%
+  filter(OrganismType == "Epiphyte")
 
-yuenbt(YSEC_T$life_expectancy, YSEC_E$life_expectancy, alpha=.05, nboot=10000, side=T)
+yuenbt(
+  YSEC_T$life_expectancy,
+  YSEC_E$life_expectancy,
+  alpha = .05,
+  nboot = 10000,
+  side = T
+)
 
 ```
 

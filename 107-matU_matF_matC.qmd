@@ -41,7 +41,8 @@ matU <- rbind(
   c(0.001, 0.4, 0.8)
 )
 stages <- c("Plantulas", "Juvenil", "Adulto")
-plot_life_cycle(matU, stages=stages)
+plot_life_cycle(matU, stages = stages)
+
 ```
 
 ------------------------------------------------------------------------
@@ -58,7 +59,8 @@ matF <- rbind(
   c(0.0, 0.0, 0.0)
 )
 stages <- c("Plantulas", "Ind Pequeños", "Ind Grande")
-plot_life_cycle(matF, stages=stages)
+plot_life_cycle(matF, stages = stages)
+
 ```
 
 ------------------------------------------------------------------------
@@ -86,6 +88,7 @@ A continuación vemos un ejemplo de una matriz de clonación. El único ejemplo 
 ```{r mat4, message=FALSE}
 
 compadre <- cdb_fetch("compadre")
+
 ```
 
 ------------------------------------------------------------------------
@@ -99,15 +102,13 @@ En el siguiente script se suma todos los valores de la matriz de clonaje (matC).
 #Encontrar MPP con matC clonaje no cero
 compadre$clonality <- 0
 
-for (i in 1:dim(compadre)[1]){
+for (i in 1:dim(compadre)[1]) {
   compadre$clonality[i] <- sum(compadre$mat[[i]]@matC) # suma de todos los valores de la matriz de clonación
 }
 
-# table(compadre$clonality) # Remover el "#" para ver todos los resultados, 
+# table(compadre$clonality) # Remover el "#" para ver todos los resultados,
 
-head(table(compadre$clonality)) #Se observa la suma de las matrices de clonaje, hay 8162 especies que no tiene información en matC, una población con un matC que su suma es 0.001, etc.    
-
-
+head(table(compadre$clonality)) #Se observa la suma de las matrices de clonaje, hay 8162 especies que no tiene información en matC, una población con un matC que su suma es 0.001, etc.
 
 ```
 
@@ -130,12 +131,11 @@ Ahora filtrar para orquídeas solamente y para aquellos con matC no nulo (clonal
 
 ```{r mat7}
 
-orchid_clonal <- compadre_flagged %>% 
-  filter(Family == "Orchidaceae") %>%    # filtrar para orquídeas
-  filter(clonality > 0)                  # filtrar para aquellos con matC no nulo
+orchid_clonal <- compadre_flagged %>%
+  filter(Family == "Orchidaceae") %>% # filtrar para orquídeas
+  filter(clonality > 0) # filtrar para aquellos con matC no nulo
 
 # Visualizar la base de datos de orquídea, se observa solamente dos matrices de clonaje
-
 
 unique(orchid_clonal$SpeciesAuthor) # hay dos poblaciones solamente en toda la base de datos
 
@@ -159,18 +159,16 @@ Cyp_cal_2
 
 #### Buscar la población que tiene **matC** máxima.
 
-En esta codigo, se evaluá todas las orquideas donde tiene una matriz de clonaje y se filtra para la que tiene la suma de matC máxima. En este caso, es la misma población que se seleccionó en el script anterior.
+En esta código, se evaluá todas las orquídeas donde tiene una matriz de clonaje y se filtra para la que tiene la suma de matC máxima. En este caso, es la misma población que se seleccionó en el script anterior.
 
 ```{r mat9}
 
-for (i in 1:dim(orchid_clonal)[1]){
+for (i in 1:dim(orchid_clonal)[1]) {
   orchid_clonal$clonality[i] <- sum(orchid_clonal$mat[[i]]@matC) # suma de todos los valores de la matriz de clonación
 }
 
-orchid_clonal %>% 
+orchid_clonal %>%
   filter(clonality == max(clonality)) # filtrar para la suma de matC máximo
-
-
 
 ```
 
@@ -186,6 +184,7 @@ Cyp_cal_2 <- orchid_clonal %>%
   filter(MatrixID == 242624)
 
 Cyp_cal_2
+
 ```
 
 ------------------------------------------------------------------------
@@ -210,12 +209,14 @@ Podemos visualizar las transiciones de las diferentes etapas por clonación. Usa
 #remotes::install_github("jonesor/Rage") # Instalar de Github para la más reciente versión
 library(Rage)
 
-matC=matC(Cyp_cal_2) # extraemos la matriz de clonación de este especie/población
+matC = matC(Cyp_cal_2) # extraemos la matriz de clonación de este especie/población
 
 
-
-plot_life_cycle(matC[[1]], stages = c("Dormant", "Smallest", "Small", "Inter", "Large", "ExtraLarge"), node_order = c(2,1,3,4,5, 6))
-
+plot_life_cycle(
+  matC[[1]],
+  stages = c("Dormant", "Smallest", "Small", "Inter", "Large", "ExtraLarge"),
+  node_order = c(2, 1, 3, 4, 5, 6)
+)
 
 ```
 
@@ -228,10 +229,9 @@ plot_life_cycle(matC[[1]], stages = c("Dormant", "Smallest", "Small", "Inter", "
 #Buscando MPM con matrix de clonación
 compadre$clonality <- 0
 
-for (i in 1:dim(compadre)[1]){
+for (i in 1:dim(compadre)[1]) {
   compadre$clonality[i] <- sum(compadre$mat[[i]]@matC) # suma de todos los valores de la matriz de clonación
 }
-
 
 ```
 
@@ -243,7 +243,7 @@ Ver cual las lista especie tienen incluido la matriz de clonación, **matC**. En
 
 ```{r mat15}
 
-Clonal_Species=compadre %>% 
+Clonal_Species = compadre %>%
   filter(clonality > 0) %>% # filtrar para aquellos con matC no nulo
   select(mat, SpeciesAuthor, Family, clonality) %>% # seleccionar las columnas de interes
   arrange(desc(clonality)) # ordenar por la columna de clonación
@@ -260,7 +260,7 @@ Hay 44 familias de plantas donde la **matC** esta incluida en la dinámica.
 ```{r mat16}
 
 # Ver la lista de familias únicas con clonación
-Families=(as.data.frame(sort(unique(Clonal_Species$Family))))
+Families = (as.data.frame(sort(unique(Clonal_Species$Family))))
 
 head(Families) # ver las primeras 6 familias
 ```
@@ -271,13 +271,12 @@ head(Families) # ver las primeras 6 familias
 
 ```{r mat17}
 
-Bromeliaceae=Clonal_Species %>% 
+Bromeliaceae = Clonal_Species %>%
   filter(Family == "Bromeliaceae") %>% # fpara la familia de bromelias
   select(mat, SpeciesAuthor, Family, clonality) %>% # seleccionar las columnas de interés
   arrange(desc(clonality)) # ordenar por la columna de clonación
 
 Bromeliaceae
-
 
 
 ```
@@ -286,20 +285,22 @@ Seleccionamos una especie de bromelia, *Aechmea nudicaulis* [@sampaio2005ramet],
 
 ```{r mat18, echoFALSE}
 
-Aechmea=compadre %>% 
+Aechmea = compadre %>%
   filter(clonality > 0) %>% # filtrar para aquellos con matC no nulo
-  filter(SpeciesAuthor == "Aechmea_nudicaulis") %>%  # para 
-  arrange(desc(clonality)) 
+  filter(SpeciesAuthor == "Aechmea_nudicaulis") %>% # para
+  arrange(desc(clonality))
 
 
-Aechmea=Aechmea %>% 
-  filter(clonality == max(clonality))  # filtrar para la suma de matC máximo
-  
- Ae_matC=matC(Aechmea) 
-  
- plot_life_cycle(Ae_matC[[1]], stages = c("rametes joven", "rametes vegetativo", "rametes con flores"), node_order = c(1,2,3))
+Aechmea = Aechmea %>%
+  filter(clonality == max(clonality)) # filtrar para la suma de matC máximo
 
+Ae_matC = matC(Aechmea)
 
+plot_life_cycle(
+  Ae_matC[[1]],
+  stages = c("rametes joven", "rametes vegetativo", "rametes con flores"),
+  node_order = c(1, 2, 3)
+)
 
 
 ```

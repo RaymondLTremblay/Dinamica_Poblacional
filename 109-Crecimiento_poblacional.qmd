@@ -39,9 +39,10 @@ mat1.1 <- matrix (c(0.43, 0.00, 1.03,  0.96,
                     0.32, 0.91, 0.00,  0.00, 
                     0.00, 0.05, 0.82, 0.00,
                     0.00, 0.00, 0.17,  0.99), 
-              nrow = 4, ncol=4, byrow = TRUE, dimnames = list(estadios, estadios))
+          nrow = 4, ncol=4, byrow = TRUE, 
+          dimnames = list(estadios, estadios))
 
-plot_life_cycle(mat1.1, stages=estadios, fontsize = 10)
+plot_life_cycle(mat1.1, stages = estadios, fontsize = 10)
 
 ```
 
@@ -55,9 +56,10 @@ mat1.2 <- matrix (c(0.43, 0.00,  0.85,  3.38,
                     0.32, 0.90,  0.00,  0.00, 
                     0.00, 0.02,  0.77,  0.11,
                     0.00, 0.00,  0.19,  0.88), 
-                  nrow = 4, ncol=4, byrow = TRUE, dimnames = list(estadios, estadios))
+          nrow = 4, ncol=4, byrow = TRUE, 
+          dimnames = list(estadios, estadios))
 
-plot_life_cycle(mat1.2, stages=estadios, fontsize = 10)
+plot_life_cycle(mat1.2, stages = estadios, fontsize = 10)
 
 ```
 
@@ -71,17 +73,14 @@ En el primer año se observa que la población tiene un valor de $\lambda$ \> 1.
 
 ```{r, cre_pop_2}
 
-options(digits=5) # Ajusta el número de decimales a mostrar
+options(digits = 5) # Ajusta el número de decimales a mostrar
 ##Calcula la lambda asintótica de cada población y año
-eig1.1<-eigen.analysis(mat1.1) 
+eig1.1 <- eigen.analysis(mat1.1)
 eig1.1$lambda
-eig1.2<-eigen.analysis(mat1.2) 
+eig1.2 <- eigen.analysis(mat1.2)
 eig1.2$lambda
 
-t=tribble(  ~Año, ~lambda,
-  "Año 1", eig1.1$lambda,
-  "Año 2", eig1.2$lambda
-)
+t = tribble(~Año, ~lambda, "Año 1", eig1.1$lambda, "Año 2", eig1.2$lambda)
 
 gt::gt(t)
 
@@ -114,7 +113,7 @@ A partir de una población inicial de 10 individuos en cada estadio (25% del tot
 ```{r}
 
 
-pop_1 <- pop.projection(mat1.1, n=c(10, 10, 10, 10), iterations=7)
+pop_1 <- pop.projection(mat1.1, n = c(10, 10, 10, 10), iterations = 7)
 pop_1
 
 ```
@@ -124,12 +123,16 @@ pop_1
 El crecimiento poblacional proyectado por año se puede visualizar, usando la función **plot** en el paquete **popbio**. En este caso, se observa que la población crece de forma exponencial, lo que es consistente con el valor de $\lambda$ calculado anteriormente. Este mismo código puede ser usado para responder las siguientes preguntas: ¿Qué pasa si cambian el número de individuos en cada estadio inicial? ¿Qué pasa si cambian la cantidad de iteraciones/time a un número grande? Para esto, se tiene que modificar **n** y el número 7, que representa las iteraciones.
 
 ```{r}
-n=c(10,10,10,10) # Definir el número de individuos en cada estadio inicial
-cambio=pop.projection(mat1.1, n, 7)
+n = c(10, 10, 10, 10) # Definir el número de individuos en cada estadio inicial
+cambio = pop.projection(mat1.1, n, 7)
 
-plot(cambio$pop.size, type="b", xlab="Año", ylab="Tamaño poblacional", main="Proyección de la población 1, año 1")
-
-
+plot(
+  cambio$pop.size,
+  type = "b",
+  xlab = "Año",
+  ylab = "Tamaño poblacional",
+  main = "Proyección de la población 1, año 1"
+)
 
 ```
 
@@ -139,10 +142,10 @@ La proporción esperada de individuos en cada estadio por año proyectado se pue
 
 ```{r}
 
-n=c(10,10,10,10) # Definir el número de individuos en cada estadio inicial
-cambio=pop.projection(mat1.1, n, 7)
+n = c(10, 10, 10, 10) # Definir el número de individuos en cada estadio inicial
+cambio = pop.projection(mat1.1, n, 7)
 
-stage.vector.plot(cambio$stage.vectors, col=2:4, ylim=c(0, 0.6))
+stage.vector.plot(cambio$stage.vectors, col = 2:4, ylim = c(0, 0.6))
 ```
 
 ## Comparación de valor de $\lambda$ entre poblaciones (1 y 2)
@@ -158,12 +161,14 @@ mat2.1 <- matrix (c(0.50, 0.00, 0.00, 0.001,
                     0.16, 0.79, 0.00, 0.00, 
                     0.00, 0.12, 0.78, 0.11,
                     0.00, 0.00, 0.21, 0.88), 
-                  nrow = 4, ncol=4, byrow = TRUE, dimnames = list(estadios, estadios))
+          nrow = 4, ncol=4, byrow = TRUE,
+          dimnames = list(estadios, estadios))
 
-  mat2.1
+mat2.1
 
-eig2.1<-eigen.analysis(mat2.1) 
+eig2.1 <- eigen.analysis(mat2.1)
 eig2.1$lambda
+
 ```
 
 La población bajo extracción tiene un valor de $\lambda$ menor (0.990) a aquella en que no se observa esta actividad de manejo. Sin embargo, debemos ser cautelosos con nuestra interpretación sobre los efectos de la extracción, debido a que cualquier diferencia relacionada con la extracción está mezclada o enmascarada con las diferencias entre los dos sitios. Para lograr una comparación robusta, se debe llevar a cabo un experimento de extracción en el mismo sitio o tener varios sitios de extracción y también varios sitios sin extracción.
@@ -192,17 +197,17 @@ Usando la función **boot.transitions** del paquete **popbio**, se pueden calcul
 #Indica el directorio de trabajo y definir los estadios
 
 
-laelia1<-read.table("data/laelia1.txt", header=TRUE) # subir los datos de la población 1, año 1 
+laelia1 <- read.table("data/laelia1.txt", header = TRUE) # subir los datos de la población 1, año 1
 
-pop1.1=laelia1 # renombrar el data frame para facilitar su uso 
+pop1.1 = laelia1 # renombrar el data frame para facilitar su uso
 
-stages<-c("pl","j","a1","a2") # identificación de los estadios
+stages <- c("pl", "j", "a1", "a2") # identificación de los estadios
 
-n<-nrow(pop1.1) # Crear una variable n que contiene el número de filas del data.frame
+n <- nrow(pop1.1) # Crear una variable n que contiene el número de filas del data.frame
 
-x<-boot.transitions(pop1.1, 1000, sort=stages) # la boot.transition selecciona al azar la cantidad de individuos en cada estadios: función esta en el paquete "popbio"
+x <- boot.transitions(pop1.1, 1000, sort = stages) # la boot.transition selecciona al azar la cantidad de individuos en cada estadios: función esta en el paquete "popbio"
 
-ic1<-quantile(x$lambda, c(0.025, 0.975))
+ic1 <- quantile(x$lambda, c(0.025, 0.975))
 ic1
 
 #IC para la población 1, año 2
@@ -214,15 +219,15 @@ ic1
 ```{r, cre_pop_4b}
 
 
-laelia2<-read.table("data/laelia2.txt", header=TRUE)
+laelia2 <- read.table("data/laelia2.txt", header = TRUE)
 
-pop1.2=laelia2
+pop1.2 = laelia2
 
-stages<-c("pl","j","a1","a2")
+stages <- c("pl", "j", "a1", "a2")
 
-n<-nrow(pop1.2)
-x2<-boot.transitions(pop1.2, 1000, sort=stages)
-ic2<-quantile(x2$lambda, c(0.025, 0.975))
+n <- nrow(pop1.2)
+x2 <- boot.transitions(pop1.2, 1000, sort = stages)
+ic2 <- quantile(x2$lambda, c(0.025, 0.975))
 ic2
 
 #Nota:  Los datos de algunas transiciones especificas no siempre se obtienen de los censos poblacionales, por lo que éstos pueden provenir de otros experimentos. Por ejemplo, si las observaciones de campo fueran nulas o escasas para la transición de semilla a plántula, éste dato se puede obtener de la literatura consultada o de experimentos previos o usar el método descrito en "Método bayesiano para calcular transciones y fecundidades". En estos casos se incorporaron las transiciones a la matriz de la siguiente forma al estimar el IC: 
@@ -241,7 +246,7 @@ bind_rows(ic1, ic2) %>%
   mutate(year = c("año 1", "año 2")) %>%
   select(year, everything()) %>%
   rename("IC 2.5%" = `2.5%`, "IC 97.5%" = `97.5%`) %>%
-  knitr::kable(digits= 3, caption = "Intervalos de confianza de λ")
+  knitr::kable(digits = 3, caption = "Intervalos de confianza de λ")
 ```
 
 ------------------------------------------------------------------------
@@ -270,8 +275,8 @@ En lo anterior, una vez más, se asume que las condiciones bajo las cuales se co
 
 ```{r, cre_pop_5}
 
-matrices<-list(mat1.1, mat1.2) # crear una lista de matrices de las poblaciones 1 de los 2 periodos de estudio
-estocástico<-stoch.growth.rate(matrices, maxt=50000, verbose=FALSE) ##Selección aleatoria de matrices
+matrices <- list(mat1.1, mat1.2) # Crear una lista de matrices de las poblaciones 1 de los 2 periodos de estudio
+estocástico <- stoch.growth.rate(matrices, maxt = 50000, verbose = FALSE) # Selección aleatoria de matrices
 #estocástico
 
 
@@ -284,14 +289,14 @@ Se transforma tasa de base log y se obtiene $λ_e$ por dos métodos (Tuljapukar 
 ```{r, cre_pop_5b}
 
 
-tuljapukar<-exp(estocástico$approx)
-simulation<-exp(estocástico$sim)
+tuljapukar <- exp(estocástico$approx)
+simulation <- exp(estocástico$sim)
 
-#tuljapukar # λ  por Tuljapukar 
+#tuljapukar # λ  por Tuljapukar
 #simulation # λ  por simulación
 
-ic.1<-exp(estocástico$sim.CI[1])
-ic.2<-exp(estocástico$sim.CI[2])
+ic.1 <- exp(estocástico$sim.CI[1])
+ic.2 <- exp(estocástico$sim.CI[2])
 
 
 
@@ -326,14 +331,18 @@ En nuestro caso, sabemos que es poco frecuente el reclutamiento episódico obser
 
 ```{r, cre_pop_6}
 
-estocástico.desigual.9<-stoch.growth.rate(matrices, prob=c(0.9,0.1),verbose=FALSE) ## Selección de acuerdo con probabilidades definidas
+estocástico.desigual.9 <- stoch.growth.rate(
+  matrices,
+  prob = c(0.9, 0.1),
+  verbose = FALSE
+) ## Selección de acuerdo con probabilidades definidas
 #estocástico.desigual.9
 
-#Se transforma tasa de base log y se obtiene $λ_e$ por dos métodos 
-tuljapukar<-exp(estocástico.desigual.9$approx)
-simulation<-exp(estocástico.desigual.9$sim)
-ic.1<-exp(estocástico.desigual.9$sim.CI[1])
-ic.2<-exp(estocástico.desigual.9$sim.CI[2])
+#Se transforma tasa de base log y se obtiene $λ_e$ por dos métodos
+tuljapukar <- exp(estocástico.desigual.9$approx)
+simulation <- exp(estocástico.desigual.9$sim)
+ic.1 <- exp(estocástico.desigual.9$sim.CI[1])
+ic.2 <- exp(estocástico.desigual.9$sim.CI[2])
 
 #tuljapukar
 #simulation
@@ -359,13 +368,17 @@ A continuación, evaluamos cómo se ve afectada $λ_e$ al disminuir o aumentar l
 
 ```{r, cre_pop_7}
 
-estocástico.desigual.2<-stoch.growth.rate(matrices, prob=c(0.2,0.8),verbose=FALSE) 
+estocástico.desigual.2 <- stoch.growth.rate(
+  matrices,
+  prob = c(0.2, 0.8),
+  verbose = FALSE
+)
 #estocástico.desigual.2
 
-tuljapukar<-exp(estocástico.desigual.2$approx)
-simulation<-exp(estocástico.desigual.2$sim)
-ic.1<-exp(estocástico.desigual.2$sim.CI[1])
-ic.2<-exp(estocástico.desigual.2$sim.CI[2])
+tuljapukar <- exp(estocástico.desigual.2$approx)
+simulation <- exp(estocástico.desigual.2$sim)
+ic.1 <- exp(estocástico.desigual.2$sim.CI[1])
+ic.2 <- exp(estocástico.desigual.2$sim.CI[2])
 
 #tuljapukar
 #simulation

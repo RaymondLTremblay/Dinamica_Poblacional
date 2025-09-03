@@ -11,9 +11,20 @@ Por: Raymond L. Tremblay
 ```{r, sin_sentido_1, message=FALSE, warnng=FALSE}
 
 #devtools::install_github("rich-iannone/DiagrammeR") # Instalar directamente de github para tener la versión más reciente
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load("DiagrammeR", "Rage", "popdemo", "popbio", "interpretCI", 
-               "MCMCpack", "ggplot2", "plyr", "reshape")
+if (!require("pacman")) {
+  install.packages("pacman")
+}
+pacman::p_load(
+  "DiagrammeR",
+  "Rage",
+  "popdemo",
+  "popbio",
+  "interpretCI",
+  "MCMCpack",
+  "ggplot2",
+  "plyr",
+  "reshape"
+)
 
 library(DiagrammeR)
 library(Rage)
@@ -27,7 +38,6 @@ library(interpretCI)
 library(MCMCpack)
 library(plyr)
 library(reshape2)
-
 
 ```
 
@@ -62,13 +72,13 @@ Sp1matF <- rbind(
   c(0.0, 0.0, 0.0)
 ) # fertility matrix
 
-Sp1matA = Sp1matU+Sp1matF # TF matrix
+Sp1matA = Sp1matU + Sp1matF # TF matrix
 
 lambda(Sp1matA) # lambda es 1, lo que indica que la población no cambia
 
 stages <- c("plantula", "juvenil", "adulto")
 
-plot_life_cycle(Sp1matA, stages=stages, fontsize = 0)
+plot_life_cycle(Sp1matA, stages = stages, fontsize = 0)
 ```
 
 Si analizamos **Sp1matU**, asumimos que ninguno de los individuos muestreados en etapa adulta muere, en ningún momento!!! Claramente esto no es realista. Para cualquier especie, la probabilidad de muerte en cualquier etapa nunca es cero (aunque podría ser muy pequeña) y, por lo tanto, nuestra matriz no tiene sentido biológico. Considere una especie de árbol, como los árboles de *Sequoia*, en donde es muy probable que la supervivencia de los árboles grandes sea muy alta entre un año y otro y por lo tanto la **supervivencia observada** sea del 100%, pero, este 100% no es realista a largo plazo. Hay que diferenciar entre lo que se observa en un periodo de muestreo y las probabilidades a largo plazo. Es posible que en el sitio de estudio NO se observó mortalidad de los árboles grandes entre los dos periodos de muestreo, lo que resultaría en una mortalidad de cero, sin embargo, este valor no es real a largo plazo. Ese estimado de campo puede ser un resultado de un tamaño de muestra insuficiente o de eventos son raros (aun con tamaño de muestra grandes).
@@ -77,11 +87,11 @@ En el siguente *script* mostramos que la población no cambia después de 7-8 pe
 
 ```{r, sin_sentido_3}
 
-n=c(50,50,50)
+n = c(50, 50, 50)
 
 
 truelambda(Sp1matU) # despues de unos periodos de tiempo vemos que el crecimiento poblacional es 1
-pop.projection(Sp1matU, n=n)$pop.changes # lista del cambio poblacional en 19 años
+pop.projection(Sp1matU, n = n)$pop.changes # lista del cambio poblacional en 19 años
 ```
 
 ------------------------------------------------------------------------
@@ -106,11 +116,11 @@ Sp1matF <- rbind(
   c(0.0, 0.0, 0.0)
 ) # fertility matrix
 
-Sp1matA_2=Sp1matU_2+Sp1matF
+Sp1matA_2 = Sp1matU_2 + Sp1matF
 
 lambda(Sp1matA_2) # lambda es 0.995, lo que indica que la población disminuye
 
-pop.projection(Sp1matU_2, n=n)$pop.changes # lista del cambio poblacional en 19 años
+pop.projection(Sp1matU_2, n = n)$pop.changes # lista del cambio poblacional en 19 años
 
 
 ```
@@ -167,11 +177,11 @@ N_PPM=tribble(~Especie, ~"Población", ~Etapas,~"Tamaño de Muestrea", ~Referenc
 
 
 
-list_fl=N_PPM %>%
+list_fl = N_PPM %>%
   flextable() %>%
   theme_zebra() %>%
-  theme_box() |> 
-  colformat_md() %>% 
+  theme_box() |>
+  colformat_md() %>%
   set_table_properties(layout = "autofit")
 
 list_fl
@@ -201,11 +211,11 @@ Sp1matF <- rbind(
   c(0.0, 0.0, 0.0)
 ) # fertility matrix
 
-Sp1matA_NT = Sp1matU_NT+Sp1matF # TF matrix
+Sp1matA_NT = Sp1matU_NT + Sp1matF # TF matrix
 
 stages <- c("plantula", "juvenil", "adulto")
 
-plot_life_cycle(Sp1matA_NT, stages=stages, fontsize = 0)
+plot_life_cycle(Sp1matA_NT, stages = stages, fontsize = 0)
 ```
 
 #### Función para evaluar si una matriz es irreducible
@@ -220,7 +230,7 @@ isIrreducible(Sp1matA_NT) # para la matriz TF, falta una etapa de transición
 # Ahora considerando Sp1matA_2
 # En esta matriz que incluye todas las transiciones y la fertilidad el resultado es "TRUE"
 Sp1matA_2
-isIrreducible(Sp1matA_2) 
+isIrreducible(Sp1matA_2)
 ```
 
 ------------------------------------------------------------------------
@@ -248,11 +258,11 @@ Sp1matF <- rbind(
   c(0.0, 0.0, 0.0)
 ) # fertility matrix
 
-Sp1matA_NS = Sp1matU_NS+Sp1matF # TF matrix
+Sp1matA_NS = Sp1matU_NS + Sp1matF # TF matrix
 
 stages <- c("plantula", "juvenil", "adulto")
 
-plot_life_cycle(Sp1matU_NS, stages=stages, fontsize = 0)
+plot_life_cycle(Sp1matU_NS, stages = stages, fontsize = 0)
 
 isIrreducible(Sp1matU_NS)
 ```
@@ -282,11 +292,11 @@ SerapiaF <- rbind(
   c(0.0, 0.0, 0.0, 0.0)
 ) # fertility matrix
 
-SerapiaA = SerapiaU+SerapiaF # TF matrix
+SerapiaA = SerapiaU + SerapiaF # TF matrix
 
 stages <- c("latente", "plantulas", "vegetativa", "adulto")
 
-plot_life_cycle(SerapiaA, stages=stages)
+plot_life_cycle(SerapiaA, stages = stages)
 
 # Tenga en cuenta que la suma de supervivencia para la etapa inicial es mayor de 1, igual a 1.01
 
@@ -319,15 +329,15 @@ Sp1matF <- rbind(
   c(0.0, 0.0, 0.0)
 ) # matriz de fertilidad
 
-Sp1matA_Fert = Sp1matU_Fert+Sp1matF # TF matriz combinada: matA = matU + matF
+Sp1matA_Fert = Sp1matU_Fert + Sp1matF # TF matriz combinada: matA = matU + matF
 
 stages <- c("plantula", "juvenil", "adulto")
 
 lambda(Sp1matA_Fert)
-  
+
 # El cambio de tamaño de la población en 5 periodos de tiempo
 n
-pr <- project(Sp1matA_Fert, vector="n", time=5)
+pr <- project(Sp1matA_Fert, vector = "n", time = 5)
 plot(pr) # Nota que después de solamente 5 años ya la población aumentó a 250,000 individuos
 ```
 
@@ -354,16 +364,16 @@ Sp1matF2 <- rbind(
   c(0.0, 0.0, 0.0, 0.0)
 ) # fertility matrix
 
-Sp1matA_Fert2 = Sp1matU_Fert2+Sp1matF2 # TF matrix
+Sp1matA_Fert2 = Sp1matU_Fert2 + Sp1matF2 # TF matrix
 
 stages <- c("semillas", "plantula", "juvenil", "adulto")
 
-plot_life_cycle(Sp1matA_Fert2, stages=stages)
+plot_life_cycle(Sp1matA_Fert2, stages = stages)
 
 lambda(Sp1matA_Fert2)
 
 # show change in population size
-pr <- project(Sp1matA_Fert2, vector="n", time=5)
+pr <- project(Sp1matA_Fert2, vector = "n", time = 5)
 plot(pr) # Note that now the number of adults did not increase to the level of the previous model
 ```
 
@@ -406,11 +416,11 @@ $$\hat{p}\pm Z_{0.05}*\sqrt{}(\frac{\hat{p}(1-\hat{p})}{n})$$
 -   Z\_{0.05} es el valor crítico de Z para un IC del 95% = 1.955. Nota que, con ese cálculo, uno de los intervalos de confianza es negativo lo cual es ilógico, ya que es negativo.
 
 ```{r, sin_sentido_13}
-n=20
-HCI=p+(1.96*sqrt((p*(1-p))/n)) # IC alto
+n = 20
+HCI = p + (1.96 * sqrt((p * (1 - p)) / n)) # IC alto
 HCI
 
-LCI=p-(1.96*sqrt((p*(1-p))/n)) # IC bajo
+LCI = p - (1.96 * sqrt((p * (1 - p)) / n)) # IC bajo
 LCI # Nota que el valor es sin sentido, ya que es negativo (que es una proporción negativa?)
 ```
 
@@ -419,7 +429,7 @@ Un método más fácil es usar la función R *propCI* de la **library(interceptC
 ```{r, sin_sentido_14}
 
 
-resultado=propCI(n=20, p=0.05, alpha=0.05)
+resultado = propCI(n = 20, p = 0.05, alpha = 0.05)
 
 
 resultado
@@ -446,7 +456,7 @@ Dirichlet <- rbind(
 
 stages <- c("plantula", "juvenil", "adulto")
 
-plot_life_cycle(Dirichlet, stages=stages)
+plot_life_cycle(Dirichlet, stages = stages)
 ```
 
 Para evaluar el intervalo ICr del 95% simultáneamente de las cuatro transiciones (plántulas a plántulas, plántulas a juvenil, plántulas a adultos y plántulas a muerte), usamos la **library(MCMCpack)**, que es un paquete dedicado a realizar simulaciones de Monte Carlo de Cadenas Markovianas *Markov Chain Monte Carlo*. Para lo cual usaremos la función *MCmultinomdirichlet*. Tenga en cuenta que la primera lista son las proporciones que se muestran en la matriz para la etapa de plántula c(.50*n,.02*n,.0*n,.3*n) multiplicadas por el tamaño de la muestra n= 25. La segunda lista son los priores bayesianos c(0.5,0.2,0.0001,0.2999), en este caso asumí que la suma de los previas es igual a 1. Esto da como resultado una confianza muy baja en la percepción previa de lo que son las transiciones. Estamos dando muy poco peso a la percepción previa en los análisis. Otro tipo de previa para la transición es que sean iguales, sin embargo, podríamos haber usado c(1,1,.0001, 1), donde este previa sugiere una transición igual para todos menos las plántulas transitan hasta convertirse en adultos. IMPORTANTE: las previas deberían ser **biológicamente realistas**, usando lo conocido de la biología de los organismos que se estudian. Por experiencia y usando la literatura se puede hacer un estimado de las transiciones y usarlo como previa. El concepto de lo anterior no se puede explicar completamente aquí, consulte las siguientes referencia [@tremblay2021population; @van2021bayesian].
@@ -463,20 +473,24 @@ Los resultados en la figura muestran que hay mucha dispersión alrededor de la p
 
 ```{r sin_sentido_16, message=FALSE}
 
-n=25
-L=posteriorPRIORL <- MCmultinomdirichlet(c(.50*n,.2*n,.0*n,.3*n), c(.5,.2,0.0001,.3), mc=100000)
-dfL=as.data.frame(L)
+n = 25
+L = posteriorPRIORL <- MCmultinomdirichlet(
+  c(.50 * n, .2 * n, .0 * n, .3 * n),
+  c(.5, .2, 0.0001, .3),
+  mc = 100000
+)
+dfL = as.data.frame(L)
 t(summary(dfL))
 
 #head(dfL)
-stack_dfL=stack(dfL)
-comb_dfbL= cbind(stack_dfL, T="25")
+stack_dfL = stack(dfL)
+comb_dfbL = cbind(stack_dfL, T = "25")
 
-All_Data3=comb_dfbL
-levels(All_Data3$ind)[levels(All_Data3$ind)=="pi.1"]="Plantulas"
-levels(All_Data3$ind)[levels(All_Data3$ind)=="pi.2"]="Juvenil"
-levels(All_Data3$ind)[levels(All_Data3$ind)=="pi.3"]="Adulto"
-levels(All_Data3$ind)[levels(All_Data3$ind)=="pi.4"]="Muerto"
+All_Data3 = comb_dfbL
+levels(All_Data3$ind)[levels(All_Data3$ind) == "pi.1"] = "Plantulas"
+levels(All_Data3$ind)[levels(All_Data3$ind) == "pi.2"] = "Juvenil"
+levels(All_Data3$ind)[levels(All_Data3$ind) == "pi.3"] = "Adulto"
+levels(All_Data3$ind)[levels(All_Data3$ind) == "pi.4"] = "Muerto"
 
 ```
 
@@ -484,14 +498,16 @@ levels(All_Data3$ind)[levels(All_Data3$ind)=="pi.4"]="Muerto"
 
 ```{r, sin_sentido_17}
 
-ggplot(data=All_Data3, aes(x=values, fill=ind))+
-  geom_density(alpha=.5) +
-  scale_y_continuous(limit=c(0, 5.5))+
-  scale_colour_hue(l=60)+
-  facet_grid(~ind)+
-  ylab("La distribución de las proporciones \n de plantulas que crecen a la siguiente etapas")+
-  xlab("Proporciones")+
-  labs(fill="Etapa de vida")
+ggplot(data = All_Data3, aes(x = values, fill = ind)) +
+  geom_density(alpha = .5) +
+  scale_y_continuous(limit = c(0, 5.5)) +
+  scale_colour_hue(l = 60) +
+  facet_grid(~ind) +
+  ylab(
+    "La distribución de las proporciones \n de plantulas que crecen a la siguiente etapas"
+  ) +
+  xlab("Proporciones") +
+  labs(fill = "Etapa de vida")
 
 
 
@@ -513,15 +529,19 @@ Aspectos importantes a tener en cuenta.
 
 
 
-Transiciones=ddply(All_Data3, c("ind"), summarise,
-            mean = round(mean(values),4), sd = round(sd(values),5),
-            median= round(median(values), 4),
-            #sem = round(sd(values)/sqrt(length(values)),6), # para calcular el error estándar de la media
-            ICr5 =  round(quantile(values, probs = c(0.05)), 4), # el cuantil 5
-            ICr95 = round(quantile(values, probs = c(0.95)), 4), # el cuantil 95
-            min=min(values),
-            max=max(values)
-            )
+Transiciones = ddply(
+  All_Data3,
+  c("ind"),
+  summarise,
+  mean = round(mean(values), 4),
+  sd = round(sd(values), 5),
+  median = round(median(values), 4),
+  #sem = round(sd(values)/sqrt(length(values)),6), # para calcular el error estándar de la media
+  ICr5 = round(quantile(values, probs = c(0.05)), 4), # el cuantil 5
+  ICr95 = round(quantile(values, probs = c(0.95)), 4), # el cuantil 95
+  min = min(values),
+  max = max(values)
+)
 
 Transiciones
 
@@ -539,30 +559,32 @@ Note que con los mismos estimado puntuales pero con una tamaño de muestra mayor
 
 ```{r, sin_sentido_19}
 
-n2=250
-L=posteriorPRIORL <- MCmultinomdirichlet(c(.50*n2,.2*n2,.0*n2,.3*n2), c(.5,.2,0.0001,.3), mc=100000)
-dfL=as.data.frame(L)
+n2 = 250
+L = posteriorPRIORL <- MCmultinomdirichlet(
+  c(.50 * n2, .2 * n2, .0 * n2, .3 * n2),
+  c(.5, .2, 0.0001, .3),
+  mc = 100000
+)
+dfL = as.data.frame(L)
 t(summary(dfL))
 
 #head(dfL)
-stack_dfL=stack(dfL)
-comb_dfbL= cbind(stack_dfL, T="25")
+stack_dfL = stack(dfL)
+comb_dfbL = cbind(stack_dfL, T = "25")
 
-All_Data4=comb_dfbL
-levels(All_Data4$ind)[levels(All_Data3$ind)=="pi.1"]="Plantulas"
-levels(All_Data4$ind)[levels(All_Data3$ind)=="pi.2"]="Juvenil"
-levels(All_Data4$ind)[levels(All_Data3$ind)=="pi.3"]="Adulto"
-levels(All_Data4$ind)[levels(All_Data3$ind)=="pi.4"]="Muerto"
-
-
-ggplot(data=All_Data4, aes(x=values, fill=ind))+
-  geom_density(aes(alpha=.5)) +
-  scale_y_continuous(limit=c(0, 18))+
-  scale_colour_hue(l=60)+
-  facet_grid(~ind)+
-  labs(fill="Etapa de vida")
+All_Data4 = comb_dfbL
+levels(All_Data4$ind)[levels(All_Data3$ind) == "pi.1"] = "Plantulas"
+levels(All_Data4$ind)[levels(All_Data3$ind) == "pi.2"] = "Juvenil"
+levels(All_Data4$ind)[levels(All_Data3$ind) == "pi.3"] = "Adulto"
+levels(All_Data4$ind)[levels(All_Data3$ind) == "pi.4"] = "Muerto"
 
 
+ggplot(data = All_Data4, aes(x = values, fill = ind)) +
+  geom_density(aes(alpha = .5)) +
+  scale_y_continuous(limit = c(0, 18)) +
+  scale_colour_hue(l = 60) +
+  facet_grid(~ind) +
+  labs(fill = "Etapa de vida")
 
 ```
 
@@ -573,15 +595,19 @@ N0te que ahora, los intervalos de confianza son más estrechos y no son negativo
 ```{r, sin_sentido_20}
 
 
-Transiciones=ddply(All_Data4, c("ind"), summarise,
-            mean = round(mean(values),3), sd = round(sd(values),4),
-            median= median(values),
-            #sem = round(sd(values)/sqrt(length(values)),6),
-            CI5 = quantile(values, probs = c(0.05)),
-            CI95 = round(quantile(values, probs = c(0.95)), 4),
-            min=min(values),
-            max=max(values)
-            )
+Transiciones = ddply(
+  All_Data4,
+  c("ind"),
+  summarise,
+  mean = round(mean(values), 3),
+  sd = round(sd(values), 4),
+  median = median(values),
+  #sem = round(sd(values)/sqrt(length(values)),6),
+  CI5 = quantile(values, probs = c(0.05)),
+  CI95 = round(quantile(values, probs = c(0.95)), 4),
+  min = min(values),
+  max = max(values)
+)
 
 Transiciones
 

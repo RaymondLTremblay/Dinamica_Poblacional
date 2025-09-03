@@ -87,7 +87,8 @@ matmart <- rbind(
   c(0.68, 0.02, 3.88, 16.53),
   c(0.22, 0.76, 0.23, 0.0),
   c(0.0, 0.13, 0.53, 0.58),
-  c(0.0, 0.0, 0.17, 0.38))
+  c(0.0, 0.0, 0.17, 0.38)
+)
 
 colSums(matmart) # sumar las filas de la matriz
 stages <- c("plántula", "infantil", "juvenil", "adulto") # asignar los nombres de los estadíos
@@ -277,10 +278,9 @@ Para extraer los nombres de las tasas vitales (de la fila 2 a la 13), sin inclui
 
 ```{r LTRE6}
 
-razonvital<-Oncidium$names.vitalrate[2:13] 
+razonvital <- Oncidium$names.vitalrate[2:13]
 
 razonvital # mostrar los nombres del objeto razón vital
-
 ```
 
 ------------------------------------------------------------------------
@@ -291,9 +291,8 @@ Extraer tasas vitales de de la orquídea *Oncidium brachyandrum* que crecen sobr
 
 ```{r LTRE7}
  
-
-Martinezzi<-Oncidium$martinezzi [2:13] # [2:13] se refiere a la fila 2 hasta la 13. 
-names(Martinezzi)<-razonvital # asignar los nombres de las tasas vitales
+Martinezzi <- Oncidium$martinezzi[2:13] # [2:13] se refiere a la fila 2 hasta la 13.
+names(Martinezzi) <- razonvital # asignar los nombres de las tasas vitales
 Martinezzi
 ```
 
@@ -305,8 +304,8 @@ Extraer tasas vitales de de la orquidea *Oncidium brachyandrum* que crecen sobre
 
 ```{r LTRE8}
 
-Rugosa<-Oncidium$rugosa [2:13]
-names(Rugosa)<-razonvital # asignar los nombres de las tasas vitales
+Rugosa <- Oncidium$rugosa[2:13]
+names(Rugosa) <- razonvital # asignar los nombres de las tasas vitales
 Rugosa
 ```
 
@@ -330,13 +329,11 @@ Nota que usando la función vitalsens se pueden calcular las sensibilidades y el
 #### *Quercus matinezzi*
 
 ```{r LTRE10}
-matmart
 
-Martinezzi.se<-vitalsens(matrix.el, Martinezzi)
+
+Martinezzi.se <- vitalsens(matrix.el, Martinezzi)
 
 Martinezzi.se # observar los resultados
-
-
 
 
 ```
@@ -358,7 +355,7 @@ En esta parte se calculará la diferencia entre las tasas vitales de *Oncidium b
 
 ```{r LTRE11}
 
-vr.dif.Martinezzi.Rugosa<-Rugosa-Martinezzi 
+vr.dif.Martinezzi.Rugosa <- Rugosa - Martinezzi
 vr.dif.Martinezzi.Rugosa
 ```
 
@@ -367,10 +364,9 @@ vr.dif.Martinezzi.Rugosa
 En este paso se calculará la tasa vital media para *Oncidium brachyandrum* creciendo sobre *Q. martinezii* y *Q. rugosa*. La tasa vital media se calcula sumando las tasas vitales de las dos matrices y dividiendo entre 2.
 
 ```{r LTRE12}
+vr.promedia.Martinezzi.Rugosa <- ((Rugosa + Martinezzi) / 2) #calcular la tazas vitales parta la matrix promedia
 
-vr.promedia.Martinezzi.Rugosa<-((Rugosa+Martinezzi)/2) #calcular la tazas vitales parta la matrix promedia
-
-# Nota: si se tuvieran 3 matrices se sumarían las tasas vitales de las tres dividido por 3. 
+# Nota: si se tuvieran 3 matrices se sumarían las tasas vitales de las tres dividido por 3.
 
 vr.promedia.Martinezzi.Rugosa
 ```
@@ -381,7 +377,10 @@ En este paso se calculará las sensibilidades y elasticidades para la matriz pro
 
 ```{r LTRE13}
 
-media.sens.Martinezzi.Rugosa<-vitalsens(matrix.el, vr.promedia.Martinezzi.Rugosa) 
+media.sens.Martinezzi.Rugosa <- vitalsens(
+  matrix.el,
+  vr.promedia.Martinezzi.Rugosa
+)
 media.sens.Martinezzi.Rugosa
 ```
 
@@ -389,7 +388,8 @@ media.sens.Martinezzi.Rugosa
 
 ```{r chap12_13}
 
-LTRE.contrib.Martinezzi.Rugosa<-vr.dif.Martinezzi.Rugosa*media.sens.Martinezzi.Rugosa$sensitivity  
+LTRE.contrib.Martinezzi.Rugosa <- vr.dif.Martinezzi.Rugosa *
+  media.sens.Martinezzi.Rugosa$sensitivity
 LTRE.contrib.Martinezzi.Rugosa
 ```
 
@@ -399,13 +399,14 @@ En esta sección se une todos los resultados en un solo objeto para poder observ
 
 ```{r LTRE14}
 
-LTRE.resultados.Martinezzi.Rugosa<- data.frame(razonvital=razonvital,
-                                               rug.vr=Rugosa, 
-                                            mart.vr=Martinezzi, 
-                                            vr.differencia=vr.dif.Martinezzi.Rugosa, 
-                                            media.sens=media.sens.Martinezzi.Rugosa$sensitivity, 
-                                            contribucion=LTRE.contrib.Martinezzi.Rugosa)
-
+LTRE.resultados.Martinezzi.Rugosa <- data.frame(
+  razonvital = razonvital,
+  rug.vr = Rugosa,
+  mart.vr = Martinezzi,
+  vr.differencia = vr.dif.Martinezzi.Rugosa,
+  media.sens = media.sens.Martinezzi.Rugosa$sensitivity,
+  contribucion = LTRE.contrib.Martinezzi.Rugosa
+)
 
 gt(LTRE.resultados.Martinezzi.Rugosa)
 ```
@@ -418,12 +419,19 @@ Se puede crear un gráfico de la contribución de cada tasa vitales sobre la his
 
 ```{r LTRE15}
 
-ggplot(LTRE.resultados.Martinezzi.Rugosa, aes(y=contribucion, x=razonvital, fill=razonvital))+
-  geom_bar(stat="identity")+
-  theme_minimal()+
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
-  labs(title="Oncidium vital rate contribución a la diferencia en lambda", x="razonvital", y="contribución")+
-  geom_hline(yintercept=0, linetype="dashed", color = "red")+
+ggplot(
+  LTRE.resultados.Martinezzi.Rugosa,
+  aes(y = contribucion, x = razonvital, fill = razonvital)
+) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(
+    title = "Oncidium vital rate contribución a la diferencia en lambda",
+    x = "razonvital",
+    y = "contribución"
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
   xlab("Tasa vitales")
 ```
 
@@ -435,12 +443,19 @@ Figure 6. Resultados de los análisis de elasticidad, para dos poblaciones de *O
 
 ```{r LTRE16}
 
-ggplot(LTRE.resultados.Martinezzi.Rugosa, aes(y=media.sens, x=razonvital, fill=razonvital))+
-  geom_bar(stat="identity")+
-  theme_minimal()+
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
-  labs(title="Promedio de la Sensitividad", x="razonvital", y="contribución")+
-  geom_hline(yintercept=0, linetype="dashed", color = "red")+
+ggplot(
+  LTRE.resultados.Martinezzi.Rugosa,
+  aes(y = media.sens, x = razonvital, fill = razonvital)
+) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(
+    title = "Promedio de la Sensitividad",
+    x = "razonvital",
+    y = "contribución"
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
   xlab("Tasa vitales")
 ```
 
@@ -462,7 +477,6 @@ mat.promedio <- (matmart + matrug) / 2
 mat.promedio
 
 
-
 ```
 
 Convertir la matriz en un vector
@@ -482,7 +496,7 @@ Unir los vectores de las matrices *O. rugosa* y *O. martinezii*
 ```{r LTRE19}
 
 
-Unido=rbind(mat_rug.vector, mat_mart.vector)
+Unido = rbind(mat_rug.vector, mat_mart.vector)
 
 Unido
 
@@ -497,7 +511,7 @@ colnames(Unido)<-expression(a11, a21, a31, a41,
                             a13, a23, a33, a43,
                             a14, a24, a43, a44)
 
-Unido=as.data.frame(Unido)
+Unido = as.data.frame(Unido)
 Unido$Site <- c("Q. rugosa", "Q. martinezii")
 
 Unido
@@ -506,7 +520,12 @@ Unido
 Extraer los elementos del data frame y convertirlos en una lista de matrices
 
 ```{r LTRE21}
-Ob_Atrt <- lapply(split(as.matrix(Unido[,1:16]), 1:2),  matrix, nrow=4, byrow=TRUE) 
+Ob_Atrt <- lapply(
+  split(as.matrix(Unido[, 1:16]), 1:2),
+  matrix,
+  nrow = 4,
+  byrow = TRUE
+)
 
 
 names(Ob_Atrt) <- Unido$Site
@@ -531,12 +550,24 @@ barplot_labels <- expression(a11, a21, a31, a41,
                              a13, a23, a33, a43,
                              a14, a24, a34, a44)
 
-x_Ob <- matrix(unlist(Ob$`Q. martinezii`), nrow=4, byrow=TRUE)
+x_Ob <- matrix(unlist(Ob$`Q. martinezii`), nrow = 4, byrow = TRUE)
 
-Ob_bp <- barplot(x_Ob[1:2,], beside=TRUE, ylim=c(-.05,.25), las=1, xlab="Transition", ylab="", xaxt='n')
+Ob_bp <- barplot(
+  x_Ob[1:2, ],
+  beside = TRUE,
+  ylim = c(-.05, .25),
+  las = 1,
+  xlab = "Transition",
+  ylab = "",
+  xaxt = 'n'
+)
 
 
-mtext(expression(paste("Contribution of ", a[ij], "to variation in ", lambda)), 2, 3.5)
+mtext(
+  expression(paste("Contribution of ", a[ij], "to variation in ", lambda)),
+  2,
+  3.5
+)
 ## rotate labels
 text(x = Ob_bp, y = -0.05, labels = barplot_labels, srt = 45, xpd = TRUE)
 title(expression(italic("Oncidium brachyandrum")))
@@ -565,15 +596,27 @@ Ob_df_rug <- as.data.frame(t(Ob$`Q. rugosa`))
 
 Ob_df <- rbind(Ob_df_mart, Ob_df_rug)
 
-Ob_df$Species <- c("Q. martinezii","Q. martinezii","Q. martinezii","Q. martinezii", "Q. rugosa","Q. rugosa","Q. rugosa","Q. rugosa")
+Ob_df$Species <- c(
+  "Q. martinezii",
+  "Q. martinezii",
+  "Q. martinezii",
+  "Q. martinezii",
+  "Q. rugosa",
+  "Q. rugosa",
+  "Q. rugosa",
+  "Q. rugosa"
+)
 
-colnames(Ob_df) <- c("a1i", "a2i", "a3i","a4i", "Species")
+colnames(Ob_df) <- c("a1i", "a2i", "a3i", "a4i", "Species")
 Ob_df$t_1 <- c("ai1", "ai2", "ai3", "ai4", "ai1", "ai2", "ai3", "ai4")
 
 
-pivot_long <- tidyr::pivot_longer(Ob_df, cols = c("a1i", "a2i", "a3i", "a4i"), 
-                                  names_to = "Transition", values_to = "Contribution")
-
+pivot_long <- tidyr::pivot_longer(
+  Ob_df,
+  cols = c("a1i", "a2i", "a3i", "a4i"),
+  names_to = "Transition",
+  values_to = "Contribution"
+)
 pivot_long$Transitions2 <- c("a11", "a21", "a31", "a41", 
                              "a12", "a22", "a32", "a42",
                              "a13", "a23", "a33", "a43", 
@@ -593,13 +636,15 @@ library(ggplot2)
 
 ggplot(pivot_long, aes(x = Transitions2, y = Contribution, fill = Species)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Contribución de la variación  en las transiciones sobre lambda",
-       x = "Transiciones",
-       y = "Contribuciones a λ") +
+  labs(
+    title = "Contribución de la variación  en las transiciones sobre lambda",
+    x = "Transiciones",
+    y = "Contribuciones a λ"
+  ) +
   theme_minimal() +
-  facet_wrap(~ Species, scales = "free") +
+  facet_wrap(~Species, scales = "free") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  geom_hline(yintercept=0, linetype="dashed", color = "red")+
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
   theme(legend.position = "none")
 
 

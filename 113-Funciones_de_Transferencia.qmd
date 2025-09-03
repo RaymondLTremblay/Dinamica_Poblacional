@@ -44,13 +44,14 @@ Aquícapturamos la matriz de Lefkovitch para la planta *Lepanthes rubripetala*.
 Lr1 <- matrix(c(0.4324, 0,      0,     0.15,
                0.3784, 0.8459, 0,     0,
                0,      0.0034, 0.7954,0.2300,
-               0,      0.0890, 0.1841,0.7510), byrow=TRUE,ncol=4)
+               0,      0.0890, 0.1841,0.7510), 
+       byrow=TRUE,ncol=4)
 
 #Capturar las categorias de estado
 estadios <- c("PL", "J", "NR", "AR")
 colnames(Lr1) <- rownames(Lr1) <- estadios
 
-#Obtener la matriz L. rubripetala 
+#Obtener la matriz L. rubripetala
 Lr1 <- matrix(Lr1[1:4, ], nrow = 4, dimnames = list(estadios, estadios))
 Lr1
 
@@ -66,8 +67,8 @@ Nota que la suma de todos los elementos de la matriz de elasticidad es uno. Prop
 
 ```{r transF2, message=FALSE}
 
- # Matriz de elasticidad
-elasticidad<- round(elas(Lr1), digit = 3)
+# Matriz de elasticidad
+elasticidad <- round(elas(Lr1), digit = 3)
 
 elasticidad
 ```
@@ -88,7 +89,7 @@ El efecto de perturbación de la transición de juvenil a no reproductivo tiene 
 
 n0 <- c(0, 46, 38, 82)
 
-tfmat_lamb=tfam_lambda(Lr1)
+tfmat_lamb = tfam_lambda(Lr1)
 
 plot(tfmat_lamb)
 ```
@@ -110,17 +111,33 @@ Nota que los vectores *e* y *d* son los vectores de perturbación que representa
 
 n0 <- c(0, 46, 38, 82)
 
-tf2<-tfa_inertia(Lr1, vector=n0, d=c(0,0,0,1), e=c(0,0,1,0), prange=seq(-0.18,0.02,0.01)) # el efecto de perturbación de la transición de no reproductivo a adulto reproductivo
+tf2 <- tfa_inertia(
+  Lr1,
+  vector = n0,
+  d = c(0, 0, 0, 1),
+  e = c(0, 0, 1, 0),
+  prange = seq(-0.18, 0.02, 0.01)
+) # el efecto de perturbación de la transición de no reproductivo a adulto reproductivo
 
 
-plot(tf2,ylim=c(0, 2), main="Inercia poblacional",cex.axis=1.4,cex.lab=1.5) # gráfica de la inercia poblacional
+plot(
+  tf2,
+  ylim = c(0, 2),
+  main = "Inercia poblacional",
+  cex.axis = 1.4,
+  cex.lab = 1.5
+) # gráfica de la inercia poblacional
 
-inertia<-inertia(Lr1, vector=n0)
+inertia <- inertia(Lr1, vector = n0)
 
-sens2<-tfs_inertia(Lr1, vector=n0, d=c(0,0,0,1), e=c(0,0,1,0), tolerance=1e-5) # el efecto de sensitividad de la inercia poblacional
-abline(inertia, sens2, lty=2, col="red") # Para añadir el efecto lineal 
-
-
+sens2 <- tfs_inertia(
+  Lr1,
+  vector = n0,
+  d = c(0, 0, 0, 1),
+  e = c(0, 0, 1, 0),
+  tolerance = 1e-5
+) # el efecto de sensitividad de la inercia poblacional
+abline(inertia, sens2, lty = 2, col = "red") # Para añadir el efecto lineal
 ```
 
 ------------------------------------------------------------------------
@@ -138,9 +155,9 @@ Hay algunas funciones de transferencia que son establecido en los scripts.
 En el siguiente ejemplo se evalúa la inercia poblacional de la matriz de *L. rubripetala* cuando todos los individuos están en el último estadio (adultos reproductivos), cuando todos los individuos están en el primer estadio (plántulas) y cuando los individuos están en la estructura de población inicial.
 
 ```{r}
-tfmatU=tfam_inertia(Lr1, bound = "upper") # donde todos los individuos están en el ultimo estadio
+tfmatU = tfam_inertia(Lr1, bound = "upper") # donde todos los individuos están en el ultimo estadio
 
-plot(tfmatU, cex.axis=1.4, cex.lab=1.5) # gráfica de la inercia poblacional
+plot(tfmatU, cex.axis = 1.4, cex.lab = 1.5) # gráfica de la inercia poblacional
 ```
 
 ------------------------------------------------------------------------
@@ -153,8 +170,8 @@ n0 <- c(0, 46, 38, 82)
 stable <- popbio::stable.stage(Lr1) # calcular el estado estable de la matriz Lr1
 
 
-tfmat_I=tfam_inertia(Lr1, vector = stable) # donde los individuos están en la estructura de población inicial
-tfmatL=tfam_inertia(Lr1, bound = "lower") # donde todos los individuos están en el primer estadio
+tfmat_I = tfam_inertia(Lr1, vector = stable) # donde los individuos están en la estructura de población inicial
+tfmatL = tfam_inertia(Lr1, bound = "lower") # donde todos los individuos están en el primer estadio
 
 plot(tfmat_I)
 ```
@@ -165,7 +182,7 @@ La inercia poblacional es el límite más bajo en el crecimiento de la població
 
 ```{r}
 
-tfmatL=tfam_inertia(Lr1, bound = "lower") # donde todos los individuos están en el primer estadio
+tfmatL = tfam_inertia(Lr1, bound = "lower") # donde todos los individuos están en el primer estadio
 
 plot(tfmatL)
 
@@ -185,24 +202,30 @@ Reiteramos que la perturbación de la estructura está determinada por dos vecto
 
 
 
-
 nLr0 <- c(0, 46, 38, 82)
 
 #PERTURBACIÓN DEL VECTOR ORIGINAL
 
 #1) Entrada de la matriz a(1,1): plántulas a plántulas
-tf1 <- tfa_lambda(Lr1, d = c(1, 0, 0, 0),
-                  e = c(1, 0, 0, 0),
-                  prange = seq(0, 4, 0.01))
+tf1 <- tfa_lambda(
+  Lr1,
+  d = c(1, 0, 0, 0),
+  e = c(1, 0, 0, 0),
+  prange = seq(0, 4, 0.01)
+)
 
 #Gráfica de la dinámica poblacional
 plot(tf1, ann = FALSE)
-title(main = "Dinámica poblacional (Plántulas - Plántulas)", ylab = "Lambda", xlab = "p")
+title(
+  main = "Dinámica poblacional (Plántulas - Plántulas)",
+  ylab = "Lambda",
+  xlab = "p"
+)
 
 #Cálculo de lambda-max:
-lambda1 <- Re(eigen(Lr1)$values[1]) 
+lambda1 <- Re(eigen(Lr1)$values[1])
 
-#Cálculo de la sensibilidad 
+#Cálculo de la sensibilidad
 sens1 <- tfs_lambda(Lr1, d = c(1, 0, 0, 0), e = c(1, 0, 0, 0))
 
 #Agregar la línea, especificando el intercepto y la pendiente
@@ -217,20 +240,26 @@ Perturbación de la transición de plántula a juvenil tiene un efecto no lineal
 
 
 #2) Entrada de la matriz a(2,1): plántulas y juveniles
-tf2 <- tfa_lambda(Lr1, d = c(1, 0, 0, 0),
-                       e = c(0, 1, 0, 0),
-                  prange = seq(-0.4, 0.6, 0.01))
+tf2 <- tfa_lambda(
+  Lr1,
+  d = c(1, 0, 0, 0),
+  e = c(0, 1, 0, 0),
+  prange = seq(-0.4, 0.6, 0.01)
+)
 
 #Gráfica de la dinámica poblacional
 plot(tf2, ann = FALSE)
-title(main = "Dinámica poblacional (Plántulas - Juveniles)", ylab = "Lambda", xlab = "p")
+title(
+  main = "Dinámica poblacional (Plántulas - Juveniles)",
+  ylab = "Lambda",
+  xlab = "p"
+)
 
 #Cálculo de lambda-max:
-lambda2 <- Re(eigen(Lr1)$values[1]) 
+lambda2 <- Re(eigen(Lr1)$values[1])
 
-#Cálculo de la sensibilidad 
-sens2 <- tfs_lambda(Lr1, d = c(1, 0, 0, 0),
-                         e = c(0, 1, 0, 0))
+#Cálculo de la sensibilidad
+sens2 <- tfs_lambda(Lr1, d = c(1, 0, 0, 0), e = c(0, 1, 0, 0))
 
 #Agregar la línea, especificando el intercepto y la pendiente
 abline(lambda2, sens2, lty = 2, col = "red")
@@ -244,20 +273,26 @@ El efecto de perturbaciones de la transición de juvenil a juvenil tiene un efec
 ```{r}
 
 #3) Entrada de la matriz a(2,2): juveniles y juveniles
-tf3 <- tfa_lambda(Lr1, d = c(0, 1, 0, 0),
-                       e = c(0, 1, 0, 0),
-                  prange = seq(-0.8, 0.1, 0.001))
+tf3 <- tfa_lambda(
+  Lr1,
+  d = c(0, 1, 0, 0),
+  e = c(0, 1, 0, 0),
+  prange = seq(-0.8, 0.1, 0.001)
+)
 
 #Gráfica de la dinámica poblacional
 plot(tf3, ann = FALSE)
-title(main = "Dinámica poblacional (Juveniles - Juveniles)", ylab = "Lambda", xlab = "p")
+title(
+  main = "Dinámica poblacional (Juveniles - Juveniles)",
+  ylab = "Lambda",
+  xlab = "p"
+)
 
 #Cálculo de lambda-max:
-lambda3 <- Re(eigen(Lr1)$values[1]) 
+lambda3 <- Re(eigen(Lr1)$values[1])
 
-#Cálculo de la sensibilidad 
-sens3 <- tfs_lambda(Lr1, d = c(0, 1, 0, 0), 
-                         e = c(0, 1, 0, 0))
+#Cálculo de la sensibilidad
+sens3 <- tfs_lambda(Lr1, d = c(0, 1, 0, 0), e = c(0, 1, 0, 0))
 
 #Agregar la línea, especificando el intercepto y la pendiente
 abline(lambda3, sens3, lty = 2, col = "red")
@@ -271,22 +306,27 @@ El efecto de perturbaciones de juvenil a no reproductivo casi es lineal por todo
 ```{r}
 
 #4) Entrada de la matriz a(3,2): juveniles y no reproductivos
-tf4 <- tfa_lambda(Lr1, d = c(0, 1, 0, 0),
-                       e = c(0, 0, 1, 0),
-                  prange = seq(-0.001, 0.03, 0.01))
+tf4 <- tfa_lambda(
+  Lr1,
+  d = c(0, 1, 0, 0),
+  e = c(0, 0, 1, 0),
+  prange = seq(-0.001, 0.03, 0.01)
+)
 
 #Gráfica de la dinámica poblacional
 plot(tf4, ann = FALSE)
-title(main = "Dinámica poblacional (Juveniles - No reproductivos)", ylab = "Lambda", xlab = "p")
+title(
+  main = "Dinámica poblacional (Juveniles - No reproductivos)",
+  ylab = "Lambda",
+  xlab = "p"
+)
 
 #Cálculo de lambda-max:
-lambda4 <- Re(eigen(Lr1)$values[1]) 
-
+lambda4 <- Re(eigen(Lr1)$values[1])
 
 
 #Cálculo de la sensibilidad
-sens4 <- tfs_lambda(Lr1, d = c(0, 1, 0, 0), 
-                         e = c(0, 0, 1, 0))
+sens4 <- tfs_lambda(Lr1, d = c(0, 1, 0, 0), e = c(0, 0, 1, 0))
 
 #Agregar la línea, especificando el intercepto y la pendiente
 abline(lambda4, sens4, lty = 2, col = "red")
@@ -299,20 +339,26 @@ El efecto de perturbación de juvenil a adulto tiene un efecto no lineal sobre l
 ```{r}
 
 #5) Entrada de la matriz a(4,2): juveniles a adultos
-tf5 <- tfa_lambda(Lr1, d = c(0,1,0,0),
-                       e = c(0,0,0,1),
-                  prange = seq(0,0.8,0.01))
+tf5 <- tfa_lambda(
+  Lr1,
+  d = c(0, 1, 0, 0),
+  e = c(0, 0, 0, 1),
+  prange = seq(0, 0.8, 0.01)
+)
 
 #Gráfica de la dinámica poblacional
 plot(tf5, ann = FALSE)
-title(main = "Dinámica poblacional (Juveniles - Adultos)", ylab = "Lambda", xlab = "p")
+title(
+  main = "Dinámica poblacional (Juveniles - Adultos)",
+  ylab = "Lambda",
+  xlab = "p"
+)
 
 #Cálculo de lambda-max:
-lambda5 <- Re(eigen(Lr1)$values[1]) 
+lambda5 <- Re(eigen(Lr1)$values[1])
 
 #Cálculo de la sensibilidad
-sens5 <- tfs_lambda(Lr1, d = c(0, 1, 0, 0), 
-                         e = c(0, 0, 0, 1))
+sens5 <- tfs_lambda(Lr1, d = c(0, 1, 0, 0), e = c(0, 0, 0, 1))
 
 #Agregar la línea, especificando el intercepto y la pendiente
 abline(lambda5, sens5, lty = 2, col = "red")
@@ -326,25 +372,31 @@ La perturbación de la transición de no reproductivo a no reproductivo tiene un
 ```{r}
 
 #6) Entrada de la matriz a(3,3): adultos no reproductivos a adultos no reproductivos
-tf6 <- tfa_lambda(Lr1, d = c(0, 0, 1, 0),
-                       e = c(0, 0, 1, 0),
-                  prange = seq(-0.8, 0.2, 0.01))
+tf6 <- tfa_lambda(
+  Lr1,
+  d = c(0, 0, 1, 0),
+  e = c(0, 0, 1, 0),
+  prange = seq(-0.8, 0.2, 0.01)
+)
 
 #Gráfica de la dinámica poblacional
 plot(tf6, ann = FALSE)
-title(main = "Dinámica poblacional (Adultos No rep - Adultos No rep)", ylab = "Lambda", xlab = "p")
+title(
+  main = "Dinámica poblacional (Adultos No rep - Adultos No rep)",
+  ylab = "Lambda",
+  xlab = "p"
+)
 
 #Cálculo de lambda-max:
-lambda6 <- Re(eigen(Lr1)$values[1]) 
+lambda6 <- Re(eigen(Lr1)$values[1])
 
 #Cálculo de la sensibilidad
-sens6 <- tfs_lambda(Lr1, d = c(0,0,1,0), 
-                         e = c(0,0,1,0))
+sens6 <- tfs_lambda(Lr1, d = c(0, 0, 1, 0), e = c(0, 0, 1, 0))
 
 #Agregar la línea, especificando el intercepto y la pendiente
 abline(lambda6, sens6, lty = 2, col = "red")
 
-#7) Entrada de la matriz a(4,3): adultos no reproductivos a adultos reproductivos
+
 
 ```
 
@@ -353,21 +405,27 @@ abline(lambda6, sens6, lty = 2, col = "red")
 El efecto de perturbación de adultos no reproductivos a adultos reproductivos tiene un efecto casi lineal cuando las perturbaciones son pequeñas, pero demuestra un efecto no lineal sobre lambda cuando las perturbaciones son grandes.
 
 ```{r}
-
-tf7 <- tfa_lambda(Lr1, d = c(0,0,1,0),
-                       e = c(0,0,0,1),
-                  prange = seq(-0.2,0.8,0.001))
+#7) Entrada de la matriz a(4,3): adultos no reproductivos a adultos reproductivos
+tf7 <- tfa_lambda(
+  Lr1,
+  d = c(0, 0, 1, 0),
+  e = c(0, 0, 0, 1),
+  prange = seq(-0.2, 0.8, 0.001)
+)
 
 #Gráfica de la dinámica poblacional
 plot(tf7, ann = FALSE)
-title(main = "Dinámica poblacional (Adultos No rep - Adultos rep)", ylab = "Lambda", xlab = "p")
+title(
+  main = "Dinámica poblacional (Adultos No rep - Adultos rep)",
+  ylab = "Lambda",
+  xlab = "p"
+)
 
 #Cálculo de lambda-max:
-lambda7 <- Re(eigen(Lr1)$values[1]) 
+lambda7 <- Re(eigen(Lr1)$values[1])
 
 #Cálculo de la sensibilidad
-sens7 <- tfs_lambda(Lr1, d = c(0,0,1,0), 
-                         e = c(0,0,0,1))
+sens7 <- tfs_lambda(Lr1, d = c(0, 0, 1, 0), e = c(0, 0, 0, 1))
 
 #Agregar la línea, especificando el intercepto y la pendiente
 abline(lambda7, sens7, lty = 2, col = "red")
@@ -381,24 +439,29 @@ El efecto de reproducción de adultos reproductivos a plántulas tiene un efecto
 ```{r}
 #8) Entrada de la matriz a(1,4): adultos reproductivos a plántulas
 
-tf8 <- tfa_lambda(Lr1, d = c(0,0,0,1),
-                       e = c(1,0,0,0),
-                  prange = seq(-0.2,0.8,0.001))
+tf8 <- tfa_lambda(
+  Lr1,
+  d = c(0, 0, 0, 1),
+  e = c(1, 0, 0, 0),
+  prange = seq(-0.2, 0.8, 0.001)
+)
 
 #Gráfica de la dinámica poblacional
 plot(tf8, ann = FALSE)
-title(main = "Dinámica poblacional (Adultos reproductivos - Plántulas)", ylab = "Lambda", xlab = "p")
+title(
+  main = "Dinámica poblacional (Adultos reproductivos - Plántulas)",
+  ylab = "Lambda",
+  xlab = "p"
+)
 
 #Cálculo de lambda-max:
-lambda8 <- Re(eigen(Lr1)$values[1]) 
+lambda8 <- Re(eigen(Lr1)$values[1])
 
 #Cálculo de la sensibilidad
-sens8 <- tfs_lambda(Lr1, d = c(1,0,0,0), 
-                         e = c(0,0,0,1))
+sens8 <- tfs_lambda(Lr1, d = c(1, 0, 0, 0), e = c(0, 0, 0, 1))
 
 #Agregar la línea, especificando el intercepto y la pendiente
 abline(lambda8, sens8, lty = 2, col = "red")
-
 ```
 
 ------------------------------------------------------------------------
@@ -409,20 +472,26 @@ El efecto de perturbación de adultos reproductivos a no reproductivos tiene un 
 
 #9) Entrada de la matriz a(3,4): adultos reproductivos a NR
 
-tf9 <- tfa_lambda(Lr1, d = c(0, 0, 0, 1),
-                       e = c(0, 0, 1, 0),
-                  prange = seq(-0.2, 0.8, 0.001))
+tf9 <- tfa_lambda(
+  Lr1,
+  d = c(0, 0, 0, 1),
+  e = c(0, 0, 1, 0),
+  prange = seq(-0.2, 0.8, 0.001)
+)
 
 #Gráfica de la dinámica poblacional
 plot(tf9, ann = FALSE)
-title(main = "Dinámica poblacional (Adultos reproductivos - NR)", ylab = "Lambda", xlab = "p")
+title(
+  main = "Dinámica poblacional (Adultos reproductivos - NR)",
+  ylab = "Lambda",
+  xlab = "p"
+)
 
 #Cálculo de lambda-max:
-lambda9 <- Re(eigen(Lr1)$values[1]) 
+lambda9 <- Re(eigen(Lr1)$values[1])
 
 #Cálculo de la sensibilidad
-sens9 <- tfs_lambda(Lr1, d = c(0, 0, 0, 1), 
-                        e = c(0, 0, 1,  0))
+sens9 <- tfs_lambda(Lr1, d = c(0, 0, 0, 1), e = c(0, 0, 1, 0))
 
 #Agregar la línea, especificando el intercepto y la pendiente
 abline(lambda9, sens9, lty = 2, col = "red")
@@ -436,24 +505,29 @@ La perturbaciones de adultos reproductivos a adultos reproductivos tiene un efec
 ```{r}
 #10) Entrada de la matriz a(4,4): adultos reproductivos a adultos reproductivos
 
-tf10 <- tfa_lambda(Lr1, d = c(0, 0, 0, 1),
-                       e = c(0, 0, 0, 1),
-                  prange = seq(-0.7, 0.22, 0.001))
+tf10 <- tfa_lambda(
+  Lr1,
+  d = c(0, 0, 0, 1),
+  e = c(0, 0, 0, 1),
+  prange = seq(-0.7, 0.22, 0.001)
+)
 
 #Gráfica de la dinámica poblacional
 plot(tf10, ann = FALSE)
-title(main = "Dinámica poblacional (Adultos rep - Adultos rep)", ylab = "Lambda", xlab = "p")
+title(
+  main = "Dinámica poblacional (Adultos rep - Adultos rep)",
+  ylab = "Lambda",
+  xlab = "p"
+)
 
 #Cálculo de lambda-max:
-lambda10 <- Re(eigen(Lr1)$values[1]) 
+lambda10 <- Re(eigen(Lr1)$values[1])
 
 #Cálculo de la sensibilidad
-sens10 <- tfs_lambda(Lr1, d = c(0,0,0,1), 
-                          e = c(0,0,0,1))
+sens10 <- tfs_lambda(Lr1, d = c(0, 0, 0, 1), e = c(0, 0, 0, 1))
 
 #Agregar la línea, especificando el intercepto y la pendiente
 abline(lambda10, sens10, lty = 2, col = "red")
-
 ```
 
 ------------------------------------------------------------------------
@@ -464,118 +538,193 @@ En esta sección se desarrolla las funciones para crear un gráfico con ggplot2.
 
 ```{r, mesage=FALSE, warning=FALSE}
 
-tf1df=as.data.frame(tf1)
-tf1tf=ggplot2::ggplot() +
+tf1df = as.data.frame(tf1)
+tf1tf = ggplot2::ggplot() +
   ggplot2::geom_line(data = tf1df, aes(x = p, y = lambda), color = "blue") +
-  ggplot2::geom_abline(slope = sens1, intercept = lambda1, linetype = "dashed", color = "red") +
+  ggplot2::geom_abline(
+    slope = sens1,
+    intercept = lambda1,
+    linetype = "dashed",
+    color = "red"
+  ) +
   #ggplot2::labs(title = "P - P", x = "p", y = "Lambda") +
-  ggplot2::theme_minimal()+
-  ylab("")+xlab("")+
-  theme(axis.text.x = element_text(angle = 45, size=6),
-        axis.text.y = element_text(size=6))
-  
+  ggplot2::theme_minimal() +
+  ylab("") +
+  xlab("") +
+  theme(
+    axis.text.x = element_text(angle = 45, size = 6),
+    axis.text.y = element_text(size = 6)
+  )
 
 
-tf2df=as.data.frame(tf2)
-tf2tf=ggplot2::ggplot() +
+tf2df = as.data.frame(tf2)
+tf2tf = ggplot2::ggplot() +
   ggplot2::geom_line(data = tf2df, aes(x = p, y = lambda), color = "blue") +
-  ggplot2::geom_abline(slope = sens2, intercept = lambda2, linetype = "dashed", color = "red") +
- # ggplot2::labs(title = "P - J", x = "p", y = "Lambda") +
-  ggplot2::theme_minimal()+
-  ylab("")+xlab("")+
-  theme(axis.text.x = element_text(angle = 45, size=6),
-        axis.text.y = element_text(size=6))
+  ggplot2::geom_abline(
+    slope = sens2,
+    intercept = lambda2,
+    linetype = "dashed",
+    color = "red"
+  ) +
+  # ggplot2::labs(title = "P - J", x = "p", y = "Lambda") +
+  ggplot2::theme_minimal() +
+  ylab("") +
+  xlab("") +
+  theme(
+    axis.text.x = element_text(angle = 45, size = 6),
+    axis.text.y = element_text(size = 6)
+  )
 
-tf3df=as.data.frame(tf3)
-tf3tf=ggplot2::ggplot() +
+tf3df = as.data.frame(tf3)
+tf3tf = ggplot2::ggplot() +
   ggplot2::geom_line(data = tf3df, aes(x = p, y = lambda), color = "blue") +
-  ggplot2::geom_abline(slope = sens3, intercept = lambda3, linetype = "dashed", color = "red") +
+  ggplot2::geom_abline(
+    slope = sens3,
+    intercept = lambda3,
+    linetype = "dashed",
+    color = "red"
+  ) +
   #ggplot2::labs(title = "J - J", x = "p", y = "Lambda") +
-  ggplot2::theme_minimal()+
-  ylab("")+xlab("")+
-  theme(axis.text.x = element_text(angle = 45, size=6),
-        axis.text.y = element_text(size=6))
+  ggplot2::theme_minimal() +
+  ylab("") +
+  xlab("") +
+  theme(
+    axis.text.x = element_text(angle = 45, size = 6),
+    axis.text.y = element_text(size = 6)
+  )
 
-tf4df=as.data.frame(tf4)
+tf4df = as.data.frame(tf4)
 
-tf4tf=ggplot2::ggplot() +
+tf4tf = ggplot2::ggplot() +
   ggplot2::geom_line(data = tf4df, aes(x = p, y = lambda), color = "blue") +
-  ggplot2::geom_abline(slope = sens4, intercept = lambda4, linetype = "dashed", color = "red") +
- # ggplot2::labs(title = "J - NR", x = "p", y = "Lambda") +
-  ggplot2::theme_minimal()+
-  ylab("")+xlab("")+
-  theme(axis.text.x = element_text(angle = 45, size=6),
-        axis.text.y = element_text(size=6))
+  ggplot2::geom_abline(
+    slope = sens4,
+    intercept = lambda4,
+    linetype = "dashed",
+    color = "red"
+  ) +
+  # ggplot2::labs(title = "J - NR", x = "p", y = "Lambda") +
+  ggplot2::theme_minimal() +
+  ylab("") +
+  xlab("") +
+  theme(
+    axis.text.x = element_text(angle = 45, size = 6),
+    axis.text.y = element_text(size = 6)
+  )
 
-tf5df=as.data.frame(tf5)
+tf5df = as.data.frame(tf5)
 
-tf5tf=ggplot2::ggplot() +
+tf5tf = ggplot2::ggplot() +
   ggplot2::geom_line(data = tf5df, aes(x = p, y = lambda), color = "blue") +
-  ggplot2::geom_abline(slope = sens5, intercept = lambda5, linetype = "dashed", color = "red") +
- # ggplot2::labs(title = "J - A", x = "p", y = "Lambda") +
-  ggplot2::theme_minimal()+
-  ylab("")+xlab("")+
-  theme(axis.text.x = element_text(angle = 45, size=6),
-        axis.text.y = element_text(size=6))
+  ggplot2::geom_abline(
+    slope = sens5,
+    intercept = lambda5,
+    linetype = "dashed",
+    color = "red"
+  ) +
+  # ggplot2::labs(title = "J - A", x = "p", y = "Lambda") +
+  ggplot2::theme_minimal() +
+  ylab("") +
+  xlab("") +
+  theme(
+    axis.text.x = element_text(angle = 45, size = 6),
+    axis.text.y = element_text(size = 6)
+  )
 
-tf6df=as.data.frame(tf6)
+tf6df = as.data.frame(tf6)
 
-tf6tf=ggplot2::ggplot() +
+tf6tf = ggplot2::ggplot() +
   ggplot2::geom_line(data = tf6df, aes(x = p, y = lambda), color = "blue") +
-  ggplot2::geom_abline(slope = sens6, intercept = lambda6, linetype = "dashed", color = "red") +
+  ggplot2::geom_abline(
+    slope = sens6,
+    intercept = lambda6,
+    linetype = "dashed",
+    color = "red"
+  ) +
   #ggplot2::labs(title = "NR - NR", x = "p", y = "Lambda") +
-  ggplot2::theme_minimal()+
-  ylab("")+xlab("")+
-  theme(axis.text.x = element_text(angle = 45, size=6),
-        axis.text.y = element_text(size=6))
+  ggplot2::theme_minimal() +
+  ylab("") +
+  xlab("") +
+  theme(
+    axis.text.x = element_text(angle = 45, size = 6),
+    axis.text.y = element_text(size = 6)
+  )
 
-tf7df=as.data.frame(tf7)
+tf7df = as.data.frame(tf7)
 
-tf7tf=ggplot2::ggplot() +
+tf7tf = ggplot2::ggplot() +
   ggplot2::geom_line(data = tf7df, aes(x = p, y = lambda), color = "blue") +
-  ggplot2::geom_abline(slope = sens7, intercept = lambda7, linetype = "dashed", color = "red") +
- # ggplot2::labs(title = "NR - A", x = "p", y = "Lambda") +
-  ggplot2::theme_minimal()+
-  ylab("")+xlab("")+
-  theme(axis.text.x = element_text(angle = 45, size=6),
-        axis.text.y = element_text(size=6))
+  ggplot2::geom_abline(
+    slope = sens7,
+    intercept = lambda7,
+    linetype = "dashed",
+    color = "red"
+  ) +
+  # ggplot2::labs(title = "NR - A", x = "p", y = "Lambda") +
+  ggplot2::theme_minimal() +
+  ylab("") +
+  xlab("") +
+  theme(
+    axis.text.x = element_text(angle = 45, size = 6),
+    axis.text.y = element_text(size = 6)
+  )
 
-tf8df=as.data.frame(tf8)
+tf8df = as.data.frame(tf8)
 
-tf8tf=ggplot2::ggplot() +
+tf8tf = ggplot2::ggplot() +
   ggplot2::geom_line(data = tf8df, aes(x = p, y = lambda), color = "blue") +
-  ggplot2::geom_abline(slope = sens8, intercept = lambda8, linetype = "dashed", color = "red") +
- # ggplot2::labs(title = "A - F", x = "p", y = "Lambda") +
-  ggplot2::theme_minimal()+
-  ylab("")+xlab("")+
-  theme(axis.text.x = element_text(angle = 45, size=6),
-        axis.text.y = element_text(size=6))
+  ggplot2::geom_abline(
+    slope = sens8,
+    intercept = lambda8,
+    linetype = "dashed",
+    color = "red"
+  ) +
+  # ggplot2::labs(title = "A - F", x = "p", y = "Lambda") +
+  ggplot2::theme_minimal() +
+  ylab("") +
+  xlab("") +
+  theme(
+    axis.text.x = element_text(angle = 45, size = 6),
+    axis.text.y = element_text(size = 6)
+  )
 
-tf9df=as.data.frame(tf9)
+tf9df = as.data.frame(tf9)
 
-tf9tf=ggplot2::ggplot() +
+tf9tf = ggplot2::ggplot() +
   ggplot2::geom_line(data = tf9df, aes(x = p, y = lambda), color = "blue") +
-  ggplot2::geom_abline(slope = sens9, intercept = lambda9, linetype = "dashed", color = "red") +
- # ggplot2::labs(title = "A - NR", x = "p", y = "Lambda") +
-  ggplot2::theme_minimal()+
-  ylab("")+xlab("")+
-  theme(axis.text.x = element_text(angle = 45, size=6),
-        axis.text.y = element_text(size=6))
+  ggplot2::geom_abline(
+    slope = sens9,
+    intercept = lambda9,
+    linetype = "dashed",
+    color = "red"
+  ) +
+  # ggplot2::labs(title = "A - NR", x = "p", y = "Lambda") +
+  ggplot2::theme_minimal() +
+  ylab("") +
+  xlab("") +
+  theme(
+    axis.text.x = element_text(angle = 45, size = 6),
+    axis.text.y = element_text(size = 6)
+  )
 
 
-
-
-tf10df=as.data.frame(tf10)
-tf10tf=ggplot2::ggplot() +
+tf10df = as.data.frame(tf10)
+tf10tf = ggplot2::ggplot() +
   ggplot2::geom_line(data = tf10df, aes(x = p, y = lambda), color = "blue") +
-  ggplot2::geom_abline(slope = sens10, intercept = lambda10, linetype = "dashed", color = "red") +
+  ggplot2::geom_abline(
+    slope = sens10,
+    intercept = lambda10,
+    linetype = "dashed",
+    color = "red"
+  ) +
   #ggplot2::labs(title = "A - A", x = "p", y = "Lambda") +
-  ggplot2::theme_minimal()+
-  ylab("")+xlab("")+
-  theme(axis.text.x = element_text(angle = 45, size=6),
-        axis.text.y = element_text(size=6))
-
-
+  ggplot2::theme_minimal() +
+  ylab("") +
+  xlab("") +
+  theme(
+    axis.text.x = element_text(angle = 45, size = 6),
+    axis.text.y = element_text(size = 6)
+  )
 
 ```
 
@@ -616,14 +765,12 @@ El siguiente gráfico muestra la inercia de la población de *L. rubripetala* en
 ```{r}
 
 #Definir márgenes
-par(mfrow = c(4,4))
-par(mfg = c(1,1))
+par(mfrow = c(4, 4))
+par(mfg = c(1, 1))
 
 #Gráficas de la función de transferencia de la inercia en el ciclo de vida de L. rubripetala (población 1)
-tfmatriz <- tfam_inertia(Lr1,vector = nLr0)
-plot(tfmatriz,  xlab="Lambda", ylab="Inercia", cex.axis=1.4, cex.lab=1.5)
-
-
+tfmatriz <- tfam_inertia(Lr1, vector = nLr0)
+plot(tfmatriz, xlab = "Lambda", ylab = "Inercia", cex.axis = 1.4, cex.lab = 1.5)
 
  
 ```
