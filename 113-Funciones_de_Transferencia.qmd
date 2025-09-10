@@ -211,7 +211,7 @@ tf1 <- tfa_lambda(
   Lr1,
   d = c(1, 0, 0, 0),
   e = c(1, 0, 0, 0),
-  prange = seq(0, 4, 0.01)
+  prange = seq(-.20, .6, 0.01)
 )
 
 #Gráfica de la dinámica poblacional
@@ -230,6 +230,9 @@ sens1 <- tfs_lambda(Lr1, d = c(1, 0, 0, 0), e = c(1, 0, 0, 0))
 
 #Agregar la línea, especificando el intercepto y la pendiente
 abline(lambda1, sens1, lty = 2, col = "red")
+
+
+
 ```
 
 ------------------------------------------------------------------------
@@ -310,7 +313,7 @@ tf4 <- tfa_lambda(
   Lr1,
   d = c(0, 1, 0, 0),
   e = c(0, 0, 1, 0),
-  prange = seq(-0.001, 0.03, 0.01)
+  prange = seq(-0.2, 0.3, 0.01)
 )
 
 #Gráfica de la dinámica poblacional
@@ -528,6 +531,8 @@ sens10 <- tfs_lambda(Lr1, d = c(0, 0, 0, 1), e = c(0, 0, 0, 1))
 
 #Agregar la línea, especificando el intercepto y la pendiente
 abline(lambda10, sens10, lty = 2, col = "red")
+
+
 ```
 
 ------------------------------------------------------------------------
@@ -752,7 +757,18 @@ cowplot::draw_label(label, x = 0.5, y = -0.01, vjust = -1, size = 14, hjust = 0.
 La misma figura, pero con mucho menos trabajo. Este script es lo preferido para evaluar la elasticidad no lineal de las funciones de transferencia. Aunque en esta figura no se demuestra el efecto de la sensibilidad, es posible agregarlo con la función `abline` como se hizo en los ejemplos anteriores.
 
 ```{r}
-tfmat=tfam_lambda(Lr1)
+
+etype<-matrix(c("P", NA, NA, "F",
+                "P", "P", NA, NA,
+                NA, "P", "P", "P",
+                NA,"P", "P", "P" ),ncol=4, byrow=TRUE)
+
+
+
+tfmat=tfam_lambda(Lr1, elementtype = etype, 
+                  Flim=c(-0.5, 2),
+                  Plim = c(-0.5,2))
+
 plot(tfmat)
 ```
 

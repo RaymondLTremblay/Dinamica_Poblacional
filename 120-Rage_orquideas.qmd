@@ -23,11 +23,7 @@ library(WRS2)
 
 ```
 
-Uno de los esfuerzos más grandes en la ecología de poblaciones es la base de datos de COMPADRE y COMADRE. COMPADRE es una base de datos de matrices de transición de estados de poblaciones de plantas y COMADRE es una base de datos de matrices de transición de estados de poblaciones de animales. Estas bases de datos son una fuente de información para evaluar la dinámica de poblaciones de plantas y animales. En este capítulo se presenta una introducción a la base de datos de COMPADRE y algunas de las funciones en los paquetes de **Rcompadre** y **Rage**. La información aquí no sustituye la información provista en la página web de COMPADRE \<<https://compadre-db.org/>\> y los tutoriales que se encuentran en la siguiente página \<<https://compadre-db.org/Education>\>.
-
-El valor de las bases de datos es tener en un mismo sitio una gran cantidad de información donde la información este organizado de la misma manera y accesible en adición a tener la información en un formato que se puede usar en análisis. En el caso de COMPADRE y COMADRE, la información esta organizada en matrices de transición de estados de poblaciones (MPM) que se pueden usar para evaluar la dinámica de poblaciones de plantas y animales y con múltiples variables, tal como sus coordinadas geográficas, el tipo de hábitat, la duración de los estudios, la fuente de la información, entre otros.
-
-En este capítulo se aprende a utiliza la base de datos de COMPADRE para evaluar la dinámica de poblaciones de orquídeas. Se evalúa como extraer diferentes tipos de datos para responder a preguntas específicas.
+El siguiente capitulo presenta algunas de las funciones del paquete de \*Rage\*\* para trabajar con la base de datos de COMPADRE y COMADRE. Estas bases de datos son repositorios públicos que contienen información de dinámica poblacional de plantas (COMPADRE) y animales (COMADRE) en formato de matrices de transición de estados de poblaciones (MPM). Esa librería de funciones incluye funciones para calcular el largo de vida esperada, la edad a la primera reproducción, la entropía y la tasa de crecimiento poblacional entre otras. En este capítulo se presentan algunas de esas funciones y como usarlas para evaluar la dinámica poblacional de orquídeas.
 
 ```{r Compr2, echo=FALSE}
 
@@ -776,7 +772,7 @@ Aquí el script crea un data frame de los valores del largo de vida para cada es
 
 ```{r compr37}
 index_O_filtrado <- index_O %>%
-  filter(ProjectionInterval == 1.0) |> # filtrar para matriz de un año solamente
+  #filter(ProjectionInterval == 1.0) |> # filtrar para matriz de un año solamente
   filter(
     MatrixComposite == "Mean", # filtrar para la matriz promedia
     MatrixTreatment == "Unmanipulated", # filtrar para la matriz sin manipulación
@@ -792,6 +788,11 @@ index_O_filtrado <- index_O %>%
     check_surv_gte_1 == FALSE # <- Asegurarse de que este filtro se aplique
   ) %>%
   mutate(matU = matU(.), start_life = mpm_first_active(.))
+
+index_O_filtrado |> select(mat, OrganismType) |> 
+  group_by(OrganismType) |> 
+  summarize(n=n())
+
 ```
 
 ```{r compmr38}
