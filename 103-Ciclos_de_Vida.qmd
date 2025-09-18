@@ -291,16 +291,16 @@ digraph {
 
 En este trabajo se recolectaron datos de la etapa de plántula, juvenil, adulto y latencia de los individuos. La historia de vida es representada por 4 etapas. Los datos provienen de la figura 4 de la publicación de [@coates2006effects], donde hay un periodo de 3 o más años entre los periodos de régimen de fuegos. Una de la etapas distintivas de esta especie es la latencia, en otra palabra plantas que no emergen de un año a otro. Muchas especies de orquídeas terrestres tienen latencia en las etapas de plántulas, juvenil y adultos . En estas especies la única etapa que podemos estimar la mortandad es después de la latencia. Esto típicamente es un problema de muestreo y no la biología de la especie, ya que frecuentemente las especies muestreadas son en peligro de extinción y no se pueden recolectar datos de todas las etapas de vida para determinar cuando no se ven la planta es viva (debajo el suelo) o muerta. Como son en peligro de extinción no se permite y realmente no es ético modificar el hábitat para determinar si la planta esta viva o muerta. En este caso, se hace unos análisis usando análisis bayesiano [@tremblay2009dormancy] para determinar cual es la probabilidad que un individuo con latencia de múltiples años este vivo.
 
-Las etapas que pasen a latente el próximo año son de color azul, los que se quedan en la misma etapa son de color roja (incluyendo de latente a latente), verde es crecimiento y amarillo es reproducción.
+Las etapas que pasen a latente el próximo año son de color negro, los que se quedan en la misma etapa son de color roja (diagional incluyendo de latente a latente), verde es retroceso, azul es crecimiento y amarillo es reproducción.
 
 ```{r CV7Prasophyllum_correctum}
 
 
 matA_lat <- rbind(
-  c(0.0, 0.0,     0.0125, 0.0),
-  c(0.0, 0.2874,  0.375,  0.1364),
-  c(0.0, 0.0230,  0.15,   0.0303),
-  c(1.000, 0.6897,  0.475,  0.7475)
+  c(0.0,     0.0,  0.0125,  0.0000),
+  c(0.0,  0.2874,  0.3750,  0.1364),
+  c(0.0,  0.0230,  0.1500,  0.0303),
+  c(1.0,  0.6897,   0.4750,  0.7475) 
 )
 
 
@@ -312,10 +312,10 @@ graph <- graph[graph$trans > 0, ]
 nodes <- paste(paste0("'", etapas_lat, "'"), collapse = "; ")
 graph$min_len <- (as.numeric(graph$to) - as.numeric(graph$from)) * 2
 graph$col <- c(
-  "blue", 
-  "red", "PaleGreen4", "blue",
-  "Goldenrod1", "PaleGreen4", "red", "blue",
-  "PaleGreen4", "PaleGreen4", "red"
+  "black", 
+  "red", "palegreen4", "black",
+  "goldenrod1", "blue", "red", "black",
+  "blue", "blue", "red"
 )
 edges <- paste0("'", graph$from, "'", " -> ", "'", graph$to, "'",
   "[minlen=", graph$min_len,
