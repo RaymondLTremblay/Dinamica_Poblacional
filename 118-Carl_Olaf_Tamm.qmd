@@ -26,12 +26,46 @@ library(DiagrammeR)
 library(raretrans)
 
 # Mi tema de formato de las gráficas de ggplot2 personal
+
 rlt_theme <- theme(
-  axis.title.y = element_text(colour = "grey20", size = 15, face = "bold"),
-  axis.text.x = element_text(colour = "grey20", size = 15, face = "bold"),
+  axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
+  axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
   axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
   axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
-)
+) +
+  theme(
+    # Remover los border
+    panel.border = element_blank(),
+    # Remover las lineas
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Remove el fondo del panel
+    panel.background = element_blank(),
+    # añadir lineas más gruesas
+    axis.line.x = element_line(colour = "black", linewidth = 1),
+    axis.line.y = element_line(colour = "black", linewidth = 1)
+  )
+
+diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
+
+
+# --- 2. Combine them into a list object ---
+# This list can be added to the plot with a single '+'
+rlt_style_fill <- function() {
+  list(
+    rlt_theme,
+    scale_fill_manual(values = diverging)
+  )
+}
+
+
+rlt_style_colour <- function() {
+  list(
+    rlt_theme,
+    scale_colour_manual(values = diverging)
+  )
+}
+
 
 
 ```
@@ -397,8 +431,8 @@ Se nota claramente que la población de *Dactylorhiza incarnata* muestreado por 
 
 ggplot(data = Dacty_0.1b, mapping = aes(x = lposterior)) +
   geom_histogram(binwidth = 0.01, colour = "white") +
-  rlt_theme +
-  geom_vline(xintercept = 1, color = "blue", size = 1.5)
+  rlt_style_colour() +
+  geom_vline(xintercept = 1, color = "#009392", size = 1.5)
 ```
 
 Para concluir, la población de *Dactylorhiza incarnata* muestreado por Tamm desde 1944 a 1971 tiene un crecimiento poblacional menor que 1.0 (lambda promedio de 0.84), con un intervalo de confianza de 0.79 a 0.89. Esto indica que la población esta reduciendo en el tiempo por aproximadamente 16%, pero que realmente la reducción pudiese ser entre 21% a 11%. El índice de *pincrease* es el valor de *p* para evaluar si la población esta creciendo o decreciendo. En este caso el valor es \<0.001, lo que indica que la población está decreciendo.

@@ -59,12 +59,74 @@ La definición más específica de los estudios de dinámica poblacional debe se
 
 ```{r chap1_1 ggplot2, echo=FALSE}
 
-library(ggplot2)
-        rlt_theme <- theme_bw()+
-          theme(axis.title.y = element_text(colour="grey20",size=15,face="bold"),
-                   axis.text.x = element_text(colour="grey20",size=15, face="bold"),
-                   axis.text.y = element_text(colour="grey20",size=20,face="bold"),  
-                   axis.title.x = element_text(colour="grey20",size=15,face="bold"))
+
+
+
+rlt_theme <- theme(
+  axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
+  axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
+  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
+  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
+) +
+  theme(
+    # Remover los border
+    panel.border = element_blank(),
+    # Remover las lineas
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Remove el fondo del panel
+    panel.background = element_blank(),
+    # añadir lineas más gruesas
+    axis.line.x = element_line(colour = "black", linewidth = 1),
+    axis.line.y = element_line(colour = "black", linewidth = 1)
+  )
+
+# Una paleta de color comenzando el gris:
+cbPalette1 <- c(
+  "lightblue",
+  "#E69F00",
+  "grey",
+  "#009E73",
+  "#F0E442",
+  "#0072B2",
+  "#D55E00",
+  "#CC79A7"
+)
+
+# Una paleta de color comenzando el negro:
+cbPalette2 <- c(
+  "#000000",
+  "#E69F00",
+  "#56B4E9",
+  "#009E73",
+  "#F0E442",
+  "#0072B2",
+  "#D55E00",
+  "#CC79A7"
+)
+
+#rlt_scale <- scale_fill_manual(values = cbPalette1)
+
+diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
+
+
+# --- 2. Combine them into a list object ---
+# This list can be added to the plot with a single '+'
+rlt_style_fill <- function() {
+  list(
+    rlt_theme,
+    scale_fill_manual(values = diverging)
+  )
+}
+
+
+rlt_style_colour <- function() {
+  list(
+    rlt_theme,
+    scale_colour_manual(values = diverging)
+  )
+}
+
                     
 ```
 
@@ -107,7 +169,7 @@ Determinar el tamaño poblacional en el futuro tiene muchos usos. Se pueden divi
 ### Tabla: El uso potencial de la diferentes acercamiento de PPM.
 
 | Categoría de Uso | Uso especifico | Referencias generales | Referencias con Orquídeas |
-|:---|:---|:---|---:|
+|:-----------------|:-----------------|:-----------------|-----------------:|
 | Manejo | Identificar las etapas o procesos demográficos claves | [@crouse1987stage] | [@shefferson2003life; @kery2004demographic; @zotz2006population; @zhongjian2008correlation; @tremblay2009dormancy; @tremblay2009population] |
 |  | Determinar cuántos individuos en una población son necesarios para reducir la extinción | [@shaffer1981minimum; @armbruster1993population; @traill2007minimum; @flather2011minimum] | ? |
 |  | Determinar cuántos individuos se necesita introducir en una sitio para establecer una población viable | [@bustamante1996population; @bell2003projecting] | ? |

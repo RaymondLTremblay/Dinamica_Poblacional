@@ -17,6 +17,47 @@ library(flextable)
 library(ftExtra)
 ```
 
+```{r}
+rlt_theme <- theme(
+  axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
+  axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
+  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
+  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
+) +
+  theme(
+    # Remover los border
+    panel.border = element_blank(),
+    # Remover las lineas
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Remove el fondo del panel
+    panel.background = element_blank(),
+    # añadir lineas más gruesas
+    axis.line.x = element_line(colour = "black", linewidth = 1),
+    axis.line.y = element_line(colour = "black", linewidth = 1)
+  )
+
+diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
+
+
+# --- 2. Combine them into a list object ---
+# This list can be added to the plot with a single '+'
+rlt_style_fill <- function() {
+  list(
+    rlt_theme,
+    scale_fill_manual(values = diverging)
+  )
+}
+
+
+rlt_style_colour <- function() {
+  list(
+    rlt_theme,
+    scale_colour_manual(values = diverging)
+  )
+}
+```
+
 ## Qué es la Elasticidad
 
 Las matrices de elasticidad son un complemento de las matrices de transición, que nos permiten evaluar el efecto de “pequeños cambios” en los parámetros de la matriz de transición sobre la tasa de crecimiento de la población ($\lambda$); así, las entradas de la matriz de elasticidad que presenten los valores más altos, serán aquellas que más impacto tendrán sobre el comportamiento de lambda ($\lambda$) [@caswell2001matrix; @de1986elasticity]. Esos cambios pueden tener un efecto positivo o negativo sobre el crecimiento poblacional [@caswell2001matrix]. El uso de las elasticidades en ecología de plantas se remonta a 1974 cuando Sarukan y Gadgil trataron de evaluar la importancia relativa de la reproducción sexual versus la reproducción vegetativa de tres especies de *Ranunculus* [@sarukhan1974studies; @de1986elasticity].
@@ -80,16 +121,15 @@ ec_df = ec_df %>%
 
 ```{r, Elas3b, echo=FALSE, warning = FALSE, message= FALSE}
 
-
 ec_df %>%
   gt() %>%
   data_color(
     columns = c(adulto2),
-    colors = c("blue"),
+    colors = c("#009392"),
     domain = NULL
   ) %>%
   tab_style(
-    style = cell_fill('black'),
+    style = cell_fill('#CF597E'),
     locations = cells_body(
       columns = c(adulto2),
       rows = 5
@@ -281,7 +321,8 @@ ggplot(EE, aes(x = Estadios, y = Elasticidad, fill = Especie)) +
   ) +
   scale_fill_discrete(
     guide = guide_legend(label.theme = element_text(angle = 0, face = "italic"))
-  )
+  )+
+  rlt_style_fill()
 
 
 
@@ -317,7 +358,8 @@ ggplot(EE1, aes(x = Estadios2, y = Elasticidad, fill = Especie)) +
   ) +
   scale_fill_discrete(
     guide = guide_legend(label.theme = element_text(angle = 0, face = "italic"))
-  )
+  )+
+  rlt_style_fill()
 
 ```
 

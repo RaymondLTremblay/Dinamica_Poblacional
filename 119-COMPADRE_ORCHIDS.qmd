@@ -1,6 +1,6 @@
 # COMPADRE y Orquídeas {#Compadre}
 
-Por: Raymond L. Tremblay y Roberto
+Por: Raymond L. Tremblay y Hibrain Adan Pérez Mendoza
 
 #### Librerías de R requeridas para el siguiente módulo
 
@@ -28,55 +28,6 @@ Uno de los esfuerzos más grandes en la ecología de poblaciones es la base de d
 El valor de las bases de datos es tener en un mismo sitio una gran cantidad de información donde la información este organizado de la misma manera y accesible en adición a tener la información en un formato que se puede usar en análisis. En el caso de COMPADRE y COMADRE, la información esta organizada en matrices de transición de estados de poblaciones (MPM) que se pueden usar para evaluar la dinámica de poblaciones de plantas y animales y con múltiples variables, tal como sus coordinadas geográficas, el tipo de hábitat, la duración de los estudios, la fuente de la información, entre otros.
 
 En este capítulo se aprende a utiliza la base de datos de COMPADRE para evaluar la dinámica de poblaciones de orquídeas. Se evalúa como extraer diferentes tipos de datos para responder a preguntas específicas.
-
-```{r Compr2, echo=FALSE}
-
-
-
-rlt_theme <- theme(
-  axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
-  axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
-  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
-  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
-) +
-  theme(
-    # Remover los border
-    panel.border = element_blank(),
-    # Remover las lineas
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    # Remove el fondo del panel
-    panel.background = element_blank(),
-    # añadir lineas más gruesas
-    axis.line.x = element_line(colour = "black", linewidth = 1),
-    axis.line.y = element_line(colour = "black", linewidth = 1)
-  )
-
-# Una paleta de color comenzando el gris:
-cbPalette1 <- c(
-  "#999999",
-  "#E69F00",
-  "#56B4E9",
-  "#009E73",
-  "#F0E442",
-  "#0072B2",
-  "#D55E00",
-  "#CC79A7"
-)
-
-# Una paleta de color comenzando el negro:
-cbPalette2 <- c(
-  "#000000",
-  "#E69F00",
-  "#56B4E9",
-  "#009E73",
-  "#F0E442",
-  "#0072B2",
-  "#D55E00",
-  "#CC79A7"
-)
-
-```
 
 ------------------------------------------------------------------------
 
@@ -115,9 +66,7 @@ compadre <- cdb_fetch("compadre") # Usar este código para bajar los datos del r
 
 #### Renombrar la base datos a algo sencillo
 
- En este script se renombrar la base de datos de COMPADRE a algo más sencillo **TodasSp**, reemplazando **compadre**.
- -   Se visualiza el nombre de cada columna en la base de datos.
- -   Hay 59 variables en la base de datos de COMPADRE.
+En este script se renombrar la base de datos de COMPADRE a algo más sencillo **TodasSp**, reemplazando **compadre**. - Se visualiza el nombre de cada columna en la base de datos. - Hay 59 variables en la base de datos de COMPADRE.
 
 ```{r Compr5}
 
@@ -126,8 +75,7 @@ TodasSp=compadre
 names(TodasSp) # La lista de los nombres de las variables en el archivo COMPADRE, Nota que 59 variables en la base de datos de COMPADRE.
 ```
 
-
-- Conocer la dimensión de la base de dato
+-   Conocer la dimensión de la base de dato
 
 ```{r Compr6}
 dim(TodasSp) # La base de datos de COMPADRE tiene 8994 filas y 59 columnas (variables)
@@ -138,22 +86,19 @@ dim(TodasSp) # La base de datos de COMPADRE tiene 8994 filas y 59 columnas (vari
 
 ------------------------------------------------------------------------
 
-
 ### Explorando la base de datos de COMPADRE
 
-Se estará evaluando múltiples funciones en Rcompadre para aprender a usar la base de datos de COMPADRE. 
+Se estará evaluando múltiples funciones en Rcompadre para aprender a usar la base de datos de COMPADRE.
 
 Para evaluar si la base de datos tiene especies de orquídeas especificas con la función 'cdb_check_species', y se puede evaluar múltiples especies a la vez. Aquí se evalúa si las especies *Epidendrum xanthinum*, *Epipactis gigantea* y *Caladenia latifolia* están en la base de datos de COMPADRE.
 
 Se nota quie solamente una de las tres especies está en la base de datos de COMPADRE.
-
 
 ```{r compr7}
 
 especies<- c("Epidendrum xanthinum", "Epipactis gigantea", "Caladenia latifolia")
 cdb_check_species(TodasSp, especies) 
 ```
-
 
 ### Crear un subconjunto de la base de datos de COMPADRE
 
@@ -168,12 +113,11 @@ index_O = TodasSp %>%
 
 ### La metadata de la base de datos de COMPADRE
 
-Con la función **cdb_metadata()** se puede evaluar la metadata de la base de datos de COMPADRE. La función muestra el número de filas y columnas, que incluye mútliples variables, tal como el nombre de la especies usada en la fuente de información 'SpeciesAuthor', el nombre del taxon reconocido "SpeciesAccepted", la fuente de información como el DOI_ISBN, los años de estudios,  sus coordinadas geográficas, el tipo de hábitat, la fuente de la información, entre otros.
+Con la función **cdb_metadata()** se puede evaluar la metadata de la base de datos de COMPADRE. La función muestra el número de filas y columnas, que incluye mútliples variables, tal como el nombre de la especies usada en la fuente de información 'SpeciesAuthor', el nombre del taxon reconocido "SpeciesAccepted", la fuente de información como el DOI_ISBN, los años de estudios, sus coordinadas geográficas, el tipo de hábitat, la fuente de la información, entre otros.
 
 ```{r Compr9}
 cdb_metadata(index_O) %>% head() # Evaluar la metadata de la base de datos de COMPADRE
 ```
-
 
 ### Extraer matrices
 
@@ -189,29 +133,25 @@ index_O %>% filter(SpeciesAccepted %in% c("Laelia speciosa")) -> Laeliasp # Extr
 Laeliasp # Visualizar la información de la especie Laelia speciosa
 ```
 
-
 ### Extraer la matriz de transición de estados de poblaciones
 
-En el siguiente script se enseña como extraer la matriz de transición de estados de poblaciones (matA) de **Laelia speciosa** y las etapas de esta matrices. Nota que el objeto **mat** es una lista de matrices que incluye la matriz de transición (matU) de estados de una población, la matriz de fecundidad (matF), la matriz de clonaje (matC) y la suma de las tres matrices (matA=matU+MatF+matC) vea el capítulo de [Matrices de transición, fecundidad y clonal]
+En el siguiente script se enseña como extraer la matriz de transición de estados de poblaciones (matA) de **Laelia speciosa** y las etapas de esta matrices. Nota que el objeto **mat** es una lista de matrices que incluye la matriz de transición (matU) de estados de una población, la matriz de fecundidad (matF), la matriz de clonaje (matC) y la suma de las tres matrices (matA=matU+MatF+matC) vea el capítulo de \[Matrices de transición, fecundidad y clonal\]
 
 ```{r Compr11}
 Laeliaspmat = matA(Laeliasp) # Extraer la matriz de transiciones de estados de la población (matA) de las cuatro filas
 Laeliaspmat
 ```
 
-
 ## Extraer matA, matU, matF y matC
 
 Note que esta funcieones bien practica porque extrae la matriz de transición de estados de poblaciones (matA), la matriz de supervivencia (matU), la matriz de fecundidad (matF) y la matriz de clonaje (matC) sin necesidad de usar el código largo en adición de los nombres de las etapas.
 
-Se selecciona la segunda fila del objeto **Laeliasp** que corresponde a la especie **Laelia speciosa** y la segunda matriz en la fila[[2]].
+Se selecciona la segunda fila del objeto **Laeliasp** que corresponde a la especie **Laelia speciosa** y la segunda matriz en la fila\[\[2\]\].
 
 ```{r Compr12}
 Laeliasp$mat[[2]]
 
 ```
-
-
 
 #### Evaluar si un genero o especie este en la base de datos de COMPADRE
 
@@ -228,14 +168,11 @@ Epidendrum = TodasSp %>%
 Epidendrum # Nota que en el genero *Epipactis*, tenemos 51 fila, pero todas son de la misma especie de dos estudios distintos.
 ```
 
+## Matrices promedio
 
+Para un estudio y especie determinados, la base de datos COM(P)ADRE puede contener múltiples matrices que reflejan diferentes combinaciones de población, año y/o tratamiento. Hay una función que permite obtener una única matriz de promedia general para cada grupo de interés (p. ej., MatrixPopulation) y, por lo tanto, limitar la pseudorreplicación. El termino usado es colapsar las matrices, con la función `mpm_mean`.
 
-## Matrices promedio 
-
-Para un estudio y especie determinados, la base de datos COM(P)ADRE puede contener múltiples matrices que reflejan diferentes combinaciones de población, año y/o tratamiento. Hay una función que permite obtener una única matriz de promedia general para cada grupo de interés (p. ej., MatrixPopulation) y, por lo tanto, limitar la pseudorreplicación. El termino usado es colapsar las matrices, con la función `mpm_mean`. 
-
-
-Seleccionamos la busqueda anterior y selecionamos solamente el estudio de Hens et al. en 2017. 
+Seleccionamos la busqueda anterior y selecionamos solamente el estudio de Hens et al. en 2017.
 
 El primer paso es convertir cada una de las matrices de transición de estados de poblaciones en una lista de matrices y luego usar la función `mpm_mean` para calcular la matriz promedio de todas las matrices de transición de estados de poblaciones. De igual manera se puede calcular la mediana de los elementos de la matriz con la función `mpm_median`.
 
@@ -251,17 +188,13 @@ mpm_mean(mpms) # calcular la matriz promedio de todas las matrices de transició
 
 ```
 
-
 ## Calcular la desviación de los elementos de la matriz
 
-De igual manera se puede calcular la desviación estándar de los elementos de la matriz de transición de estados de poblaciones con la función `mpm_sd`. 
+De igual manera se puede calcular la desviación estándar de los elementos de la matriz de transición de estados de poblaciones con la función `mpm_sd`.
 
 ```{r Compr15}
 mpm_sd(mpms) # calcular la desviación estander de los elementos de la matriz de transición de estados de poblaciones. Se consigue una matriz para matA, matU, matF y matC.
 ```
-
-
-
 
 Muchas veces es poco tedioso evaluar la base de datos completa de COMPADRE. Una manera facilitar el acceso a los datos es extraer las matrices con la función cdb_flatten. Nota lo que hace esta función es extraer todas las matrices de transición de estados de poblaciones (matA, matU, matF, matC) y las etapas de cada matriz y crear una lista con esa información.
 
@@ -276,14 +209,9 @@ Epi_flat$matA[1] # miramos solamente la primera matriz
 
 ```
 
-
-
-
-
-
 ### Evaluación de cumplimiento de condiciones
 
-Es sumamente importante el cumplimiento de los supuestos de los análisis. Si no evaluamos críticamente las condiciones de las matrices, pudiese ser que los resultados no sean biologícamente relevante.  Para los análisis de PMP es necesario que la matrices cumple con ciertas condiciones. Dependiendo de la pregunta científica sea tiene que evaluar si esas matriz tienen las condiciones necesarias. Una de estas condiciones es la ergodicidad e irreducibilidad.
+Es sumamente importante el cumplimiento de los supuestos de los análisis. Si no evaluamos críticamente las condiciones de las matrices, pudiese ser que los resultados no sean biologícamente relevante. Para los análisis de PMP es necesario que la matrices cumple con ciertas condiciones. Dependiendo de la pregunta científica sea tiene que evaluar si esas matriz tienen las condiciones necesarias. Una de estas condiciones es la ergodicidad e irreducibilidad.
 
 -   **check_ergodic**: Para la definición de ergodicidad.
 
@@ -291,11 +219,11 @@ Es sumamente importante el cumplimiento de los supuestos de los análisis. Si no
 
 -   **check_NA_A**: Determinar si hay valores faltantes en 'matA' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices.
 
--   **check_NA_U**: Determinar si hay valores faltantes en 'matU' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices. La matriz de supervivencia es la matriz más importante para evaluar el largo de vida de una especie.
+-   **check_NA_U**: Determinar si hay valores faltantes en 'matU' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices. La matriz de supervivencia es la matriz más importante para evaluar el Caladlargo de vida de una especie.
 
 -   **check_NA_F**: Determinar si hay valores faltantes en 'matF' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices. La matriz de fecundidad es la matriz más importante para evaluar el crecimiento de la población, cualquier especie donde no tiene fecundidad se vera reducido en el tiempo.
 
--   **check_NA_C**: Determinar si hay valores faltantes en 'matC'. Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices. 
+-   **check_NA_C**: Determinar si hay valores faltantes en 'matC'. Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices.
 
 -   **check_zero_U**: Determinar si la 'matU' tiene todos ceros (incluido 'NA'). Las submatrices compuestas enteramente de valores cero pueden resultar problemáticas. Puede haber buenas razones biológicas para este fenómeno. Por ejemplo, en la población focal particular en el año focal particular, realmente no se registró una supervivencia. Sin embargo, las submatrices de valor cero pueden provocar que algunos cálculos fallen y puede ser necesario excluirlas.
 
@@ -317,9 +245,9 @@ Es sumamente importante el cumplimiento de los supuestos de los análisis. Si no
 
 Usando la función cdb_flag se puede evaluar todas las opciones en la base de datos de COMPADRE.
 
-Usando la función **cdb_flag** se identifica problemas potenciales en las matrices de transición de estados de las poblaciones. Esa función añade una fila por opciones en la matriz. Nota que para cada prueba anterior crea una columna con **TRUE** o **FALSE** para cada matriz en la base de datos. 
+Usando la función **cdb_flag** se identifica problemas potenciales en las matrices de transición de estados de las poblaciones. Esa función añade una fila por opciones en la matriz. Nota que para cada prueba anterior crea una columna con **TRUE** o **FALSE** para cada matriz en la base de datos.
 
-Para facilitar el análisis usamos solamente las especies de *Caladenia*. 
+Para facilitar el análisis usamos solamente las especies de *Caladenia*.
 
 ```{r Compr17}
 #Orchids_New=as_cdb(index)
@@ -338,9 +266,7 @@ Compadre_flagged %>% select(mat, SpeciesAccepted, starts_with("check"))
 
 #### Ergodicidad e Irreducibilidad
 
-En los siguientes scripts se filtra para las matrices con ciertas condiciones para evaluar si las matrices son ergódicas e irreducibles. Notas las matrices que son ergódica son irreducibles, pero no todas las matrices irreducibles son ergódicas. Evalué la cantidad de filas en cada caso. 
-
-
+En los siguientes scripts se filtra para las matrices con ciertas condiciones para evaluar si las matrices son ergódicas e irreducibles. Notas las matrices que son ergódica son irreducibles, pero no todas las matrices irreducibles son ergódicas. Evalué la cantidad de filas en cada caso.
 
 ```{r Compr18}
 
@@ -381,41 +307,7 @@ Mat_erg_irred_fec
 
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-`
-
-
+\`
 
 http://127.0.0.1:29465/rmd_output/1/compadre_orchid-ppm-y-su-uso.html
 

@@ -41,6 +41,50 @@ library(reshape2)
 
 ```
 
+```{r}
+
+rlt_theme <- theme(
+  axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
+  axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
+  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
+  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
+) +
+  theme(
+    # Remover los border
+    panel.border = element_blank(),
+    # Remover las lineas
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Remove el fondo del panel
+    panel.background = element_blank(),
+    # añadir lineas más gruesas
+    axis.line.x = element_line(colour = "black", linewidth = 1),
+    axis.line.y = element_line(colour = "black", linewidth = 1)
+  )
+
+
+diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
+
+
+# --- 2. Combine them into a list object ---
+# This list can be added to the plot with a single '+'
+rlt_style_fill <- function() {
+  list(
+    rlt_theme,
+    scale_fill_manual(values = diverging)
+  )
+}
+
+
+rlt_style_colour <- function() {
+  list(
+    rlt_theme,
+    scale_colour_manual(values = diverging)
+  )
+}
+
+```
+
 El valor principal de los estudios científicos radica en el supuesto de que los datos obtenidos representan una versión suficientemente cercana de la realidad y cuanto a la biología de campo que pueden ser utilizados para inferir sobre la ecología y conservación de las especies de interés. Este supuesto de que los datos representan realmente a la realidad es un mito, ya que solamente son una muestra, que esperamos que se acerque lo suficiente para tener confianza en los resultados. En ningún estudio ecológico se podrán obtener **TODOS** los datos para evaluar todas las relaciones bióticas y abióticas que mantiene un organismo y sus interacciones. Dicho modelo sería demasiado complejo e irreal dentro del concepto de lo que se puede lograr en un trabajo científico. Es por ello que, el objetivo de estos trabajos es tener una apreciación de los parámetros más importantes para definir patrones e interacciones suficientemente cercanas a la realidad para ser útiles. Por consiguiente, la base de estos estudios está sostenida en las unidades de muestreo y en la recolección de datos. Si los datos no representan la realidad, las interpretaciones de los análisis pueden ser erróneas. La matemática, con sus ecuaciones y sus modelos, no hará que la biología se aproxime más a la realidad, si desde el principio los datos y el método de recolección de datos son erróneos.
 
 Es por ello que en esta sección evaluaremos diferentes aspectos de los análisis matriciales poblacionales de proyección (MPP) y diferentes aspectos de la recolección de datos que pudiesen ser problemáticos cuando uno considera la biología de una especie. La lista de *Impactos* no pretende incluir todos los posibles efectos de datos sin sentido; sino más bien, brindar algunos ejemplos de que pasa cuando uno no considera estos problemas y cómo pueden distorsionar las interpretaciones. Por lo tanto, se les extiende una advertencia a todos los biólogos de poblaciones, para que estén conscientes de estos temas y siempre evalúen críticamente sus datos desde la forma de recolección, su análisis e interpretaciones de sus resultados y aceptar que son solamente un modelo (una caricatura) de muchos posibles modelos.
@@ -507,7 +551,8 @@ ggplot(data = All_Data3, aes(x = values, fill = ind)) +
     "La distribución de las proporciones \n de plantulas que crecen a la siguiente etapas"
   ) +
   xlab("Proporciones") +
-  labs(fill = "Etapa de vida")
+  labs(fill = "Etapa de vida")+
+  rlt_style_fill()
 
 
 
@@ -584,7 +629,8 @@ ggplot(data = All_Data4, aes(x = values, fill = ind)) +
   scale_y_continuous(limit = c(0, 18)) +
   scale_colour_hue(l = 60) +
   facet_grid(~ind) +
-  labs(fill = "Etapa de vida")
+  labs(fill = "Etapa de vida")+
+  rlt_style_fill()
 
 ```
 

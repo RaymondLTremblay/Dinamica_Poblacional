@@ -13,6 +13,48 @@ library(scales)
 library(Rage)
 ```
 
+```{r}
+rlt_theme <- theme(
+  axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
+  axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
+  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
+  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
+) +
+  theme(
+    # Remover los border
+    panel.border = element_blank(),
+    # Remover las lineas
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Remove el fondo del panel
+    panel.background = element_blank(),
+    # añadir lineas más gruesas
+    axis.line.x = element_line(colour = "black", linewidth = 1),
+    axis.line.y = element_line(colour = "black", linewidth = 1)
+  )
+
+
+diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
+
+
+# --- 2. Combine them into a list object ---
+# This list can be added to the plot with a single '+'
+rlt_style_fill <- function() {
+  list(
+    rlt_theme,
+    scale_fill_manual(values = diverging)
+  )
+}
+
+
+rlt_style_colour <- function() {
+  list(
+    rlt_theme,
+    scale_colour_manual(values = diverging)
+  )
+}
+```
+
 ## Propiedades, supuestos e índices matriciales
 
 En este capítulo revisaremos algunos de los índices frecuentemente utilizados cuando hablamos de análisis matricial. Estos índices describen la calidad de la matriz por lo que su cálculo es importante para obtener resultados e interpretaciones válidas. Este capítulo se compone de dos secciones, en la primera se incluyen índices para checar el estado de la matriz, estos son: **Dimensión cuadrada**, **Ergocidad**, **no Negativa**, **Irreducibilidad** y **Primitividad**. En la segunda sección se abordan los índices que describen el comportamiento de la población a largo plazo, basados en los modelos de proyección poblacional (MPP). Estos índices permiten evaluar cómo cambia la población antes y después de un disturbio. Entre ellos se encuentran: el **Análisis de Convergencia**, **Análisis de Amortiguamiento**, **Valor reproductivo** y la **Estructura Estable**. Si se requiere conocer los índices con mayor detalle se sugiere consultar [@caswell2001matrix] y [@stott2011framework].
@@ -344,6 +386,7 @@ ggplot(todo_data_df, aes(x = Time, y = Population, color = DampingRatio)) +
     color = "Amortigamento (ζ)" # Title for the legend
   ) +
   # Customize the plot theme for better aesthetics
+  rlt_style_colour() +
   theme_minimal(base_size = 14) +
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold"),
@@ -566,6 +609,7 @@ population_plot <- ggplot(
     y = "Proporción de la Población",
     color = "Etapa de Vida"
   ) +
+  rlt_style_colour() +
   theme_minimal(base_size = 12) +
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold"),

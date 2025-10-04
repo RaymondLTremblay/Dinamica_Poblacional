@@ -21,12 +21,45 @@ library(gt)
 
 ```{r, echo=FALSE, message=FALSE}
 # Mi tema de formato de las gráficas de ggplot2 personal
+
 rlt_theme <- theme(
-  axis.title.y = element_text(colour = "grey20", size = 15, face = "bold"),
-  axis.text.x = element_text(colour = "grey20", size = 15, face = "bold"),
+  axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
+  axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
   axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
   axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
-)
+) +
+  theme(
+    # Remover los border
+    panel.border = element_blank(),
+    # Remover las lineas
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Remove el fondo del panel
+    panel.background = element_blank(),
+    # añadir lineas más gruesas
+    axis.line.x = element_line(colour = "black", linewidth = 1),
+    axis.line.y = element_line(colour = "black", linewidth = 1)
+  )
+
+
+diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
+
+# --- 2. Combine them into a list object ---
+# This list can be added to the plot with a single '+'
+rlt_style_fill <- function() {
+  list(
+    rlt_theme,
+    scale_fill_manual(values = diverging)
+  )
+}
+
+
+rlt_style_colour <- function() {
+  list(
+    rlt_theme,
+    scale_colour_manual(values = diverging)
+  )
+}
 ```
 
 ## Dinámica poblacional de largo y corto plazo
@@ -180,12 +213,13 @@ pr1df <- as.data.frame(pr1)
 pr1df$time <- seq(1, nrow(pr1df), 1)
 
 ggplot(pr1df, aes(time, pr1)) +
-  geom_line(color = "blue", size = 1) +
+  geom_line(aes(color = "blue"), size = 2) +
   geom_hline(yintercept = 1, linetype = "dashed", color = "red") +
   xlab("Time intervals") +
   ylab("Relative population size/density") +
   theme_minimal() +
-  rlt_theme
+  rlt_style_colour()+
+  theme(legend.position = "none")
 
 
 #plot(pr1, log = "y", ylim = c(0.1, 1.6), ann = FALSE)
@@ -236,12 +270,12 @@ pr3 <- project(Lr1st, vector = Wmax, time = 50)
 pr3df <- as.data.frame(pr3)
 pr3df$time <- seq(1, nrow(pr3df), 1)
 ggplot(pr3df, aes(time, pr3)) +
-  geom_line(color = "blue", size = 1) +
+  geom_line(aes(color = "blue"), size = 2) +
   geom_hline(yintercept = 1, linetype = "dashed", color = "red") +
   xlab("Time intervals") +
   ylab("Relative population size/density") +
   theme_minimal() +
-  rlt_theme
+  rlt_style_colour()
 
 
 ## Código para el plot usando el método tradicional
@@ -290,12 +324,12 @@ pr5 <- project(Lr1, vector = nLr5, time = 50)
 pr5df <- as.data.frame(pr5)
 pr5df$time <- seq(1, nrow(pr5df), 1)
 ggplot(pr5df, aes(time, pr5)) +
-  geom_line(color = "blue", size = 1) +
+  geom_line(aes(color = "blue"), size = 2) +
   geom_hline(yintercept = 1, linetype = "dashed", color = "red") +
   xlab("Time intervals") +
   ylab("Relative population size/density") +
   theme_minimal() +
-  rlt_theme
+  rlt_style_colour()
 
 #plot(pr5, log = "y", ylim = c(0.1, 1.6), ann = FALSE)
 #title(main = "Proyección de la dinámica (Escenario 5)", xlab = "Time intervals", ylab = "Population size/density")
@@ -339,9 +373,8 @@ ggplot(Population_density, aes(time, Pop, color = Escenario)) +
     x = "Time intervals",
     y = "Relative population size/density"
   ) +
-  scale_color_manual(values = c("orange", "purple", "brown")) +
   theme_minimal() +
-  rlt_theme
+  rlt_style_colour()
 ```
 
 ------------------------------------------------------------------------
@@ -372,9 +405,6 @@ abs.plot <- ggplot(data = Population_density) +
     linewidth = 0.8
   ) +
   geom_hline(yintercept = 1, linewidth = 0.8) +
-  scale_colour_manual(
-    values = c("#C6E2FF", "#B9D3EE", "black", "#9FB6CD", "#6C7B8B")
-  ) +
   theme(axis.title.x = element_text(vjust = -1, size = 12)) +
   theme(axis.title.y = element_text(vjust = 1, size = 12)) +
   theme(axis.text = element_text(size = 12)) +
@@ -383,6 +413,7 @@ abs.plot <- ggplot(data = Population_density) +
     x = "Intervalos de Proyección",
     y = "Densidad poblacional relativa \n de lambda max"
   ) +
+  rlt_style_colour() +
   theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 12))
 abs.plot
 
@@ -510,14 +541,15 @@ trans.plot <- ggplot(data = Population_density) +
     aes(x = Time, y = Projection, group = Escenario, colour = Escenario),
     linewidth = 0.8
   ) +
-  scale_colour_manual(values = c("green4", "black", "orange2")) +
+  
   labs(
     title = "Dinámica poblacional transitoria",
     x = "Intervalo de proyección (meses)",
     y = "Densidad poblacional \n relativa a lambda max"
   ) +
   ylim(0.3, 1.3) +
-  rlt_theme
+  rlt_style_colour()
+
 trans.plot
 ```
 
@@ -547,9 +579,6 @@ trans.plot <- ggplot(data = Population_density_complete) +
     aes(x = Time, y = Projection, group = Escenario, colour = Escenario),
     linewidth = 0.8
   ) +
-  scale_colour_manual(
-    values = c("green3", "purple4", "black", "pink", "orange2")
-  ) +
   labs(
     title = "Dinámica poblacional transitoria",
     x = "Intervalo de proyección (meses)",
@@ -557,7 +586,7 @@ trans.plot <- ggplot(data = Population_density_complete) +
   ) +
   #theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 12)) +
   ylim(0.3, 1.3) +
-  rlt_theme
+  rlt_style_colour()
 
 
 trans.plot
@@ -703,7 +732,7 @@ trans.plot <- ggplot(data = Population_density) +
     y = "Densidad poblacional relativa \n a lambda max"
   ) +
   ylim(0.3, 1.3) +
-  rlt_theme
+  rlt_style_colour()
 
 
 trans.plot +
@@ -711,7 +740,10 @@ trans.plot +
     "text",
     x = 49,
     y = maxatt1$maxatt,
-    label = expression(paste(underline(rho) == 0.46)),
+    # 1. Change expression() to a string
+    # 2. Add parse = TRUE
+    label = "underline(rho) == 0.46",
+    parse = TRUE,
     hjust = 1.0,
     vjust = -1
   ) +
@@ -719,10 +751,15 @@ trans.plot +
     "text",
     x = 49,
     y = maxamp5$maxamp,
-    label = expression(paste(bar(rho) == 1)),
+    # 1. Change expression() to a string
+    # 2. Add parse = TRUE
+    label = "bar(rho) == 1",
+    parse = TRUE,
     hjust = 1.22,
     vjust = -1
   )
+
+
 
 ```
 
@@ -771,7 +808,8 @@ trans.plot +
     "text",
     x = 49,
     y = maxatt1$maxatt,
-    label = expression(paste(underline(rho) == 0.46)),
+    label = "underline(rho) == 0.46",
+    parse=TRUE,
     hjust = 0.5,
     vjust = -0.8
   ) +
@@ -779,7 +817,8 @@ trans.plot +
     "text",
     x = 49,
     y = maxatt2$maxatt,
-    label = expression(paste(underline(rho) == 0.89)),
+    label = "underline(rho) == 0.89",
+    parse=TRUE,
     hjust = 0.5,
     vjust = -0.1
   ) +
@@ -787,7 +826,8 @@ trans.plot +
     "text",
     x = 49,
     y = maxatt4$maxatt,
-    label = expression(paste(underline(rho) == 0.79)),
+    label ="underline(rho) == 0.79",
+    parse=TRUE,
     hjust = 0.5,
     vjust = 0
   ) +
@@ -795,7 +835,8 @@ trans.plot +
     "text",
     x = 49,
     y = maxamp5$maxamp,
-    label = expression(paste(bar(rho) == 1.22)),
+    label = "bar(rho) == 1.22",
+    parse=TRUE,
     hjust = 0.5,
     vjust = -0.8
   )

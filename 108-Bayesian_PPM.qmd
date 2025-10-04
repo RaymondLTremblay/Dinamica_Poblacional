@@ -18,6 +18,48 @@ library(gt)
 
 ```
 
+```{r}
+rlt_theme <- theme(
+  axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
+  axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
+  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
+  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
+) +
+  theme(
+    # Remover los border
+    panel.border = element_blank(),
+    # Remover las lineas
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Remove el fondo del panel
+    panel.background = element_blank(),
+    # añadir lineas más gruesas
+    axis.line.x = element_line(colour = "black", linewidth = 1),
+    axis.line.y = element_line(colour = "black", linewidth = 1)
+  )
+
+
+diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
+
+
+# --- 2. Combine them into a list object ---
+# This list can be added to the plot with a single '+'
+rlt_style_fill <- function() {
+  list(
+    rlt_theme,
+    scale_fill_manual(values = diverging)
+  )
+}
+
+
+rlt_style_colour <- function() {
+  list(
+    rlt_theme,
+    scale_colour_manual(values = diverging)
+  )
+}
+```
+
 ## Introducción MPP Bayesiano
 
 El objetivo de este capítulo es mostrar algunos de los problemas a los que nos enfrentamos al estimar parámetros de matrices poblacionales de especies raras, de especies con tamaños de muestra limitados o de especies con transiciones poco frecuentes. Particularmente, se muestran los problemas asociados a las matrices de transición para especies raras y se propone un método basado en estadística bayesiana que permite estimar parámetros que representen de manera realista el ciclo de vida de la especie de estudio.
@@ -343,7 +385,7 @@ alltogethernow <- tibble(
 )
 ggplot(
   data = alltogethernow,
-  mapping = aes(x = fate, y = p, group = priorweight)
+  mapping = aes(x = fate, y = p, group = priorweight, colour = priorweight)
 ) +
   geom_point(
     mapping = aes(shape = priorweight),
@@ -354,7 +396,7 @@ ggplot(
     position = position_dodge(width = 0.5)
   ) +
   theme_bw() +
-  rlt_theme
+  rlt_style_colour()
 
 ```
 
@@ -429,12 +471,11 @@ ggplot(data = RLT_0.5,
        mapping = aes(x = lposterior)) + 
   geom_histogram(binwidth = 0.01, colour="white") + 
   theme_bw() +
-  rlt_theme+ geom_vline(xintercept = 1, 
-                color = "blue", linewidth=1.5)
+  rlt_style_fill() +
+  geom_vline(xintercept = 1, 
+                color = "#009392", linewidth=1.5)
 
 ```
-
-
 
 ------------------------------------------------------------------------
 

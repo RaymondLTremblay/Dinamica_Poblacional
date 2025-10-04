@@ -14,6 +14,51 @@ library(raretrans)
 library(ggpubr)
 ```
 
+```{r}
+
+rlt_theme <- theme(
+  axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
+  axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
+  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
+  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
+) +
+  theme(
+    # Remover los border
+    panel.border = element_blank(),
+    # Remover las lineas
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Remove el fondo del panel
+    panel.background = element_blank(),
+    # añadir lineas más gruesas
+    axis.line.x = element_line(colour = "black", linewidth = 1),
+    axis.line.y = element_line(colour = "black", linewidth = 1)
+  )
+
+diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
+
+
+# --- 2. Combine them into a list object ---
+# This list can be added to the plot with a single '+'
+rlt_style_fill <- function() {
+  list(
+    rlt_theme,
+    scale_fill_manual(values = diverging)
+  )
+}
+
+
+rlt_style_colour <- function() {
+  list(
+    rlt_theme,
+    scale_colour_manual(values = diverging)
+  )
+}
+
+```
+
+------------------------------------------------------------------------
+
 El termino **biología** pudiese ser un sinónimo de variación biológica. No hay dos organismos iguales, ni siquiera gemelos/clones que sean completamente idénticos. La variación biológica es una característica fundamental de la vida y es la base de la evolución, no puede haber evolución sin variación. Cuando se considera los individuos, por ejemplos humanos, fácilmente reconocemos variación, en tamaño, color de ojos, susceptibilidad a cáncer o infección y efecto que tiene el ambiente (por ejemplo la dieta o acceso a la educación) entre muchos factores que impacta la supervivencia o crecimiento y reproducción. Pero desafortunadamente cuando se considera los animales y plantas de una misma especie frecuentemente se obvia la variación en los análisis. Podemos observar variación a múltiples niveles en una misma especie
 
 -   Variación sub-individual (dentro de un individuo), un concepto bien desarrollado por Carlos Herrera de la Universidad de Sevilla [@herrera2009multiplicity]. Esta variación nunca ha sido incluido en modelos MPP.
@@ -192,9 +237,9 @@ Serapia.eq %>%
   gather(key="etapa", value="individuos") %>%  # convertir el data frame de formato ancho a largo
   mutate(etapa=factor(etapa, levels=c("plantula", "latente", "rosetta", "con_flor"))) %>% # ordenar las etapas de la vida
   ggplot(aes(x=individuos))+
-  geom_histogram(bins=30, fill="blue", color="black")+
+  geom_histogram(bins=30, aes(fill="blue"), color="white")+
   facet_wrap(~etapa, scales="free")+
-  theme_minimal()+
+  rlt_style_fill()+
   labs(title="Distribución de número de individuos esperado de *Serapia cordigera*",
        x="Número de individuos", y="Frecuencia")+
   theme(title = element_markdown())
@@ -209,11 +254,12 @@ Serapia_eq_T=Serapia.eq %>%
 
   
   ggplot(Serapia_eq_T,aes(x=total))+
-  geom_histogram(bins=30, fill="blue", color="black")+
-  theme_minimal()+
+  geom_histogram(bins=30, aes(fill="blue"), color="white")+
+  rlt_style_fill()+
   labs(title="Distribución de total de individuos esperado de *Serapia cordigera*",
-       x="Número Total de individuos por simulación", y="Frecuencia")+
-  theme(title = element_markdown())
+       x="Número total de individuos por simulación", y="Frecuencia")+
+  theme(title = element_markdown())+
+    theme(legend.position = "none")
 ```
 
 ------------------------------------------------------------------------
@@ -235,7 +281,7 @@ head(Serapia.uneq) # vemos las primeras 6 simulaciones de tamaño de muestra
 
 ### Comparar la distribución de cantidad de individuos esperado por simulaciones
 
-Ahora vamos a solapar las dos distribuciones (la de selección por igual y por poblaciones mayormente impactado por humanos) para ver si hay una diferencia en la distribución de tamaño de muestra entre las dos simulaciones. Los resultados de la simulaciones siguiere que las poblaciones dominado antropogénicas (rojo) tienen una mayor cantidad de individuos en el futuro que si las poblaciones tienen igual de probabilidades (aquamarine).
+Ahora vamos a solapar las dos distribuciones (la de selección por igual y por poblaciones mayormente impactado por humanos) para ver si hay una diferencia en la distribución de tamaño de muestra entre las dos simulaciones. Los resultados de la simulaciones siguiere que las poblaciones dominado antropogénicas (rojo) tienen una mayor cantidad de individuos en el futuro si las poblaciones tienen igual de probabilidades (aquamarine).
 
 ```{r sim7}
 
@@ -246,12 +292,13 @@ Serapia.uneq_T=Serapia.uneq %>%
 
 
 ggplot(Serapia.uneq_T, aes(total))+
-  geom_histogram( bins=30, fill="red", color="black", alpha=.5)+
+  geom_histogram(bins=30, aes(fill="blue"), color="white")+
   geom_histogram(data=Serapia_eq_T, aes(x=total), bins=30, fill="aquamarine", color="black", alpha=.5)+
-  theme_minimal()+
+  rlt_style_fill()+
   labs(title="Distribución del total de individuos esperado de *Serapia cordigera*",
        x="Número total de individuos por simulación", y="Frecuencia")+
-  theme(title = element_markdown())
+  theme(title = element_markdown())+
+  theme(legend.position = "none")
 
 ```
 
@@ -352,14 +399,14 @@ Serapia_eq_N=Serapia.eq_N %>%
 
 ```
 
-Visualizar el tamaño de poblacional esperado por etapa de la vida para las poblaciones afectada de forma antropogénicas y naturales. Se observa que las poblaciones afectada de forma antropogénicas tienen un tamaño de poblacional más grande que las poblaciones naturales.
+Visualizar el tamaño de poblacional esperado por etapa de la vida para las poblaciones afectada de forma antropogénicas y naturales. Se observa que las poblaciones afectada de forma antropogénicas tienen un tamaño de poblacional más grande que las poblaciones naturales. la poblaciones con efecto antropogénico tienen a ser de mayor cantidad.
 
 ```{r}
-
+diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
 ggplot(Serapia_eq_N, aes(total))+
-  geom_histogram( bins=30, fill="red", color="black", alpha=.5)+
+  geom_histogram(fill= "#009392", color="white",bins=30,  alpha=.5)+
   geom_histogram(data=Serapia_eq_A, aes(x=total), 
-                 bins=30, fill="blue", color="black", alpha=.5)+
+                fill="#CF597E", color="white", bins=30,  alpha=.5)+
   theme_minimal()+
   labs(title="Distribución de total de individuos esperado de *Serapia cordigera*",
        x="Número total de individuos por simulación", y="Frecuencia")+
@@ -601,10 +648,10 @@ Se nota que el crecimiento poblacional intrínsico de la especies de *Serapia co
 
 ```{r sim18}
  
-  ggplot(Tabla_resultado, aes(x=tipo, y=lambda))+
-  geom_point(stat="identity", colour="blue")+
+  ggplot(Tabla_resultado, aes(x=tipo, y=lambda, color=tipo))+
+  geom_point(stat="identity", colour="black")+
   geom_errorbar(aes(ymin=CI_inf, ymax=CI_sup), width=.2)+
-  theme_minimal()+
+  rlt_style_colour()+
   geom_hline(yintercept=1, linetype="dashed", color = "red")+
   labs(title="Comparación de simulaciones de crecimiento poblacional de *Serapia cordigera*")+
   labs(x="Tipo de variación", y="Crecimiento poblacional")+
@@ -741,6 +788,7 @@ Ahora vemos como se distribuye una distribución beta. Usamos los datos de la et
 
 ```{r sim25, warning=FALSE}
 
+
 a # los valores del shape alpha 
 b # los valores del shape beta
 
@@ -759,35 +807,35 @@ Latentes=plot_beta(0.396, 99.594)+
     labs(title = paste("Distribución de latentes \n (alpha =", 0.396, ", beta =", 99.594, ")"),
          x = "Probabilidad", y = "Densidad")+
     theme(text = element_text(size = 6))+
-  geom_vline(xintercept = 0.004, linetype = "dashed", color = "red")
+  geom_vline(xintercept = 0.004, linetype = "dashed", color = "#009392")
 
 Plantulas=plot_beta(0.000, 99.990)+
   xlim(0, .025)+ylim(0, .05)+
     labs(title = paste("Distribución de plántulas \n (alpha =", 0.000, ", beta =", 99.90, ")"),
          x = "probabilidad", y = "Densidad")+
     theme(text = element_text(size = 6))+
-  geom_vline(xintercept = 0.000, linetype = "dashed", color = "red")
+  geom_vline(xintercept = 0.000, linetype = "dashed", color = "#009392")
 
 Rosetta=plot_beta(28.710, 71.280)+
   xlim(0, .5)+
     labs(title = paste("Distribución de rosettas \n (alpha =", 28.710, ", beta =", 71.280, ")"),
          x = "probabilidad", y = "Densidad")+
     theme(text = element_text(size = 6))+
-  geom_vline(xintercept = 0.287, linetype = "dashed", color = "red")
+  geom_vline(xintercept = 0.287, linetype = "dashed", color = "#009392")
 
 Adultos=plot_beta(10.197, 89.793)+
   xlim(0, .27)+
     labs(title = paste("Distribución de Ind. con flores \n (alpha =", 10.197, ", beta =", 89.793, ")"),
          x = "probabilidad", y = "Densidad")+
     theme(text = element_text(size = 6))+
-  geom_vline(xintercept = 0.102, linetype = "dashed", color = "red")
+  geom_vline(xintercept = 0.102, linetype = "dashed", color = "#009392")
 
 Fallecidos=plot_beta(60.687, 39.303)+
   xlim(.40, .8)+
     labs(title = paste("Distribución de fallecidos \n (alpha =", 60.687, ", beta =", 39.303, ")"),
          x = "probabilidad", y = "Densidad")+
     theme(text = element_text(size = 6))+
-  geom_vline(xintercept = 0.607, linetype = "dashed", color = "red")
+  geom_vline(xintercept = 0.607, linetype = "dashed", color = "#009392")
 
 
 
