@@ -690,7 +690,7 @@ window.Quarto = {
 </div>
 <section id="introducción-mpp-bayesiano" class="level2">
 <h2 class="anchored" data-anchor-id="introducción-mpp-bayesiano">Introducción MPP Bayesiano</h2>
-<p>El objetivo de este capítulo es mostrar algunos de los problemas a los que nos enfrentamos al estimar parámetros de matrices poblacionales de especies raras, de especies con tamaños de muestra limitados o de especies con transiciones poco frecuentes. Particularmente, se muestran los problemas asociados a las matrices de transición para especies raras y se propone un método basado en estadística bayesiana que permite estimar parámetros que representen de manera realista el ciclo de vida de la especie de estudio.</p>
+<p>El objetivo de este capítulo es mostrar una alternativa bayesiana de como estimar las entradas de la matriz de transiciones y de fecundidades para resolver algunos de los problemas a los que nos enfrentamos al estimar parámetros de matrices poblacionales de especies raras, en otra palabra de especies con tamaños de muestra limitados o de especies con transiciones poco frecuentes. Particularmente, se muestran los problemas asociados a las matrices de transición para especies raras y se propone un método basado en estadística bayesiana que permite estimar parámetros que representen de manera realista el ciclo de vida de la especie de estudio.</p>
 <p>Considere un primer ejemplo donde sabemos que la especie de interés tiene tres etapas en su ciclo de vida (semillas, plántulas y adultos) de las cuales sólo los individuos en la etapa más avanzada (i.e., adultos) producen semillas. El primer paso para llevar a cabo el análisis es evaluar las etapas del ciclo de vida para determinar cuáles de éstas determinan mayoritariamente la dinámica poblacional de la especie así como evaluar cómo puede llevarse a cabo una recolección óptima de datos.</p>
 <p>En la primera figura podemos observar el ciclo de vida considerado para esta especie hipotética. Una vez definido el ciclo de vida de la especie procedimos a colectar datos de campo y a estimar las transiciones y la fertilidad. Los resultados obtenidos mostraron lo siguiente:</p>
 <ol type="1">
@@ -715,7 +715,7 @@ window.Quarto = {
 <li>La mayoría de los adultos permanecen como adultos (no se presenta mortandad).</li>
 <li>Ninguno de los adultos produce semillas.</li>
 </ul>
-<p><strong>NOTE</strong>: que es posible que los datos colectados en campo arrojen estos valores, pero muchas veces esas observaciones son resultado de tamaños de muestra limitados.</p>
+<p><strong>NOTE</strong>: que es posible que los datos colectados en campo arrojen estos valores, pero muchas veces esas observaciones son resultado de tamaños de muestra limitados. o eventos raros que no se observaron en el periodo de muestreo. En consecuencia, es importante considerar la biología de la especie y el tamaño de muestra al momento de analizar los datos.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -731,20 +731,21 @@ window.Quarto = {
 </section>
 <section id="un-ciclo-de-vida-incompleto" class="level2">
 <h2 class="anchored" data-anchor-id="un-ciclo-de-vida-incompleto">Un ciclo de vida incompleto</h2>
+<p>Este ciclo de vida no es realista ya que no hay semillas y ninguna plántula sobrevive. La tasa de crecimiento asintótica de la población observada es <span class="math inline">\(\lambda = 0.9\)</span>. La matriz no es ergódica (no se puede llegar a cualquier otro estado desde uno o más estados), y es reducible, lo que significa que una o más columnas y filas se pueden descartar y tienen las mismas propiedades en términos de sus eigenvalores y eigenvectores.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(matA, <span class="at">stages =</span> stages)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-3651b90984b4b066431e" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-3651b90984b4b066431e">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"semillas\" -> \"plantulas\" -> \"adultos\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"semillas\" -> \"plantulas\" -> \"adultos\" [style=invis] } [style=invis] \"semillas\" -> \"plantulas\"[minlen=3,fontsize=10,color=grey,xlabel=\" 1\"]\n\"adultos\" -> \"adultos\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.9\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-a64e43a51ef86b516330" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-a64e43a51ef86b516330">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"semillas\" -> \"plantulas\" -> \"adultos\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"semillas\" -> \"plantulas\" -> \"adultos\" [style=invis] } [style=invis] \"semillas\" -> \"plantulas\"[minlen=3,fontsize=10,color=grey,xlabel=\" 1\"]\n\"adultos\" -> \"adultos\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.9\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <section id="interpretaciones-biológicamente-irreales-de-los-datos-existentes." class="level3">
 <h3 class="anchored" data-anchor-id="interpretaciones-biológicamente-irreales-de-los-datos-existentes.">Interpretaciones biológicamente irreales de los datos existentes.</h3>
 <ul>
-<li>Se quiere estudiar a los árboles del género <em>Sequoia sempervirens</em>. Una especie donde los individuos pueden ser super grande y un largo de vida promedio es estimado a estar entre 1,200 y 2,200 años. Si se muestrean árboles grandes (con un dbh de &gt; 3 metros) aunque la muestra sea de más de 1000 individuos es posible que no encontremos ningún individuo que muera entre un año y otro o entre dos periodos de muestreo. Con estos datos podríamos estimar que la supervivencia para esta especie es del 100%. Sin embargo, es necesario considerar que 1) si el tamaño de muestra aumenta a 10,000 o 100,000 árboles se podrían haber detectado uno o más individuos muertos, 2) la mortalidad en plantas frecuentemente está relacionada con el tamaño del individuo, por lo que, entre más grande es un individuo menor es la probabilidad de morir y 3) que la mortalidad en este tipo de individuos puede ser dependiente del momento del muestreo, es decir, en años con variación biótica o abiótica muy alta donde la mortalidad aumenta. Si se toman en cuenta estas consideraciones en el estudio de <em>Sequoias</em> la probabilidad de mortalidad en estos individuos sería baja pero no 0.</li>
+<li>Se quiere estudiar a los árboles del género <em>Sequoia sempervirens</em>. Una especie donde los individuos pueden ser super grande y un largo de vida promedio es estimado a estar entre 1,200 y 2,200 años. Si se muestren árboles grandes (con un dbh de &gt; 3 metros) aunque la muestra sea de más de 1000 individuos es posible que no encontremos ningún individuo que muera entre un año y otro o entre dos periodos de muestreo (por ejemplo en 10 años). Con estos datos podríamos estimar que la supervivencia para esta especie es del 100%. Sin embargo, es necesario considerar que 1) si el tamaño de muestra aumenta a 10,000 o 100,000 árboles se podrían haber detectado uno o más individuos muertos, 2) la mortalidad en plantas frecuentemente está relacionada con el tamaño del individuo, por lo que, entre más grande es un individuo menor es la probabilidad de morir y 3) que la mortalidad en este tipo de individuos puede ser dependiente del momento del muestreo, es decir, en años con variación biótica o abiótica muy alta donde la mortalidad aumenta. Si se toman en cuenta estas consideraciones en el estudio de <em>Sequoias</em> la probabilidad de mortalidad en estos individuos sería baja pero no 0.</li>
 </ul>
 <p>Tomando en cuenta los ejemplos anteriores podemos concluir que es importante considerar la biología de la especie, el método de muestreo y el tamaño de muestra para llevar a cabo un análisis de datos correcto.</p>
 <hr>
@@ -752,7 +753,7 @@ window.Quarto = {
 </section>
 <section id="el-paquete-raretrans" class="level2">
 <h2 class="anchored" data-anchor-id="el-paquete-raretrans">El paquete “raretrans”</h2>
-<p>El manuscrito <span class="citation" data-cites="tremblay2021population">Tyre, Tremblay &amp; Perez (<a href="#ref-raretrans2024" role="doc-biblioref">2024</a>)</span> contiene los datos originales y el uso del paquete. Para tener acceso a los documentos siguen el siguiente enlace https://doi.org/10.1016/j.ecolmodel.2021.109526.</p>
+<p>El siguiente sección usaremos el paquete “raretrans” que facilita los estimados de las entradas en la matrices de transicione y fecundidades. El manuscrito <span class="citation" data-cites="tremblay2021population">Tyre, Tremblay &amp; Perez (<a href="#ref-raretrans2024" role="doc-biblioref">2024</a>)</span> contiene los datos originales y el uso del paquete. Para tener acceso a los documentos siguen el siguiente enlace https://doi.org/10.1016/j.ecolmodel.2021.109526.</p>
 <p><strong>Population projections from holey matrices: Using prior information to estimate rare transition events</strong></p>
 <p>Resumen</p>
 <p>Las matrices de proyección poblacional (MPM) son una herramienta común para predecir el comportamiento de la población a corto y largo plazo. Sin embargo, cuando se utilizan para especies raras, amenazadas y en peligro de extinción los datos disponibles suelen tener tamaños de muestra reducido. En consecuencia, algunos eventos demográficos podrían perderse en la modelización dando como resultado matrices con eventos faltantes que reflejen trayectorias de ciclo de vida incompletas o biológicamente poco realistas. Estas matrices con eventos faltantes (ceros; e.g., sin observación de semillas que se transforman en plántulas) a menudo se sustituyen utilizando información de la literatura aunque información referente a otras poblaciones, otros períodos de tiempo, otras especies usualmente se omite.</p>
@@ -940,8 +941,8 @@ $Fmat
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_life_cycle</span>(Tmat, <span class="at">stages =</span> stages2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-b7d4b1cbf361a0c99b1f" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-b7d4b1cbf361a0c99b1f">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plantulas\" -> \"juveniles\" -> \"adultos\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plantulas\" -> \"juveniles\" -> \"adultos\" [style=invis] } [style=invis] \"plantulas\" -> \"plantulas\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.5\"]\n\"juveniles\" -> \"juveniles\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.833\"]\n\"juveniles\" -> \"adultos\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.167\"]\n\"adultos\" -> \"adultos\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.875\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-af6ba87c485f63e37895" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-af6ba87c485f63e37895">{"x":{"diagram":"\ndigraph {\n  {\n    graph[overlap=false];\n    rank=same;\n    node [shape= egg , fontsize= 12 ]; \"plantulas\" -> \"juveniles\" -> \"adultos\" [style=invis] \n  } ordering=out\n  x [style=invis]\n  x -> { \"plantulas\" -> \"juveniles\" -> \"adultos\" [style=invis] } [style=invis] \"plantulas\" -> \"plantulas\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.5\"]\n\"juveniles\" -> \"juveniles\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.833\"]\n\"juveniles\" -> \"adultos\"[minlen=3,fontsize=10,color=grey,xlabel=\" 0.167\"]\n\"adultos\" -> \"adultos\"[minlen=0,fontsize=10,color=grey,xlabel=\" 0.875\"]\n labelloc=\"t\";\n  label=\"  \"\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <hr>
@@ -1144,10 +1145,10 @@ $Fmat
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
-             [,1]      [,2]         [,3]
-[1,] 0.0675650509 0.0157329 0.0642227954
-[2,] 0.4172656602 0.7142076 0.0001845602
-[3,] 0.0000169227 0.2016203 0.8803321459</code></pre>
+             [,1]        [,2]        [,3]
+[1,] 3.664593e-01 0.004967975 0.485353050
+[2,] 3.431879e-01 0.795990603 0.004576251
+[3,] 1.682596e-06 0.159020669 0.867438662</code></pre>
 </div>
 </div>
 </section>
@@ -1218,23 +1219,23 @@ $Fmat
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>gt<span class="sc">::</span><span class="fu">gt</span>(<span class="fu">signif</span>(RLT_0<span class="fl">.5</span>_summary, <span class="at">digits =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="bkdjdgjjtv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#bkdjdgjjtv table {
+<div id="fyvvzstrar" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#fyvvzstrar table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#bkdjdgjjtv thead, #bkdjdgjjtv tbody, #bkdjdgjjtv tfoot, #bkdjdgjjtv tr, #bkdjdgjjtv td, #bkdjdgjjtv th {
+#fyvvzstrar thead, #fyvvzstrar tbody, #fyvvzstrar tfoot, #fyvvzstrar tr, #fyvvzstrar td, #fyvvzstrar th {
   border-style: none;
 }
 
-#bkdjdgjjtv p {
+#fyvvzstrar p {
   margin: 0;
   padding: 0;
 }
 
-#bkdjdgjjtv .gt_table {
+#fyvvzstrar .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1260,12 +1261,12 @@ $Fmat
   border-left-color: #D3D3D3;
 }
 
-#bkdjdgjjtv .gt_caption {
+#fyvvzstrar .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#bkdjdgjjtv .gt_title {
+#fyvvzstrar .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1277,7 +1278,7 @@ $Fmat
   border-bottom-width: 0;
 }
 
-#bkdjdgjjtv .gt_subtitle {
+#fyvvzstrar .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1289,7 +1290,7 @@ $Fmat
   border-top-width: 0;
 }
 
-#bkdjdgjjtv .gt_heading {
+#fyvvzstrar .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1301,13 +1302,13 @@ $Fmat
   border-right-color: #D3D3D3;
 }
 
-#bkdjdgjjtv .gt_bottom_border {
+#fyvvzstrar .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#bkdjdgjjtv .gt_col_headings {
+#fyvvzstrar .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1322,7 +1323,7 @@ $Fmat
   border-right-color: #D3D3D3;
 }
 
-#bkdjdgjjtv .gt_col_heading {
+#fyvvzstrar .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1342,7 +1343,7 @@ $Fmat
   overflow-x: hidden;
 }
 
-#bkdjdgjjtv .gt_column_spanner_outer {
+#fyvvzstrar .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1354,15 +1355,15 @@ $Fmat
   padding-right: 4px;
 }
 
-#bkdjdgjjtv .gt_column_spanner_outer:first-child {
+#fyvvzstrar .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#bkdjdgjjtv .gt_column_spanner_outer:last-child {
+#fyvvzstrar .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#bkdjdgjjtv .gt_column_spanner {
+#fyvvzstrar .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1374,11 +1375,11 @@ $Fmat
   width: 100%;
 }
 
-#bkdjdgjjtv .gt_spanner_row {
+#fyvvzstrar .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#bkdjdgjjtv .gt_group_heading {
+#fyvvzstrar .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1404,7 +1405,7 @@ $Fmat
   text-align: left;
 }
 
-#bkdjdgjjtv .gt_empty_group_heading {
+#fyvvzstrar .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1419,15 +1420,15 @@ $Fmat
   vertical-align: middle;
 }
 
-#bkdjdgjjtv .gt_from_md > :first-child {
+#fyvvzstrar .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#bkdjdgjjtv .gt_from_md > :last-child {
+#fyvvzstrar .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#bkdjdgjjtv .gt_row {
+#fyvvzstrar .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1446,7 +1447,7 @@ $Fmat
   overflow-x: hidden;
 }
 
-#bkdjdgjjtv .gt_stub {
+#fyvvzstrar .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1459,7 +1460,7 @@ $Fmat
   padding-right: 5px;
 }
 
-#bkdjdgjjtv .gt_stub_row_group {
+#fyvvzstrar .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1473,15 +1474,15 @@ $Fmat
   vertical-align: top;
 }
 
-#bkdjdgjjtv .gt_row_group_first td {
+#fyvvzstrar .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#bkdjdgjjtv .gt_row_group_first th {
+#fyvvzstrar .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#bkdjdgjjtv .gt_summary_row {
+#fyvvzstrar .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1491,16 +1492,16 @@ $Fmat
   padding-right: 5px;
 }
 
-#bkdjdgjjtv .gt_first_summary_row {
+#fyvvzstrar .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#bkdjdgjjtv .gt_first_summary_row.thick {
+#fyvvzstrar .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#bkdjdgjjtv .gt_last_summary_row {
+#fyvvzstrar .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1510,7 +1511,7 @@ $Fmat
   border-bottom-color: #D3D3D3;
 }
 
-#bkdjdgjjtv .gt_grand_summary_row {
+#fyvvzstrar .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1520,7 +1521,7 @@ $Fmat
   padding-right: 5px;
 }
 
-#bkdjdgjjtv .gt_first_grand_summary_row {
+#fyvvzstrar .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1530,7 +1531,7 @@ $Fmat
   border-top-color: #D3D3D3;
 }
 
-#bkdjdgjjtv .gt_last_grand_summary_row_top {
+#fyvvzstrar .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1540,11 +1541,11 @@ $Fmat
   border-bottom-color: #D3D3D3;
 }
 
-#bkdjdgjjtv .gt_striped {
+#fyvvzstrar .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#bkdjdgjjtv .gt_table_body {
+#fyvvzstrar .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1553,7 +1554,7 @@ $Fmat
   border-bottom-color: #D3D3D3;
 }
 
-#bkdjdgjjtv .gt_footnotes {
+#fyvvzstrar .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1567,7 +1568,7 @@ $Fmat
   border-right-color: #D3D3D3;
 }
 
-#bkdjdgjjtv .gt_footnote {
+#fyvvzstrar .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1576,7 +1577,7 @@ $Fmat
   padding-right: 5px;
 }
 
-#bkdjdgjjtv .gt_sourcenotes {
+#fyvvzstrar .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1590,7 +1591,7 @@ $Fmat
   border-right-color: #D3D3D3;
 }
 
-#bkdjdgjjtv .gt_sourcenote {
+#fyvvzstrar .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1598,72 +1599,72 @@ $Fmat
   padding-right: 5px;
 }
 
-#bkdjdgjjtv .gt_left {
+#fyvvzstrar .gt_left {
   text-align: left;
 }
 
-#bkdjdgjjtv .gt_center {
+#fyvvzstrar .gt_center {
   text-align: center;
 }
 
-#bkdjdgjjtv .gt_right {
+#fyvvzstrar .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#bkdjdgjjtv .gt_font_normal {
+#fyvvzstrar .gt_font_normal {
   font-weight: normal;
 }
 
-#bkdjdgjjtv .gt_font_bold {
+#fyvvzstrar .gt_font_bold {
   font-weight: bold;
 }
 
-#bkdjdgjjtv .gt_font_italic {
+#fyvvzstrar .gt_font_italic {
   font-style: italic;
 }
 
-#bkdjdgjjtv .gt_super {
+#fyvvzstrar .gt_super {
   font-size: 65%;
 }
 
-#bkdjdgjjtv .gt_footnote_marks {
+#fyvvzstrar .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#bkdjdgjjtv .gt_asterisk {
+#fyvvzstrar .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#bkdjdgjjtv .gt_indent_1 {
+#fyvvzstrar .gt_indent_1 {
   text-indent: 5px;
 }
 
-#bkdjdgjjtv .gt_indent_2 {
+#fyvvzstrar .gt_indent_2 {
   text-indent: 10px;
 }
 
-#bkdjdgjjtv .gt_indent_3 {
+#fyvvzstrar .gt_indent_3 {
   text-indent: 15px;
 }
 
-#bkdjdgjjtv .gt_indent_4 {
+#fyvvzstrar .gt_indent_4 {
   text-indent: 20px;
 }
 
-#bkdjdgjjtv .gt_indent_5 {
+#fyvvzstrar .gt_indent_5 {
   text-indent: 25px;
 }
 
-#bkdjdgjjtv .katex-display {
+#fyvvzstrar .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#bkdjdgjjtv div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#fyvvzstrar div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1683,8 +1684,8 @@ $Fmat
 <tr class="odd">
 <td class="gt_row gt_right" headers="medianaL">0.96</td>
 <td class="gt_row gt_right" headers="promedioL">0.96</td>
-<td class="gt_row gt_right" headers="skewnessL">-0.22</td>
-<td class="gt_row gt_right" headers="ICrBajo">0.88</td>
+<td class="gt_row gt_right" headers="skewnessL">-0.18</td>
+<td class="gt_row gt_right" headers="ICrBajo">0.87</td>
 <td class="gt_row gt_right" headers="ICrAlto">1</td>
 <td class="gt_row gt_right" headers="p_increase">0.14</td>
 </tr>
@@ -2338,7 +2339,7 @@ Tyre A, Tremblay R, Perez M. 2024. <em><a href="https://github.com/atyre2/raretr
 <span id="cb43-64"><a href="#cb43-64" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-65"><a href="#cb43-65" aria-hidden="true" tabindex="-1"></a><span class="fu">## Introducción MPP Bayesiano</span></span>
 <span id="cb43-66"><a href="#cb43-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-67"><a href="#cb43-67" aria-hidden="true" tabindex="-1"></a>El objetivo de este capítulo es mostrar algunos de los problemas a los que nos enfrentamos al estimar parámetros de matrices poblacionales de especies raras, de especies con tamaños de muestra limitados o de especies con transiciones poco frecuentes. Particularmente, se muestran los problemas asociados a las matrices de transición para especies raras y se propone un método basado en estadística bayesiana que permite estimar parámetros que representen de manera realista el ciclo de vida de la especie de estudio.</span>
+<span id="cb43-67"><a href="#cb43-67" aria-hidden="true" tabindex="-1"></a>El objetivo de este capítulo es mostrar una alternativa bayesiana de como estimar las entradas de la matriz de transiciones y de fecundidades para resolver algunos de los problemas a los que nos enfrentamos al estimar parámetros de matrices poblacionales de especies raras, en otra palabra de especies con tamaños de muestra limitados o de especies con transiciones poco frecuentes. Particularmente, se muestran los problemas asociados a las matrices de transición para especies raras y se propone un método basado en estadística bayesiana que permite estimar parámetros que representen de manera realista el ciclo de vida de la especie de estudio.</span>
 <span id="cb43-68"><a href="#cb43-68" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-69"><a href="#cb43-69" aria-hidden="true" tabindex="-1"></a>Considere un primer ejemplo donde sabemos que la especie de interés tiene tres etapas en su ciclo de vida (semillas, plántulas y adultos) de las cuales sólo los individuos en la etapa más avanzada (i.e., adultos) producen semillas. El primer paso para llevar a cabo el análisis es evaluar las etapas del ciclo de vida para determinar cuáles de éstas determinan mayoritariamente la dinámica poblacional de la especie así como evaluar cómo puede llevarse a cabo una recolección óptima de datos.</span>
 <span id="cb43-70"><a href="#cb43-70" aria-hidden="true" tabindex="-1"></a></span>
@@ -2364,24 +2365,24 @@ Tyre A, Tremblay R, Perez M. 2024. <em><a href="https://github.com/atyre2/raretr
 <span id="cb43-90"><a href="#cb43-90" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>La mayoría de los adultos permanecen como adultos (no se presenta mortandad).</span>
 <span id="cb43-91"><a href="#cb43-91" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Ninguno de los adultos produce semillas.</span>
 <span id="cb43-92"><a href="#cb43-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-93"><a href="#cb43-93" aria-hidden="true" tabindex="-1"></a>**NOTE**: que es posible que los datos colectados en campo arrojen estos valores, pero muchas veces esas observaciones son resultado de tamaños de muestra limitados.</span>
+<span id="cb43-93"><a href="#cb43-93" aria-hidden="true" tabindex="-1"></a>**NOTE**: que es posible que los datos colectados en campo arrojen estos valores, pero muchas veces esas observaciones son resultado de tamaños de muestra limitados. o eventos raros que no se observaron en el periodo de muestreo. En consecuencia, es importante considerar la biología de la especie y el tamaño de muestra al momento de analizar los datos.</span>
 <span id="cb43-94"><a href="#cb43-94" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-95"><a href="#cb43-95" aria-hidden="true" tabindex="-1"></a><span class="in">```{r bayes1, message=FALSE}</span></span>
 <span id="cb43-96"><a href="#cb43-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-97"><a href="#cb43-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-98"><a href="#cb43-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-99"><a href="#cb43-99" aria-hidden="true" tabindex="-1"></a>matA <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb43-100"><a href="#cb43-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
-<span id="cb43-101"><a href="#cb43-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
-<span id="cb43-102"><a href="#cb43-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.9</span>)</span>
-<span id="cb43-103"><a href="#cb43-103" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb43-104"><a href="#cb43-104" aria-hidden="true" tabindex="-1"></a>stages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"semillas"</span>, <span class="st">"plantulas"</span>, <span class="st">"adultos"</span>)</span>
-<span id="cb43-105"><a href="#cb43-105" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb43-106"><a href="#cb43-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-97"><a href="#cb43-97" aria-hidden="true" tabindex="-1"></a>matA <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb43-98"><a href="#cb43-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
+<span id="cb43-99"><a href="#cb43-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>),</span>
+<span id="cb43-100"><a href="#cb43-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.9</span>)</span>
+<span id="cb43-101"><a href="#cb43-101" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb43-102"><a href="#cb43-102" aria-hidden="true" tabindex="-1"></a>stages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"semillas"</span>, <span class="st">"plantulas"</span>, <span class="st">"adultos"</span>)</span>
+<span id="cb43-103"><a href="#cb43-103" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb43-104"><a href="#cb43-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-105"><a href="#cb43-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-106"><a href="#cb43-106" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb43-107"><a href="#cb43-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-108"><a href="#cb43-108" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-108"><a href="#cb43-108" aria-hidden="true" tabindex="-1"></a><span class="fu">## Un ciclo de vida incompleto</span></span>
 <span id="cb43-109"><a href="#cb43-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-110"><a href="#cb43-110" aria-hidden="true" tabindex="-1"></a><span class="fu">## Un ciclo de vida incompleto</span></span>
+<span id="cb43-110"><a href="#cb43-110" aria-hidden="true" tabindex="-1"></a>Este ciclo de vida no es realista ya que no hay semillas y ninguna plántula sobrevive. La tasa de crecimiento asintótica de la población observada es $\lambda = 0.9$. La matriz no es ergódica (no se puede llegar a cualquier otro estado desde uno o más estados), y es reducible, lo que significa que una o más columnas y filas se pueden descartar y tienen las mismas propiedades en términos de sus eigenvalores y eigenvectores.</span>
 <span id="cb43-111"><a href="#cb43-111" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-112"><a href="#cb43-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{r bayes2}</span></span>
 <span id="cb43-113"><a href="#cb43-113" aria-hidden="true" tabindex="-1"></a></span>
@@ -2391,7 +2392,7 @@ Tyre A, Tremblay R, Perez M. 2024. <em><a href="https://github.com/atyre2/raretr
 <span id="cb43-117"><a href="#cb43-117" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-118"><a href="#cb43-118" aria-hidden="true" tabindex="-1"></a><span class="fu">### Interpretaciones biológicamente irreales de los datos existentes.</span></span>
 <span id="cb43-119"><a href="#cb43-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-120"><a href="#cb43-120" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Se quiere estudiar a los árboles del género *Sequoia sempervirens*. Una especie donde los individuos pueden ser super grande y un largo de vida promedio es estimado a estar entre 1,200 y 2,200 años. Si se muestrean árboles grandes (con un dbh de \&gt; 3 metros) aunque la muestra sea de más de 1000 individuos es posible que no encontremos ningún individuo que muera entre un año y otro o entre dos periodos de muestreo. Con estos datos podríamos estimar que la supervivencia para esta especie es del 100%. Sin embargo, es necesario considerar que 1) si el tamaño de muestra aumenta a 10,000 o 100,000 árboles se podrían haber detectado uno o más individuos muertos, 2) la mortalidad en plantas frecuentemente está relacionada con el tamaño del individuo, por lo que, entre más grande es un individuo menor es la probabilidad de morir y 3) que la mortalidad en este tipo de individuos puede ser dependiente del momento del muestreo, es decir, en años con variación biótica o abiótica muy alta donde la mortalidad aumenta. Si se toman en cuenta estas consideraciones en el estudio de *Sequoias* la probabilidad de mortalidad en estos individuos sería baja pero no 0.</span>
+<span id="cb43-120"><a href="#cb43-120" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Se quiere estudiar a los árboles del género *Sequoia sempervirens*. Una especie donde los individuos pueden ser super grande y un largo de vida promedio es estimado a estar entre 1,200 y 2,200 años. Si se muestren árboles grandes (con un dbh de \&gt; 3 metros) aunque la muestra sea de más de 1000 individuos es posible que no encontremos ningún individuo que muera entre un año y otro o entre dos periodos de muestreo (por ejemplo en 10 años). Con estos datos podríamos estimar que la supervivencia para esta especie es del 100%. Sin embargo, es necesario considerar que 1) si el tamaño de muestra aumenta a 10,000 o 100,000 árboles se podrían haber detectado uno o más individuos muertos, 2) la mortalidad en plantas frecuentemente está relacionada con el tamaño del individuo, por lo que, entre más grande es un individuo menor es la probabilidad de morir y 3) que la mortalidad en este tipo de individuos puede ser dependiente del momento del muestreo, es decir, en años con variación biótica o abiótica muy alta donde la mortalidad aumenta. Si se toman en cuenta estas consideraciones en el estudio de *Sequoias* la probabilidad de mortalidad en estos individuos sería baja pero no 0.</span>
 <span id="cb43-121"><a href="#cb43-121" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-122"><a href="#cb43-122" aria-hidden="true" tabindex="-1"></a>Tomando en cuenta los ejemplos anteriores podemos concluir que es importante considerar la biología de la especie, el método de muestreo y el tamaño de muestra para llevar a cabo un análisis de datos correcto.</span>
 <span id="cb43-123"><a href="#cb43-123" aria-hidden="true" tabindex="-1"></a></span>
@@ -2399,7 +2400,7 @@ Tyre A, Tremblay R, Perez M. 2024. <em><a href="https://github.com/atyre2/raretr
 <span id="cb43-125"><a href="#cb43-125" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-126"><a href="#cb43-126" aria-hidden="true" tabindex="-1"></a><span class="fu">## El paquete "raretrans"</span></span>
 <span id="cb43-127"><a href="#cb43-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-128"><a href="#cb43-128" aria-hidden="true" tabindex="-1"></a>El manuscrito <span class="co">[</span><span class="ot">@tremblay2021population, @raretrans2024</span><span class="co">]</span> contiene los datos originales y el uso del paquete. Para tener acceso a los documentos siguen el siguiente enlace https://doi.org/10.1016/j.ecolmodel.2021.109526.</span>
+<span id="cb43-128"><a href="#cb43-128" aria-hidden="true" tabindex="-1"></a>El siguiente sección usaremos el paquete "raretrans" que facilita los estimados de las entradas en la matrices de transicione y fecundidades. El manuscrito <span class="co">[</span><span class="ot">@tremblay2021population, @raretrans2024</span><span class="co">]</span> contiene los datos originales y el uso del paquete. Para tener acceso a los documentos siguen el siguiente enlace https://doi.org/10.1016/j.ecolmodel.2021.109526.</span>
 <span id="cb43-129"><a href="#cb43-129" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-130"><a href="#cb43-130" aria-hidden="true" tabindex="-1"></a>**Population projections from holey matrices: Using prior information to estimate rare transition events**</span>
 <span id="cb43-131"><a href="#cb43-131" aria-hidden="true" tabindex="-1"></a></span>

@@ -62,7 +62,7 @@ rlt_style_colour <- function() {
 
 ## Introducción MPP Bayesiano
 
-El objetivo de este capítulo es mostrar algunos de los problemas a los que nos enfrentamos al estimar parámetros de matrices poblacionales de especies raras, de especies con tamaños de muestra limitados o de especies con transiciones poco frecuentes. Particularmente, se muestran los problemas asociados a las matrices de transición para especies raras y se propone un método basado en estadística bayesiana que permite estimar parámetros que representen de manera realista el ciclo de vida de la especie de estudio.
+El objetivo de este capítulo es mostrar una alternativa bayesiana de como estimar las entradas de la matriz de transiciones y de fecundidades para resolver algunos de los problemas a los que nos enfrentamos al estimar parámetros de matrices poblacionales de especies raras, en otra palabra de especies con tamaños de muestra limitados o de especies con transiciones poco frecuentes. Particularmente, se muestran los problemas asociados a las matrices de transición para especies raras y se propone un método basado en estadística bayesiana que permite estimar parámetros que representen de manera realista el ciclo de vida de la especie de estudio.
 
 Considere un primer ejemplo donde sabemos que la especie de interés tiene tres etapas en su ciclo de vida (semillas, plántulas y adultos) de las cuales sólo los individuos en la etapa más avanzada (i.e., adultos) producen semillas. El primer paso para llevar a cabo el análisis es evaluar las etapas del ciclo de vida para determinar cuáles de éstas determinan mayoritariamente la dinámica poblacional de la especie así como evaluar cómo puede llevarse a cabo una recolección óptima de datos.
 
@@ -88,11 +88,9 @@ Algunas interpretaciones biológicamente NO realistas para los datos recolectado
 -   La mayoría de los adultos permanecen como adultos (no se presenta mortandad).
 -   Ninguno de los adultos produce semillas.
 
-**NOTE**: que es posible que los datos colectados en campo arrojen estos valores, pero muchas veces esas observaciones son resultado de tamaños de muestra limitados.
+**NOTE**: que es posible que los datos colectados en campo arrojen estos valores, pero muchas veces esas observaciones son resultado de tamaños de muestra limitados. o eventos raros que no se observaron en el periodo de muestreo. En consecuencia, es importante considerar la biología de la especie y el tamaño de muestra al momento de analizar los datos.
 
 ```{r bayes1, message=FALSE}
-
-
 
 matA <- rbind(
   c(0.0, 0.0, 0.0),
@@ -107,6 +105,8 @@ title <- NULL
 
 ## Un ciclo de vida incompleto
 
+Este ciclo de vida no es realista ya que no hay semillas y ninguna plántula sobrevive. La tasa de crecimiento asintótica de la población observada es $\lambda = 0.9$. La matriz no es ergódica (no se puede llegar a cualquier otro estado desde uno o más estados), y es reducible, lo que significa que una o más columnas y filas se pueden descartar y tienen las mismas propiedades en términos de sus eigenvalores y eigenvectores.
+
 ```{r bayes2}
 
 plot_life_cycle(matA, stages = stages)
@@ -115,7 +115,7 @@ plot_life_cycle(matA, stages = stages)
 
 ### Interpretaciones biológicamente irreales de los datos existentes.
 
--   Se quiere estudiar a los árboles del género *Sequoia sempervirens*. Una especie donde los individuos pueden ser super grande y un largo de vida promedio es estimado a estar entre 1,200 y 2,200 años. Si se muestrean árboles grandes (con un dbh de \> 3 metros) aunque la muestra sea de más de 1000 individuos es posible que no encontremos ningún individuo que muera entre un año y otro o entre dos periodos de muestreo. Con estos datos podríamos estimar que la supervivencia para esta especie es del 100%. Sin embargo, es necesario considerar que 1) si el tamaño de muestra aumenta a 10,000 o 100,000 árboles se podrían haber detectado uno o más individuos muertos, 2) la mortalidad en plantas frecuentemente está relacionada con el tamaño del individuo, por lo que, entre más grande es un individuo menor es la probabilidad de morir y 3) que la mortalidad en este tipo de individuos puede ser dependiente del momento del muestreo, es decir, en años con variación biótica o abiótica muy alta donde la mortalidad aumenta. Si se toman en cuenta estas consideraciones en el estudio de *Sequoias* la probabilidad de mortalidad en estos individuos sería baja pero no 0.
+-   Se quiere estudiar a los árboles del género *Sequoia sempervirens*. Una especie donde los individuos pueden ser super grande y un largo de vida promedio es estimado a estar entre 1,200 y 2,200 años. Si se muestren árboles grandes (con un dbh de \> 3 metros) aunque la muestra sea de más de 1000 individuos es posible que no encontremos ningún individuo que muera entre un año y otro o entre dos periodos de muestreo (por ejemplo en 10 años). Con estos datos podríamos estimar que la supervivencia para esta especie es del 100%. Sin embargo, es necesario considerar que 1) si el tamaño de muestra aumenta a 10,000 o 100,000 árboles se podrían haber detectado uno o más individuos muertos, 2) la mortalidad en plantas frecuentemente está relacionada con el tamaño del individuo, por lo que, entre más grande es un individuo menor es la probabilidad de morir y 3) que la mortalidad en este tipo de individuos puede ser dependiente del momento del muestreo, es decir, en años con variación biótica o abiótica muy alta donde la mortalidad aumenta. Si se toman en cuenta estas consideraciones en el estudio de *Sequoias* la probabilidad de mortalidad en estos individuos sería baja pero no 0.
 
 Tomando en cuenta los ejemplos anteriores podemos concluir que es importante considerar la biología de la especie, el método de muestreo y el tamaño de muestra para llevar a cabo un análisis de datos correcto.
 
@@ -123,7 +123,7 @@ Tomando en cuenta los ejemplos anteriores podemos concluir que es importante con
 
 ## El paquete "raretrans"
 
-El manuscrito [@tremblay2021population, @raretrans2024] contiene los datos originales y el uso del paquete. Para tener acceso a los documentos siguen el siguiente enlace https://doi.org/10.1016/j.ecolmodel.2021.109526.
+El siguiente sección usaremos el paquete "raretrans" que facilita los estimados de las entradas en la matrices de transicione y fecundidades. El manuscrito [@tremblay2021population, @raretrans2024] contiene los datos originales y el uso del paquete. Para tener acceso a los documentos siguen el siguiente enlace https://doi.org/10.1016/j.ecolmodel.2021.109526.
 
 **Population projections from holey matrices: Using prior information to estimate rare transition events**
 

@@ -117,9 +117,18 @@ ec_df = as.data.frame(elas(ec)) |> round(3)
 
 ec_df = ec_df %>%
   bind_rows(summarise_all(., ~ if (is.numeric(.)) sum(.) else "Total"))
+
 ```
 
+
+how to add a column with the names of the stages to the script below
+
+
 ```{r, Elas3b, echo=FALSE, warning = FALSE, message= FALSE}
+
+ec_df <- ec_df %>%
+  mutate(stages = c("plántula", "juvenil", "adulto1", "adulto2", "suma")) %>%  # Add the new column
+  relocate(stages, .before = everything())
 
 ec_df %>%
   gt() %>%
@@ -265,11 +274,11 @@ En la Figura 1a y b se observa los valores de elasticidad añadidos por proceso 
 ![*Lepanthes eltoroensis*. Foto: Tremblay](Species/Lepanthes%20eltoroensis%20Tremblay.jpeg){style="float: left; margin: 10px;width: 40% ; "}
 :::
 
--   *Artorima erubescens* [@garcia2003demografia] -rojo-,
--   *Erycina crista-galli* [@mondragon2007life] -verde-marón-,
--   *Laelia speciosa* [@hernandez1992dinamica] -verde-
--   *Lepanthes caritensis* [@tremblay1997lepanthes] -azul-
--   *Lepanthes eltoroensis* [@tremblay2003population] -violeta-.
+-   *Artorima erubescens* [@garcia2003demografia]
+-   *Erycina crista-galli* [@mondragon2007life]
+-   *Laelia speciosa* [@hernandez1992dinamica]
+-   *Lepanthes caritensis* [@tremblay1997lepanthes]
+-   *Lepanthes eltoroensis* [@tremblay2003population]
 
 en la figura 1a, la suma por la historia de vida, F: fecundidad, P: permanencia y C: crecimiento y en la figura 1b los valores de elasticidad sumados por estadios (b), P: plántulas, NR; individuos no reproductivos, R: individuos reproductivos o adultos.
 
@@ -370,7 +379,7 @@ ggplot(EE1, aes(x = Estadios2, y = Elasticidad, fill = Especie)) +
 
 ## Limitaciones
 
-Aunque las matrices son una herramienta muy útil para determinar el comportamiento demográfico de una especie o un conjunto de estas, es necesario estar conscientes que las diferentes entradas de dicha matriz son el resultado, en la mayoría de los casos, de la conjunción de varias tasas vitales a la vez [@franco2004comparative] ademas que dependen fuertemente de la calidad de los datos (vea capitulo xx ). Así mismo, es importante considerar que ciertas entradas son la combinación de varios procesos demográficos, es decir por ejemplo la entrada que representa la transición de plántula a juvenil, implica que el individuo debe sobrevivir y además crecer lo suficiente para pasar al siguiente estadio, o en el caso de la fecundidad que el individuo debe sobrevivir y además, por lo que se recomiendo separar los valores de cada proceso de cada entrada y calcular las elasticidades de las tasas vitales per se. Por consecuencia el acercamiento más reciente de “transient function” desarollado por Stott et al. [@stott2012beyond] pudiese ser un acercamiento más adecuado si los cambios en sean grandes. En adición si la población este lejos de su equilibrio de estapas/edades estable, la elasticidad no es una buena aproximación de la respuesta de la población a los cambios en las tasas vitales [@stott2012beyond]. Por lo que es recomendable usar el análisis de elasticidad solamente para poblaciones que están cerca de su equilibrio y que los cambios en las tasas vitales son pequeños.
+Aunque las matrices son una herramienta muy útil para determinar el comportamiento demográfico de una especie o un conjunto de estas, es necesario estar conscientes que las diferentes entradas de dicha matriz son el resultado, en la mayoría de los casos, de la conjunción de varias tasas vitales a la vez [@franco2004comparative] ademas que dependen fuertemente de la calidad de los datos. Así mismo, es importante considerar que ciertas entradas son la combinación de varios procesos demográficos, es decir por ejemplo la entrada que representa la transición de plántula a juvenil, implica que el individuo debe sobrevivir y además crecer lo suficiente para pasar al siguiente estadio, o en el caso de la fecundidad que el individuo debe sobrevivir y además, por lo que se recomiendo separar los valores de cada proceso de cada entrada y calcular las elasticidades de las tasas vitales per se. Por consecuencia el acercamiento más reciente de “transient function” desarollado por Stott et al. [@stott2012beyond] pudiese ser un acercamiento más adecuado si los cambios en sean grandes ya muchos los efectos no son lineales. En adición si la población este lejos de su equilibrio de etapas/edades estable, la elasticidad no es una buena aproximación de la respuesta de la población a los cambios en las tasas vitales [@stott2012beyond]. Por lo que es recomendable usar el análisis de elasticidad solamente para poblaciones que están cerca de su equilibrio y que los cambios en las tasas vitales son pequeños.
 
 Una de las limitaciones principales de los análisis de elasticidad tradicional mencionado arriba es que el modelo de respuestas es lineal. En otra palabra se asume que los cambios en las tasas vitales son proporcionales a los cambios en la tasa de crecimiento poblacional y que irrelevante del tamaño del cambio el cambio seguirá una respuesta lineal. En la realidad, los cambios en las tasas vitales no son proporcionales y lineal a los cambios en la tasa de crecimiento poblacional. Por ejemplo, si uno aumenta mucho la supervivencia de los individuos de una etapa, la tasa de crecimiento poblacional no aumentará de manera proporcional y lineal. Por consecuencia, la elasticidad es una aproximación y no una descripción exacta de la relación entre los cambios en las tasas vitales y la tasa de crecimiento poblacional y es aplicable a solamente análisis de perturbaciones pequeñas. Vea el capitulo \[x\] para métodos más avanzados de análisis de elasticidad.
 
@@ -428,4 +437,5 @@ Revisión:
 
 -   Demetria : Mayo 2025
 -   RLT: Mayo 2025
+-   RLT: Octubre 2025
 :::

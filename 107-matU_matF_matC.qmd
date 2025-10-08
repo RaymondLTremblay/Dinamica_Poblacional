@@ -49,7 +49,7 @@ plot_life_cycle(matU, stages = stages)
 
 ## MatF: Matriz de fecundidad
 
-Si uno sigue la figura resultante del Script 2. puede observar que algunos de los individuos en la segunda etapa pueden producir plántulas. Por consecuencia seria probablemente más adecuado cambiar de nombre para la segunda etapa de "juvenil" a "adultos pequeños"; debido que el concepto de juvenil pudiese ser confundido con individuos no reproductivos. Lo que se observa en el ciclo de vida son las aportaciones de plántulas que provienen de adultos pequeños y grandes. Esta separación de categorías de adultos (en este caso pequeños y grandes) es recomendables cuando las probabilidades de fecundidad son muy diferentes entre clases de tamaño, por ejemplo, en el caso de *Guariante aurantica* [@mondragon2009population] en donde al estudiar su demografía se decidió crear dos categorías de reproductivos r1 (altura del pseudobulbo entre 7 y 15 cm) y r2( pseudobulbo \> 15 cm) en donde la producción de plántulas fue de 0.007, en tanto que la de los individuos r2 fue de 0.121.
+Si uno sigue la figura resultante del Script 2. puede observar que algunos de los individuos en la segunda etapa pueden producir plántulas. Por consecuencia seria probablemente más adecuado cambiar de nombre para la segunda etapa de "juvenil" a "adultos pequeños"; debido que el concepto de juvenil pudiese ser confundido con individuos no reproductivos. Lo que se observa en el ciclo de vida son las aportaciones de plántulas que provienen de adultos pequeños y grandes. Esta separación de categorías de adultos (en este caso pequeños y grandes) es recomendables cuando las probabilidades de fecundidad son muy diferentes entre clases de tamaño, por ejemplo, en el caso de *Guariante aurantica* [@mondragon2009population] en donde al estudiar su demografía se decidió crear dos categorías de reproductivos `r1` (altura del pseudobulbo entre 7 y 15 cm) y `r2`( pseudobulbo \> 15 cm) en donde la producción de plántulas fue de 0.007, en tanto que la de los individuos r2 fue de 0.121.
 
 ```{r matA2}
 
@@ -58,7 +58,7 @@ matF <- rbind(
   c(0.0, 0.0, 0.0),
   c(0.0, 0.0, 0.0)
 )
-stages <- c("Plantulas", "Ind Pequeños", "Ind Grande")
+stages <- c("Plántulas", "Ind Pequeños", "Ind Grande")
 plot_life_cycle(matF, stages = stages)
 
 ```
@@ -83,7 +83,7 @@ A continuación vemos un ejemplo de una matriz de clonación. El único ejemplo 
 
 ------------------------------------------------------------------------
 
-### Decargar la base de datos de compradre
+### Descargar la base de datos de COMPADRE
 
 ```{r mat4, message=FALSE}
 
@@ -125,7 +125,7 @@ summary(compadre$clonality[compadre$clonality>0],) # Resumen estadístico de la 
 
 ------------------------------------------------------------------------
 
-### Control de Calidad de las matriz
+### Control de calidad de las matriz
 
 Añade control de calidad a la base de datos (por ejemplo, para entradas faltantes en **matA**). En el capítulo COMPADRE y las orquídeas se usa esa base de datos y se describe muchas alternativa para la limpieza y o sea la selección de las matriz con características específicos.
 
@@ -163,7 +163,7 @@ Seleccionamos solamente un ejemplo la Matriz de *Cypripedium calceolus*, #24262 
 Cyp_cal_2 <- orchid_clonal %>%
   filter(MatrixID == 242624)
 
-Cyp_cal_2
+#Cyp_cal_2
 ```
 
 ------------------------------------------------------------------------
@@ -178,8 +178,10 @@ for (i in 1:dim(orchid_clonal)[1]) {
   orchid_clonal$clonality[i] <- sum(orchid_clonal$mat[[i]]@matC) # suma de todos los valores de la matriz de clonación
 }
 
-orchid_clonal %>%
+Orchid_clonal_max=orchid_clonal %>%
   filter(clonality == max(clonality)) # filtrar para la suma de matC máximo
+
+Orchid_clonal_max
 
 ```
 
