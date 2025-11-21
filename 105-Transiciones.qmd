@@ -16,22 +16,44 @@ library(DiagrammeR)
 
 ## Introducción
 
-En el siguiente capítulo se enseña como calcular las transiciones para la matriz de Lefkovitch (transiciones por etapas). En la primera parte se enseña como calcular las transiciones de manera tradicional a mano y en la segunda parte veremos como calcular las transiciones de manera más eficiente usando funciones que estén disponibles en paquetes de R. Los métodos presentado aquí son una adaptación de los métodos presentados en [@caswell2000matrix] y pueden ver también una aplicación de estos métodos aplicado a las orquídeas [@tremblay2003population]. Si ha hecho análisis de matrices de transición antes, probablemente ha usado el método tradicional de calcular las transiciones y pueden obviar leer este capítulo. Este método consiste en calcular la proporciones de individuos que transitan de una clase de edad a otra. Este método es tedioso y propenso a errores cuando se hacen a mano. Pero es importante por lo menos hacer el esfuerzo una vez a mano para conocer cual es la mecánica de calcular las transiciones. En la segunda parte del capítulo veremos como calcular las transiciones usando la función **projection.matrix** del paquete **popbio**. Esta función es más eficiente y menos propensa a errores que hacerlo a mano.
+En este capítulo se explica cómo calcular las transiciones para la matriz de Lefkovitch (transiciones por etapas). La primera parte aborda el cálculo tradicional a mano, mientras que la segunda muestra cómo realizarlo de manera más eficiente utilizando funciones disponibles en paquetes de R.
+
+Los métodos presentados son una adaptación de los propuestos por [@caswell2000matrix] y se incluye una aplicación en orquídeas [@tremblay2003population]. Si ya has realizado análisis de matrices de transición, probablemente conozcas el método tradicional y podrías omitir esta sección. Este procedimiento consiste en calcular las proporciones de individuos que transitan de una clase de edad o etapa a otra, pero hacerlo manualmente puede ser tedioso y propenso a errores. Aun así, es recomendable realizarlo al menos una vez para comprender la mecánica del cálculo.
+
+En la segunda parte del capítulo se muestra cómo calcular las transiciones utilizando la función projection.matrix del paquete popbio, una alternativa más eficiente y menos susceptible a errores que el método manual.
 
 ------------------------------------------------------------------------
 
 ## Métodos tradicional de calcular las transiciones
 
-El primer paso es la tabla de datos de la orquídea y sus estados en dos periodos de tiempo, digamos un año de intervalo. Aquí adjunto un ejemplo de una tabla de datos de 19 individuos. Tenemos 4 estados en esta planta, "plantas pequeñas", "juveniles", "adultos" y "Muerto". En la tabla de datos, tenemos 19 individuos que fueron muestreados en dos periodos de tiempo. En el primer periodo de tiempo, 7 individuos estaban en el estado "plantas pequeñas", 6 en el estado "juveniles" y 6 en el estado "adultos". Para calcular las transiciones, necesitamos calcular la proporción de individuos que transitaron de un estado a otro. Por ejemplo, de los 7 individuos que estaban en el estado "plantas pequeñas " en el primer periodo de tiempo, 1 individuos estaba en el estado "plantas pequeñas" en el segundo periodo de tiempo, 2 individuos estaban en el estado "juvenile", 3 individuos estaban en el estado "adulto", y un individuo que falleció, dando las siguientes proporciones
+El primer paso consiste en construir una tabla de datos con los individuos muestreados en dos periodos de tiempo (por ejemplo, con un intervalo de un año). Supongamos que tenemos 19 individuos de una orquídea con cuatro estados:
 
-De plantas pequeñas a otras clases
+-   Plantas pequeñas
+-   Juveniles
+-   Adultos
+-   Muerto
 
--   1/7 = 0.1428, transitaron de "plantas pequeñas" a "plantas pequeñas"
--   2/7 = 0.2857, transitaron de "plantas pequeñas" a "juveniles"
--   3/7 = 0.4285 transitaron de "plantas pequeñas" a "adultos"
--   1/7 = 0.1428 fallecieron o sea que las "plantas pequeñas" en el primer periodo de tiempo fallecieron antes de llegar al segundo muestreo
+En el primer periodo:
 
-La suma de las proporciones calculado de los datos
+-   7 individuos estaban en plantas pequeñas
+-   6 en juveniles
+-   6 en adultos
+
+Para calcular las transiciones, debemos obtener la proporción de individuos que pasan de un estado a otro. Por ejemplo, de los 7 individuos que eran plantas pequeñas en el primer periodo:
+
+-   1 permaneció como planta pequeña
+-   2 pasaron a juveniles
+-   3 pasaron a adultos
+-   1 murió
+
+Esto se traduce en las siguientes proporciones:
+
+-   Plantas pequeñas → Plantas pequeñas: $\frac{1}{7}$ = 0.142871
+-   Plantas pequeñas → Juveniles: $\frac{2}{7}$ = 0.285772
+-   Plantas pequeñas → Adultos: $\frac{3}{7}$ = 0.428573
+-   Plantas pequeñas → Muerto: $\frac{1}{7}$ = 0.142871
+
+La suma de estas proporciones debe ser igual a 1 (o muy cercana, considerando redondeos).
 
 ```{r Trans2}
 
@@ -53,21 +75,21 @@ sum2
 
 ```
 
-Nota que la suma de todas estas transiciones tienen que sumar a 1.000. NO pueden ser mayor que 1 o menor de 1. Si la suma de las transiciones es mayor o menor de 1, significa que hay un error en los cálculos de las proporciones. Una de las causas principales ocurre cuando se redondea excesivamente o incorrectamente. En este caso, nota que la suma da un total de 0.9998, que es suficiente cerca de 1.0.
+**Nota**: La suma de todas las transiciones debe ser exactamente 1.000. No puede ser mayor ni menor que 1. Si la suma es distinta de 1, significa que hay un error en el cálculo de las proporciones. Una causa frecuente de este problema es el redondeo excesivo o incorrecto. En este caso, la suma total es 0.9998, lo cual es suficientemente cercano a 1.0.
 
 Ahora calculamos las otras transiciones de juveniles a otras clases
 
 -   0/6 = 0.0000, transitaron de "juveniles" a "plantas pequeñas"
 -   3/6 = 0.5000, transitaron de "juveniles" a "juveniles"
 -   2/6 = 0.3333, transitaron de "juveniles" a "adultos" '
--   1/6 = 0.1666, fallecieron de las "juveniles" en el primer periodo de tiempo fallecieron en el segundo periodo de tiempo
+-   1/6 = 0.1666, murieron entre el primer y segundo periodo
 
 De adultos a otras clases
 
 -   0/6 = 0, transitaron de "adulto" a "plantas pequeñas"
 -   0/6 = 0, transitaron de "adulto" a "juveniles"
 -   4/6 = 0.6667, transitaron de "adulto" a "adulto"
--   2/6 = 0.3333, fallecieron de las "adulto" en el primer periodo de tiempo fallecieron antes del segundo periodo de tiempo.
+-   2/6 = 0.3333, murieron antes del segundo periodo
 
 Aquí la lista completa de las transiciones a todas las etapas posibles.
 
@@ -93,14 +115,23 @@ gt(Orchis_ficticia)
 
 ------------------------------------------------------------------------
 
-### Construyendo la matriz de transiciones
+### Construcción de la matriz de transiciones
 
-Ahora usamos los valores calculados arriba para construir la matriz de transiciones.
+Ahora utilizamos los valores calculados anteriormente para construir la matriz de transiciones.
 
-Nota que en las columnas representa el estado en el periodo 1 y las filas los estados en el periodo 2. Importante la transiciones a "Muerto" no se pone en la matriz, automáticamente los análisis reconoce que 1 menos la suma las transiciones en la matriz, sera la proporciones de fallecimiento. Se añade la información usando la función matrix() de R. La función matrix() tiene los siguientes argumentos:
+**Importante**:
 
--   nrow =: el número de filas y columnas (siempre la matriz estará cuadrada.
--   byrow =: si se quiere llenar la matriz por filas (byrow) o por columnas (bycol).
+-   Las columnas representan el estado en el primer periodo.
+-   Las filas representan el estado en el segundo periodo.
+
+Las transiciones hacia el estado “Muerto” no se incluyen en la matriz, ya que los análisis reconocen automáticamente que la proporción de mortalidad se obtiene como:
+
+$$Proporción-de-fallecimiento = 1 − suma-de-las-transiciones-en-la-fila$$
+
+Para crear la matriz en `R`, se utiliza la función *matrix()*, que incluye los siguientes argumentos:
+
+-   nrow = número de filas (y columnas, porque la matriz siempre será cuadrada).
+-   byrow = indica si los datos se llenan por filas (TRUE) o por columnas (FALSE).
 
 ```{r Trans4}
 
@@ -115,7 +146,12 @@ ficticia_matrix
 
 ### Añadiendo los nombres de las etapas
 
-Es buena práctica es añadir el nombre de las etapas a la matriz ya que ayuda a encontrar inconsistencia y posible errores. Las dos funciones necesarias son **rownames** y **colnames**.
+Es una buena práctica asignar nombres a las filas y columnas de la matriz, ya que esto facilita la interpretación y ayuda a detectar inconsistencias o posibles errores.
+
+Para ello, se utilizan dos funciones en R:
+
+-   rownames(): asigna nombres a las filas.
+-   colnames(): asigna nombres a las columnas.
 
 ```{r Trans5}
 
@@ -128,11 +164,14 @@ ficticia_matrix
 
 ------------------------------------------------------------------------
 
-### Construcción de matriz con funciones en R
+### Construcción de la matriz con funciones en R
+En la siguiente sección aprenderemos a calcular las transiciones de manera más eficiente utilizando funciones disponibles en un paquete de R. La función principal que emplearemos es `projection.matrix` del paquete `popbio`.
 
-En la próxima sección veremos como calcular las transiciones de manera más eficiente usando funciones disponibles en un paquete de R. La función principal que usaremos es la función **projection.matrix** del paquete **popbio**. Sin duda esta función es más eficiente y menos propensa a errores que hacerlo a mano. Naturalmente en investigaciones, la cantidad de datos será mucho mayor al ejemplo anterior, y más datos mayor es la probabilidad de cometer errores al calcular las transiciones a mano. La función **projection.matrix** es una función que calcula las transiciones y la fecundidad a partir de una tabla de datos con los estados de los individuos en dos periodos de tiempo. Esta función es muy útil para calcular las transiciones y la fecundidad de manera rápida y eficiente.
+Esta función es mucho más rápida y menos propensa a errores que realizar los cálculos manualmente. En investigaciones reales, la cantidad de datos suele ser mucho mayor que en el ejemplo anterior, y a mayor volumen de datos, mayor es la probabilidad de cometer errores si se calculan las transiciones a mano.
 
-Los argumentos de la función **projection.matrix** son los siguientes:
+La función `projection.matrix` permite calcular tanto las transiciones como la fecundidad a partir de una tabla que contiene los estados de los individuos en dos periodos de tiempo. Esto la convierte en una herramienta muy útil para obtener resultados precisos y eficientes.
+
+Los principales argumentos de la función `projection.matrix` son los siguientes:
 
 ```         
 projection.matrix(
@@ -147,11 +186,29 @@ projection.matrix(
    )
 ```
 
-Nota que el "output" de la función **projection.matrix** es una lista con dos elementos, en dos matrices, una con las transiciones $T$ y otra con la fertilidad $F$. La primera tiene solamente los valores de transiciones y la segunda solamente los valores que corresponde a la fertilidad, o sea la cantidad de individuos que se añaden a cada clase de edad por reproducción no clonal.
+## Salida de la función projection.matrix
 
-Antes de comenzar hacer los análisis es importante que los nombres de las columnas se cambian a nombres que causan menos problemas para la función **projection.matrix**. En este caso, cambiamos los nombres de las columnas de la tabla de datos de "anio_1" a "stage" y de "anio_2" a "fate". Esos nombres corresponde a las etapas en el primer y segundo periodo de tiempo, *fate* se traduce como "destino" en español.
+El output de la función `projection.matrix` es una lista que contiene dos matrices:
 
-Los datos tienen que estar en formato de tabla de datos, o sea que cada fila es un individuo y cada columna es una variable. En este caso, tenemos 19 filas y 4 columnas. La columna "transición" no es necesaria para la función **projection.matrix**.
+- **T**: incluye únicamente los valores de transición entre etapas.
+- **F**: incluye únicamente los valores de fertilidad, es decir, la cantidad de individuos que se incorporan a cada clase de edad por reproducción no clonal.
+
+## Preparación de los datos antes del análisis
+
+Antes de comenzar con los análisis, es importante renombrar las columnas para evitar problemas con la función projection.matrix. En este caso:
+
+- Cambiamos anio_1 a stage.
+- Cambiamos anio_2 a fate.
+
+Estos nombres corresponden a las etapas en el primer y segundo periodo de tiempo. El término fate se traduce al español como “destino”.
+
+Los datos deben estar organizados en formato de tabla, donde:
+
+- Cada fila representa un individuo.
+- Cada columna representa una variable.
+
+En nuestro ejemplo, la tabla contiene 19 filas y 4 columnas.
+La columna “transición” no es necesaria para la función `projection.matrix`.
 
 ```{r}
 library(gt)
@@ -181,7 +238,7 @@ gt(Orchis_ficticia_por_ind)
 
 ```
 
-Aqui la función para cambiar los nombres de las columnas a "stage" y "fate". Mostramos los primeros 6 individuos de la tabla de datos.
+A continuación, mostramos cómo cambiar los nombres de las columnas a **stage** y **fate**, y luego visualizar los primeros seis individuos de la tabla de datos:
 
 ```{r Trans6}
 
@@ -191,7 +248,16 @@ gt(head(Orchis_ficticia_por_ind))
 
 ```
 
-Ahora que tenemos los nombres de las columnas cambiados, podemos usar la función **projection.matrix** para calcular las transiciones y la fertilidad. En este caso, la columna "fertilidad" es la cantidad de individuos que se añaden a cada clase de edad. En este caso, solamente los adultos pueden reproducirse y añadir nuevos individuos a la clase de edad "plantas pequeñas". En este caso, la fertilidad es 1/6 = 0.1666, o sea que un adulto añade un nuevo individuo a la clase de edad "plantas pequeñas" en el segundo periodo de tiempo.
+Una vez que hemos asignado los nombres a las columnas, podemos utilizar la función projection.matrix para calcular las transiciones y la fertilidad.
+
+En este contexto, la columna “fertilidad” representa la cantidad de individuos que se incorporan a cada clase de edad en el siguiente periodo.
+
+En nuestro caso, solo los adultos pueden reproducirse, añadiendo nuevos individuos a la clase “plantas pequeñas”.
+La fertilidad se calcula como:
+
+Fertilidad=$\frac{1}{6}$ = 0.1666
+
+Esto significa que, en promedio, cada adulto añade un nuevo individuo a la clase “plantas pequeñas” en el segundo periodo de tiempo.
 
 Aquí un ejemplo de la función
 
@@ -212,7 +278,17 @@ projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=TRUE)
 
 ```
 
-Si quiere la matriz con la unión de ambas matrices, puede usar el argumento **TF=FALSE** a lo que se refiere a **matA**. Nota que esta matriz se llama matA = matT + matF (la suma de las matrices de transiciones y de fertilidad)
+## Unión de matrices
+
+Si deseas obtener una matriz que combine tanto las transiciones como la fertilidad, puedes utilizar el argumento **TF** = FALSE en relación con **matA**.
+
+En este caso, la matriz resultante se define como:
+
+$$matA= \text{matT} + \text{matF}$$
+donde:
+
+- matT es la matriz de transiciones.
+- matF es la matriz de fertilidad.
 
 ```{r Trans8}
 
@@ -223,13 +299,15 @@ projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=FALSE)
 
 ------------------------------------------------------------------------
 
-## Matriz con Clonaje
+## Matriz de Clonaje
 
-Muchas orquídeas se reproducen por clonaje, o sea que los individuos son genéticamente idénticos pero se separan de la planta madre. En algunas ocasiones estos clones se pueden separar de la planta madre por medio de un **keiki** o separación de los rizomas debido que se deterioran/mueren. Este un método de reproducción asexual. En este caso, la matriz de transiciones se puede modificar para incluir el clonaje. Hay pocos ejemplos en las orquídeas de matriz que incluyen una sub-matriz de clonaje **matC**. Evolutivamente es solamente un individuo que crece y no debería se considerado como fecundidad. Este concepto de crecimiento es diferente a la fecundidad y tiene importancia en los análisis de selección natural y deriva genética (los dos procesos evolutivos). El crecimiento poblacional por medio asexual puede impactar el crecimiento intrínsico de la población y la dinámica poblacional.
+Muchas orquídeas se reproducen por clonación, lo que significa que los individuos son genéticamente idénticos y se originan a partir de la planta madre. En algunos casos, estos clones se separan mediante un keiki o por división de los rizomas cuando estos se deterioran o mueren. Este es un método de reproducción asexual.
 
-Vemos un ejemplo del trabajo de *Cypripedium calceolus* en Europa [@garcia2010living]. En este trabajo los autores querían explorar la dinámica de especies que viven a la periferia de su distribución geográfica. La poblaciones se encuentran en los Pirineos y en el norte de Europa. Aprovechamos para demostrar como se extrae las especies que tienen una matriz de clonaje, **matC**.
+En este contexto, la matriz de transiciones puede modificarse para incluir el clonaje. Existen pocos ejemplos en orquídeas donde se incorpora una submatriz de clonaje, denominada matC. Desde el punto de vista evolutivo, este proceso representa el crecimiento de un individuo y no debe considerarse como fecundidad, ya que es un mecanismo distinto. Este concepto de crecimiento es relevante en los análisis de selección natural y deriva genética, dos procesos evolutivos fundamentales. Además, la reproducción asexual puede influir en el crecimiento intrínseco y la dinámica poblacional.
 
-Primero tenemos que bajar los datos de la base de datos de COMPADRE. Para esto, tenemos que usar la función **cdb_fetch** del paquete **Rcompadre**. Esta función baja los datos de la base de datos de COMPADRE y los guarda en un objeto llamado **compadre**.
+Como ejemplo, revisamos el trabajo sobre *Cypripedium calceolus* en Europa [@garcia2010living]. En este estudio, los autores analizaron la dinámica de poblaciones situadas en la periferia de su distribución geográfica, específicamente en los Pirineos y el norte de Europa. Aprovecharemos este caso para mostrar cómo se identifican especies que incluyen una matriz de clonaje (**matC**).
+
+El primer paso consiste en descargar los datos desde la base de datos COMPADRE utilizando la función `cdb_fetch` del paquete **Rcompadre**. Esta función obtiene la información y la almacena en un objeto llamado compadre.
 
 ```{r Trans10, message=FALSE}
 
@@ -348,13 +426,19 @@ digraph {
 ) 
 ```
 
-Los estudios en orquídea que usan matrices de clonaje son raros, pero es importante considerar el clonaje en los análisis de dinámica poblacional. El clonaje puede tener un impacto significativo en la dinámica poblacional y en la evolución de las especies. En este caso, el clonaje se considera como una forma de reproducción asexual que puede afectar la estructura genética de la población y su capacidad para adaptarse a cambios ambientales.
+Los estudios sobre orquídeas que incorporan matrices de clonaje son poco frecuentes, pero es fundamental considerar este proceso en los análisis de dinámica poblacional. El clonaje puede tener un impacto significativo tanto en la dinámica de las poblaciones como en la evolución de las especies.
+
+En este contexto, el clonaje se entiende como una forma de reproducción asexual que puede modificar la estructura genética de la población y afectar su capacidad de adaptación frente a cambios ambientales.
 
 ------------------------------------------------------------------------
 
 ### Limitaciones de los métodos tradicionales
 
-El uso de estos métodos tradicionales aun que sean calculado a mano o usar la función **projection.matrix** del paquete **popbio** pudiese ser problemático. Los problemas ocurren por condiciones de muestreo, especialmente cuando trabajan con los tamaños de muestra están pequeños o que las transiciones son raras de forma natural [@tremblay2021population; @gascoigne2023standard], eso es frecuentamente el caso en especies raras. En el capitulo **Impacto de datos sin sentidos biológico** se discute los problemas posibles cuando hay datos sin sentidos y como construir matrices más confiable y cuando se debería usar el método Bayesiano para los análisis. En el capitulo **Impacto de datos sin sentido biológico** se discute como resolver asuntos de matrices para que sean más compatible con la biología de la especies estudiada y por consecuencia con más relevancia a la biología de los especies estudiada. Los autores recomienda usar el método Bayesiano para los análisis de matrices de transición en todo momento al menos que el tamaño demuestra es bien grande y ninguna transiciones es rara. El método Bayesiano es un enfoque estadístico que permite incorporar información previa y ajustar los modelos a los datos observados. Este enfoque es especialmente útil cuando se trabaja con datos escasos o cuando las transiciones son raras. Aunque pudiese ser más complejo de implementar, el método Bayesiano proporciona una mayor flexibilidad y robustez en el análisis de matrices de transición en adición de estimar la confianza de los estimados de las transiciones y fecundidad.
+El uso de métodos tradicionales, ya sea mediante cálculos manuales o utilizando la función `projection.matrix` del paquete popbio, puede resultar problemático. Las dificultades surgen principalmente por condiciones de muestreo, especialmente cuando el tamaño de muestra es pequeño o cuando las transiciones son naturalmente raras [@tremblay2021population; @gascoigne2023standard], situación común en especies poco frecuentes.
+
+En el capítulo **Impacto de datos sin sentido biológico** se analizan los problemas que ocurren cuando los datos carecen de coherencia biológica, cómo construir matrices más confiables y cuándo es apropiado emplear el método bayesiano en los análisis. Este enfoque permite resolver inconsistencias y garantizar que las matrices sean más compatibles con la biología de la especie estudiada, aumentando así la relevancia de los resultados.
+
+Los autores recomiendan utilizar el **método bayesiano** para el análisis de matrices de transición en la mayoría de los casos, excepto cuando el tamaño de muestra es muy grande y ninguna transición es rara. El método bayesiano es un enfoque estadístico que permite incorporar información previa y ajustar los modelos a los datos observados. Este enfoque es especialmente útil cuando se trabaja con datos escasos o transiciones poco frecuentes. Aunque su implementación puede ser más compleja, ofrece mayor flexibilidad y robustez, además de estimar la confianza en los valores de transición y fecundidad.
 
 Revisión:
 
