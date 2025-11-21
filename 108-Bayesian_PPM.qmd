@@ -62,33 +62,42 @@ rlt_style_colour <- function() {
 
 ## Introducción MPP Bayesiano
 
-El objetivo de este capítulo es mostrar una alternativa bayesiana de como estimar las entradas de la matriz de transiciones y de fecundidades para resolver algunos de los problemas a los que nos enfrentamos al estimar parámetros de matrices poblacionales de especies raras, en otra palabra de especies con tamaños de muestra limitados o de especies con transiciones poco frecuentes. Particularmente, se muestran los problemas asociados a las matrices de transición para especies raras y se propone un método basado en estadística bayesiana que permite estimar parámetros que representen de manera realista el ciclo de vida de la especie de estudio.
+Introducción al MPP Bayesiano Este capítulo presenta una alternativa bayesiana para estimar los parámetros de las matrices de transición y fecundidad en modelos poblacionales, especialmente útil en el estudio de especies raras. Estas especies suelen tener tamaños de muestra reducidos o transiciones vitales poco frecuentes, lo que dificulta obtener estimaciones confiables. El enfoque bayesiano propuesto permite incorporar conocimiento previo sobre el ciclo de vida de la especie para generar estimaciones más realistas.
 
-Considere un primer ejemplo donde sabemos que la especie de interés tiene tres etapas en su ciclo de vida (semillas, plántulas y adultos) de las cuales sólo los individuos en la etapa más avanzada (i.e., adultos) producen semillas. El primer paso para llevar a cabo el análisis es evaluar las etapas del ciclo de vida para determinar cuáles de éstas determinan mayoritariamente la dinámica poblacional de la especie así como evaluar cómo puede llevarse a cabo una recolección óptima de datos.
+### Ejemplo de especie con tres etapas
 
-En la primera figura podemos observar el ciclo de vida considerado para esta especie hipotética. Una vez definido el ciclo de vida de la especie procedimos a colectar datos de campo y a estimar las transiciones y la fertilidad. Los resultados obtenidos mostraron lo siguiente:
+Consideremos una especie hipotética con tres etapas en su ciclo de vida: semillas, plántulas y adultos. En este caso, sólo los adultos producen semillas. El primer paso del análisis consiste en identificar qué etapas tienen mayor influencia en la dinámica poblacional y cómo optimizar la recolección de datos en campo.
 
-1.  No se observan semillas. Esto podría deberse a que todas germinaron y transitaron a la etapa de plántula
+La primera figura muestra el ciclo de vida considerado. Tras definirlo, se recolectaron datos de campo y se estimaron las tasas de transición y fecundidad. Los resultados revelaron lo siguiente:
 
--   ¿Es realista que el 100% de las semillas germinó?
--   ¿Por qué no se encontraron semillas?
+1.  **No se observaron semillas**. Esto podría indicar que todas germinaron y pasaron a la etapa de plántula.
 
-2.  Por qué no se observan plántulas, con lo cual podría pensarse que todas murieron o no hubo germinación de semillas.
+-   ¿Es realista asumir que el 100% de las semillas germinaron?
+-   ¿Por qué no se encontraron semillas en el muestreo?
 
-    -   ¿Es realista que todas las plántulas mueran durante el ciclo de vida de una especie?
+2.  **No se observaron plántulas**. Esto podría interpretarse como que todas murieron o que ninguna semilla germinó.
 
-Aquí podemos observar dos interpretaciones no realistas de los datos recolectados para el ajuste de las matrices de proyección poblacionales (MPP): ningún individuo muere o todos mueren. Sin embargo, estos resultados están afectados por el tamaño de la muestra. Suponga que para nuestra especie de interés solamente se tuvo acceso a 4 plantas adultas ya que es un especie rara, si estos 4 individuos sobreviven obtendríamos una supervivencia del 100%. Es decir, obtendríamos que ¡los individuos son inmortales! Claramente este resultado se debe más a un error debido al reducido tamaño de muestra que al ciclo de vida de la especie ya que por pura probabilidad no se encontró ninguna planta que se muera. Entonces, es importante reconocer cuándo los parámetros que estimamos a partir de los datos colectados no reflejan la historia de vida típica de la especie.
+-   ¿Es realista asumir que todas las plántulas mueren durante el ciclo de vida de una especie?
 
-El paquete **raretrans** ayuda a manejar este tipo de situaciones y a estimar parámetros más realistas al considerar explicítamente el ciclo de vida típico de la especie estudiada.
+Estas interpretaciones extremas —que ningún individuo muere o que todos mueren— no son biológicamente realistas. Sin embargo, pueden surgir como resultado de un tamaño de muestra reducido. Por ejemplo, si sólo se observaron 4 plantas adultas (debido a que la especie es rara) y todas sobrevivieron, se estimaría una tasa de supervivencia del 100%, lo que implicaría que los individuos son "inmortales". Este resultado no refleja la realidad biológica, sino una limitación del muestreo: por simple azar, no se observó ninguna muerte. Por lo tanto, es fundamental reconocer cuándo los parámetros estimados no representan adecuadamente la historia de vida típica de la especie.
 
-Algunas interpretaciones biológicamente NO realistas para los datos recolectados en el estudio de ciclos de vida incluyen:
+### El papel del paquete raretrans
 
--   Todas las semillas sobreviven y pasan a ser plántulas.
--   Ninguna plántula sobrevive y/o pasa a ser adulto.
--   La mayoría de los adultos permanecen como adultos (no se presenta mortandad).
--   Ninguno de los adultos produce semillas.
+El paquete `raretrans` fue desarrollado para abordar este tipo de situaciones. Utiliza un enfoque bayesiano que permite incorporar conocimiento previo sobre el ciclo de vida de la especie, ayudando a estimar parámetros más realistas incluso cuando los datos son escasos o incompletos.
 
-**NOTE**: que es posible que los datos colectados en campo arrojen estos valores, pero muchas veces esas observaciones son resultado de tamaños de muestra limitados. o eventos raros que no se observaron en el periodo de muestreo. En consecuencia, es importante considerar la biología de la especie y el tamaño de muestra al momento de analizar los datos.
+### \*\*Ejemplos de interpretaciones no realistas\*\*
+
+-   Algunas interpretaciones biológicamente poco plausibles que pueden surgir del análisis de datos limitados incluyen:
+
+-   Todas las semillas germinan y se convierten en plántulas.
+
+-   Ninguna plántula sobrevive ni alcanza la etapa adulta.
+
+-   Todos los adultos sobreviven sin mortalidad.
+
+-   Ningún adulto produce semillas.
+
+**Nota**: Aunque estos resultados pueden surgir directamente de los datos recolectados, muchas veces son consecuencia de tamaños de muestra pequeños o de eventos raros que no se observaron durante el periodo de muestreo. Por ello, es esencial considerar tanto la biología de la especie como las limitaciones del muestreo al interpretar los datos.
 
 ```{r bayes1, message=FALSE}
 
@@ -103,9 +112,20 @@ title <- NULL
 
 ```
 
-## Un ciclo de vida incompleto
+## Evaluación Crítica del Ciclo de Vida y la Matriz Poblacional
 
-Este ciclo de vida no es realista ya que no hay semillas y ninguna plántula sobrevive. La tasa de crecimiento asintótica de la población observada es $\lambda = 0.9$. La matriz no es ergódica (no se puede llegar a cualquier otro estado desde uno o más estados), y es reducible, lo que significa que una o más columnas y filas se pueden descartar y tienen las mismas propiedades en términos de sus eigenvalores y eigenvectores.
+El ciclo de vida propuesto para esta especie hipotética presenta limitaciones importantes que lo hacen poco realista. En particular:
+
+-   No se observaron semillas en el muestreo, lo que sugiere que todas germinaron y pasaron a la etapa de plántula. Sin embargo, asumir una germinación del 100% es altamente improbable en condiciones naturales.
+-   Ninguna plántula sobrevivió, lo que indica una falla completa en la transición hacia la etapa adulta.
+
+Como resultado, la tasa de crecimiento poblacional asintótica observada es λ=0.9\lambda = 0.9λ=0.9, lo que implica una población en declive.
+
+Además, la matriz poblacional estimada presenta dos propiedades estructurales problemáticas:
+
+1.  **No es ergódica**: No es posible transitar desde cualquier estado a cualquier otro estado dentro del ciclo de vida. Esto limita la conectividad entre etapas y reduce la capacidad de la matriz para representar adecuadamente la dinámica poblacional.
+
+2.  **Es reducible**: Una o más filas y columnas pueden eliminarse sin alterar las propiedades fundamentales de la matriz (como sus eigenvalores y eigenvectores). Esto indica que ciertas etapas del ciclo de vida no contribuyen significativamente a la dinámica poblacional, lo cual puede ser un artefacto del muestreo o de una estructura biológica mal representada.
 
 ```{r bayes2}
 
@@ -115,9 +135,17 @@ plot_life_cycle(matA, stages = stages)
 
 ### Interpretaciones biológicamente irreales de los datos existentes.
 
--   Se quiere estudiar a los árboles del género *Sequoia sempervirens*. Una especie donde los individuos pueden ser super grande y un largo de vida promedio es estimado a estar entre 1,200 y 2,200 años. Si se muestren árboles grandes (con un dbh de \> 3 metros) aunque la muestra sea de más de 1000 individuos es posible que no encontremos ningún individuo que muera entre un año y otro o entre dos periodos de muestreo (por ejemplo en 10 años). Con estos datos podríamos estimar que la supervivencia para esta especie es del 100%. Sin embargo, es necesario considerar que 1) si el tamaño de muestra aumenta a 10,000 o 100,000 árboles se podrían haber detectado uno o más individuos muertos, 2) la mortalidad en plantas frecuentemente está relacionada con el tamaño del individuo, por lo que, entre más grande es un individuo menor es la probabilidad de morir y 3) que la mortalidad en este tipo de individuos puede ser dependiente del momento del muestreo, es decir, en años con variación biótica o abiótica muy alta donde la mortalidad aumenta. Si se toman en cuenta estas consideraciones en el estudio de *Sequoias* la probabilidad de mortalidad en estos individuos sería baja pero no 0.
+Al estudiar especies longevas como Sequoia sempervirens, es común enfrentar interpretaciones erróneas derivadas de datos limitados o mal contextualizados. Esta especie puede alcanzar tamaños extraordinarios (diámetros a la altura del pecho, dbh, mayores a 3 metros) y tener una longevidad estimada entre 1,200 y 2,200 años.
 
-Tomando en cuenta los ejemplos anteriores podemos concluir que es importante considerar la biología de la especie, el método de muestreo y el tamaño de muestra para llevar a cabo un análisis de datos correcto.
+Supongamos que se realiza un muestreo de más de 1,000 individuos grandes. Es posible que, en un intervalo de uno o incluso diez años, no se observe la muerte de ningún individuo. A partir de estos datos, se podría concluir erróneamente que la supervivencia anual es del 100%. Sin embargo, esta interpretación es biológicamente poco realista por varias razones:
+
+1.  **Tamaño de muestra insuficiente**: Si el muestreo se ampliara a 10,000 o 100,000 individuos, probablemente se detectarían muertes, aunque fueran pocas. Esto sugiere que la mortalidad es baja, pero no nula.
+
+2.  **Relación entre tamaño y mortalidad**: En plantas, la probabilidad de morir suele disminuir con el tamaño del individuo. Los árboles más grandes tienen mayor resistencia a factores ambientales y biológicos, lo que reduce su tasa de mortalidad.
+
+3.  **Dependencia temporal de la mortalidad**: La muerte de individuos puede estar influenciada por eventos bióticos (plagas, enfermedades) o abióticos (sequías, incendios, tormentas) que varían entre años. En años extremos, la mortalidad puede aumentar significativamente.
+
+Por lo tanto, aunque los datos observados sugieren una supervivencia perfecta, la probabilidad real de mortalidad es baja pero no cero. Este tipo de sesgo en la interpretación puede ser corregido mediante enfoques estadísticos más robustos, como el uso de modelos bayesianos que incorporan incertidumbre y conocimiento previo sobre la biología de la especie.
 
 ------------------------------------------------------------------------
 
@@ -135,9 +163,13 @@ Una forma de abordar este problema es a través de métodos bayesianos para el a
 
 ## Instalación del paquete raretrans
 
-Para instalar **raretrans** removemos el **\#** antes de correr el script para tener acceso a los códigos de **raretrans**. Si tiene dificultad a bajar el paquete siempre puede ir al siguiente enlace y bajar las funciones directamente:
+Para instalar el paquete `raretrans`, es necesario habilitar el acceso al código eliminando el símbolo `#` que precede las líneas del script de instalación. Esto permitirá ejecutar correctamente las funciones del paquete.
+
+Si tienes dificultades para instalar el paquete directamente desde R, puedes acceder al repositorio oficial en GitHub y descargar las funciones manualmente desde el siguiente enlace.
 
 https://github.com/atyre2/raretrans/blob/master/raretrans.Rproj
+
+Una vez descargado, puedes cargar las funciones en tu entorno de trabajo en R utilizando `source()` o integrarlas en tu proyecto según sea necesario.
 
 ```{r bayes4, message=FALSE}
 
@@ -166,9 +198,30 @@ rlt_theme <- theme(axis.title.y = element_text(colour="grey20",size=15,face="bol
 
 ## Obtención de la matriz de proyección
 
-`raretrans` supone que la matriz de proyección es una lista de dos matrices, una matriz de transición y una matriz de fertilidad. Este es el formato de salida de `popbio::projection.matrix`. Si tenemos transiciones individuales en nuestra base de datos (con clase `data.frame()`), podemos usar `raretrans::get_state_vector` para obtener el número inicial de individuos por etapa.
+`raretrans` supone que la matriz de proyección es una lista con dos componentes:
+
+-   **Matriz de transición**: Probabilidades de pasar de una etapa a otra (o permanecer en la misma).
+
+-   **Matriz de fertilidad** Número de nuevos individuos producidos por cada etapa reproductiva.
+
+Este es el formato de salida de `popbio::projection.matrix`. Si tenemos transiciones individuales en nuestra base de datos (con clase `data.frame()`), podemos usar `raretrans::get_state_vector` para obtener el número inicial de individuos por etapa.
 
 Podemos utilizar la función `popbio::projection.matrix` para obtener los datos necesarios. Hacemos una demostración con los datos de transición y fertilidad de *Lepanthes eltoroensis* **POPNUM 250** en el **periodo 5**. *Lepanthes eltoroensis* es una orquídea epífita, endémica de Puerto Rico y con una distribución limitada a una pequeña región de la isla.
+
+
+::: img-float
+![*Lepanthes eltoroensis*. Foto: Edwin Guevara](Species/Lepanthes_eltoroensis_Edwin_Guevara.jpg){style="float: right; margin: 10px;width: 45% ; "}
+
+![*Lepanthes eltoroensis*. Foto: Edwin Guevara](Species/Lepanthes_eltoroensis_Phorophyte_Edwin_Guevara.jpg){style="float: left; margin: 10px;width: 45% ; "}
+
+:::
+
+
+***
+
+
+<br>
+
 
 ## Descargar los datos de la una población de *L. elto* del paquete **raretrans**
 
@@ -179,6 +232,16 @@ head(L_elto)
 ```
 
 ## Organización de los datos en el "data.frame"
+
+Supongamos que tienes una base de datos llamada L_elto con las siguientes columnas:
+
+-   pop: identificador de la población
+-   period: periodo de tiempo
+-   stage: etapa actual del individuo
+-   next_stage: etapa siguiente
+-   fertility: indicador de fertilidad
+
+Seleccionamos la población POPNUM 250 y el periodo 5:
 
 El primer paso es seleccionar los datos de la población y el periodo de tiempo que queremos analizar. Posteriormente, cambiamos el nombre del estado más pequeño a "seedling". Este paso no es estrictamente necesario pero nos ayuda a entender más fácilmente la nomenclatura.
 
@@ -196,7 +259,7 @@ onepop <- L_elto %>%
   ) # redefine "p" por plantula a "s" para seedling
 ```
 
-En el siguiente codigo usamos la función `popbio::projection.matrix()` para crear la matriz de proyección poblacional. Tenemos ahora nuestra matriz de transición y fecundidad basado en los datos de la población #250 del periodo 5. La función `projection.matrix()` requiere que se especifiquen los nombres de las etapas y los estados siguientes, así como el nombre de la columna de fertilidad. En este caso, las etapas son "s" (plántula), "j" (juvenil) y "a" (adulto), y el estado siguiente es `next_stage`. La columna de fertilidad se llama `fertility`. El argumento `sort` especifica el orden en que queremos que aparezcan las etapas en la matriz.
+En el siguiente código usamos la función `popbio::projection.matrix()` para crear la matriz de proyección poblacional. Tenemos ahora nuestra matriz de transición y fecundidad basado en los datos de la población #250 del periodo 5. La función `projection.matrix()` requiere que se especifiquen los nombres de las etapas y los estados siguientes, así como el nombre de la columna de fertilidad. En este caso, las etapas son "s" (plántula), "j" (juvenil) y "a" (adulto), y el estado siguiente es `next_stage`. La columna de fertilidad se llama `fertility`. El argumento `sort` especifica el orden en que queremos que aparezcan las etapas en la matriz.
 
 Solamente los adultos pueden producir plántulas, por lo que la matriz de fertilidad tiene un valor de fertilidad solamente en la posición (1,3), (plántula, adulto). La función `projection.matrix()` devuelve una lista con dos matrices: una de transición y otra de fertilidad. La matriz de transición es una matriz cuadrada que muestra las probabilidades de transición entre las etapas, mientras que la matriz de fertilidad es una matriz que muestra la fecundidad por etapa.
 
@@ -223,7 +286,7 @@ TF # Este es la estructura de etapas de vida para esa población.  Nota que tene
 
 ## Obtener el número inicial de individuos por etapa
 
-Dado que nuestros conteos (número de individuos, $N$ y el tamaño de *muestra equivalente* *a priori* se expresan como múltiplos del número de individuos observados, necesitamos obtener el número de individuos en cada etapa ($N$) en el primer periodo de tiempo. Para esto utilizamos la función `raretrans::get_state_vector()`. Se observa que la cantidad de individuos iniciales por etapa es el número de individuos en el primer muestreo es muy limitada, con 11 plántulas, 47 juveniles y 34 adultos.
+Dado que nuestros conteos (número de individuos), $N$ y el tamaño de *muestra equivalente* *a priori* se expresan como múltiplos del número de individuos observados, necesitamos obtener el número de individuos en cada etapa ($N$) en el primer periodo de tiempo. Para esto utilizamos la función `raretrans::get_state_vector()`. Se observa que la cantidad de individuos iniciales por etapa es el número de individuos en el primer muestreo es muy limitada, con 11 plántulas, 47 juveniles y 34 adultos, para esta población en este periodo de muestreo.
 
 ```{r bayes8}
 
@@ -269,7 +332,9 @@ TF2
 N2
 ```
 
-¿Cómo se ve el ciclo de vida de la población en ese periodo?
+------------------------------------------------------------------------
+
+### ¿Cómo se ve el ciclo de vida de la población en ese periodo?
 
 A la matriz mostrada le falta la transición de plántula a juvenil. Ademas dado que ninguno de los 6 juveniles murió hay una sobrestimación de su supervivencia. La tasa de crecimiento asintótica de la población observada es $\lambda$. La matriz no es ergódica (no se puede llegar a cualquier otro estado desde uno o más estados), y es reducible, lo que significa que una o más columnas y filas se pueden descartar y tienen las mismas propiedades en términos de sus eigenvalores y eigenvectores.
 
@@ -286,7 +351,12 @@ plot_life_cycle(Tmat, stages = stages2)
 
 ### Incorporar previas informativas
 
-Para solucionar el problema de la creación de transiciones imposibles, especificamos previas informativas obtenidos del conocimiento de un experto en orquídeas epífitas de *Lepanthes* (RLT). La información tiene que tener la misma forma que la matriz de transiciones, i.e., con una fila más que columnas. Esta última fila representa los individuos que se mueren para cada etapa. Además, estos valores deberían ser preferiblemente especificados ANTES de colectar los datos de campo, para no sesgar los resultados.
+Para evitar que el modelo genere transiciones imposibles entre etapas del ciclo de vida, se pueden incorporar previas informativas. Estas previas se basan en el conocimiento experto sobre la especie, en este caso proporcionado por un especialista en orquídeas epífitas del género Lepanthes (RLT). La información debe tener el mismo formato que la matriz de transición, es decir:
+
+-   Una matriz con una fila más que columnas.
+-   La última fila representa los individuos que mueren en cada etapa.
+
+Es importante que estos valores se definan antes de recolectar los datos de campo, para evitar que el análisis se vea influenciado o sesgado por los datos observados.
 
 ```{r bayes12}
 
@@ -310,24 +380,64 @@ fill_transitions(TF, N, P = RLT_Tprior)
 
 ### Modificar el peso de los valores *a priori*
 
-Podemos especificar el peso de los valores **a priori** modificando el tamaño de muestra de cada etapa. Si tenemos poca confianza en los valores **a priori** le damos un peso pequeño para que los datos del campo dominen más los resultados.
+Cuando usamos previas informativas en el modelo, podemos ajustar su peso modificando el tamaño de muestra a priori para cada etapa del ciclo de vida.
+
+### ¿Por qué ajustar el peso?
+
+-   Si tenemos alta confianza en los valores a priori (por ejemplo, por experiencia o estudios previos), podemos asignarles un peso mayor.
+-   Si tenemos poca confianza, es mejor asignarles un peso pequeño, permitiendo que los datos de campo tengan mayor influencia en los resultados.
+
+#### ¿Cómo se interpreta el peso?
+
+El peso se especifica como el tamaño de muestra a priori. Por defecto, cada columna de la matriz de previas suma 1, lo que equivale a un tamaño de muestra a priori de 1. Puedes modificar esta suma para reflejar mayor o menor certeza en los valores propuestos.
 
 ```{r bayes14}
 
 fill_transitions(TF, N, P = RLT_Tprior, priorweight = 0.5)
 ```
 
-En este caso, el `priorweight` se pondera con la mitad del número observado de transiciones. En este caso, con sólo 2 transiciones, el tamaño efectivo de la muestra **a priori** sigue siendo 1. Si el número de transiciones observadas fuera mayor, una ponderación **a priori** de 0,5N sería mayor que 1, pero permitiría que los datos dominen. Siempre se debería asignar al las previas un peso que sea menor (preferiblemente mucho menor) que el tamaño de muestra observado ya que entre más pequeño sea mayor peso tendrán los datos del campo.
+En este caso, el `priorweight` se pondera con la mitad del número de transiciones observadas. Por ejemplo: Si se observaron solo 2 transiciones, entonces priorweight = 1, lo que equivale a un tamaño de muestra a priori de 1. Si se observaran más transiciones, por ejemplo 20, entonces priorweight = 10, lo que permite que los datos observados tengan mayor influencia en el resultado final.
 
-Note que ahora tenemos una matriz de transición que es ergódica y reducible. En adición la tasa de mortandad y la tasa de transiciones son más realista.
+**Recomendación** Siempre se debe asignar a las previas un peso menor (preferiblemente mucho menor) que el tamaño de muestra observado. Esto garantiza que los datos reales del campo tengan mayor peso en el análisis y evita que el conocimiento previo domine injustamente los resultados.
+
+**Resultado**
+
+La nueva matriz de transición:
+
+-   Es ergódica (todas las etapas están conectadas directa o indirectamente).
+-   Es reducible, lo que significa que algunas etapas pueden no ser alcanzables desde otras, dependiendo del ciclo de vida.
+-   Presenta tasas de mortandad y transición más realistas, gracias a la incorporación del conocimiento experto.
 
 ------------------------------------------------------------------------
 
-## Intervalos de credibilidad de las transiciones
+## Intervalos de credibilidad para las transiciones
 
-A continuación obtendremos los intervalos de credibilidad (ICr) para cada entrada de la matriz. Como la distribución posterior marginal de un elemento en una multinomial es una distribución beta es posible utilizar estas distribuciones beta para calcular los intervalos de credibilidad de las tasas de transición. Para esto podemos usar el tipo de retorno **TN** para obtener los parámetros deseados. Esas son las estimaciones puntuales (comparar con la primera columna anterior), inferior y superior $95\%$ de los intervalos de credibilidad simétricos para transiciones de la etapa de plántula. Sin embargo, existe un alto grado de incertidumbre debido al tamaño de muestra pequeño ($2$) y al bajo peso que tienen los *priors* ($1$), lo que implica a un tamaño de muestra efectivo de 3.
+Una vez ajustada la matriz de transición con los datos observados y las previas informativas, podemos calcular los intervalos de credibilidad (ICr) para cada entrada de la matriz.
 
-Ahora vemos como calcular el intervalo de credibilidad de los parámetros. Por ejemplo la tasa de mortandad puntual es de 0.31 pero el intervalo de 95% de credibilidad es entre 0.096 y 0.585 demostrando que el mejor estimado de este parámetro es muy incierto. Este es claramente un ejemplo de cómo los tamaños de muestra pequeños pueden afectar la credibilidad de los parámetros. En este caso, el intervalo de credibilidad es muy amplio, lo que indica que hay mucha incertidumbre en la estimación de la tasa de transición.
+**¿Cómo se calculan?** Cada elemento de la matriz de transición ajustada sigue una distribución beta, ya que proviene de una distribución posterior marginal de una multinomial. Esto permite calcular intervalos de credibilidad para las tasas de transición.
+
+Para obtener estos valores, se puede usar el tipo de retorno TN, que proporciona:
+
+-   La estimación puntual.
+-   El límite inferior del intervalo de credibilidad al 95%.
+-   El límite superior del intervalo de credibilidad al 95%.
+
+### Ejemplo: etapa de plántula
+
+Supongamos que estamos analizando las transiciones desde la etapa de plántula (s). Si el número de transiciones observadas es 2, y el peso de las previas es 1, el tamaño de muestra efectivo es 3. Esto genera un intervalo de credibilidad más amplio, reflejando la alta incertidumbre en la estimación. Por ejemplo:
+
+-   La tasa de mortandad puntual es 0.31.
+-   El intervalo de credibilidad al 95% va de 0.096 a 0.585.
+
+Este rango amplio indica que el mejor estimado es muy incierto, lo cual es típico cuando se trabaja con tamaños de muestra pequeños.
+
+### Interpretación
+
+Un intervalo de credibilidad amplio significa que hay mucha incertidumbre en la estimación del parámetro. Esto resalta la importancia de contar con:
+
+-   Más datos de campo.
+-   Previas bien fundamentadas.
+-   Un análisis cuidadoso del tamaño de muestra efectivo.
 
 ```{r bayes15}
 
@@ -353,11 +463,15 @@ Una de la gran ventaja de usar el paquete `raretrans` es que podemos calcular lo
 
 ### El efecto del tamaño de muestra sobre los intervalos de credibilidad
 
-¿Qué pasa si aumentamos el tamaño de muestra efectivo? Aumentar el tamaño de muestra efectivo a $20$ especificando: `priorweight`$= 9 (9*2 = 18 + 2 = 20)$ hace que los intervalos de credibilidad se reduzcan bastante. Entonces, es importante enfatizar en que el tamaño de muestra tiene gran impacto sobre la confianza que se tiene sobre el estimador puntual (el promedio) de las transiciones, permanencias y mortalidad. Note en la figura como el tamaño del intervalo de credibilidad cambia drásticamente cuando se aumenta el número de datos.
+Cuando se aumenta el **tamaño de muestra efectivo**, los **intervalos de credibilidad** se vuelven más estrechos, lo que indica mayor confianza en las estimaciones puntuales. Aumentar el tamaño de muestra efectivo a $20$ especificando: `priorweight`$= 9 (9*2 = 18 + 2 = 20)$ hace que los intervalos de credibilidad se reduzcan bastante. Entonces, es importante enfatizar en que el tamaño de muestra tiene gran impacto sobre la confianza que se tiene sobre el estimador puntual (el promedio) de las transiciones, permanencias y mortalidad. Note en la figura como el tamaño del intervalo de credibilidad cambia drásticamente cuando se aumenta el número de datos.
 
 La tasa de transición de plántula a juvenil se reduce cuando el tamaño de la muestra es demasiado grande.
 
-IMPORTANTE: En general, el tamaño de la muestra **a priori** debe ser menor que el tamaño de muestra observado. Este es sólamente un ejemplo para demostrar el concepto y ser cuidadoso en la selección de las previas.
+IMPORTANTE: Aunque este ejemplo muestra cómo el tamaño de muestra afecta la credibilidad, en la práctica:
+
+-   El peso de las previas (priorweight) debe ser menor que el tamaño de muestra observado.
+-   Esto asegura que los datos reales del campo tengan mayor influencia en el análisis.
+-   Usar un tamaño de muestra a priori demasiado grande puede sesgar los resultados y reducir la validez del modelo.
 
 ```{r bayes16}
 
@@ -402,7 +516,7 @@ ggplot(
 
 ------------------------------------------------------------------------
 
-## Intervalo de credibilidad de $\lambda$
+## Intervalo de credibilidad para la tasa de crecimiento asintótica $\lambda$
 
 Obtener intervalos de credibilidad para la tasa de crecimiento asintótica, $\lambda$, requiere simular matrices a partir de las distribuciones posteriores. Estas simulaciones usualmente son complicadas de hacer, por lo que hemos incorporado en el paquete la función `raretrans::sim_transitions()` para generar una lista de matrices simuladas dada la matriz observada y las previas. En otras palabras, esta función se calcula múltiples veces de las matrices de transición y fertilidad basándose en los datos observados y en los valores *a priori* especificados pero variando los valores de los parámetros de las distribuciones beta y gamma.
 
@@ -512,7 +626,7 @@ gt::gt(signif(RLT_0.5_summary, digits = 2))
 
 ### Uso de previas uniformes
 
-En esta sección es para demostrar porque no es recomendable el uso de distribuciones previas uniformes. Si se entiende el concepto de valores *a priori* y *a posteriori* no es necesario leer esta sección y puede ir directo a la sección.
+En esta sección es para demostrar porque no es recomendable el uso de distribuciones previas uniformes. Si se entiende el concepto de valores *a priori* y *a posteriori* no es necesario leer esta sección.
 
 ### Matriz de transición
 

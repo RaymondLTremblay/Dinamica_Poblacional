@@ -1,6 +1,6 @@
 # Rage y Orquídeas {#Rage}
 
-Por: Raymond L. Tremblay y
+Por: Raymond L. Tremblay
 
 #### Librerías de R requeridas para el siguiente módulo
 
@@ -19,11 +19,12 @@ library(leaflet)
 library(Rage) # función para calcular el largo de vida esperada entre otras
 library(car)
 library(popdemo)
-library(WRS2)
+library(skimr)
+library(flextable)
 
 ```
 
-El siguiente capítulo presenta algunas de las funciones del paquete de *Rage* para trabajar con la base de datos de COMPADRE y COMADRE. Estas bases de datos son repositorios públicos que contienen información de dinámica poblacional de plantas (COMPADRE) y animales (COMADRE) en formato de matrices de transición de estados o edades de poblaciones (MPM). La libreria *Rage* tiene funciones calcular el largo de vida esperada, la edad a la primera reproducción, la entropía y la tasa de crecimiento poblacional entre otras. En este capítulo se presentan algunas de esas funciones y como usarlas para evaluar la dinámica poblacional de orquídeas.
+El presente capítulo examina una selección de funciones contenidas en el paquete **Rage**, diseñado para facilitar el análisis de datos provenientes de las bases de datos **COMPADRE** y **COMADRE**. Estos repositorios públicos reúnen información sobre la dinámica poblacional de plantas (**COMPADRE**) y animales (**COMADRE**), estructurada en matrices de transición por estados o edades (MPM). La librería `Rage` ofrece herramientas analíticas que permiten estimar parámetros demográficos clave, tales como la esperanza de vida, la edad de inicio de la reproducción, la entropía poblacional y la tasa de crecimiento, entre otros. A lo largo del capítulo, se ilustran algunas de estas funciones y se demuestra su aplicación en el estudio de la dinámica poblacional de especies de orquídeas.
 
 ```{r Rage2, echo=FALSE}
 
@@ -80,9 +81,9 @@ Vea el capítulo anterior
 
 #### Rastreando los datos con el enlace de web
 
--   Usando la función *cdb_fetch()* se puede bajar los datos directamente de la pagina de web de COMPADRE. Esta función se encuentra en el paquete de **Rcompadre**.
+La obtención de datos directamente desde el sitio web de **COMPADRE** puede realizarse mediante la función `cdb_fetch()`, la cual forma parte del paquete **Rcompadre**. Esta herramienta permite acceder de manera eficiente y automatizada a los datos de dinámica poblacional disponibles en dicho repositorio, facilitando su integración en flujos de trabajo reproducibles dentro del entorno de R.
 
-```{r Rage4}
+```{r Rage4, message=FALSE}
 
 compadre <- cdb_fetch("compadre") # Usar este código para bajar los datos del repositorio de COMPADRE.
 
@@ -93,9 +94,7 @@ compadre <- cdb_fetch("compadre") # Usar este código para bajar los datos del r
 
 #### Renombrar la base datos a algo sencillo
 
--   En este script se renombrar la base de datos de COMPADRE a algo más sencillo **TodasSp**, reemplazando **compadre**.
--   Se visualiza el nombre de cada columna en la base de datos.
-    -   Hay 59 variables en la base de datos de COMPADRE.
+En este segmento del script, se realiza una simplificación del nombre de la base de datos COMPADRE, asignándole el identificador TodasSp. Aunque el paquete `Rage recomienda convertir el objeto original de clase list en un objeto de clase CompadreDB mediante la función as_cdb(), en este caso se conserva la estructura original para facilitar el acceso directo a sus componentes. A continuación, se utiliza la función names() para visualizar los nombres de las variables contenidas en la base de datos. Esta operación revela que el conjunto de datos incluye un total de 59 variables, las cuales describen diversos atributos ecológicos y demográficos de las especies registradas.
 
 ```{r Rage5}
 
@@ -112,44 +111,32 @@ names(TodasSp) # La lista de los nombres de las variables en el archivo COMPADRE
 
 ### Filtrar para la familia de Orquidaceae
 
--   Extraer (filter) solamente las especies de la familia **Orchidaceae** de la base completa de datos de COMPADRE.
+Para filtrar únicamente las especies pertenecientes a la familia Orchidaceae en la base de datos COMPADRE (ahora renombrada como TodasSp), puedes utilizar la función filter() del paquete dplyr. Aquí tienes el código en R con estilo claro y académico:
 
 ```{r Rage7}
 
 Orquideas = TodasSp %>%
-  filter(Family %in% c("Orchidaceae")) # Extraer la orquídeas de la base de datos.
+  filter(Family %in% c("Orchidaceae")) # Extraer las orquídeas de la base de datos.
 
 
-
-head(Orquideas, n = 3) # para visualizar las primera 3 filas de la base de datos de COMPADRE para las orquídeas.
+# Assuming Orquideas is a CompadreDB object
+head(cdb_metadata(Orquideas), n = 3) |> 
+  gt()
 ```
 
-------------------------------------------------------------------------
 
-#### Evaluar si un genero o especie este en la base de datos de COMPADRE
-
--   Para filtrar un genero específico se puede usar el siguiente código.
-    -   Aquí seleccionamos todas las matrices del genero **Epipactis**.
-    -   Nota que hay 59 filas, que corresponde típicamente a 59 matrices de diferentes poblaciones, tiempo o un análisis teóricos.
-
-```{r Rage6}
-
-Epi = Orquideas %>%
-  filter(Genus %in% c("Epipactis")) # Filtrar la información de *Epipactis* en la base de datos.
-head(Epi) # Nota que en el genero *Epipactis*, tenemos 51 fila, pero todas son de la misma especie de dos estudios distintos.
-
-cdb_flag(Epi) 
-```
 
 ------------------------------------------------------------------------
 
 ## Cuantos estudios únicos?
 
-Para detemrinar cuantos estudios únicos hay en la base de datos de orquídeas se puede usar las variables **Authors** y **YearPublication**. Estas dos variables combinadas dan un identificador único para cada estudio. En este caso hay 66 estudios únicos en la base de datos de COMPADRE.
+En este bloque de código se construye un nuevo conjunto de datos, SPECIES_O, que resume información clave sobre los estudios incluidos en la base de datos de orquídeas. Se seleccionan variables relevantes como el año de inicio y finalización del estudio (`StudyStart`, `StudyEnd`), el nombre científico aceptado de la especie (`SpeciesAccepted`), el año de publicación (`YearPublication`), los autores (`Authors`), el identificador del artículo (`DOI_ISBN`), el tipo de organismo (`OrganismType`), y el identificador de población (`MatrixPopulation`), junto con la matriz de proyección (`mat`).
 
-Se observa en el nuevo data frame que hay 66 estudios únicos en la base de datos de COMPADRE, los autores de los estudios, el año de publicación y el DOI o ISBN del artículo, el año de comienzo y temrinación de los estudios, el tipo de organismo (epifita o terrestre), la cantidad de poblaciones muestreadas por especie y el nombre científico de la especie entre otras variables.
+Luego, se agrupan los datos por especie, año de publicación, tipo de organismo y periodo del estudio, y se calcula el número de poblaciones únicas muestreadas por especie mediante length(unique(MatrixPopulation)). El resultado se ordena alfabéticamente por especie y se normalizan los valores de los años como variables numéricas. Finalmente, se recodifica la variable OrganismType para traducir los términos originales del inglés al español: "Epiphyte" se convierte en "Epífita" y "Herbaceous perennial" en "Terrestre". Se eliminan los registros con valores faltantes en los años de inicio o finalización del estudio.
 
-```{r chap7}
+Este resumen permite visualizar de forma clara cuántas poblaciones fueron muestreadas por especie, en qué periodo se realizaron los estudios, y qué tipo de orquídea fue analizada, lo que facilita comparaciones entre especies y estudios.
+
+```{r chap7, warning=FALSE, message=FALSE}
 
 #names(Orquideas) Los nombres de las variables
 SPECIES_O = Orquideas %>%
@@ -178,10 +165,12 @@ SPECIES_O = Orquideas %>%
   mutate(OrganismType_RC=fct_recode(OrganismType,
                              "Epífita"="Epiphyte",
                              "Terrestre"="Herbaceous perennial")) |> 
-  drop_na(StudyStart, StudyEnd) 
+  drop_na(StudyStart, StudyEnd) |> 
+  ungroup()
   
 
-SPECIES_O
+gt(head(SPECIES_O))
+
 
 #write_csv(SPECIES_O, "DATA/Species_O.csv")
 ```
@@ -190,7 +179,13 @@ SPECIES_O
 
 ### Determinar cuantas poblaciones fueron muestreadas por especies
 
--   Cúal es la frecuencia de cantidad de poblaciones por especies en la base de datos. La mayoría de los estudios usaron una sola población, pero hay estudios que usaron hasta 18 poblaciones distintas. Estas poblaciones pudiese ser de diferentes publicaciones o de las mismas poblaciones pero de diferentes fuentes.
+Cúal es la frecuencia de cantidad de poblaciones por especies en la base de datos.
+
+-   La mayoría de las especies fueron estudiadas en una sola población.
+
+-   Sin embargo, hay casos en los que se muestrearon hasta 18 poblaciones distintas para una misma especie.
+
+Este gráfico permite observar claramente la concentración de estudios en pocas poblaciones, así como los casos excepcionales con mayor cobertura. Esto puede reflejar diferencias en el diseño de los estudios, disponibilidad de datos o interés ecológico particular en ciertas especies.
 
 ```{r Rage8}
 
@@ -199,25 +194,24 @@ as.data.frame(table(SPECIES_O$n_populations)) |>
   geom_bar(stat="identity",aes(fill="lightblue"))+
   rlt_style_fill() +
   ylab("Frecuencia")+
-  xlab("Cantidad de Poblaciones en el estudio")+
+  xlab("Cantidad de Poblaciones \n en el estudio")+
   theme(legend.position = "none")
 
 ```
 
+*** 
+
 ### La cantidad de poblaciones por especies en la base de datos de COMPADRE.
 
--   La cantidad de poblaciones por especies en la base de datos de COMPADRE varia grandemente. La mayoría de las especies tienen una sola población, pero hay especies que tienen hasta 20 poblaciones distintas. Estas poblaciones pudiese ser de diferentes publicaciones. Por ejemplo los datos de *Lepanthes rupestris* provienen de dos publicaciones distintas [@tremblay2001gene; @tremblay2014bayesian], hasta pudiese en parte ser matrices recolectado de la misma población en los años, pero con objetivos distintos. En la primera publicación [@tremblay2001gene] se uso para evaluar el tamaño efectivo de la poblaciones, **Ne**. En la segunda publicación [@tremblay2014bayesian] se utilizaron los datos de las mismas poblaciones anterior y periodo de tiempo con el enfoque de desarrollar un nuevo método de estimar los elementos de la matriz, especialmente cuando hay pocos datos en cada población o tiempo y se aprovecha del conocimiento de la información de todas las poblaciones para tener estimados de los parámetros para que sean biologícamente realista.
+La cantidad de poblaciones muestreadas por especie en la base de datos de COMPADRE varía considerablemente. Aunque la mayoría de las especies están representadas por una sola población, existen casos en los que se han registrado hasta 20 poblaciones distintas para una misma especie. Estas poblaciones pueden provenir de diferentes publicaciones científicas o representar datos recolectados en distintos momentos o con distintos objetivos dentro de una misma población. Por ejemplo, los datos de *Lepanthes rupestris* provienen de dos estudios independientes [@tremblay2001gene; @tremblay2014bayesian]. En el primero, se utilizaron matrices poblacionales para estimar el tamaño efectivo de las poblaciones (Ne), mientras que en el segundo se emplearon los mismos datos para desarrollar un enfoque bayesiano que permite estimar los elementos de las matrices de transición, especialmente útil cuando se dispone de pocos datos por población o periodo. Este enfoque aprovecha la información conjunta de todas las poblaciones para generar estimaciones más robustas y biológicamente realistas.
 
 ------------------------------------------------------------------------
 
 ### ¿Cuan largo fueron los estudios?
 
-Para evaluar el largo de tiempo por estudio se necesita seleccionar una combinación de variables única
+La duración de los estudios en la base de datos de orquídeas de COMPADRE varía considerablemente. Aunque muchos estudios abarcan solo unos pocos años —el mínimo requerido para calcular una matriz de transición poblacional es de dos periodos—, también existen investigaciones que se extienden por lapsos más prolongados. Algunos estudios, como los realizados por Tremblay con *Lepanthes rupestris*, incluyen muestreos mensuales, mientras que otros se basan en observaciones anuales. Esta diversidad en la temporalidad refleja tanto los objetivos específicos de cada investigación como las estrategias metodológicas empleadas.
 
-Hay estudios que duraron pocos tiempos. El mínimo es de dos periodos de tiempo para calcular un periodo de transición. Hay otros estudios que muestrearon las poblaciones por mucho meas tiempo. Nota que también hay especies que fueron muestreados múltiples veces pero a cada mes (los trabajos de Tremblay con *Lepanthes*) y otros a cada año.
-
--   La duración de los estudios en la base de datos de COMPADRE. La mayoría de los estudios duraron pocos años.
--   Aquí vemos cuando comenzaron los estudios comenzaron y terminaron basado si las plantas son epifitas o no.
+La siguiente visualización muestra cómo varía la duración de los estudios según el tipo de orquídea, diferenciando entre especies epífitas y terrestres:
 
 ```{r Rage9}
 
@@ -227,7 +221,7 @@ SPECIES_O$SpeciesAccepted <- fct_reorder(
   .desc = FALSE
 )
 
-names(SPECIES_O)
+
 
 ggplot(SPECIES_O, aes(SpeciesAccepted, ymin = StudyStart, ymax = StudyEnd, color = OrganismType_RC)) +
   geom_linerange() +
@@ -284,22 +278,29 @@ ggplot(SPECIES_O, aes(SpeciesAccepted, ymin = StudyStart, ymax = StudyEnd, color
 
 ### Tiempo de duración de las investigaciones.
 
--   El la siguiente figura se visualiza el tiempo de duración de los estudios de las orquídeas epifitas y terrestre. En la base de datos de COMPADRE la mayoría de los estudios duraron pocos años especialmente en epifitas. Hay estudios que duraron más de 20 años.
+La siguiente figura muestra la duración de los estudios realizados sobre orquídeas epífitas y terrestres. Según los datos extraídos de la base de datos COMPADRE, la mayoría de las investigaciones tuvieron una duración relativamente corta, especialmente en el caso de las especies epífitas. Sin embargo, también se registran estudios que se extendieron por más de 20 años, lo que evidencia un compromiso a largo plazo en algunos casos para entender mejor la dinámica poblacional de estas plantas.
 
-```{r Rage10, message=FALSE, warning=FALSE}
+```{r Rage10, message=FALSE, warning=FALSE, }
 
 Orquideas = Orquideas %>%
-  mutate(StudyDuration = as.numeric(StudyDuration))
+  mutate(StudyDuration = as.numeric(StudyDuration),
+    OrganismType_RC = fct_recode(
+      OrganismType,
+      "Epífita" = "Epiphyte",
+      "Terrestre" = "Herbaceous perennial"
+    )
+  )
+
 
 #table(Orquideas$StudyDuration)
 #table(Orquideas$OrganismType)
 
-ggplot(Orquideas, aes(StudyDuration, fill = OrganismType)) +
+ggplot(Orquideas, aes(StudyDuration, fill = OrganismType_RC)) +
   geom_histogram(colour = "white") +
-  facet_wrap(~OrganismType) +
+  facet_wrap(~OrganismType_RC) +
   theme(legend.position = "none") +
-  xlab("Study duration") +
-  ylab("Frequency") +
+  xlab("Duración de los estudios") +
+  ylab("Frecuencia") +
   rlt_style_fill() +
   scale_x_continuous(n.breaks = 10)
 
@@ -310,78 +311,59 @@ ggsave("Figures/Duración_Epi_Ter.png")
 
 ------------------------------------------------------------------------
 
-Limpieza de la matriz con condiciones específicas
 
-En este caso se evalúa si las matrices cumplen con ciertas condiciones para poder calcular el valor propio de lambda. Estas condiciones (vea el capítulo de **Rcompadre**).
+***
 
--   Primero aplicamos la función **cdb_flag()** a la base de datos de orquídeas para evaluar las matrices y crear una columna para cada evaluación. (vea lista en el capítulo anterior)
+### Cálculo del Valor Propio Dominante (λ) en Matrices Ergodicas e Irreductibles
 
-```{r Rage11}
-#Orchids_New=as_cdb(index)
-#compadre$mat[index]
+A partir del conjunto de matrices previamente filtradas por cumplir con las condiciones de ergodicidad e irreducibilidad, se procede al cálculo del valor propio dominante ($\lambda$), el cual representa la tasa de crecimiento poblacional asintótica en modelos matriciales.
 
-Compadre_flagged <- cdb_flag(Orquideas) # Evaluación de todas las opciones en la base de datos de COMPADRE
+Para ello, se emplea la función eigs del paquete popdemo, que permite obtener los valores propios de una matriz. Esta función se aplica a cada matriz seleccionada mediante sapply, generando una lista de valores de ($\lambda$) almacenados en el objeto lambdaVals. Cada entrada en esta lista corresponde al valor propio dominante de una matriz matA incluida en el conjunto de datos.
 
-Compadre_flagged %>% select(mat, SpeciesAccepted, starts_with("check"))
+Posteriormente, se utiliza la función summary para obtener una descripción estadística de los valores de ($\lambda$), y la función hist para visualizar su distribución, lo que permite evaluar la variabilidad en las tasas de crecimiento poblacional entre las distintas especies o poblaciones representadas.
 
-```
 
-#### Ergodicidad e Irreducibilidad
 
-En los siguientes scripts se filtra para las matrices con ciertas condiciones para evaluar si las matrices son ergódicas e irreducibles. Notas las matrices que son ergódica son irreducibles, pero no todas las matrices irreducibles son ergódicas. Evalué la cantidad de filas en cada caso.
+#### Matrices ergódicas e irreductibles
 
-```{r Rage12}
+```{r Rage12c}
 
-Mat_ergodic <- subset(
-  Compadre_flagged,
-  check_NA_A == FALSE & check_ergodic == TRUE
-) # para evaluar si las matrices son ergódicas solamente
-head(Mat_ergodic, n=2)
-
-Mat_irred <- subset(
-  Compadre_flagged,
-  check_NA_A == FALSE & check_irreducible == TRUE
-) # para evaluar si las matrices son irreducibles solamente
-head(Mat_irred, n=2)
+Compadre_flagged <- cdb_flag(Orquideas)
 
 
 Mat_erg_irred <- subset(
   Compadre_flagged,
   check_NA_A == FALSE & check_irreducible == TRUE & check_ergodic == TRUE
 ) # para evaluar si las matrices son ergódicas e irreducibles al mismo tiempo
-head(Mat_erg_irred, n=2)
 
+head(cdb_metadata(Mat_erg_irred), n=2) |> 
+  gt()
 
 ```
 
-### Ahora usando las matrices que cumple con las condiciones de ergodicidad y irreducbilidad se puede calcular el valor propio de lambda.
 
--   La función **eigs** calcula los valores propios de una matriz, la función proviene de la library(popdemo). En este caso se calcula el valor propio de lambda para las matrices que son ergódicas e irreducibles previamente seleccionado. Usando la función **sapply** se aplica la función **eigs** a todas las matrices en la base de datos y crea una lista de los cálculos. Si mira la lista de valores propios de lambda en el objeto **lambdaVals** se observa valor por cada **matA** incluido en el archivo.
 
--   Se usa la función **summary** para resumir los valores propios de lambda.
+```{r Rage13, warning=FALSE, message=FALSE}
 
--   Se usa la función **hist** para visualizar la distribución de los valores propios de lambda.
+lambdaVals_list <- sapply(matA(Mat_erg_irred), popdemo::eigs, what = "lambda") 
 
-```{r Rage13}
 
-lambdaVals <- sapply(matA(Mat_erg_irred), popdemo::eigs, what = "lambda") 
 
-summary(lambdaVals) # la distribuciones de los lambdas
+lambdaVals=as_tibble(lambdaVals_list)
 
-lambdaVals=as.tibble(lambdaVals)
+tidy(lambdaVals) |> gt()
 
 ggplot(lambdaVals, aes(value))+
   geom_histogram(aes(fill="lightblue"), colour="white")+
   rlt_style_fill()+
-  xlab("Lambda values")+
-  ylab("Frequency")+
-  scale_x_continuous(n.breaks = 10)
+  xlab("Lambda")+
+  ylab("Frecuencia")+
+  scale_x_continuous(n.breaks = 10)+
+  theme(legend.position = "none")
 
 ```
 
-Una segunda alternativa es usar la función **map_dbl** de la librería **purrr** para calcular cada uno los valores propios de lambda.
-
--   La función de **map_dbl** transforma su entrada aplicando una función a cada elemento de una lista y devolviendo un objeto de la misma longitud que la entrada. En este caso por cada **matA**, habrá un lambda.
+Una metodología alternativa para calcular los valores propios dominantes ($\lambda$) de las matrices de transición poblacional consiste en utilizar la función `map_dbl` de la librería purrr. Esta función permite aplicar una operación a cada elemento de una lista, devolviendo un vector numérico de igual longitud. En este contexto, se aplica una función de cálculo de $\lambda$ a cada matriz de transición (matA), obteniendo así un valor de $\lambda$ por matriz. Esta estrategia resulta eficiente para el procesamiento simultáneo de múltiples matrices dentro de un flujo de trabajo reproducible en R.
 
 ```{r Rage23}
 
@@ -398,9 +380,12 @@ lambdaVals1 <- map_dbl(
 lambdaVals2 <- map_dbl(matA(Mat_erg_irred), ~ popbio::lambda(.x))
 ```
 
-## Variación en crecimiento de la población en Epífitas y Terrestres
 
-Aquí seleccionamos las especies de Epifitas y Terrestres en objeto distincto con todas las poblaciones muestradas
+***
+
+## Variación en el crecimiento poblacional entre especies epífitas y terrestres
+
+En esta sección se seleccionan las especies clasificadas como epífitas y terrestres, agrupándolas en objetos distintos que contienen todas las poblaciones muestreadas correspondientes. Esta separación permite evaluar comparativamente la variación en las tasas de crecimiento poblacional entre ambos grupos funcionales, facilitando el análisis de patrones ecológicos y demográficos asociados a sus respectivos hábitos de vida.
 
 ```{r, Rage25}
 
@@ -447,13 +432,41 @@ lambda_terr <- map_dbl(matA(x_terr), ~ popdemo::eigs(.x, what = "lambda"))
 
 ```
 
-Con la función summary evaluamos la tendencias centrales y dispersión de las especies terrestres y epifitas. Uno observa que las especies terrestres tienen valores propios de lambda más dispersos que las especies epifitas y los promedios son distintos un poco distintos y las mediana es similar.
+
+***
+
+### Evaluación de Tendencias Centrales y Dispersión en Especies Terrestres y Epífitas
+
+Mediante el uso de la función summary, se analizaron las medidas de tendencia central y dispersión de los valores propios de lambda correspondientes a especies terrestres y epífitas. Los resultados indican que las especies terrestres presentan una mayor dispersión en los valores de lambda en comparación con las especies epífitas. Aunque los promedios difieren ligeramente entre ambos grupos, las medianas resultaron ser similares, lo que sugiere patrones demográficos comparables en términos de centralidad, pero con variabilidad distinta en su comportamiento poblacional.
 
 ```{r Rage27}
 
-summary(lambda_epif)
 
-summary(lambda_terr)
+
+library(flextable)
+
+# Clacular resúmenes
+epif_summary <- summary(lambda_epif)
+terr_summary <- summary(lambda_terr)
+
+# Unire los resúmenes en un solo data frame
+combined_df <- rbind(
+  Epífita = epif_summary,
+  Terrestre = terr_summary
+)
+
+# Convertir a data frame y añadir columna de hábitat
+combined_df <- as.data.frame(combined_df)
+combined_df$Habit <- rownames(combined_df)
+
+# Reordenar columnas
+combined_df <- combined_df[, c("Habit", names(epif_summary))]
+
+# Crear la tabla con flextable
+flextable(combined_df) |>
+  autofit() |>
+  theme_vanilla()
+
 
 ```
 
@@ -462,6 +475,13 @@ Para visualizar los datos en una figura de **ggplot2**, hay que convertir estas 
 ```{r Rage28}
 
 df_Lamb_epif = as.data.frame(lambda_epif)
+df_Lamb_terr = as.data.frame(lambda_terr)
+
+```
+
+Crear una columna con el tipo de hábitat y renombrar la columna lambda
+
+```{r Rage28b}
 df_Lamb_epi = df_Lamb_epif %>%
   add_column(Habit_Type = "Epífitas") %>%
   rename(lambda = lambda_epif)
@@ -471,46 +491,58 @@ df_Lamb_terr = as.data.frame(lambda_terr)
 df_Lamb_terr = df_Lamb_terr %>%
   add_column(Habit_Type = "Terrestre") %>%
   rename(lambda = lambda_terr)
+```
 
+Unir los dos data.frame en uno solo
+
+```{r Rage28c}
 
 ALL_Lambdas = rbind(df_Lamb_epi, df_Lamb_terr) # unir los dos data frame en uno
 ```
 
-```{r Rage29}
+Visualizar el crecimiento poblacional por tipo de hábitat
+
+```{r Rage29, warning=FALSE, message=FALSE}
 
 ggplot(ALL_Lambdas, aes(lambda, fill = Habit_Type)) +
   geom_histogram(colour = "white") +
   facet_wrap(~Habit_Type) +
   rlt_style_fill()+
   scale_x_continuous(n.breaks = 8)+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  ylab("Frecuencia")
 
 # ggsave("Figures/Terr_Epi_lambda.png")
 ```
 
 ------------------------------------------------------------------------
 
-## Calcular los coeficientes y determinar si son significativamente diferentes entre los grupos
+## Estimación del crecimiento promedio y evaluación de diferencias significativas
 
-Para calcular los coeficientes (el promedio) y determinar si estos son significativamente diferentes entre los grupos se puede usar un modelo lineal y la función **lm**. En este caso se usa la variable **Habit_Type** para predecir el valor propio de lambda. Se observa que las especies epifitas tienden a tener un valor propio de lambda más bajo que las especies terrestres.
-
-En adición se pude ver los coeficientes específicos de cada grupo usando la misma función añadiendo **-1** al modelo que quita el intercepto y calcula los coeficientes para cada grupo.
+Para evaluar si existen diferencias significativas en los valores propios de lambda entre especies epífitas y terrestres, se emplea un modelo lineal utilizando la función `lm`. En este análisis, la variable **Habit_Type** se utiliza como predictor del valor propio dominante ($\lambda$), lo que permite estimar el efecto del tipo de hábitat sobre la tasa de crecimiento poblacional. Los resultados del modelo indican que las especies epífitas tienden a presentar valores de lambda más bajos en comparación con las especies terrestres. Para obtener los coeficientes específicos de cada grupo, se ajusta un segundo modelo excluyendo el intercepto mediante la inclusión de `-1` en la fórmula. Esta parametrización permite calcular directamente el promedio de lambda para cada grupo funcional, facilitando la comparación entre ellos.
 
 ```{r Rage30}
 
 model_lambda = lm(lambda ~ Habit_Type, data = ALL_Lambdas)
-summary(model_lambda)
+#summary(model_lambda)
 
 
-tidy(model_lambda)
+
 
 model_lambda_epi_terr = lm(lambda ~ Habit_Type-1, data = ALL_Lambdas)
-summary(model_lambda_epi_terr)
+#summary(model_lambda_epi_terr)
+
+tidy_results= tidy(model_lambda_epi_terr)
+
+flextable(tidy_results)
 ```
 
-### Visualización de las distribuciones de los coeficientes
 
-Uno puedo visualizar estas distribuciones usando la librería **ggdist** y **distributional**, con la función **stat_halfeye**. Es importante notar que la función **stat_halfeye** requiere que se especifique la distribución de los datos y que la información proviene del modelo anterior (model_lambda). En este análisis se asume que los $\lambda$ tienen una distribución normal.
+*** 
+
+### Visualización de las distribuciones de los lambda's
+
+Para representar gráficamente las distribuciones de los coeficientes estimados en el modelo lineal, se emplean las librerías `ggdist` y `distributional`, utilizando la función **stat_halfeye**. Esta función permite visualizar la forma y dispersión de las distribuciones de los parámetros, proporcionando una representación intuitiva de la incertidumbre asociada a cada estimación. Es importante destacar que stat_halfeye requiere especificar explícitamente la distribución de los datos; en este análisis, se asume que los valores propios de lambda ($\lambda$) siguen una distribución normal. La información utilizada para esta visualización proviene del modelo ajustado previamente (model_lambda), lo que permite comparar directamente los coeficientes entre grupos funcionales como epífitas y terrestres.
 
 ```{r Rage31}
 
@@ -529,7 +561,7 @@ model_lambda_epi_terr %>%
   )
 ```
 
-La gráfica anterior puede esconder la dispersión de los datos, específicamente los datos sesgados, por lo que se puede añadir los datos originales a la figura. En el siguiente caso se añade un **\|** por cada lambda en la posición inferior de la figura. Nota ahora que la dispersión de los datos es varia si uno mira la distribución con el promedio y el error estandard versus los datos originales, los **\|**. Es claro que con esta figura uno puede apreciar la dispersión de los datos y la distribución de los datos. Esta gráfica da una perspectiva muy diferente al anterior y más completa de los datos, enfocado en los datos fuera de datos centrado de la distribución.
+La gráfica anterior puede ocultar la dispersión de los datos, especialmente cuando hay sesgos. Para abordar esto, se pueden añadir los datos originales a la figura. En este caso, se ha incorporado un símbolo de barra **\|** por cada valor de lambda en la parte inferior de la gráfica. Al observar esta nueva visualización, se nota que la dispersión varía significativamente si se compara la representación basada en el promedio y el error estándar con la distribución real de los datos, representada por los **\|**. Esta figura permite apreciar mejor tanto la dispersión como la distribución de los datos. En comparación con la gráfica anterior, esta ofrece una perspectiva más completa, destacando los valores que se alejan del centro de la distribución.
 
 ```{r Rage32}
 
@@ -555,20 +587,22 @@ ALL_Lambdas %>%
     position = position_nudge(y = -.15)
   )+
   theme(legend.position = c(0.1, 0.8)) +
-  rlt_style_colour()
+  rlt_style_colour()+
+  ylab("")
 
 ```
-
-
-
 
 ------------------------------------------------------------------------
 
 ## Mapa de distribución de los estudios.
 
-La lista presente corresponde a los datos de COMPADRE y suplementada con búsqueda en los artículos para crear un mapa donde fueron hecho los estudios de dinámica poblacional. Desafortunadamente todavía en COMPADRE falta muchos datos y detalles que entrar en la base de datos. En esta sección se hizo una búsqueda de las orquídeas en la base de datos de COMPADRE y se extrajeron los datos de latitud y longitud de los artículos originales. En algunos casos no se pudo encontrar los datos de latitud y longitud, pero si el país o región donde se hizo el estudio. En estos casos se usó Google Maps para obtener las coordenadas aproximadas del sitio de muestreo. En otros casos no se pudo encontrar ninguna información de la localización del estudio. Estos casos no están incluidos en el mapa. Agradezco a Diana Molina Ozuma para la búsqueda de las coordinadas del los sitios de estudio. 
+La lista presentada corresponde a los datos extraídos de la base de datos COMPADRE, complementados con información obtenida directamente de los artículos científicos, con el objetivo de construir un mapa que muestre dónde se han realizado estudios de dinámica poblacional.
 
-Lista de números de poblaciones únicas por especies.
+Lamentablemente, COMPADRE aún carece de muchos datos y detalles importantes que deberían incorporarse a su base. En esta sección, se realizó una búsqueda específica de estudios sobre orquídeas dentro de COMPADRE, extrayendo las coordenadas de latitud y longitud directamente de los artículos originales.
+
+En los casos en que no se encontraron coordenadas exactas, pero sí se identificó el país o región del estudio, se utilizó Google Maps para estimar las coordenadas aproximadas del sitio de muestreo. Cuando no fue posible obtener ninguna información sobre la localización del estudio, esos casos fueron excluidos del mapa.
+
+Agradezco a Diana Molina Ozuma por su valiosa colaboración en la búsqueda de las coordenadas de los sitios de estudio.
 
 ```{r Rage33}
 
@@ -576,7 +610,7 @@ Orchid_data_DOI_Diana_3a <- read_excel("data/Orchid_data_DOI_Diana_3a.xlsx")
 
 ```
 
-```{r Rage34}
+```{r Rage34, warning=FALSE, message=FALSE}
 
 Lat_Long = Orchid_data_DOI_Diana_3a %>%
   select(SpeciesAccepted, Lon, Lat, OrganismType) |>
@@ -587,14 +621,14 @@ Lat_Long = Orchid_data_DOI_Diana_3a %>%
 
 ------------------------------------------------------------------------
 
-### Visualización de distribución con ggplot2
+### Visualización de distribución geospatial
 
-Usamos el paquete ggplot2 para visualizar la distribución de las orquídeas en la base de datos de COMPADRE. En este caso se usa la función **borders** para añadir los bordes de los países al mapa. La función **borders** usa funciones en el paquete **maps** para añadir los bordes de los países al mapa.
+Para representar la distribución geográfica de las orquídeas registradas en la base de datos `COMPADRE`, se utilizó el paquete **ggplot2**. En esta visualización, se emplea la función **borders**, que incorpora los contornos de los países al mapa. Esta función se basa en el paquete maps, el cual proporciona los datos geográficos necesarios para delinear los límites nacionales, permitiendo contextualizar espacialmente los puntos de muestreo.
 
-```{r Rage35}
+```{r Rage35, message=FALSE, warning=FALSE}
 
 ggplot2::ggplot(Lat_Long, aes(Lon, Lat, colour = OrganismType)) +
-  borders(database = "world", fill = "grey80", col = NA) +
+  annotation_borders(database = "world", fill = "grey80", col = NA) +
   geom_point(size = 1.0, alpha = 0.5)+
   theme(legend.position = c(0.15,0.2))+
   rlt_style_colour()
@@ -602,11 +636,15 @@ ggplot2::ggplot(Lat_Long, aes(Lon, Lat, colour = OrganismType)) +
 #ggsave("orchid_map.jpg")
 ```
 
-## Usando Leaflet para mapar de distribución interactivo
+***
 
-Aquí se usa el paquete **Leaflet** para mapear los sitios de muestreo de las especies donde hubo trabajo de campo.
+## Mapa de distribución interactivo con Leaflet
 
-Se observa una gran disparidad en los sitios de muestreo entre las orquídeas. Las poblaciones en roja son epifitas y las azul son terrestres. Note la disparidad, las especies terrestres están mayormente en Europa y Norte América, con poca representación en Asia y ninguna en África. La especies epifitas están todas en el Caribe y Centro América (México) y ninguna en África, Asia y Australia. Note que este mapa se puede agrandar para enfocar en areas especificas del mapa.
+Se utilizó el paquete Leaflet para crear un mapa interactivo que muestra los sitios de muestreo de las especies de orquídeas estudiadas en campo. Este enfoque permite explorar visualmente la distribución geográfica de las poblaciones incluidas en los estudios.
+
+El mapa revela una marcada disparidad en los sitios de muestreo entre los dos tipos de orquídeas. Las poblaciones marcadas en rojo corresponden a especies epífitas, mientras que las azules representan especies terrestres. Se observa que las especies terrestres están principalmente distribuidas en Europa y América del Norte, con escasa representación en Asia y ninguna en África. Por otro lado, las especies epífitas se concentran en el Caribe y América Central (especialmente México), sin presencia en África, Asia ni Australia.
+
+Además, el mapa es interactivo y permite hacer zoom para examinar áreas específicas con mayor detalle. Presiona sobre los puntos para obtener información adicional sobre el nombre científico de la especie muestreada en este sitio.
 
 ```{r Rage36}
 
@@ -634,718 +672,7 @@ Orchid_map
 
 ------------------------------------------------------------------------
 
-## La esperanza de vida de las orquídeas
 
-Cada especies tiene un promedio de largo de vida y una distribución de supervivencia. En los humanos el largo de vida promedio es de ±72 años (y varia por país y otros factores), pero hay personas que viven hasta 100 años o más. En las orquídeas el largo de vida promedio varia mucho de especies cada tienen un periodo vida corto, pero hay individuos que viven hasta 100 años o más. Para calcular el largo de vida y su distribuciones de una especies se usa la matriz de transición **matU** (la matrix de transiciones) y la etapa de inicio de la vida **start_life**. La función **lifeExpectancy** calcula el largo de vida de una especies. Nota que este caso no se usa la matriz de fecundidad **matF** o la matriz de clonaje **matC**.
-
-Para calcular y comparar los datos es importante que la matriz sea del mismo largo de tiempo, por ejemplo no se debería comparar una matriz de 1 año con una matriz de 1 mes o de 10 años. Los valores de tiempo es la unidad de los datos de la matriz.
-
-Aquí el script crea un data frame de todas las especies que cumple con las condiciones necesarias para ser evaluados. Despues de la aplicaciones de los filtros se retiene 34 especies de orquídeas.
-
-```{r Rage37}
-index_O_filtrado <- Orquideas %>%
-  filter(ProjectionInterval == 1.0) |> # filtrar para matriz de un año solamente
-  filter(
-    MatrixComposite == "Mean", # filtrar para la matriz promedia
-    MatrixTreatment == "Unmanipulated", # filtrar para la matriz sin manipulación (que no son experimentos)
-    MatrixCaptivity == "W" # filtrar para poblaciones naturales (no en cautiverio)
-  ) %>%
-  mutate(StageID = cdb_id_stages(.)) %>% # crear un ID para las etapas
-  cdb_collapse(columns = "StageID") %>% # colapsar las etapas
-  cdb_flag() %>% # evaluar las matrices y crear una columna para cada evaluación
-  filter(
-    check_NA_U == FALSE, # filtrar para matrices sin valores faltantes
-    check_zero_U == FALSE, # filtrar para matrices sin valores cero
-    check_singular_U == FALSE, # filtrar para matrices no singulares
-    check_surv_gte_1 == FALSE # <- Asegurarse de que este filtro se aplique
-  ) %>%
-  mutate(matU = matU(.), start_life = mpm_first_active(.))
-
-index_O_filtrado |> select(mat, OrganismType) |> 
-  group_by(OrganismType) |> 
-  summarize(n=n())
-
-```
-
-# Paso adicional de filtrado manual para mayor seguridad.
-
-El filtro adicional es para remover matrices que tienen valores de supervivencia mayores a 1 en la matriz de transición **matU**. Esto se puede hacer con la función **sapply** para evaluar cada matriz en la lista de matrices y remover las que no cumplen con esta condición. En este caso se retienen 31 matrices que cumplen con esta condición. En otra palabra tenemos 3 matrices de la lista enterior que tiene supervivencia mayor a uno (lo que es biologícamente imposible).
-
-```{r compmr38}
-
-index_O_filtrado_final <- index_O_filtrado %>%
-  filter(sapply(matU, function(mat) {
-    if (is.null(mat)) return(FALSE)
-    all(colSums(mat, na.rm = TRUE) <= 1)
-  }))
-```
-
-## El largo de Vida y su varianza
-
-Ahora aplicar las funciones de cálculo para estimar el largo de vida y su varianza. Creamos una función llamada **lifeExpectancy** que calcula el largo de vida usando la matriz de transición **matU** y la etapa de inicio de la vida **start_life**.
-
-```{r Rage39}
-
-lifeExpectancy <- function(matU, startLife) {
-  N <- solve(diag(nrow(matU)) - matU)
-  return(colSums(N)[startLife])
-}
-
-
-index_O_calculado <- index_O_filtrado_final %>%
-  mutate(life_expectancy = mapply(lifeExpectancy, matU, start_life)) %>% # calcular el largo de vida promedio
-  mutate(var_life_expectancy = mapply(life_expect_var, matU, start = 1)) %>% # calcular la varianza del largo de vida
-  mutate(low_CI_var_LS = pmax(0, life_expectancy - 1.96 * sqrt(var_life_expectancy))) %>% # calcular el intervalo de confianza inferior
-  mutate(high_CI_var_LS = life_expectancy + 1.96 * sqrt(var_life_expectancy)) %>% # calcular el intervalo de confianza superior
-  mutate(OrganismType = reorder(OrganismType, life_expectancy, median)) # ordenar las especies por el largo de vida 
-
-
-```
-
-```{r}
-index_O_calculado_subset=index_O_calculado |> 
-  select(mat, SpeciesAccepted, OrganismType, life_expectancy, var_life_expectancy, 
-         low_CI_var_LS, high_CI_var_LS, OrganismType) |> 
-  mutate(OrganismType_RC=fct_recode(OrganismType,
-                             "Epífita"="Epiphyte",
-                             "Terrestre"="Herbaceous perennial"))
-
-
-
-index_O_calculado_subset$SpeciesAccepted <- fct_reorder(
-  index_O_calculado_subset$SpeciesAccepted,
-  index_O_calculado_subset$life_expectancy,
-  .desc = FALSE
-)
-
-names(index_O_calculado_subset)
-
-main.plot=ggplot(index_O_calculado_subset, aes(SpeciesAccepted, color = OrganismType_RC)) +
-  geom_linerange(aes(x = SpeciesAccepted, ymin = low_CI_var_LS, ymax = high_CI_var_LS)) +
-  geom_point(aes(y = life_expectancy), size = 2) +
-  coord_flip() +
-  theme(legend.position.inside = c(0.8, 0.2)) +
-  ylab("") +
-  xlab("") +
-  rlt_style_colour()+
-  theme(
-    axis.text.x = element_text(
-      color = "grey20",
-      size = 9,
-      angle = 90,
-      hjust = .5,
-      vjust = .5,
-      face = "plain"
-    ),
-    axis.text.y = element_text(
-      color = "grey20",
-      size = 7,
-      angle = 0,
-      hjust = 1,
-      vjust = 0,
-      face = "plain"
-    ),
-    axis.title.x = element_text(
-      color = "grey20",
-      size = 12,
-      angle = 0,
-      hjust = .5,
-      vjust = 0,
-      face = "plain"
-    ),
-    axis.title.y = element_text(
-      color = "grey20",
-      size = 12,
-      angle = 90,
-      hjust = .5,
-      vjust = .5,
-      face = "plain"
-    )
-  )+
-  theme(legend.position="none")+
-  theme(axis.text.y = element_text(size = 5))+
-  scale_y_continuous(n.breaks = 12)
-
-## Insertar la figura 
-
-inset.plot=index_O_calculado_subset |> 
-  filter(life_expectancy<50) |> 
-  ggplot(aes(SpeciesAccepted, color = OrganismType_RC)) +
-  geom_linerange(aes(x = SpeciesAccepted, ymin = low_CI_var_LS, ymax = high_CI_var_LS)) +
-  geom_point(aes(y = life_expectancy), size = 2) +
-  coord_flip() +
-  theme(legend.position.inside = c(0.8, 0.2)) +
-  ylab("") +
-  xlab("") +
-  rlt_style_colour() +
-  theme(
-    axis.text.x = element_text(
-      color = "grey20",
-      size = 9,
-      angle = 90,
-      hjust = .5,
-      vjust = .5,
-      face = "plain"
-    ),
-    axis.text.y = element_text(
-      color = "grey20",
-      size = 7,
-      angle = 0,
-      hjust = 1,
-      vjust = 0,
-      face = "plain"
-    ),
-    axis.title.x = element_text(
-      color = "grey20",
-      size = 12,
-      angle = 0,
-      hjust = .5,
-      vjust = 0,
-      face = "plain"
-    ),
-    axis.title.y = element_text(
-      color = "grey20",
-      size = 12,
-      angle = 90,
-      hjust = .5,
-      vjust = .5,
-      face = "plain"
-    )
-  )+
-  theme(legend.position = c(0.8,0.2),
-        legend.title = element_blank())+
-  theme(axis.text.y = element_text(size = 5))+
-  scale_y_continuous(n.breaks = 12)
-
-library(cowplot)
-
-final_plot <- ggdraw() +
-  draw_plot(main.plot) +
-  draw_plot(inset.plot, x = 0.3, y = 0.15, width = 0.7, height = 0.7)
-
-final_plot
-```
-
-------------------------------------------------------------------------
-
-## Longevidad
-
-La longevidad es el largo de vida máximo que puede alcanzar un individuo en una población. En este caso se usa la función **longevity** para calcular el tiempo para un cohorte llegue a un 5% de supervivencia. La función **longevity** requiere la matriz de transición **matU** y la etapa de inicio de la vida **start_life**.
-
-```{r}
-names(index_O_calculado)
-
-index_O_calculado_subset=index_O_calculado |> 
-  select(mat, SpeciesAccepted, OrganismType, life_expectancy, var_life_expectancy, 
-         low_CI_var_LS, high_CI_var_LS, OrganismType) |> 
-  mutate(OrganismType_RC=fct_recode(OrganismType,
-                             "Epífita"="Epiphyte",
-                             "Terrestre"="Herbaceous perennial"))
-
-
-
-
-
-longevity_O <- index_O_filtrado_final %>%
-  mutate(longevidad=mapply(longevity, matU, start = 2, lx_crit = 0.05)) # calcular la longevidad por cada especie
-
-
-
-#longevity_O$longevidad
-
-
-
-```
-
-```{r}
-names(longevity_O)
-longevity_O=longevity_O|>
-mutate(OrganismType_RC=fct_recode(OrganismType,
-                             "Epífita"="Epiphyte",
-                             "Terrestre"="Herbaceous perennial"))
-
-longevity_O$SpeciesAccepted <- fct_reorder(
-  longevity_O$SpeciesAccepted,
-  longevity_O$longevidad,
-  .desc = FALSE
-)
-
-main.plot=ggplot(longevity_O , aes(x=SpeciesAccepted, y=longevidad, color = OrganismType_RC)) +
-  geom_point() +
- coord_flip() +
-  theme(legend.position.inside = c(0.8, 0.2)) +
-  ylab("") +
-  xlab("") +
-  rlt_style_colour() +
-  theme(
-    axis.text.x = element_text(
-      color = "grey20",
-      size = 9,
-      angle = 90,
-      hjust = .5,
-      vjust = .5,
-      face = "plain"
-    ),
-    axis.text.y = element_text(
-      color = "grey20",
-      size = 7,
-      angle = 0,
-      hjust = 1,
-      vjust = 0,
-      face = "plain"
-    ),
-    axis.title.x = element_text(
-      color = "grey20",
-      size = 12,
-      angle = 0,
-      hjust = .5,
-      vjust = 0,
-      face = "plain"
-    ),
-    axis.title.y = element_text(
-      color = "grey20",
-      size = 12,
-      angle = 90,
-      hjust = .5,
-      vjust = .5,
-      face = "plain"
-    )
-  )+
-  theme(legend.position="none")+
-  theme(axis.text.y = element_text(size = 5))+
-  scale_y_continuous(n.breaks = 12)
-
-## Insertar la figura 
-
-inset.plot=longevity_O |> 
-  filter(longevidad <50) |> 
-ggplot(aes(x=SpeciesAccepted, y=longevidad, color = OrganismType_RC)) +
-  geom_point() +
-  coord_flip() +
-  theme(legend.position.inside = c(0.8, 0.2)) +
-  ylab("") +
-  xlab("") +
-  rlt_style_colour() +
-  theme(
-    axis.text.x = element_text(
-      color = "grey20",
-      size = 9,
-      angle = 90,
-      hjust = .5,
-      vjust = .5,
-      face = "plain"
-    ),
-    axis.text.y = element_text(
-      color = "grey20",
-      size = 7,
-      angle = 0,
-      hjust = 1,
-      vjust = 0,
-      face = "plain"
-    ),
-    axis.title.x = element_text(
-      color = "grey20",
-      size = 12,
-      angle = 0,
-      hjust = .5,
-      vjust = 0,
-      face = "plain"
-    ),
-    axis.title.y = element_text(
-      color = "grey20",
-      size = 12,
-      angle = 90,
-      hjust = .5,
-      vjust = .5,
-      face = "plain"
-    )
-  )+
-  theme(legend.position = c(0.8,0.2),
-        legend.title = element_blank())+
-  theme(axis.text.y = element_text(size = 5))+
-  scale_y_continuous(n.breaks = 12)
-
-library(cowplot)
-
-longevidad_plot <- ggdraw() +
-  draw_plot(main.plot) +
-  draw_plot(inset.plot, x = 0.3, y = 0.15, width = 0.7, height = 0.7)
-
-longevidad_plot
-```
-
-#### 
-
-```{r Rage40, eval=FALSE, echo=FALSE}
-Orquideas %>%
-  filter(ProjectionInterval == 1.0) |> # filtrar para matriz de un año solamente
-  filter(
-    MatrixComposite == "Mean", # filtrar para la matriz promedia
-    MatrixTreatment == "Unmanipulated", # filtrar para la matriz sin manipulación
-    MatrixCaptivity == "W" # filtrar para poblaciones naturales (no en cautiverio)
-  ) %>%
-  mutate(StageID = cdb_id_stages(.)) %>% # crear un ID para las etapas
-  cdb_collapse(columns = "StageID") %>% # colapsar las etapas
-  cdb_flag() %>% # cdb_flag() aquí para evaluar las matrices colapsadas
-  filter(
-    check_NA_U == FALSE, # filtrar para matrices sin valores faltantes
-    check_zero_U == FALSE, # filtrar para matrices sin valores cero
-    check_singular_U == FALSE, # filtrar para matrices no singulares
-    check_surv_gte_1 == FALSE # filtrar para la matU que las supervivencias no sean mayores a 1
-  ) %>%
-  mutate(matU = matU(.), start_life = mpm_first_active(.)) %>% # extraer la matriz de transición y la etapa de inicio de la vida
-  mutate(life_expectancy = mapply(lifeExpectancy, matU, start_life)) %>% # calcular el largo de vida
-  mutate(var_life_expectancy = mapply(life_expect_var, matU, start = 1)) %>% # calcular la varianza del largo de vida
-  mutate(low_CI_var_LS = life_expectancy - 1.96 * sqrt(var_life_expectancy)) %>% # calcular el intervalo de confianza inferior
-  mutate(
-    high_CI_var_LS = life_expectancy + 1.96 * sqrt(var_life_expectancy)) %>% # calcular el intervalo de confianza superior
-  mutate(OrganismType = reorder(OrganismType, life_expectancy, median)) # ordenar las especies por el largo de vida
-
-```
-
-Figura del largo de vida promedio y su varianza para las orquídeas terrestres y epifitas.
-
-```{r}
-
-```
-
-```{r Rage41, eval=FALSE}
-
-lifeExpectancy <- function(matU, startLife) {
-  N <- solve(diag(nrow(matU)) - matU)
-  return(colSums(N)[startLife])
-}
-
-
-compadre_life_expect <- Orquideas %>%
-  filter(ProjectionInterval == 1.0) |> # filtrar para matriz de un año solamente
-  filter(
-    MatrixComposite == "Mean", # filtrar para la matriz promedia
-    MatrixTreatment == "Unmanipulated", # filtrar para la matriz sin manipulación
-    MatrixCaptivity == "W" # filtrar para poblaciones naturales (no en cautiverio)
-  ) %>%
-  mutate(StageID = cdb_id_stages(.)) %>% # crear un ID para las etapas
-  cdb_collapse(columns = "StageID") %>% # colapsar las etapas
-  cdb_flag() %>% # evaluar las matrices y crear una columna para cada evaluación
-  filter(
-    check_NA_U == FALSE, # filtrar para matrices sin valores faltantes
-    check_zero_U == FALSE, # filtrar para matrices sin valores cero
-    check_singular_U == FALSE,
-    check_surv_gte_1 == FALSE, # filtrar para matrices sin valores de supervivencia mayores a 1
-  ) %>% # filtrar para matrices no singulares
-  mutate(matU = matU(.), start_life = mpm_first_active(.)) %>% # extraer la matriz de transición y la etapa de inicio de la vida
-  mutate(life_expectancy = mapply(lifeExpectancy, matU, start_life)) %>% # calcular el largo de vida
-  mutate(var_life_expectancy = mapply(life_expect_var, matU, start = 1)) %>% # calcular la varianza del largo de vida
-  mutate(low_CI_var_LS = life_expectancy - 1.96 * sqrt(var_life_expectancy)) %>% # calcular el intervalo de confianza inferior
-  mutate(
-    high_CI_var_LS = life_expectancy + 1.96 * sqrt(var_life_expectancy)) %>% # calcular el intervalo de confianza superior
-  mutate(OrganismType = reorder(OrganismType, life_expectancy, median)) # ordenar las especies por el largo de vida
-
-```
-
-```{r Rage42, eval=FALSE, echo=FALSE}
-sort(names(New_Data))
-compadre_life_expect <- New_Data %>%
-  # Filter based on metadata first to reduce the size of the database
-  filter(ProjectionInterval == 1.0) %>%
-  filter(
-    MatrixComposite == "Mean",
-    MatrixTreatment == "Unmanipulated",
-    MatrixCaptivity == "W"
-  ) %>%
-  
-  # Then perform checks and data preparation
-  cdb_flag() %>% # Check for missing values in matrices (returns check_NA_*)
-  filter(
-    check_NA_U == FALSE # Ensure no missing values in the survival matrix
-  ) %>%
-  
-  # Then work on the matrices themselves
-  cdb_collapse(columns = "StageID") %>%
-  mutate(matU = matU(.), start_life = mpm_first_active(.)) %>%
-  
-  # Perform further checks on the matrices
-  filter(
-    map_lgl(matU, ~ all(. > 0)), # Check for zero values in the survival matrix
-    map_lgl(matU, ~ is_invertible(.)) # Check for singularity
-  ) %>%
-  
-  # Finally, perform calculations and mutations
-  mutate(life_expectancy = mapply(lifeExpectancy, matU, start_life)) %>%
-  mutate(var_life_expectancy = mapply(life_expect_var, matU, start = 1)) %>%
-  mutate(low_CI_var_LS = life_expectancy - 1.96 * sqrt(var_life_expectancy)) %>%
-  mutate(high_CI_var_LS = life_expectancy + 1.96 * sqrt(var_life_expectancy)) %>%
-  mutate(OrganismType = reorder(OrganismType, life_expectancy, median))
-```
-
-```{r comp43, eval=FALSE, echo=FALSE}
-
-OrchidLS = compadre_life_expect %>%
-  select(
-    mat,
-    SpeciesAccepted,
-    OrganismType,
-    SpeciesAccepted,
-    life_expectancy,
-    low_CI_var_LS,
-    high_CI_var_LS
-  ) %>%
-  arrange(desc(life_expectancy)) # tabla de los resultados
-
-```
-
-```{r Rage44, eval=FALSE, echo=FALSE}
-
-New_Data@data %>%
-  filter(ProjectionInterval == 1.0) |> # filtrar para matriz de un año
-  filter(
-    MatrixComposite == "Mean", # filtrar para la matriz promedia
-    MatrixTreatment == "Unmanipulated", # filtrar para la matriz sin manipulación
-    MatrixCaptivity == "W" # filtrar para poblaciones naturales (no en cautiverio)
-  ) %>%
-  mutate(StageID = cdb_id_stages(.)) %>% # crear un ID para las etapas
-  cdb_collapse(columns = "StageID") %>% # colapsar las etapas
-  cdb_flag() %>% # evaluar las matrices y crear una columna para cada evaluación
-  filter(check_zero_C == FALSE) # filtrar para matrices sin valores faltantes
-# filtrar para matrices sin valores cero
-
-
-
-         
-```
-
-Visualizar el largo de vida por plantas epifitas versus terrestres. Nota aquí que algunas especies están representada múltiple veces. Por consecuencia la distribución de los datos no es una buena representación de la diferencia entre las especies epifitas y terrestres, debido a lo que se llama pseudoreplicación. Este tabla representa la distribución los datos del data frame anterior.
-
-Calculando el promedio y la desviación estándar de la esperanza de vida de las orquídeas.
-
-```{r Rage47, eval=FALSE}
-index_O_calculado |>
-  group_by(OrganismType) |>
-  summarize(
-    mean_LS = mean(life_expectancy, na.rm = TRUE),
-    sd_LS = sd(var_life_expectancy, na.rm = TRUE)
-  )
-
-
-#OrchidLS |>
-#  group_by(OrganismType) |>
-#  summarize(
- #   mean_LS = mean(life_expectancy, na.rm = TRUE),
- #   sd_LS = sd(life_expectancy, na.rm = TRUE)
-#  )
-```
-
-Haciendo una figura del largo de vida de las especies epífitas y terrestres. Nota que la escala es logarítmica.
-
-```{r Rage48, eval=FALSE}
-
-ggplot2::ggplot(
-  index_O_calculado,
-  aes(OrganismType, life_expectancy, colour = OrganismType)
-) +
-  geom_boxplot(size=.8) +
-  geom_point() +
-  scale_y_log10() +
-  coord_flip() +
-  labs(x = NULL, y = "Life expectancy (log(years))") +
-  rlt_theme +
-  theme(legend.position = "none")
-
-ggsave("Figures/Life_Span.png")
-```
-
-https://jonesor.github.io/Rage/reference/life_expect.html
-
-En el siguiente script y gráfico vemos la visualización por genero de los estimados de la esperanza de vida. Nota que la esperanza de vida es un estimado y no un valor exacto. En este caso se usa la función **life_expect_var** para calcular la varianza de la esperanza de vida. La escala de x (el largo de vida fue cambiado a log10 de la esperanza de vida).
-
-**How to calculate CI of life span, it is in the table above, use gamma, not normal** !!!!
-
-low_CI_var_LS high_CI_var_LS
-
-```{r Rage49, eval=FALSE}
-
-#SPECIES_O$SpeciesAccepted <- fct_reorder(SPECIES_O$SpeciesAccepted, SPECIES_O$StudyStart, .desc = FALSE) # Ordenar por fecha de inicio del estudio
-
-
-ggplot(
-  index_O_calculado,
-  aes(
-    x = reorder(SpeciesAccepted, life_expectancy),
-    life_expectancy,
-    colour = OrganismType
-  )
-) +
-  # geom_boxplot() +
-  geom_point() +
-  scale_y_log10() +
-  coord_flip() +
-  labs(x = NULL, y = "Life expectancy (log(years))")
-#  rlt_theme+
-#theme(legend.position = "none")
-
-#ggsave("Figures/Genus_Life_Span.png")
-```
-
-EWl largo de vida de las Caladenia solamente
-
-Evaluando el largo de vida de las especies de *Caladenia* solamente
-
-```{r Rage50, ech=FALSE, eval=FALSE}
-
-#SPECIES_O$SpeciesAccepted <- fct_reorder(SPECIES_O$SpeciesAccepted, SPECIES_O$StudyStart, .desc = FALSE)
-
-index_O_calculado |>
-  group_by(Genus) |>
-  summarize(
-    mean_LS = mean(life_expectancy, na.rm = TRUE),
-    sd_LS = sd(life_expectancy, na.rm = TRUE)
-  ) |>
-  filter(Genus %in% c("Caladenia"))
-
-index_O_calculado |>
-  filter(Genus %in% c("Caladenia")) |>
-  ggplot(aes(
-    x = reorder(SpeciesAccepted, life_expectancy),
-    life_expectancy,
-    colour = OrganismType
-  )) +
-  geom_point() +
-  scale_y_log10() +
-  coord_flip() +
-  labs(x = NULL, y = "Life expectancy (years)") +
-  rlt_theme +
-  theme(legend.position = "none")
-
-#ggsave("Figures/Caladenia_Life_Span.png")
-```
-
-```{r Rage51, echo=FALSE, eval=FALSE}
-
-unique(compadre_life_expect$OrganismType) #Test difference in life span.
-
-t.test(life_expectancy ~ OrganismType, data = compadre_life_expect)
-
-
-shapiro.test(compadre_life_expect$life_expectancy) # Not normaly distributed
-
-
-leveneTest(life_expectancy ~ OrganismType, data = compadre_life_expect) # equal variance but not notmaly distributed
-
-```
-
-https://jonesor.github.io/Rage/articles/a03_LifeHistoryTraits.html
-
-## Reproducción y maduración
-
-## Caracteristicas de componentes de tabla de vida
-
-## La distribución de mortandad y fecundidad
-
-Baudisch, A. 2011. The pace and shape of ageing. Methods in Ecology and Evolution, 2(4), 375– 382. doi:10.1111/j.2041-210X.2010.00087.x
-
-Baudisch, A, Stott, I. 2019. A pace and shape perspective on fertility. Methods Ecol Evol. 10: 1941– 1951. doi:10.1111/2041-210X.13289
-
-Caswell, H. 2001. Matrix Population Models: Construction, Analysis, and Interpretation. 2nd edition. Sinauer Associates, Sunderland, MA. ISBN-10: 0878930965
-
-Demetrius, L. 1978. Adaptive value, entropy and survivorship curves. Nature 275: 213-214.
-
-Demetrius, L., & Gundlach, V. M. 2014. Directionality theory and the entropic principle of natural selection. Entropy 16: 5428-5522.
-
-de Vries, C., Bernard, C., & Salguero-Gómez, R. 2023. Discretising Keyfitz’ entropy for studies of actuarial senescence and comparative demography. Methods in Ecology and Evolution, 14, 1312–1319. doi:10.1111/2041-210X.14083
-
-Morris, W. F. & Doak, D. F. 2003. Quantitative Conservation Biology: Theory and Practice of Population Viability Analysis. Sinauer Associates, Sunderland, MA. ISBN-10: 0878935460
-
-Salguero-Gómez, R., Jones, O. R., Jongejans, E., Blomberg, S. P., Hodgson, D. J., Mbeau-Ache, C., Zuidema, P. A., de Kroon, H., & Buckley, Y. M. 2016. Fast–Slow continuum and reproductive strategies structure plant life-history variation worldwide. Proceedings of the National Academy of Sciences 113 (1): 230–35
-
-Use robust Approach
-
-Para el siguiente análisis se necesita instalar el paquete **WRS2**.
-
-Y se necesita cargar el archivo de funciones de **Rallfun-v38.txt** que se encuentra en el siguiente enlace \<<https://github.com/rrwilcox/Rallfun>\> y guardarlo en su directorio de trabajo. Pudiese ser que haya versiones más recientes de este archivo. Nota que la dirección abajo funciona para mi computadora, uds tienen que ajustar la dirección del archivo a su directorio de trabajo.
-
-```{r Rage52, echo=FALSE, eval=FALSE}
-
-source(
-  "/Users/rlt/Library/CloudStorage/Dropbox/GitHub_Dropbox_Drive/GitHub/Diagnostico_Poblacional/Diagnostico_Poblacional/Rallfun-v38.txt",
-  chdir = T
- # Home computer
-#source("/Users/rlt/Dropbox/METAS+COHORT_D/Rallfun-v38.txt", chdir = T)
-#source("/Users/rlt/Dropbox/Ackermanstuff/Pollinator_Interaction/Specificity_Index_pollinators/Rallfun-v38.txt", chdir = T) ## Work laptop Computer
-#source("/Users/raymondtremblay/Dropbox/METAS+COHORT_D/Rallfun-v38.txt", chdir = T) #When used on Monique
-```
-
-```{r Rage53, eval=FALSE, echo=FALSE}
-
-unique(compadre_life_expect$OrganismType)
-
-Cf = cdb_flatten(compadre_life_expect)
-
-
-YSEC_T = Cf %>%
-  dplyr::select("life_expectancy", "OrganismType") %>%
-  filter(OrganismType == "Herbaceous perennial")
-
-YSEC_T
-YSEC_E = Cf %>%
-  dplyr::select("life_expectancy", "OrganismType") %>%
-  filter(OrganismType == "Epiphyte")
-
-yuenbt(
-  YSEC_T$life_expectancy,
-  YSEC_E$life_expectancy,
-  alpha = .05,
-  nboot = 10000,
-  side = T
-)
-
-```
-
-```{r Rage54,  echo=FALSE, eval=FALSE}
-
-data(Compadre)
-
-
-Compadre$matA <- matA(Compadre)
-
-# create empty vector to store output
-Compadre$dim <- numeric(nrow(Compadre))
-
-#index$dim <- numeric(nrow(Orquideas))
-
-# loop through all rows of Compadre
-for (i in seq_len(nrow(Compadre))) {
-  Compadre$dim[i] <- nrow(Compadre$matA[[i]])
-}
-
-# function to determine whether matrix 'mat' has any stages with no transitions
-NullStages <- function(mat) any(colSums(mat) == 0)
-
-# apply function to every element of A
-Compadre$null_stages <- sapply(Compadre$matA, NullStages)
-
-NullStages(Compadre$matA[[1]]) # apply function to single element
-Compadre$null_stages <- sapply(matA(Compadre), NullStages)
-```
-
-### Calcular el promedio y la varianza en la expectativa de vida de un modelo de matriz poblacional
-
-```{r Rage55,  echo=FALSE, eval=FALSE}
-
-# función para calcular la esperanza de vida
-
-
-data(mpm1)
-
-life_expect_mean(mpm1$matU, start = 1)
-rep_stages <- repro_stages(mpm1$matF)
-(n1 <- mature_distrib(mpm1$matU, start = 2, repro_stages = rep_stages))
-
-life_expect_mean(mpm1$matU, mixdist = n1, start = NULL)
-
-life_expect_var(mpm1$matU, start = 1)
-
-
-```
 
 http://127.0.0.1:29465/rmd_output/1/compadre_orchid-ppm-y-su-uso.html
 

@@ -527,7 +527,7 @@ mat.promedio
 
 ```
 
-Convertir la matriz en un vector
+## Convertir las matrices en un vectores
 
 ```{r LTRE18}
 mat.promedio.vector <- as.vector(mat.promedio)
@@ -538,6 +538,12 @@ mat_rug.vector <- as.vector(matrug) # vector para O. rugosa
 mat_mart.vector <- as.vector(matmart) # vector para O. martinezii
 
 ```
+
+```{r}
+mat_rug.vector
+matrug
+```
+
 
 Unir los vectores de las matrices *O. rugosa* y *O. martinezii*
 
@@ -554,10 +560,10 @@ Unido
 Añadir los nombres a las columnas de la matriz promedio
 
 ```{r LTRE20}
-colnames(Unido)<-expression(a11, a21, a31, a41, 
-                            a12, a22, a32, a42, 
-                            a13, a23, a33, a43,
-                            a14, a24, a43, a44)
+colnames(Unido)<-expression(a11, a12, a13, a14, # nota que el orden es por columnas no filas
+                            a21, a22, a23, a24, 
+                            a31, a32, a33, a34,
+                            a41, a42, a34, a44)
 
 Unido = as.data.frame(Unido)
 Unido$Site <- c("Q. rugosa", "Q. martinezii")
@@ -571,8 +577,8 @@ Extraer los elementos del data frame y convertirlos en una lista de matrices
 Ob_Atrt <- lapply(
   split(as.matrix(Unido[, 1:16]), 1:2),
   matrix,
-  nrow = 4,
-  byrow = TRUE
+  ncol = 4,
+  byrow = FALSE
 )
 
 
@@ -581,70 +587,32 @@ names(Ob_Atrt) <- Unido$Site
 Ob_Atrt
 ```
 
-## Analisis de ERTV para *Oncidium brachyandrum*
+## Análisis de ERTV para *Oncidium brachyandrum*
 
 Gráfico de contribución de ERTV para la matriz promedio de *Oncidium brachyandrum* creciendo sobre *Quercus martinezii* y *Q. rugosa*.
-
-```{r LTRE22, eval=FALSE}
-
-#plots <- lapply(plots, mean)
-Ob <- LTRE(Ob_Atrt, mat.promedio) # usando la matriz promedio
-#Ob$`Q. martinezii`
-#x_Ob <- matrix(unlist(Ob), nrow=4, byrow=TRUE)
-#x_Ob
-
-barplot_labels <- expression(a11, a21, a31, a41,
-                             a12, a22, a32, a42,
-                             a13, a23, a33, a43,
-                             a14, a24, a34, a44)
-
-x_Ob <- matrix(unlist(Ob$`Q. martinezii`), nrow = 4, byrow = TRUE)
-
-Ob_bp <- barplot(
-  x_Ob[1:2, ],
-  beside = TRUE,
-  ylim = c(-.05, .25),
-  las = 1,
-  xlab = "Transition",
-  ylab = "",
-  xaxt = 'n'
-)
-
-
-mtext(
-  expression(paste("Contribution of ", a[ij], "to variation in ", lambda)),
-  2,
-  3.5
-)
-## rotate labels
-text(x = Ob_bp, y = -0.05, labels = barplot_labels, srt = 45, xpd = TRUE)
-title(expression(italic("Oncidium brachyandrum")))
-box()
-
-#str(Ob)
-#str(x_Ob)
-```
 
 ```{r LTRE23}
 Ob <- LTRE(Ob_Atrt, mat.promedio)
 Ob
 ```
 
-```{r LTRE24,  echo=FALSE}
-
 ## Analisis de ERTV para *Oncidium brachyandrum* por hospedero
 
-#Convertir los resultados de ERTV en un data frame para facilitar la visualización y manipulación de los datos para usar con ggplot2
+Convertir los resultados de ERTV en un data frame para facilitar la visualización y manipulación de los datos para usar con ggplot2
+
+```{r LTRE24,  echo=TRUE}
 
 
-Ob <- LTRE(Ob_Atrt, mat.promedio)
 
-Ob_df_mart <- as.data.frame(t(Ob$`Q. martinezii`))
-Ob_df_rug <- as.data.frame(t(Ob$`Q. rugosa`))
+
+Ob <- LTRE(Ob_Atrt, mat.promedio) # Realizar el análisis de ERTV usando la matriz promedio
+
+Ob_df_mart <- as.data.frame(t(Ob$`Q. martinezii`)) # Convertir los resultados de *Q. martinezii* en un data frame
+Ob_df_rug <- as.data.frame(t(Ob$`Q. rugosa`)) # Convertir los resultados de *Q. rugosa* en un data frame
 
 Ob_df <- rbind(Ob_df_mart, Ob_df_rug)
 
-Ob_df$Species <- c(
+Ob_df$Species <- c( # Asignar nombres de especies, una asignación de nombre por cada fila
   "Q. martinezii",
   "Q. martinezii",
   "Q. martinezii",
@@ -655,29 +623,31 @@ Ob_df$Species <- c(
   "Q. rugosa"
 )
 
-colnames(Ob_df) <- c("a1i", "a2i", "a3i", "a4i", "Species")
-Ob_df$t_1 <- c("ai1", "ai2", "ai3", "ai4", "ai1", "ai2", "ai3", "ai4")
+colnames(Ob_df) <- c("a1i", "a2i", "a3i", "a4i", "Species") # Asignar nombres a las columnas
+Ob_df$t_1 <- c("ai1", "ai2", "ai3", "ai4", "ai1", "ai2", "ai3", "ai4") # Asignar nombres a las filas
 
 
-pivot_long <- tidyr::pivot_longer(
-  Ob_df,
-  cols = c("a1i", "a2i", "a3i", "a4i"),
-  names_to = "Transition",
-  values_to = "Contribution"
+pivot_long <- tidyr::pivot_longer( # Convertir a formato largo para ggplot2
+  Ob_df, # datos de entrada
+  cols = c("a1i", "a2i", "a3i", "a4i"), # columnas a pivotar
+  names_to = "Transition", # nombre de la nueva columna para las variables
+  values_to = "Contribution" # nombre de la nueva columna para los valores
 )
-pivot_long$Transitions2 <- c("a11", "a21", "a31", "a41", 
-                             "a12", "a22", "a32", "a42",
-                             "a13", "a23", "a33", "a43", 
-                             "a14", "a24", "a34", "a44",
-                             "a11", "a21", "a31", "a41", 
-                             "a12", "a22", "a32", "a42", 
-                             "a13", "a23", "a33", "a43", 
-                             "a14", "a24", "a34", "a44")
+pivot_long$Transitions2 <- c("a11", "a12", "a13", "a14",  # Asignar nombres a las transiciones
+                             "a21", "a22", "a23", "a24",
+                             "a31", "a32", "a33", "a34", 
+                             "a41", "a42", "a43", "a44",
+                             "a11", "a12", "a13", "a14", 
+                             "a21", "a22", "a23", "a24",
+                             "a31", "a32", "a33", "a34", 
+                             "a41", "a42", "a43", "a44")
 
 
 
-
+# head(pivot_long)
 ```
+
+Creación de unos gráficos para ver la contribución de las tasas vitales sobre la variación en *λ* para cada una de las especies de hospedero.
 
 ```{r LRE25 }
 library(ggplot2)
@@ -685,21 +655,37 @@ library(ggplot2)
 ggplot(pivot_long, aes(x = Transitions2, y = Contribution, fill = Species)) +
   geom_bar(stat = "identity", position = "dodge") +
   labs(
-    title = "Contribución de la variación  en las transiciones sobre lambda",
+    title = "Contribución de la variación en las transiciones sobre lambda",
     x = "Transiciones",
     y = "Contribuciones a λ"
   ) +
  rlt_style_fill()+
-  facet_wrap(~Species, scales = "free") +
+ # facet_wrap(~Species) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
   theme(legend.position = "none")
 
+```
 
+# Alternativa de grafico (Adriana averigua cual de las opciones de gráfico es mejor)
+
+```{r LRE26 }
+ggplot(pivot_long, aes(x = Transitions2, y = Contribution, fill = Species)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "Contribución de la variación en las transiciones sobre lambda",
+    x = "Transiciones",
+    y = "Contribuciones a λ"
+  ) +
+ rlt_style_fill()+
+  facet_wrap(~Species) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  theme(legend.position = "none")
 
 ```
 
-Aquí se observa el efecto de las transiciones de las tasas vitales sobre la variación en *λ* para las dos especies de hospedero. Las barras positivas indican contribuciones positivas a la variación en $\lambda$, mientras que las barras negativas indican contribuciones negativas sobre $\lambda$. NOTA importante que la escala de las barras (le eje de $Y$) es diferente para cada especie de hospedero. El efecto de las transiciones de las tasas vitales sobre la variación en *λ* es diferente para cada especie de hospedero, no solamente el efecto sobre las tasa vitales son diferentes pero entre hospedero pero los cambios relativos. Lo que indica que las dinámicas poblacionales de *Oncidium brachyandrum* son influenciadas por el hospedero en el que crece. Este patrón de cambios de tasa vitales y su importancia relativa en la variación de *λ* necesita ser estudiado en más especies de orquídeas epífitas para entender si es un patrón generalizado o no. Por consecuencia el proximo paso es evaluar cual son la características de las especies de hospedero que influyen en la dinámica poblacional de las orquídeas epífitas.
+Aquí se observa el efecto de las transiciones de las tasas vitales sobre la variación en *λ* para las dos especies de hospedero. Las barras positivas indican contribuciones positivas a la variación en $\lambda$, mientras que las barras negativas indican contribuciones negativas sobre $\lambda$. El efecto de las transiciones de las tasas vitales sobre la variación en *λ* es diferente para cada especie de hospedero, no solamente el efecto sobre las tasa vitales son diferentes pero entre hospedero pero los cambios relativos. Lo que indica que las dinámicas poblacionales de *Oncidium brachyandrum* son influenciadas por el hospedero en el que crece. Este patrón de cambios de tasa vitales y su importancia relativa en la variación de *λ* necesita ser estudiado en más especies de orquídeas epífitas para entender si es un patrón generalizado o no. Por consecuencia el proximo paso es evaluar cual son la características de las especies de hospedero que influyen en la dinámica poblacional de las orquídeas epífitas.
 
 Enlace sobre ERTV https://bookdown.org/cdorm/lefko3gentle/ltre.html
 
