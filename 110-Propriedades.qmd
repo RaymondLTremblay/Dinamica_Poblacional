@@ -57,9 +57,30 @@ rlt_style_colour <- function() {
 
 ## Propiedades, supuestos e índices matriciales
 
-En este capítulo revisaremos algunos de los índices frecuentemente utilizados cuando hablamos de análisis matricial. Estos índices describen la calidad de la matriz por lo que su cálculo es importante para obtener resultados e interpretaciones válidas. Este capítulo se compone de dos secciones, en la primera se incluyen índices para checar el estado de la matriz, estos son: **Dimensión cuadrada**, **Ergocidad**, **no Negativa**, **Irreducibilidad** y **Primitividad**. En la segunda sección se abordan los índices que describen el comportamiento de la población a largo plazo, basados en los modelos de proyección poblacional (MPP). Estos índices permiten evaluar cómo cambia la población antes y después de un disturbio. Entre ellos se encuentran: el **Análisis de Convergencia**, **Análisis de Amortiguamiento**, **Valor reproductivo** y la **Estructura Estable**. Si se requiere conocer los índices con mayor detalle se sugiere consultar [@caswell2001matrix] y [@stott2011framework].
+En este capítulo aprenderemos sobre algunos índices que se usan con frecuencia en el análisis matricial. Estos índices nos ayudan a saber si una matriz es “buena” para trabajar y si los resultados que obtenemos son confiables.
 
-------------------------------------------------------------------------
+El capítulo está dividido en dos partes:
+
+1.  **Índices sobre el estado de la matriz**
+
+Aquí veremos características básicas que debe cumplir una matriz para que el análisis sea válido:
+
+-   **Dimensión cuadrada**: la matriz debe tener el mismo número de filas y columnas.
+-   **Ergocidad**: asegura que, con el tiempo, todas las partes del sistema se conecten.
+-   **No negatividad**: los valores de la matriz no pueden ser negativos.
+-   **Irreducibilidad**: indica que no se puede dividir la matriz en bloques independientes.
+-   **Primitividad**: garantiza que, después de varias iteraciones, la matriz se estabiliza.
+
+2.  **Índices sobre el comportamiento a largo plazo**
+
+Estos se basan en modelos de proyección poblacional (MPP) y nos permiten entender cómo cambia la población antes y después de un disturbio:
+
+-   **Análisis de convergencia**: mide si la población tiende a una estructura estable.
+-   **Análisis de amortiguamiento**: indica qué tan rápido se alcanza esa estabilidad.
+-   **Valor reproductivo**: muestra la importancia de cada clase en la reproducción futura.
+-   **Estructura estable**: describe la distribución de la población cuando todo se estabiliza.
+
+Si quieres profundizar en estos índices, te recomiendo consultar [@caswell2001matrix] y [@stott2011framework].
 
 ## Construir una matriz poblacional
 
@@ -107,13 +128,16 @@ dim(Lr1)
 
 ### Ergócidad
 
-Decimos que la propiedad de ergodicidad se cumple cuando el crecimiento asintótico predicho por matriz es independiente de la estructura poblacional inicial considerada en el estudio. En otras palabras, sin importar el estado inicial de la población, su comportamiento converge a una estructura estable y a una tasa de crecimiento constante a largo plazo. Si una matriz poblacional no es ergódica, el crecimiento poblacional depende de la estructura poblacional inicial, lo que implica que el promedio o la tasa de crecimiento poblacional no son buenos predictores del comportamiento poblacional a largo plazo [@mangalam2022ergodic]. Para evaluar si la matriz es ergódica puede emplearse la función *isErgodic* del paquete **popbio** en **R**. Esta función da como resultado el valor lógico "TRUE" si la matriz es ergódica y "FALSE" en el caso contrario. En *L. rubripetala* se espera que la matriz sea ergódica, ya que los autores reportaron que la población alcanza tanto una estructura estable como una tasa de crecimiento constante en el tiempo [@tremblay2015stable].
+Decimos que la propiedad de ergodicidad se cumple cuando el crecimiento asintótico predicho por matriz es independiente de la estructura poblacional inicial considerada en el estudio. En otras palabras, sin importar el estado inicial de la población, su comportamiento converge a una estructura estable y a una tasa de crecimiento constante a largo plazo. Si una matriz poblacional no es ergódica, el crecimiento poblacional depende de la estructura poblacional inicial, lo que implica que el promedio o la tasa de crecimiento poblacional no son buenos predictores del comportamiento poblacional a largo plazo [@mangalam2022ergodic]. Para comprobar si la matriz es ergódica puede emplearse la función *isErgodic* del paquete **popbio** en **R**. Esta función da como resultado el valor lógico "TRUE" si la matriz es ergódica y "FALSE" en el caso contrario. En *L. rubripetala* se espera que la matriz sea ergódica, ya que los autores reportaron que la población alcanza tanto una estructura estable como una tasa de crecimiento constante en el tiempo [@tremblay2015stable].
 
 ```{r Indice4}
 isErgodic(Lr1, digits=5, return.eigvec=FALSE)
 ```
 
-Ejemplo de una matriz que no cumple con la condición de ergodicidad. Esta condición se presenta cuando ningún individuo logra pasar del estado de plántula al juvenil y tampoco al de adulto. Al evaluar esta matriz con la función *isErgodic* se comprueba que no es ergódica al ser la respuesta "FALSE". Esto significa que el crecimiento poblacional depende de la estructura poblacional inicial y, por lo tanto, no se puede esperar que la población alcance una estructura estable ni una tasa de crecimiento constante a largo plazo.
+Una matriz no cumple la condición de ergodicidad cuando, por ejemplo, ningún individuo logra pasar del estado de plántula al juvenil ni al adulto. En este caso, la población queda “atascada” en las primeras etapas y no puede alcanzar una estructura estable. Si evaluamos esta matriz con la función `isErgodic` del paquete popbio en R, el resultado será FALSE. Esto indica que:
+
+-   El crecimiento poblacional depende de la estructura inicial, y
+-   No se puede esperar que la población alcance una estructura estable ni una tasa de crecimiento constante a largo plazo.
 
 ```{r Indice5}
 #Capturar los datos de la matriz para L. rubripetala (Tremblay et al. 2015)
@@ -133,7 +157,17 @@ isErgodic(Lr1_No_erg, digits = 4, return.eigvec = FALSE)
 
 ### Elementos no negativa
 
-La matriz poblacional debe ser no negativa, es decir, todas sus entradas deben ser mayores o iguales a cero. Esto significa que cada entrada de la matriz representa el número o la proporción de individuos que transitan de un estado a otro, por lo que carece de sentido biológico que alguno de estos valores sea negativo. Además, si la matriz tuviera elementos negativos no sería posible comparar adecuadamente el número de individuos en cada categoría de edad o estado, y, tampoco se podría calcular la tasa de crecimiento poblacional. En el caso de *L. rubripetala*, la matriz es no negativa, ya que todos sus elementos son mayores o iguales a cero. Esto puede verificarse en **R** con la función *IsPositive*, la cual responde "TRUE" si la matriz cumple con esta condición y "FALSE" en el caso contrario.
+Una matriz poblacional debe ser no negativa, lo que significa que todas sus entradas son mayores o iguales a cero. ¿Por qué? Porque cada valor representa el número o la proporción de individuos que pasan de una etapa a otra. Tener valores negativos no tendría sentido biológico: no puede haber “menos” individuos que los existentes.
+
+Además, si la matriz tuviera elementos negativos:
+
+-   No podríamos comparar correctamente las categorías de edad o estado.
+-   Sería imposible calcular la tasa de crecimiento poblacional.
+
+En el caso de *L. rubripetala*, la matriz cumple esta condición, ya que todos sus valores son mayores o iguales a cero. En R, esto se puede verificar con la función `isPositive`, que devuelve:
+
+-   TRUE si la matriz es no negativa,
+-   FALSE si contiene algún valor negativo
 
 ```{r Indice6}
 # No negativa 
@@ -149,7 +183,12 @@ IsPositive <- function(mat) {
 IsPositive(Lr1)
 ```
 
-A continuación se muestra un ejemplo de una matriz que no cumple con la propiedad de no negatividad. En este caso, el elemento en la posición (4, 3) es negativo, lo que significa que la transición de la categoría adulto reproductivos a la de adulto no reproductivo tiene un valor negativo. Al evaluar esta matriz con la función *IsPositive* se obtiene el valor de "FALSE", lo que indica que no se trata de una matriz no negativa. Por lo tanto, esta la matriz no es válida para el análisis de dinámica poblacional y no se puede esperar que la población alcance una estructura estable ni una tasa de crecimiento constante a largo plazo.
+A continuación se muestra un ejemplo de una matriz que no cumple la propiedad de no negatividad. En este caso, el elemento ubicado en la posición (4, 3) es negativo, lo que indica que la transición desde la categoría adulto reproductivo hacia adulto no reproductivo tiene un valor inválido.
+
+Al evaluar esta matriz con la función `isPositive` en R, el resultado es FALSE. Esto significa que:
+
+-   La matriz no es válida para el análisis de dinámica poblacional.
+-   No se puede esperar que la población alcance una estructura estable ni una tasa de crecimiento constante a largo plazo.
 
 ```{r Indice6b}
 #Capturar los datos de la matriz para L. rubripetala (Tremblay et al. 2015)
@@ -169,15 +208,29 @@ IsPositive(Lr1_No_pos)
 
 ### Irreducibilidad
 
-La matriz de transición poblacional debe ser irreducible, es decir, todos los elementos de la matriz están conectados entre sí y existe una ruta desde cualquier estado hacia los demás. Esto es fundamental, ya que si la matriz no es irreducible, no se puede esperar que la población alcance una estructura estable ni una tasa de crecimiento constante a largo plazo. En el caso de *L. rubripetala*, la matriz es irreducible: todas sus categorías están conectadas y existe una ruta entre ellas. Esta propiedad puede comprobarse en **R** mediante la función **isIrreducible** del paquete **popdemo**, la cual resulta en “TRUE” si la matriz es irreducible y “FALSE” en caso contrario. Es importante hacer notar que no todas las matrices reducibles son inválidas para el análisis poblacional. En algunos casos, pueden ser aceptables; por ejemplo, en especies con estados de vida que no son relevantes para el crecimiento poblacional, como las fases postreproductivas en mamíferos (humanos, ballenas, etc.).
+Una matriz de transición poblacional debe ser irreducible, lo que significa que todas sus categorías están conectadas y existe al menos una ruta que permite llegar desde cualquier estado a los demás. Esta propiedad es esencial porque, si la matriz no es irreducible, la población no podrá alcanzar una estructura estable ni una tasa de crecimiento constante a largo plazo.
 
-Cabe señalar que, la función *isIrreducible* corresponde a "TRUE" si la matriz es irreducible y "FALSE" si no lo es. En el caso de *L. rubripetala* la matriz es irreducible. Esto significa que todos los elementos de la matriz están conectados y hay una ruta desde cualquier categoría de edad o estado a todas las demás, lo que permite que la población alcance una estructura estable y una tasa de crecimiento constante a largo plazo.
+En el caso de *L. rubripetala*, la matriz es irreducible: todas las etapas del ciclo de vida están conectadas y existe una ruta entre ellas. Para comprobar esta propiedad en R, se utiliza la función `isIrreducible` del paquete popdemo, que devuelve:
+
+-   TRUE si la matriz es irreducible,
+-   FALSE si no lo es.
+
+Es importante destacar que no todas las matrices reducibles son inválidas. En algunos casos, pueden aceptarse, por ejemplo, en especies con etapas que no influyen en el crecimiento poblacional, como las fases postreproductivas en mamíferos (humanos, ballenas, etc.).
+
+En resumen, para *L. rubripetala*, la función `isIrreducible` devuelve TRUE, lo que confirma que todas las categorías están conectadas y que la población puede alcanzar una estructura estable y una tasa de crecimiento constante a largo plazo.
 
 ```{r Indice7}
 isIrreducible(Lr1)
 ```
 
-A continuación se muestra un ejemplo de matriz en la que el cuarto estadio no presenta valores de reproducción. En este caso la función **isIrreducible** indica "FALSE" como resultado. Esto se debe a que no existe un vínculo entre la categoría de plántula y la categoría de adulto reproductivo, implicando que no hay reproducción asocida a la presencia de plántulas en la población. La ausencia de este vínculo resulta, por un lado, en un ciclo de vida incompleto, como se evidencia en la imagen, y, por otro, en una población que no podrá alcanzar una estructura estable ni una tasa de crecimiento constante a largo plazo.
+A continuación se muestra un ejemplo de matriz en la que el cuarto estadio no presenta valores de reproducción. Al evaluar esta matriz con la función `isIrreducible` en R, el resultado es FALSE.
+
+¿Por qué ocurre esto? Porque no existe un vínculo entre la categoría plántula y la categoría adulto reproductivo, lo que significa que la presencia de plántulas en la población no contribuye a la reproducción.
+
+Esta ausencia de conexión provoca dos problemas:
+
+-   Un ciclo de vida incompleto, como se observa en la imagen.
+-   Una población que no podrá alcanzar una estructura estable ni una tasa de crecimiento constante a largo plazo.
 
 ```{r}
 Lr1_Irr <- matrix(c(0.4324,  0.,       0.0,     0,
@@ -195,7 +248,19 @@ isIrreducible(Lr1_Irr)
 
 ### Primitividad
 
-La matriz de transición poblacional debe ser primitiva, es decir, al elevarla a altas potencias, se obtiene un único valor positivo (i.e. tasa de crecimiento poblacional). Esta propiedad es importante porque garantiza que la población alcance una estructura estable y una tasa de crecimiento constante a largo plazo. En el caso de *L. rubripetala*, la matriz es primitiva, ya que al elevarla a altas potencias se obtiene un único valor positivo. Esto puede comprobarse en **R** con la función *isPrimitive* del paquete **popdemo**, cuya respuesta es "TRUE" si la matriz cumple con esta propiedad. Una matriz no primitiva, en contraste, tendría una dinámica poblacional inestable a largo plazo cuando, por ejemplo, la población presente un comportamiento cíclico, caracterizado por oscilaciones entre categorías de edad o estado que nunca se estabiliza. Es importante señalar que, por definición, toda matriz irreducible es primitiva; sin embargo, no toda matriz primitiva es irreducible. Por ejemplo, una matriz podría ser primitiva sin ser irreducible, si presenta un ciclo de vida completo en el que alguna edad/estado no es relevante para el crecimiento poblacional.
+Una matriz de transición poblacional debe ser primitiva, lo que significa que, al elevarla a potencias altas, se obtiene un único valor positivo dominante (la tasa de crecimiento poblacional). Esta propiedad es clave porque asegura que la población alcanzará una estructura estable y una tasa de crecimiento constante a largo plazo.
+
+En el caso de *L. rubripetala*, la matriz es primitiva: al elevarla a potencias altas, aparece un único valor positivo. En R, esto se puede comprobar con la función `isPrimitive` del paquete popdemo, que devuelve:
+
+-   TRUE si la matriz es primitiva,
+-   FALSE si no lo es.
+
+Una matriz no primitiva tendría una dinámica inestable a largo plazo, como ocurre en poblaciones con comportamiento cíclico, donde las proporciones entre categorías oscilan sin llegar a estabilizarse.
+
+Es importante señalar que:
+
+-   Toda matriz irreducible es primitiva,
+-   Pero no toda matriz primitiva es irreducible. Por ejemplo, una matriz puede ser primitiva sin ser irreducible si incluye un ciclo de vida completo, pero alguna etapa no influye en el crecimiento poblacional (como fases postreproductivas).
 
 ```{r Indice8}
 isPrimitive(Lr1)
@@ -205,15 +270,22 @@ isPrimitive(Lr1)
 
 ## Índices de descripción de la matriz poblacional
 
-En esta sección se revisan los índices poblacionales obtenidos a partir del analisis de matricial, los cuales se estiman una vez que ha verificado que cumplen con los supuestos. Estos índices permiten comprender el comportamiento de la población a largo plazo y anticipar cómo se espera que se comporte en el tiempo. Los índices que se abordan a continuación son: **estructura estable**, **valor reproductivo**, **análisis de convergencia** y **análisis de amortiguamiento**. Todos estos se calculan a partir de la matriz de transición poblacional y del vector de la estructura poblacional observada al inicio del estudio.
+En esta sección se revisan los índices poblacionales obtenidos a partir del análisis de matricial, los cuales se estiman una vez que ha verificado que cumplen con los supuestos. Estos índices permiten comprender el comportamiento de la población a largo plazo y anticipar cómo se espera que se comporte en el tiempo. Los índices que se abordan a continuación son: **estructura estable**, **valor reproductivo**, **análisis de convergencia** y **análisis de amortiguamiento**. Todos estos se calculan a partir de la matriz de transición poblacional y del vector de la estructura poblacional observada al inicio del estudio.
 
 ------------------------------------------------------------------------
 
 ### Estructura Estable
 
-La estructura poblacional estable (*W*, también llamada eigenvector derecho) describe la proporción de individuos en cada categoría de edad o estado que se espera alcanzar a largo plazo. En el caso de *L. rubripetala*, se espera que la población alcance una estructura estable de 0.088, 0.206, 0.369 y 0.337 para las categorías de plántulas, juveniles, adultos no reproductivos y adultos reproductivos, respectivamente.
+La estructura poblacional estable (W, también conocida como eigenvector derecho) indica la proporción esperada de individuos en cada categoría de edad o estado cuando la población ha alcanzado el equilibrio a largo plazo. Por ejemplo, en L. rubripetala se espera que la estructura estable sea:
 
-Este índice supone que la tasa de crecimiento poblacional, $\lambda$, se mantiene constante en el tiempo, lo cual sólo es posible bajo condiciones ambientales constantes. Sin embargo, en la naturaleza esto es poco frecuente. Además, la estructura estable supone que el periodo de muestreo y las condiciones abióticas y bióticas son típicas y constantes. En la revisión bibliográfica de Williams y colaboradores [@williams2011distance] se reporta que más del 80% de las poblaciones analizadas no cumplieron con la condición de estructura estable, situación que que fue más evidente en poblaciones descritas con matrices grandes (n x n) y tiempo de generacional prolongado. De manera similar, Tremblay (*com.pers.*), en una revisión bibliográfica rápida, reconoció que la mayoría de las orquídeas analizadas no se encontraban en la estructura estable al inicio de su muestreo poblacional.
+-   Plántulas: 0.088
+-   Juveniles: 0.206
+-   Adultos no reproductivos: 0.369
+-   Adultos reproductivos: 0.337
+
+Este índice supone que la tasa de crecimiento poblacional ($\lambda$) se mantiene constante en el tiempo, lo cual solo ocurre bajo condiciones ambientales estables. Sin embargo, en la naturaleza esto es poco común. Además, la estructura estable asume que el periodo de muestreo y las condiciones abióticas y bióticas son típicas y no cambian.
+
+En la revisión de Williams y colaboradores [@williams2011distance], se reportó que más del 80% de las poblaciones analizadas no cumplían con la condición de estructura estable, especialmente en especies con matrices grandes (n × n) y tiempos generacionales prolongados. De manera similar, Tremblay (com. pers.) observó que la mayoría de las orquídeas estudiadas no estaban en estructura estable al inicio del muestreo poblacional.
 
 ```{r Indice9}
 #Estructura estable de estados
@@ -263,9 +335,22 @@ ggplot(Wdf, aes(y = Wmax, x = Categorias)) +
 ![*Spathoglottis plicata*. Foto: Tremblay](Species/Spathoglottis%20plicata%20Tremblay.jpeg){style="float: left; margin: 10px;width: 40% ; "}
 :::
 
-El valor reproductivo (*v*, también denominado el eigenvector izquierdo) describe la contribución esperada de cada categoría de edad o estado a la reproducción de la población. En el caso de *L. rubripetala* se espera que los valores reproductivos sean 1.00, 1.52, 2.32 y 2.66 para las categorías de plántulas, juveniles, adultos no reproductivos y adultos reproductivos, respectivamente. Este índice es relevante porque permite identificar cómo se distribuye la reproducción en la población y qué etapas son más importantes para el crecimiento poblacional a largo plazo. La primera categoría siempre tiene un valor reproductivo de 1.00, ya que representa el inicio del ciclo de vida y sirve como referencia para calcular el valor reproductivo de los demás estados.
+El valor reproductivo (v, también llamado eigenvector izquierdo) indica la contribución esperada de cada categoría de edad o estado a la reproducción de la población.
 
-El valor reproductivo permite definir estrategias de manejo en las especies. Por ejemplo, en **Spathoglottis plicata**, una orquídea terrestre considerada invasora, las acciones de control deberían enfocarse en las categorías con mayor valor reproductivo, debido a que son las que más contribuyen al crecimiento poblacional. Por el contrario, conviene enfocarse en los estadios con valores reproductivos bajos si se busca remover individuos de una población con el menor impacto posible a la población.
+En el caso de L. rubripetala, los valores reproductivos esperados son:
+
+-   Plántulas: 1.00
+-   Juveniles: 1.52
+-   Adultos no reproductivos: 2.32
+-   Adultos reproductivos: 2.66
+
+Este índice es muy útil porque muestra qué etapas son más importantes para el crecimiento poblacional a largo plazo. La primera categoría siempre tiene un valor de 1.00, ya que representa el inicio del ciclo de vida y sirve como referencia para calcular los demás valores.
+
+Además, el valor reproductivo ayuda a definir estrategias de manejo. Por ejemplo:
+
+-   En *Spathoglottis plicata*, una orquídea terrestre invasora, las acciones de control deberían enfocarse en las categorías con mayor valor reproductivo, porque son las que más contribuyen al crecimiento poblacional.
+
+-   Por el contrario, si se busca remover individuos con el menor impacto posible, conviene actuar sobre las etapas con valores reproductivos bajos.
 
 ```{r Indice11}
 # Valor reproductivo
@@ -305,7 +390,9 @@ dr(Lr1) # usando la función "dr" para "damping ratio" en el paquete "popdemo"
 
 ### Graficación del Índice de amortiguamiento
 
-El comportamiento del Índice de amortiguamiento se visualiza a través de una gráfica de líneas, la cual muestra la respuesta de un sistema a un paso de entrada (un cambio súbito) y cuya respuesta en el tiempo varía ante distintos niveles de amortiguamiento. Para facilitar la comprensión visual del concepto, en el siguiente recuadro se presenta el códico que resulta en una gráfica en la que se muestra el comportamiento de una población perturbada.
+El comportamiento del índice de amortiguamiento se puede visualizar mediante una gráfica de líneas, que muestra cómo responde un sistema ante un cambio súbito (un “paso de entrada”) y cómo varía esa respuesta en el tiempo según diferentes niveles de amortiguamiento.
+
+Para facilitar la comprensión, en el siguiente bloque se incluye el código que genera una gráfica ilustrando el comportamiento de una población perturbada:
 
 ```{r Indice13, message=FALSE, warning=FALSE}
 
@@ -419,7 +506,11 @@ $$
 t = \frac{\log(dr)}{\log(x)}
 $$
 
-dónde $dr$ es el índice de amortiguamiento (damping ratio), $x$ es un factor de comparación, y $t$ representa el tiempo en la misma unidad en que se construyó la matriz (días, meses, años, etc.).
+dónde 
+
+- $dr$ es el índice de amortiguamiento (damping ratio)
+- $x$ es un factor de comparación
+- $t$ representa el tiempo en la misma unidad en que se construyó la matriz (días, meses, años, etc.).
 
 El análisis de amortiguamiento estima la rapidez con la que una población converge a su estructura estable después de un disturbio [@jiang2020life]. El índice de amortiguamiento ($d > 0$) sugiere que mientras mayor sea su valor, más rápida será la convergencia. El tiempo de amortiguamiento se calcula como: $\tau=1/d$, dónde $\tau$ expresa la duración del proceso de convergencia en unidades de tiempo consistentes con la matriz poblacional. Cabe señalar que, se ha demostrado que existe una relación entre el índice de amortiguamiento y el tiempo generacional de una especie [@jiang2020life].
 
@@ -628,3 +719,5 @@ print(population_plot)
 Revisión:
 
 RLT 2025_06_02
+
+RLT 2025-11-22
