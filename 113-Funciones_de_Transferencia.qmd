@@ -20,7 +20,7 @@ library(cowplot)
 
 Los modelos de dinámica transitoria constituyen una alternativa para analizar la evolución de una población ante eventos de perturbación repentinos, ya sean de origen biótico (por ejemplo, depredación), abiótico (por ejemplo, huracanes) o antropogénico (por ejemplo, extracción) [@ezard2010matrix]. En el capítulo dedicado a la dinámica transitoria aprendimos a evaluar la respuesta inmediata o de corto plazo del crecimiento poblacional ($\lambda\_{\max}$) frente a la alteración de la estructura poblacional. Asimismo, mediante los índices de transferencia comparamos los cambios en la densidad poblacional cuando la estructura no se encuentra en una distribución estable, variando la proporción de individuos por categoría (por ejemplo, solo semillas o únicamente individuos adultos).
 
-Continuando con los análisis de la dinámica transitoria en *Lepanthes rupestris* realizados por Tremblay y colaboradores [@tremblay2015stable], en este capítulo abordaremos los análisis de perturbación transitoria. Estos permiten proyectar cómo responde la dinámica poblacional transitoria ante la manipulación de las tasas vitales (supervivencia, reproducción y crecimiento) y de la estructura poblacional (abundancia relativa de individuos de diferentes edades, tamaños o etapas) [@stott2016perturbation]. Dichos análisis son herramientas clave para identificar qué individuos o tasas vitales son más relevantes para la dinámica a corto plazo. A partir de estos resultados, es posible definir estrategias de conservación y manejo más eficientes, que permitan alcanzar tasas de crecimiento planificadas para la especie de interés ($\lambda = 1$, $\lambda < 1$ o $\lambda > 1$), con el mínimo esfuerzo o costo [@stott2016perturbation].
+Continuando con los análisis de la dinámica transitoria en *Lepanthes rubripetala* realizados por Tremblay y colaboradores [@tremblay2015stable], en este capítulo abordaremos los análisis de perturbación transitoria. Estos permiten proyectar cómo responde la dinámica poblacional transitoria ante la manipulación de las tasas vitales (supervivencia, reproducción y crecimiento) y de la estructura poblacional (abundancia relativa de individuos de diferentes edades, tamaños o estados) [@stott2016perturbation]. Dichos análisis son herramientas clave para identificar qué individuos o tasas vitales son más relevantes para la dinámica a corto plazo. A partir de estos resultados, es posible definir estrategias de conservación y manejo más eficientes, que permitan alcanzar tasas de crecimiento planificadas para la especie de interés ($\lambda = 1$, $\lambda < 1$ o $\lambda > 1$), con el mínimo esfuerzo o costo [@stott2016perturbation].
 
 En el modelo de crecimiento asintótico o de largo plazo, tratado en el capítulo sobre Elasticidad, se realizaron dos análisis de perturbación: sensibilidad y elasticidad, que estiman los efectos absolutos y relativos, respectivamente, de pequeñas perturbaciones sobre la tasa de crecimiento poblacional ($\lambda$) [@caswell2000matrix]. Sin embargo, estos análisis no son adecuados para evaluar la dinámica a corto plazo, ya que resultan poco eficientes para describir la respuesta poblacional ante perturbaciones de gran magnitud [@stott2011framework; @stott2012beyond]. Además, dichos análisis asumen una relación lineal entre la perturbación y el crecimiento poblacional en modelos asintóticos, lo cual no refleja la respuesta no lineal característica de los modelos de dinámica transitoria [@stott2011framework; @stott2012beyond].
 
@@ -49,7 +49,8 @@ Además, la función de transferencia permite estimar cuantitativamente tanto la
 A continuación se presenta una descripción general de los componentes que integran el marco de análisis para la elasticidad no lineal basada en la función de transferencia, junto con las ecuaciones más relevantes utilizadas en el cálculo de estos parámetros. Para una explicación más detallada, se recomienda consultar los trabajos de Hodgson y Townley, así como los de Stott y colaboradores [@stott2012beyond; @hodgson2004methodological]. El análisis de elasticidad no lineal mediante la función de transferencia incorpora los siguientes elementos:
 
 -   La matriz de proyección poblacional (MPP), denotada como $A$, que describe el ciclo de vida de la población en estudio.
--   Los elementos perturbados de la matriz, definidos como la estructura de perturbación, cuya magnitud se expresa mediante $\delta$.
+-   Los elementos de la matriz, definidos como la estructura de perturbación,
+-   La magnitud con la que se altera una estructura de perturbación, representada por $\delta$.
 -   La ubicación de dichos elementos, determinada por los vectores $d$ (columna) y $e$ (renglón).
 
 Al combinar estos componentes mediante multiplicaciones y sumas según la ecuación correspondiente, se obtiene una matriz que indica qué elementos han sido perturbados. En esta ecuación, $e^T$ representa la transposición del vector $e$, convirtiéndolo de columna a renglón. Este procedimiento permite estimar el efecto de una perturbación sobre la tasa de crecimiento poblacional a largo plazo [@stott2012beyond].
@@ -64,7 +65,7 @@ Esta ecuación corresponde a las elasticidades no lineales; donde, $I$ es la mat
 
 ## Elasticidad No Lineal: Métodos Basados en la Función de Transferencia
 
-Los análisis de elasticidad no lineal realizados por Tremblay y colaboradores [@tremblay2015stable] para Lepanthes rupripetala se desarrollaron mediante dos enfoques principales:
+Los análisis de elasticidad no lineal realizados por Tremblay y colaboradores [@tremblay2015stable] para *Lepanthes rupripetala* se desarrollaron mediante dos enfoques principales:
 
 -   Función de transferencia del efecto sobre $\lambda$
 -   Función de transferencia del efecto sobre la inercia poblacional
@@ -86,7 +87,7 @@ d)  Magnitud de la perturbación ($\delta$)
 
 ### Matriz de proyección poblacional ($A$)
 
-Como se indicó previamente, se utilizarán los datos correspondientes a la población 1 de Lepanthes rupripetala, obtenidos del estudio de Tremblay y colaboradores [@tremblay2015stable]. La matriz denominada Lr1 describe las transiciones entre las siguientes categorías: plántula (PL), juvenil (J), no reproductivo (NR) y adulto reproductivo (AR).
+Como se indicó previamente, se utilizarán los datos correspondientes a la población 1 de *Lepanthes rupripetala*, obtenidos del estudio de Tremblay y colaboradores [@tremblay2015stable]. La matriz denominada **Lr1** describe las transiciones entre las siguientes categorías: plántula (PL), juvenil (J), adulto no reproductivo (NR) y adulto reproductivo (AR).
 
 En el siguiente bloque se muestra la implementación en **R**, donde la función `matrix()` se emplea para construir la matriz de transición, y el objeto `n0` representa el vector con la estructura inicial observada. La matriz resultante evidencia que las probabilidades más altas corresponden a la permanencia en los estados juvenil, no reproductivo y reproductivo, con valores de 0.84, 0.79 y 0.75, respectivamente.
 
@@ -174,7 +175,7 @@ Posteriormente, en la gráfica que se genera para analizar la respuesta transito
 
 ```{r}
 #Intervalo de la perturbación:
-prange = seq(-0.7954,0.0205,0.01)
+prange = seq(-0.7954, 0.0205, 0.01)
 
 ```
 
@@ -231,7 +232,7 @@ Para comprender cómo la transición del ciclo de vida se ve afectada por la per
 
 -   Con la función `abline`, se añade la tendencia lineal de la perturbación sobre $\lambda$, cuya pendiente indica la sensibilidad del cambio.
 
-Los resultados muestran que la permanencia en el estado no reproductivo ejerce un efecto no lineal sobre $\lambda$, con una respuesta drástica incluso ante perturbaciones pequeñas. La población responde en incrementos proporcionales de 0.01, desde el nivel mínimo hasta el máximo de perturbación. Según la gráfica, una perturbación menor provoca un cambio radical en el crecimiento poblacional. Mientras la sensibilidad lineal sugiere un descenso constante, la función de transferencia indica que, tras un descenso inicial, la población alcanza un punto de estabilización cercano a $\lambda \approx 0.95λ$.
+Los resultados muestran que la permanencia en el estado no reproductivo ejerce un efecto no lineal sobre $\lambda$, con una respuesta drástica incluso ante perturbaciones pequeñas. La población responde en incrementos proporcionales de 0.01, desde el nivel mínimo hasta el máximo de perturbación. Según la gráfica, una perturbación menor provoca un cambio radical en el crecimiento poblacional. Mientras la sensibilidad lineal sugiere un descenso constante, la función de transferencia indica que, tras un descenso inicial, la población alcanza un punto de estabilización cercano a $\lambda \approx 0.95$.
 
 ```{r}
 # Vector original
@@ -379,7 +380,7 @@ La función `tfam_lambda` permite estimar automáticamente la elasticidad no lin
 -   La asignación del tipo de elemento (por ejemplo, fecundidad o probabilidad de transición) en la matriz está predeterminada en el código de la función.
 -   La magnitud de la perturbación también se calcula a partir de parámetros predefinidos en el código.
 
-Estas condiciones pueden generar inconsistencias, ya que las características de la especie analizada no siempre coinciden con los criterios establecidos por el autor del código. Por ejemplo, en la definición de elementos en la matriz $A$, el código asume que todos los valores del primer renglón corresponden a fecundidad ($F$). Sin embargo, en el caso de *L. rupripetala*, el elemento [1,1] representa una probabilidad de transición ($P$), no fecundidad. Este problema se resuelve incorporando la función `elementtype`, que permite especificar el tipo de cada elemento.
+Estas condiciones pueden generar inconsistencias, ya que las características de la especie analizada no siempre coinciden con los criterios establecidos por el autor del código. Por ejemplo, en la definición de elementos en la matriz $A$, el código asume que todos los valores del primer renglón corresponden a fecundidad ($F$). Sin embargo, en el caso de *L. rupripetala*, el elemento \[1,1\] representa una probabilidad de transición ($P$), no una fecundidad. Este problema se resuelve incorporando la función `elementtype`, que permite especificar el tipo de cada elemento.
 
 Respecto a la magnitud de la perturbación, los valores predefinidos por el autor (`Flim` = (-1, 10) y `Plim` = (-1, 10)) no pueden modificarse. Esto implica que todos los elementos se perturban en el mismo intervalo, lo cual es poco realista, ya que cada elemento debería tener un rango específico según su naturaleza. En particular, el límite superior de Plim puede generar valores mayores a 1, lo que excede la probabilidad máxima permitida en una columna de la matriz $A$.
 
@@ -420,13 +421,13 @@ $$ Donde
     Representa la **población proyectada en el equilibrio asintótico** (cuando el sistema alcanza su estructura estable).
 
 -   $\mathbf{v}^\top$\
-    Es el **vector propio izquierdo transpuesto** asociado al eigenvalor dominante de la matriz de proyección. Pondera las etapas según su contribución al crecimiento.
+    Es el **vector propio izquierdo transpuesto** asociado al eigenvalor dominante de la matriz de proyección. Pondera las estados según su contribución al crecimiento.
 
 -   $\hat{\mathbf{n}}_0$\
-    Es el **vector inicial de población normalizado**, que indica la distribución inicial entre clases o etapas.
+    Es el **vector inicial de población normalizado**, que indica la distribución inicial entre clases o estados.
 
 -   $\mathbf{w}$\
-    Es el **vector propio derecho**, que describe la **distribución estable por etapas** cuando la población crece a la tasa asintótica.
+    Es el **vector propio derecho**, que describe la **distribución estable por estados** cuando la población crece a la tasa asintótica.
 
 -   $\|\mathbf{w}\|_1$\
     Es la **norma L₁ del vector (**\mathbf{w}), equivalente a la suma de sus componentes. Se usa para escalar el vector estable.
@@ -452,7 +453,9 @@ d)  Tomando en cuenta la estructura estable inicial, que evalúa la persistencia
 
 Con base en estos escenarios, a continuación se describe cómo aplicar **tfa_inertia** y **tfam_inertia**.
 
-*Elasticidad no lineal a través de* **tfa_inertia**. El primer escenario: un caso específico del ciclo de vida, permitirá ejemplificar el uso de la función **tfa_inertia**. En este se evalúa el efecto de la estasis o permanencia en el estado no reproductivo \[3,3\] sobre la inercia poblacional y fue seleccionado porque presenta el valor más alto de elasticidad. En el cálculo se usan los siguientes argumentos para esta función: la matriz de transición de la población *Lr1*; indicamos el vector de la estructura poblacional, la estructura de perturbación (elemento de la matriz a perturbar) y la magnitud de la perturbación la estructura de perturbación o `prange` = seq(-0.7954, 0.0205, 0.01). En el recuadro se presenta el código correspondiente para su estimación.
+### *Elasticidad no lineal a través de* **tfa_inertia**.
+
+El primer escenario: un caso específico del ciclo de vida, permitirá ejemplificar el uso de la función **tfa_inertia**. En este se evalúa el efecto de la estasis o permanencia en el estado no reproductivo \[3,3\] sobre la inercia poblacional y fue seleccionado porque presenta el valor más alto de elasticidad. En el cálculo se usan los siguientes argumentos para esta función: la matriz de transición de la población *Lr1*; indicamos el vector de la estructura poblacional, la estructura de perturbación (elemento de la matriz a perturbar) y la magnitud de la perturbación la estructura de perturbación o `prange` = seq(-0.7954, 0.0205, 0.01). En el recuadro se presenta el código correspondiente para su estimación.
 
 Como resultado se genera una gráfica en la que se aprecia el comportamiento de la inercia o persistencia poblacional a corto plazo ante una perturbación. Esta respuesta se da de forma proporcional y de manera creciente, teniendo como puntos extremos en el eje *x* la perturbación mínima y la máxima. La línea roja representa la elasticidad a perturbación cero y la línea negra la función de transferencia de la inercia poblacional ante cambios en la permanencia en la fase de adulto no reproductivo.
 
@@ -477,15 +480,17 @@ abline(inertia, sens2, lty=2, col="red") # Para añadir el efecto lineal
 
 ------------------------------------------------------------------------
 
-*Elasticidad no lineal a través de* **tfam_inertia**. En el cálculo de inercia poblacional se puede optar por evaluar los efectos de todas las entradas de la matriz con valor \>0. La función **matA** ofrece esta opción y su uso se ejemplificará a través de los tres escenarios faltantes (b, c y d).
+### *Elasticidad no lineal a través de* **tfam_inertia**.
+
+En el cálculo de inercia poblacional se puede optar por evaluar los efectos de todas las entradas de la matriz con valor \>0. La función **matA** ofrece esta opción y su uso se ejemplificará a través de los tres escenarios faltantes (b, c y d).
 
 En este cálculo de la inercia poblacional se usan los siguientes argumentos para esta función: la matriz de transición de la población *Lr1*; el vector de la estructura poblacional, y, al igual que en **tfam_lambda**, se hacen los ajustes de los tipos de elementos en la matriz con **elementtype** y se mantienen los límite mínimo y máximo de las funciones `Plim` y `Flim` definidos por el autor del código.
 
 A continuación se proyecta la persistencia de *L. rupripetala* para los tres escenarios faltantes: Perturbación de todo el ciclo de vida, concentración de individuos en la última y primera categoría, y, la estructura estable inicial.
 
-*a)  Perturbación de todo el ciclo de vida*. Los resultados de la simulación de perturbación de todas y cada uno de los elementos de la matriz: reproducción, crecimiento y supervivencia, sugieren que la permanencia en las cuatro fases del ciclo de vida de *L. rupripetala* tienen un impacto negativo en la inercia poblacional. Cualquier aumento en la estasis en la permanencia en alguno de los cuatro estados provocará una disminución en la densidad de la población a corto plazo.
+-   *Perturbación de todo el ciclo de vida*. Los resultados de la simulación de perturbación de todas y cada uno de los elementos de la matriz: reproducción, crecimiento y supervivencia, sugieren que la permanencia en las cuatro fases del ciclo de vida de *L. rupripetala* tienen un impacto negativo en la inercia poblacional. Cualquier aumento en la estasis en la permanencia en alguno de los cuatro estados provocará una disminución en la densidad de la población a corto plazo.
 
-A excepción del tránsito de adulto no reproductivo a reproductivo, el tránsito a un etapa superior tiene un efecto positivo en la inercia poblacional. Lo mismo sucede con la retrogresión de adultos reproductivos a no reproductivos y en la contribución reproductiva de adultos a plántulas.
+A excepción del tránsito de adulto no reproductivo a reproductivo, el tránsito a un estado superior tiene un efecto positivo en la inercia poblacional. Lo mismo sucede con la retrogresión de adultos reproductivos a no reproductivos y en la contribución reproductiva de adultos a plántulas.
 
 ```{r}
 
@@ -507,9 +512,13 @@ plot(tfmatriz,  xlab="p", ylab="Inercia", cex.axis=1.4, cex.lab=1.5)
 
 ```
 
-*b) Última y primera categoría*. La función de transferencia de la inercia fue estimada al suponer que la población se encuentra concentrada en:
+------------------------------------------------------------------------
 
-*i) la categoría de adulto reproductivo (Upper bound)*. El código para el cálculo de la inercia poblacional se presenta en el siguiente recuadro. En este se supone que la población está representada por el último estado del ciclo de vida. Los resultados de la gráfica (extremo inferior derecho) sugieren que cuando todos los individuos de *L. rubripetala* se encuentran en la fase de adulto reproductivo, la inercia poblacional a corto plazo será mayor a 1.4, lo que sugiere que la población puede crecer por más del 40% antes de alcanzar la tasa constante de crecimiento poblacional. Asimismo, estos resultados indican que los adultos reproductivos tienen un alto impacto positivo sobre la tasa de crecimiento poblacional, a excepción de la transición juveniles a adultos no reproductivos.
+-   *Última y primera categoría*. La función de transferencia de la inercia fue estimada al suponer que la población se encuentra concentrada en:
+
+    *i) la categoría de adulto reproductivo (Upper bound)*.
+
+El código para el cálculo de la inercia poblacional se presenta en el siguiente recuadro. En este se supone que la población está representada por el último estado del ciclo de vida. Los resultados de la gráfica (extremo inferior derecho) sugieren que cuando todos los individuos de *L. rubripetala* se encuentran en la fase de adulto reproductivo, la inercia poblacional a corto plazo será mayor a 1.4, lo que sugiere que la población puede crecer por más del 40% antes de alcanzar la tasa constante de crecimiento poblacional. Asimismo, estos resultados indican que los adultos reproductivos tienen un alto impacto positivo sobre la tasa de crecimiento poblacional, a excepción de la transición juveniles a adultos no reproductivos.
 
 ```{r}
 etype<-matrix(c("P", "F", "F", "F",
@@ -524,7 +533,9 @@ plot(tfmatU, cex.axis=1.4, cex.lab=1.5) # gráfica de la inercia poblacional
 
 ------------------------------------------------------------------------
 
-*ii) la categoría de plántulas (Lower bound)*. El código del cálculo de la inercia poblacional al suponer que la población está dominada por el primer estado del ciclo de vida se presenta en el siguiente recuadro. Los resultados de la primera gráfica (extremo superior derecho) sugieren que al suponer que todos los individuos de *L. rubripetala* se concentran en el límite inferior, la inercia poblacional a corto plazo es de 0.7, lo que sugiere que la población puede reducir hasta un 30% antes de alcanzar la tasa constante de crecimiento poblacional. En este escenario se reconoce que la dominancia de las plántulas en la población tiene un impacto negativo en el crecimiento de la población a corto plazo, ya que es todos los casos la $lambda$ poblacional está por debajo de 1.
+*ii) la categoría de plántulas (Lower bound)*.
+
+El código del cálculo de la inercia poblacional al suponer que la población está dominada por el primer estado del ciclo de vida se presenta en el siguiente recuadro. Los resultados de la primera gráfica (extremo superior derecho) sugieren que al suponer que todos los individuos de *L. rubripetala* se concentran en el límite inferior, la inercia poblacional a corto plazo es de 0.7, lo que sugiere que la población puede reducir hasta un 30% antes de alcanzar la tasa constante de crecimiento poblacional. En este escenario se reconoce que la dominancia de las plántulas en la población tiene un impacto negativo en el crecimiento de la población a corto plazo, ya que es todos los casos la $lambda$ poblacional está por debajo de 1.
 
 ```{r}
 
@@ -536,7 +547,9 @@ plot(tfmatL)
 
 ------------------------------------------------------------------------
 
-*c) la estructura estable inicial*. En el siguiente recuadro se presenta el código del cálculo de la inercia poblacional para una población que se encuentra en su estructura estable y, por tanto, en equilibrio. Los resultados de la primera gráfica (extremo superior derecho) sugieren que la fecundidad tiene el mayor impacto positivo en la dinámica transitoria si la población se ecuentra en en equilibrio. En estas condiciones, duplicar la fecundidad aumenta significativamente el tamaño de la población a corto plazo.
+*c) la estructura estable inicial*.
+
+En el siguiente recuadro se presenta el código del cálculo de la inercia poblacional para una población que se encuentra en su estructura estable y, por tanto, en equilibrio. Los resultados de la primera gráfica (extremo superior derecho) sugieren que la fecundidad tiene el mayor impacto positivo en la dinámica transitoria si la población se encuentra en en equilibrio. En estas condiciones, duplicar la fecundidad aumenta significativamente el tamaño de la población a corto plazo.
 
 ```{r transF5}
 n0 <- c(0, 46, 38, 82)
@@ -916,7 +929,7 @@ tf10tf=ggplot2::ggplot() +
 
 label <- substitute(
   paste(rho)
-) # este código es para poner el símbolo de "rho" en el eje x de la figura
+) # este código es para poner el símbolo de "rho" en el eje "x" de la figura
 
 cowplot::plot_grid(tf1tf, NULL, NULL, tf8tf,   # nota que los NULL son para dejar espacios vacíos
                    tf2tf, tf3tf, NULL, NULL,  
