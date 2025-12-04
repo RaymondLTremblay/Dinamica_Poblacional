@@ -1,5 +1,4 @@
-# Largo y Expectativa de Vida 
-
+# Largo y Expectativa de Vida
 
 ```{r, LV1, message=FALSE, warning=FALSE}
 library(Rcompadre) # Paquete para trabajar con la base de datos de COMPADRE y COMADRE
@@ -63,7 +62,6 @@ Orquideas = compadre %>%
 
 ```
 
-
 ------------------------------------------------------------------------
 
 ## Esperanza de vida en las orquídeas
@@ -118,9 +116,7 @@ index_O_filtrado_final <- index_O_filtrado %>%
   }))
 ```
 
-
-
-***
+------------------------------------------------------------------------
 
 ## Esperanza de vida y su varianza
 
@@ -128,26 +124,25 @@ En esta etapa se aplican funciones específicas para estimar la esperanza de vid
 
 Esta función permite obtener dos métricas clave:
 
-- **Esperanza de vida**: el tiempo promedio que se espera que un individuo sobreviva desde su etapa inicial.
-- **Varianza de la esperanza de vida**: una medida de la dispersión o variabilidad en torno a ese promedio.
+-   **Esperanza de vida**: el tiempo promedio que se espera que un individuo sobreviva desde su etapa inicial.
+-   **Varianza de la esperanza de vida**: una medida de la dispersión o variabilidad en torno a ese promedio.
 
 Es importante destacar que este cálculo se basa únicamente en la matriz de transición, sin considerar la matriz de fecundidad (matF) ni la matriz de clonaje (matC), ya que el enfoque está centrado en la supervivencia.
 
 ### Cálculo del largo de vida y su varianza
 
-- Se procede a aplicar las funciones necesarias para estimar el largo de vida promedio y su varianza para cada especie de orquídea en el conjunto de datos filtrado. Para ello:
+-   Se procede a aplicar las funciones necesarias para estimar el largo de vida promedio y su varianza para cada especie de orquídea en el conjunto de datos filtrado. Para ello:
 
-- Se define la función **lifeExpectancy**, que calcula la esperanza de vida a partir de la matriz de transición (**matU**) y la etapa inicial de vida (**startLife**). Esta función se basa en la matriz fundamental de supervivencia.
+-   Se define la función **lifeExpectancy**, que calcula la esperanza de vida a partir de la matriz de transición (**matU**) y la etapa inicial de vida (**startLife**). Esta función se basa en la matriz fundamental de supervivencia.
 
-- Se utiliza la función **mapply** para aplicar lifeExpectancy a cada matriz en la lista, generando una nueva columna **life_expectancy** con los valores calculados.
+-   Se utiliza la función **mapply** para aplicar lifeExpectancy a cada matriz en la lista, generando una nueva columna **life_expectancy** con los valores calculados.
 
-- Se calcula la varianza de la esperanza de vida con la función **life_expect_var**, también aplicada con **mapply**, y se guarda en la columna **var_life_expectancy**.
+-   Se calcula la varianza de la esperanza de vida con la función **life_expect_var**, también aplicada con **mapply**, y se guarda en la columna **var_life_expectancy**.
 
 Se calculan los intervalos de confianza del 95% para la esperanza de vida: Este metodo asume una distribución normal de los estimados de la esperanza de vida. Esta distribución pudiese no ser la más adecuada, pero es una aproximación comúnmente utilizada.
 
-  - low_CI_var_LS: límite inferior, ajustado para no ser menor que cero.
-  - high_CI_var_LS: límite superior.
-
+-   low_CI_var_LS: límite inferior, ajustado para no ser menor que cero.
+-   high_CI_var_LS: límite superior.
 
 Finalmente, se reordena la variable OrganismType según la mediana del largo de vida, facilitando la visualización comparativa entre tipos de organismos.
 
@@ -167,7 +162,6 @@ index_O_calculado <- index_O_filtrado_final %>%
   mutate(OrganismType = reorder(OrganismType, life_expectancy, median)) # ordenar las especies por el largo de vida 
 
 ```
-
 
 ## Creamos una tabla de los resultados y veamos las tres primeras filas
 
@@ -189,8 +183,6 @@ OrchidLS = index_O_calculado %>%
 head(cdb_metadata(OrchidLS), n = 3) |> 
   gt()
 ```
-
-
 
 #### Finalmente de visualiza los datos
 
@@ -327,16 +319,13 @@ final_plot
 
 Lo más importante de esta figura es notar las gran incertidumbre que hay en los estimados de la esperanza de vida, lo cual se refleja en los intervalos de confianza. Esta incertidumbre puede deberse a varios factores, como la calidad de los datos, la variabilidad biológica entre individuos y poblaciones, y las limitaciones inherentes a los modelos utilizados para estimar la esperanza de vida a partir de matrices de transición.
 
-Posterior a este análisis es importante regresar a cada modelo/especie/población y evaluar la calidad de los datos y los supuestos del modelo para entender mejor las fuentes de incertidumbre y cómo podrían ser mitigadas en futuros estudios.  Claramente hay unas especies donde los estimados paraceen más confiables que en otras. En adición hay algunas especies donde el la esperanza de vida parace completamente irreal, lo cual sugiere que hay problemas con los datos o el modelo para esas especies en particular.
+Posterior a este análisis es importante regresar a cada modelo/especie/población y evaluar la calidad de los datos y los supuestos del modelo para entender mejor las fuentes de incertidumbre y cómo podrían ser mitigadas en futuros estudios. Claramente hay unas especies donde los estimados paraceen más confiables que en otras. En adición hay algunas especies donde el la esperanza de vida parace completamente irreal, lo cual sugiere que hay problemas con los datos o el modelo para esas especies en particular.
 
+------------------------------------------------------------------------
 
-**** 
-****
+------------------------------------------------------------------------
 
 ## Longevidad de vida
-
-
-
 
 ```{r, LV9, eval=FALSE, echo=FALSE}
 longevity_O <- index_O_filtrado_final %>%
@@ -371,10 +360,6 @@ main.plot <- ggplot(longevity_O, aes(x = SpeciesAccepted, color = OrganismType_R
 main.plot
 
 ```
-
-
-
-
 
 ```{r, LV10, echo=TRUE, eval=FALSE}
 
@@ -446,16 +431,9 @@ main.plot_median
 
 ```
 
-
-
-
-
-
 ------------------------------------------------------------------------
 
 ## Longevidad sin los intervalos de confianza
-
-
 
 La longevidad es el largo de vida máximo que puede alcanzar un individuo en una población. En este caso se usa la función **longevity** para calcular el tiempo para un cohorte llegue a un 5% de supervivencia. La función **longevity** requiere la matriz de transición **matU** y la etapa de inicio de la vida **start_life**.
 
@@ -609,8 +587,7 @@ longevidad_plot
 
 #### 
 
-
-Estimar el largo de 
+Estimar el largo de
 
 ```{r LV13, eval=FALSE, echo=FALSE}
 Orquideas %>%
@@ -640,8 +617,6 @@ Orquideas %>%
 ```
 
 Figura del largo de vida promedio y su varianza para las orquídeas terrestres y epifitas.
-
-
 
 ```{r LV14, eval=FALSE}
 
@@ -981,7 +956,6 @@ life_expect_var(mpm1$matU, start = 2)
 
 ```
 
-
 ## Esperanza de vida en las orquídeas
 
 Cada especie de orquídea posee un promedio de longevidad y una distribución de supervivencia particular. Por ejemplo, en humanos, la esperanza de vida promedio es de aproximadamente 72 años (aunque varía según el país y otros factores), y algunas personas pueden vivir más de 100 años. De manera similar, en las orquídeas, aunque muchas especies tienen ciclos de vida cortos, existen individuos que pueden alcanzar edades superiores a los 100 años.
@@ -1017,9 +991,6 @@ index_O_filtrado |> select(mat, OrganismType) |>
 
 ```
 
-
-
-
 # Paso adicional de filtrado manual para mayor precisión
 
 Se aplicó un filtro adicional para eliminar matrices de transición (matU) que contienen valores de supervivencia mayores a 1, lo cual es biológicamente imposible. Este filtrado se realizó utilizando la función sapply, que permite evaluar cada matriz en la lista y excluir aquellas que no cumplen con esta condición.
@@ -1037,10 +1008,7 @@ index_O_filtrado_final <- index_O_filtrado %>%
   }))
 ```
 
-
-
-***
-
+------------------------------------------------------------------------
 
 ## Esperanza de vida y su varianza
 
@@ -1048,29 +1016,27 @@ En esta etapa se aplican funciones específicas para estimar la esperanza de vid
 
 Esta función permite obtener dos métricas clave:
 
-- **Esperanza de vida**: el tiempo promedio que se espera que un individuo sobreviva desde su etapa inicial.
-- **Varianza de la esperanza de vida**: una medida de la dispersión o variabilidad en torno a ese promedio.
+-   **Esperanza de vida**: el tiempo promedio que se espera que un individuo sobreviva desde su etapa inicial.
+-   **Varianza de la esperanza de vida**: una medida de la dispersión o variabilidad en torno a ese promedio.
 
 Es importante destacar que este cálculo se basa únicamente en la matriz de transición, sin considerar la matriz de fecundidad (matF) ni la matriz de clonaje (matC), ya que el enfoque está centrado en la supervivencia.
 
-
-***
+------------------------------------------------------------------------
 
 #### Cálculo del largo de vida y su varianza
 
-- Se procede a aplicar las funciones necesarias para estimar el largo de vida promedio y su varianza para cada especie de orquídea en el conjunto de datos filtrado. Para ello:
+-   Se procede a aplicar las funciones necesarias para estimar el largo de vida promedio y su varianza para cada especie de orquídea en el conjunto de datos filtrado. Para ello:
 
-- Se define la función **lifeExpectancy**, que calcula la esperanza de vida a partir de la matriz de transición (**matU**) y la etapa inicial de vida (**startLife**). Esta función se basa en la matriz fundamental de supervivencia.
+-   Se define la función **lifeExpectancy**, que calcula la esperanza de vida a partir de la matriz de transición (**matU**) y la etapa inicial de vida (**startLife**). Esta función se basa en la matriz fundamental de supervivencia.
 
-- Se utiliza la función **mapply** para aplicar lifeExpectancy a cada matriz en la lista, generando una nueva columna **life_expectancy** con los valores calculados.
+-   Se utiliza la función **mapply** para aplicar lifeExpectancy a cada matriz en la lista, generando una nueva columna **life_expectancy** con los valores calculados.
 
-- Se calcula la varianza de la esperanza de vida con la función **life_expect_var**, también aplicada con **mapply**, y se guarda en la columna **var_life_expectancy**.
+-   Se calcula la varianza de la esperanza de vida con la función **life_expect_var**, también aplicada con **mapply**, y se guarda en la columna **var_life_expectancy**.
 
 Se calculan los intervalos de confianza del 95% para la esperanza de vida:
 
-  - low_CI_var_LS: límite inferior, ajustado para no ser menor que cero.
-  - high_CI_var_LS: límite superior.
-
+-   low_CI_var_LS: límite inferior, ajustado para no ser menor que cero.
+-   high_CI_var_LS: límite superior.
 
 Finalmente, se reordena la variable OrganismType según la mediana del largo de vida, facilitando la visualización comparativa entre tipos de organismos.
 
@@ -1090,7 +1056,6 @@ index_O_calculado <- index_O_filtrado_final %>%
   mutate(OrganismType = reorder(OrganismType, life_expectancy, median)) # ordenar las especies por el largo de vida 
 
 ```
-
 
 #### Finalmente de visualiza los datos
 
@@ -1225,9 +1190,7 @@ final_plot <- ggdraw() +
 final_plot
 ```
 
-
 USING Quartiles
-
 
 ```{r LV30}
 longevity_O <- index_O_filtrado_final %>%
@@ -1262,10 +1225,6 @@ main.plot <- ggplot(longevity_O, aes(x = SpeciesAccepted, color = OrganismType_R
 main.plot
 
 ```
-
-
-
-
 
 ```{r, LV31}
 
@@ -1308,16 +1267,9 @@ main.plot_median
 
 ```
 
-
-
-
-
-
 ------------------------------------------------------------------------
 
 ## Longevidad sin los intervalos de confianza
-
-
 
 La longevidad es el largo de vida máximo que puede alcanzar un individuo en una población. En este caso se usa la función **longevity** para calcular el tiempo para un cohorte llegue a un 5% de supervivencia. La función **longevity** requiere la matriz de transición **matU** y la etapa de inicio de la vida **start_life**.
 
@@ -1471,8 +1423,7 @@ longevidad_plot
 
 #### 
 
-
-Estimar el largo de 
+Estimar el largo de
 
 ```{r LV34, eval=FALSE, echo=FALSE}
 Orquideas %>%
@@ -1502,8 +1453,6 @@ Orquideas %>%
 ```
 
 Figura del largo de vida promedio y su varianza para las orquídeas terrestres y epifitas.
-
-
 
 ```{r LV35, eval=FALSE}
 
@@ -1812,5 +1761,3 @@ life_expect_var(mpm1$matU, start = 2)
 
 
 ```
-
-

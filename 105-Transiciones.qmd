@@ -165,6 +165,7 @@ ficticia_matrix
 ------------------------------------------------------------------------
 
 ### Construcción de la matriz con funciones en R
+
 En la siguiente sección aprenderemos a calcular las transiciones de manera más eficiente utilizando funciones disponibles en un paquete de R. La función principal que emplearemos es `projection.matrix` del paquete `popbio`.
 
 Esta función es mucho más rápida y menos propensa a errores que realizar los cálculos manualmente. En investigaciones reales, la cantidad de datos suele ser mucho mayor que en el ejemplo anterior, y a mayor volumen de datos, mayor es la probabilidad de cometer errores si se calculan las transiciones a mano.
@@ -190,25 +191,24 @@ projection.matrix(
 
 El output de la función `projection.matrix` es una lista que contiene dos matrices:
 
-- **T**: incluye únicamente los valores de transición entre etapas.
-- **F**: incluye únicamente los valores de fertilidad, es decir, la cantidad de individuos que se incorporan a cada clase de edad por reproducción no clonal.
+-   **T**: incluye únicamente los valores de transición entre etapas.
+-   **F**: incluye únicamente los valores de fertilidad, es decir, la cantidad de individuos que se incorporan a cada clase de edad por reproducción no clonal.
 
 ## Preparación de los datos antes del análisis
 
 Antes de comenzar con los análisis, es importante renombrar las columnas para evitar problemas con la función projection.matrix. En este caso:
 
-- Cambiamos anio_1 a stage.
-- Cambiamos anio_2 a fate.
+-   Cambiamos anio_1 a stage.
+-   Cambiamos anio_2 a fate.
 
 Estos nombres corresponden a las etapas en el primer y segundo periodo de tiempo. El término fate se traduce al español como “destino”.
 
 Los datos deben estar organizados en formato de tabla, donde:
 
-- Cada fila representa un individuo.
-- Cada columna representa una variable.
+-   Cada fila representa un individuo.
+-   Cada columna representa una variable.
 
-En nuestro ejemplo, la tabla contiene 19 filas y 4 columnas.
-La columna “transición” no es necesaria para la función `projection.matrix`.
+En nuestro ejemplo, la tabla contiene 19 filas y 4 columnas. La columna “transición” no es necesaria para la función `projection.matrix`.
 
 ```{r}
 library(gt)
@@ -252,8 +252,7 @@ Una vez que hemos asignado los nombres a las columnas, podemos utilizar la funci
 
 En este contexto, la columna “fertilidad” representa la cantidad de individuos que se incorporan a cada clase de edad en el siguiente periodo.
 
-En nuestro caso, solo los adultos pueden reproducirse, añadiendo nuevos individuos a la clase “plantas pequeñas”.
-La fertilidad se calcula como:
+En nuestro caso, solo los adultos pueden reproducirse, añadiendo nuevos individuos a la clase “plantas pequeñas”. La fertilidad se calcula como:
 
 Fertilidad=$\frac{1}{6}$ = 0.1666
 
@@ -284,11 +283,10 @@ Si deseas obtener una matriz que combine tanto las transiciones como la fertilid
 
 En este caso, la matriz resultante se define como:
 
-$$matA= \text{matT} + \text{matF}$$
-donde:
+$$matA= \text{matT} + \text{matF}$$ donde:
 
-- matT es la matriz de transiciones.
-- matF es la matriz de fertilidad.
+-   matT es la matriz de transiciones.
+-   matF es la matriz de fertilidad.
 
 ```{r Trans8}
 
@@ -440,9 +438,11 @@ En el capítulo **Impacto de datos sin sentido biológico** se analizan los prob
 
 Los autores recomiendan utilizar el **método bayesiano** para el análisis de matrices de transición en la mayoría de los casos, excepto cuando el tamaño de muestra es muy grande y ninguna transición es rara. El método bayesiano es un enfoque estadístico que permite incorporar información previa y ajustar los modelos a los datos observados. Este enfoque es especialmente útil cuando se trabaja con datos escasos o transiciones poco frecuentes. Aunque su implementación puede ser más compleja, ofrece mayor flexibilidad y robustez, además de estimar la confianza en los valores de transición y fecundidad.
 
+::: {.hidden-note}
 Revisión:
 
 -   RLT: Apr 19, 2025
 -   Demetria:
 -   RLT: May 26, 2025
 -   RLT: June 25, 2025
+:::

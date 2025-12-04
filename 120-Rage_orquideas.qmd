@@ -94,7 +94,7 @@ compadre <- cdb_fetch("compadre") # Usar este código para bajar los datos del r
 
 #### Renombrar la base datos a algo sencillo
 
-En este segmento del script, se realiza una simplificación del nombre de la base de datos COMPADRE, asignándole el identificador TodasSp. Aunque el paquete `Rage recomienda convertir el objeto original de clase list en un objeto de clase CompadreDB mediante la función as_cdb(), en este caso se conserva la estructura original para facilitar el acceso directo a sus componentes. A continuación, se utiliza la función names() para visualizar los nombres de las variables contenidas en la base de datos. Esta operación revela que el conjunto de datos incluye un total de 59 variables, las cuales describen diversos atributos ecológicos y demográficos de las especies registradas.
+En este segmento del script, se realiza una simplificación del nombre de la base de datos COMPADRE, asignándole el identificador TodasSp. Aunque el paquete \`Rage recomienda convertir el objeto original de clase list en un objeto de clase CompadreDB mediante la función as_cdb(), en este caso se conserva la estructura original para facilitar el acceso directo a sus componentes. A continuación, se utiliza la función names() para visualizar los nombres de las variables contenidas en la base de datos. Esta operación revela que el conjunto de datos incluye un total de 59 variables, las cuales describen diversos atributos ecológicos y demográficos de las especies registradas.
 
 ```{r Rage5}
 
@@ -123,8 +123,6 @@ Orquideas = TodasSp %>%
 head(cdb_metadata(Orquideas), n = 3) |> 
   gt()
 ```
-
-
 
 ------------------------------------------------------------------------
 
@@ -199,7 +197,7 @@ as.data.frame(table(SPECIES_O$n_populations)) |>
 
 ```
 
-*** 
+------------------------------------------------------------------------
 
 ### La cantidad de poblaciones por especies en la base de datos de COMPADRE.
 
@@ -311,8 +309,7 @@ ggsave("Figures/Duración_Epi_Ter.png")
 
 ------------------------------------------------------------------------
 
-
-***
+------------------------------------------------------------------------
 
 ### Cálculo del Valor Propio Dominante (λ) en Matrices Ergodicas e Irreductibles
 
@@ -321,8 +318,6 @@ A partir del conjunto de matrices previamente filtradas por cumplir con las cond
 Para ello, se emplea la función eigs del paquete popdemo, que permite obtener los valores propios de una matriz. Esta función se aplica a cada matriz seleccionada mediante sapply, generando una lista de valores de ($\lambda$) almacenados en el objeto lambdaVals. Cada entrada en esta lista corresponde al valor propio dominante de una matriz matA incluida en el conjunto de datos.
 
 Posteriormente, se utiliza la función summary para obtener una descripción estadística de los valores de ($\lambda$), y la función hist para visualizar su distribución, lo que permite evaluar la variabilidad en las tasas de crecimiento poblacional entre las distintas especies o poblaciones representadas.
-
-
 
 #### Matrices ergódicas e irreductibles
 
@@ -340,8 +335,6 @@ head(cdb_metadata(Mat_erg_irred), n=2) |>
   gt()
 
 ```
-
-
 
 ```{r Rage13, warning=FALSE, message=FALSE}
 
@@ -380,8 +373,7 @@ lambdaVals1 <- map_dbl(
 lambdaVals2 <- map_dbl(matA(Mat_erg_irred), ~ popbio::lambda(.x))
 ```
 
-
-***
+------------------------------------------------------------------------
 
 ## Variación en el crecimiento poblacional entre especies epífitas y terrestres
 
@@ -432,8 +424,7 @@ lambda_terr <- map_dbl(matA(x_terr), ~ popdemo::eigs(.x, what = "lambda"))
 
 ```
 
-
-***
+------------------------------------------------------------------------
 
 ### Evaluación de Tendencias Centrales y Dispersión en Especies Terrestres y Epífitas
 
@@ -537,8 +528,7 @@ tidy_results= tidy(model_lambda_epi_terr)
 flextable(tidy_results)
 ```
 
-
-*** 
+------------------------------------------------------------------------
 
 ### Visualización de las distribuciones de los lambda's
 
@@ -636,7 +626,7 @@ ggplot2::ggplot(Lat_Long, aes(Lon, Lat, colour = OrganismType)) +
 #ggsave("orchid_map.jpg")
 ```
 
-***
+------------------------------------------------------------------------
 
 ## Mapa de distribución interactivo con Leaflet
 
@@ -672,8 +662,7 @@ Orchid_map
 
 ------------------------------------------------------------------------
 
-
-
+::: {.hidden-note}
 http://127.0.0.1:29465/rmd_output/1/compadre_orchid-ppm-y-su-uso.html
 
 Revisión RLT:
@@ -681,3 +670,4 @@ Revisión RLT:
 Sept 15, 2024
 
 Jan 20, 2025
+:::
