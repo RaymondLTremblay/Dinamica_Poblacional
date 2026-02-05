@@ -1,6 +1,37 @@
 # Fecundidad {#MatricesF}
 
+La fecundidad describe la contribución reproductiva de los individuos a la
+población y constituye uno de los componentes clave de los modelos de
+proyección poblacional. Este capítulo presenta los principios conceptuales
+y prácticos necesarios para calcular la fecundidad y su incorporación en
+matrices poblacionales estructuradas.
+
 ## Por: Aucencia Emeterio-Lara y Raymond L Tremblay
+
+## Fecundidad y su representación en modelos matriciales de población
+
+La fecundidad representa el proceso mediante el cual los individuos
+contribuyen nuevos reclutas a la población y es un componente esencial de
+la dinámica poblacional. En los modelos matriciales, la fecundidad suele
+integrarse como una combinación de producción reproductiva, supervivencia
+temprana y transición hacia los estadios iniciales del ciclo de vida.
+
+En este capítulo se examinan los fundamentos para calcular la fecundidad a
+partir de datos empíricos, destacando las decisiones conceptuales necesarias
+para traducir observaciones biológicas —como floración, producción de
+semillas o reclutamiento— en parámetros demográficos coherentes. Se discuten
+las diferencias entre fecundidad potencial y fecundidad realizada, así como
+las implicaciones de estas distinciones para la interpretación de la
+dinámica poblacional.
+
+Asimismo, se analiza cómo la fecundidad se integra en la matriz de
+proyección, generalmente a través de la submatriz **F**, y cómo su
+parametrización influye en el crecimiento poblacional y en análisis
+posteriores de sensibilidad y elasticidad. Este capítulo se diferencia de
+los anteriores porque se centra en la cuantificación explícita de un
+proceso demográfico específico, estableciendo el vínculo entre datos
+reproductivos y modelos poblacionales utilizados para inferir patrones de
+crecimiento y evaluar escenarios de manejo.
 
 #### Librerías de R requeridas para el siguiente módulo
 
@@ -16,11 +47,18 @@ library(gt)
 
 Toda población de organismos depende de la reproducción para su crecimiento; sin ella, la población no puede aumentar. Por esta razón, la reproducción es un proceso esencial para evaluar el crecimiento poblacional y determinar si el reclutamiento es suficiente para sostener dicho crecimiento. En el caso de las plantas, la reproducción puede ser sexual o vegetativa. Cuando se considera el crecimiento vegetativo, es necesario incorporar una matriz de clonación. Sin embargo, en este capítulo nos enfocaremos únicamente en la reproducción sexual, que es la más común en estudios de ecología de poblaciones.
 
-La forma en que se obtiene e integra la reproducción en los modelos de crecimiento poblacional es crucial, ya que su incorporación puede influir en los resultados y en las conclusiones derivadas del modelo. Por ello, comenzaremos describiendo errores frecuentes en el uso de matrices de transición para calcular la fecundidad.
+La forma en que se obtiene e integra la reproducción en los modelos de crecimiento poblacional es crucial, ya que su incorporación puede influir en los resultados y en las conclusiones derivadas del modelo. Por ello, comenzaremos describiendo errores frecuentes en el uso de matrices de transición para calcular la fecundidad. La fecundidad constituye una forma particular de transición demográfica,
+discutida en el capítulo sobre transiciones poblacionales. La influencia de la fecundidad sobre la dinámica poblacional se refleja
+directamente en la tasa de crecimiento poblacional introducida en el capítulo sobre crecimiento poblacional. La importancia relativa de la fecundidad frente a otros procesos vitales se evalúa posteriormente mediante el análisis de elasticidad poblacional.
 
 El primer paso para calcular la fecundidad consiste en definir las clases de edad o tamaño de los individuos. Estas clases agrupan organismos con características similares en términos de edad o tamaño. Por ejemplo, en una población de peces, las clases pueden ser: juveniles, adultos jóvenes y adultos viejos; mientras que en plantas, las clases suelen ser: plántulas, juveniles y adultos. Si la primera etapa del modelo corresponde a “plántula”, el reclutamiento debe contabilizar las “nuevas plántulas” que ingresan a la población en cada periodo. Es fundamental que la etapa reproductiva se mida en la misma escala y periodo que las demás etapas.
 
 Un error común es calcular la fecundidad usando el número de semillas producidas cuando la primera etapa del modelo son plántulas. En este caso, la fecundidad debe expresarse en términos de plántulas, no de semillas. Para ello, es necesario convertir la cantidad de semillas en plántulas mediante una tasa de germinación o de supervivencia.
+
+## Estimación de la fecundidad a partir de datos
+
+A continuación se presentan los métodos y cálculos utilizados para estimar
+la fecundidad y su incorporación en matrices de proyección poblacional.
 
 ## La fecundidad de las orquídeas en la demografía poblacional
 
