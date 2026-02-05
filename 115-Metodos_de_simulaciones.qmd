@@ -1,6 +1,49 @@
 # Variación Temporal y Espacial {#VarTempEsp}
 
+Los métodos de simulación permiten explorar la dinámica poblacional bajo
+escenarios variables y condiciones no observadas directamente en los datos.
+Este capítulo introduce las simulaciones poblacionales como herramientas
+prospectivas para evaluar trayectorias futuras, variabilidad demográfica y
+respuestas a cambios en los procesos vitales.
+
+
 Por: Raymond L. Tremblay
+
+## Simulaciones poblacionales y exploración de escenarios dinámicos
+
+Las simulaciones poblacionales constituyen una extensión natural de los
+modelos matriciales al permitir proyectar poblaciones bajo condiciones
+variables, estocásticas o dependientes del tiempo. A diferencia de los
+análisis analíticos que se centran en el comportamiento asintótico, las
+simulaciones permiten explorar trayectorias transitorias, evaluar la
+variabilidad demográfica y analizar respuestas poblacionales ante cambios
+explícitos en los procesos vitales.
+
+En este capítulo se presentan los fundamentos conceptuales de las
+simulaciones poblacionales, mostrando cómo pueden implementarse a partir de
+matrices de proyección y transiciones demográficas previamente definidas.
+Se discuten distintos tipos de simulaciones, incluyendo simulaciones
+determinísticas, estocásticas y basadas en escenarios, así como sus
+aplicaciones para evaluar extinción, recuperación y efectos de manejo.
+
+Asimismo, se analiza el papel de las simulaciones como herramientas
+complementarias a enfoques analíticos como la elasticidad y los LTRE. Mientras
+estos últimos permiten identificar la importancia relativa o las causas de
+diferencias observadas, las simulaciones permiten evaluar **qué podría
+ocurrir** bajo condiciones alternativas. Este capítulo se diferencia de los
+anteriores porque se enfoca en la exploración explícita del futuro
+poblacional, integrando estructura demográfica, variabilidad y supuestos de
+manejo para generar predicciones y apoyar la toma de decisiones en ecología y
+biología de la conservación. Las simulaciones se construyen a partir de las transiciones demográficas
+introducidas en el capítulo sobre
+transiciones poblacionales. Las trayectorias simuladas se interpretan en relación con la tasa de
+crecimiento poblacional discutida en el capítulo sobre
+crecimiento poblacional. A diferencia de los
+análisis LTRE,
+que explican diferencias observadas, las simulaciones permiten explorar
+escenarios futuros no observados. Las simulaciones pueden extenderse naturalmente dentro de un marco
+bayesiano, como se describe en el capítulo sobre
+modelos bayesianos de proyección poblacional.
 
 #### Librerías de R requeridas para el siguiente módulo
 
@@ -58,6 +101,12 @@ rlt_style_colour <- function() {
 ```
 
 ------------------------------------------------------------------------
+## Implementación de simulaciones poblacionales
+
+A continuación se describen los procedimientos para implementar simulaciones
+poblacionales a partir de matrices de proyección y transiciones demográficas,
+incluyendo ejemplos determinísticos y estocásticos.
+
 
 El termino **biología** pudiese ser un sinónimo de variación biológica. No hay dos organismos iguales, ni siquiera gemelos/clones que sean completamente idénticos. La variación biológica es una característica fundamental de la vida y es la base de la evolución, no puede haber evolución sin variación. Cuando se considera los individuos, por ejemplos humanos, fácilmente reconocemos variación, en tamaño, color de ojos, susceptibilidad a cáncer o infección y efecto que tiene el ambiente (por ejemplo la dieta o acceso a la educación) entre muchos factores que impacta la supervivencia o crecimiento y reproducción. Pero desafortunadamente cuando se considera los animales y plantas de una misma especie frecuentemente se obvia la variación en los análisis. Podemos observar variación a múltiples niveles en una misma especie
 
@@ -67,6 +116,7 @@ El termino **biología** pudiese ser un sinónimo de variación biológica. No h
 -   Variación entre tiempo (entre periodos de tiempo).
 
 Todos estos componentes de variación tendrán impacto en la dispersión de los estimados de los parámetros de la matriz de transición y el crecimiento poblacional en adición del comportamiento de la población en tiempo. Hay un componente que frecuentemente se deja por olvido es el efecto de la variación en tamaño de muestra pequeña en los estimados de los parámetros de la matriz de transición y el crecimiento poblacional, este es el **efecto demográfico por tamaño de muestra**. En este capítulo se discute el efecto de la variación en tiempo y espacio en los estimados de los parámetros de la matriz de transición y el crecimiento poblacional. El efecto demográfico se discute en otros capítulos.
+
 
 ------------------------------------------------------------------------
 
