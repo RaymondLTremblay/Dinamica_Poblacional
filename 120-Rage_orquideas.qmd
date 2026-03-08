@@ -7,7 +7,6 @@ Por: Raymond L. Tremblay
 ```{r Rage1, message=FALSE}
 #| error: true
 
-
 library(Rcompadre) # Paquete para trabajar con la base de datos de COMPADRE y COMADRE
 library(tidyverse) # Paquete para activar multiples paquetes
 library(gt) # Paquete para formatear tablas
@@ -30,8 +29,6 @@ El presente capítulo examina una selección de funciones contenidas en el paque
 ```{r Rage2, echo=FALSE}
 #| error: true
 
-
-
 rlt_theme <- theme(
   axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
   axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
@@ -51,7 +48,6 @@ rlt_theme <- theme(
     axis.line.y = element_line(colour = "black", linewidth = 1)
   )
 
-
 diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
 
 # --- 2. Combine them into a list object ---
@@ -62,7 +58,6 @@ rlt_style_fill <- function() {
     scale_fill_manual(values = diverging)
   )
 }
-
 
 rlt_style_colour <- function() {
   list(
@@ -90,9 +85,6 @@ La obtención de datos directamente desde el sitio web de **COMPADRE** puede rea
 
 compadre <- readRDS("data/COMPADRE_2026.rds") # Usar este código para bajar los datos del repositorio de COMPADRE.
 
-
-
-
 ```
 
 #### Renombrar la base datos a algo sencillo
@@ -107,8 +99,6 @@ En este segmento del script, se realiza una simplificación del nombre de la bas
 TodasSp=compadre
 names(TodasSp) # La lista de los nombres de las variables en el archivo COMPADRE, Nota que 59 variables en la base de datos de COMPADRE.
 
-
-
 ```
 
 ------------------------------------------------------------------------
@@ -122,7 +112,6 @@ Para filtrar únicamente las especies pertenecientes a la familia Orchidaceae en
 
 Orquideas = TodasSp %>%
   filter(Family %in% c("Orchidaceae")) # Extraer las orquídeas de la base de datos.
-
 
 # Assuming Orquideas is a CompadreDB object
 head(cdb_metadata(Orquideas), n = 3) |> 
@@ -175,7 +164,6 @@ SPECIES_O = Orquideas %>%
 
 gt(head(SPECIES_O))
 
-
 #write_csv(SPECIES_O, "DATA/Species_O.csv")
 ```
 
@@ -227,8 +215,6 @@ SPECIES_O$SpeciesAccepted <- fct_reorder(
   .desc = FALSE
 )
 
-
-
 ggplot(SPECIES_O, aes(SpeciesAccepted, ymin = StudyStart, ymax = StudyEnd, color = OrganismType_RC)) +
   geom_linerange() +
   coord_flip() +
@@ -275,7 +261,6 @@ ggplot(SPECIES_O, aes(SpeciesAccepted, ymin = StudyStart, ymax = StudyEnd, color
   theme(axis.text.y = element_text(size = 5))+
   scale_y_continuous(n.breaks = 12)
 
-
 #ggsave("images/Lenght_survey.png")
 
 ```
@@ -297,7 +282,6 @@ Orquideas = Orquideas %>%
       "Terrestre" = "Herbaceous perennial"
     )
   )
-
 
 #table(Orquideas$StudyDuration)
 #table(Orquideas$OrganismType)
@@ -335,7 +319,6 @@ Posteriormente, se utiliza la función summary para obtener una descripción est
 
 Compadre_flagged <- cdb_flag(Orquideas)
 
-
 Mat_erg_irred <- subset(
   Compadre_flagged,
   check_NA_A == FALSE & check_irreducible == TRUE & check_ergodic == TRUE
@@ -350,8 +333,6 @@ head(cdb_metadata(Mat_erg_irred), n=2) |>
 #| error: true
 
 lambdaVals_list <- sapply(matA(Mat_erg_irred), popdemo::eigs, what = "lambda") 
-
-
 
 lambdaVals=as_tibble(lambdaVals_list)
 
@@ -372,13 +353,11 @@ Una metodología alternativa para calcular los valores propios dominantes ($\lam
 ```{r Rage23}
 #| error: true
 
-
 ## con el paquete popdemo
 lambdaVals1 <- map_dbl(
   matA(Mat_erg_irred),
   ~ popdemo::eigs(.x, what = "lambda")
 )
-
 
 ## O puede calcular lambda con el paquete popbio, que evita algunos mensajes de advertencia
 
@@ -394,20 +373,16 @@ En esta sección se seleccionan las especies clasificadas como epífitas y terre
 ```{r, Rage25}
 #| error: true
 
-
 epifitas = Orquideas %>%
   filter(OrganismType == "Epiphyte")
 
 terrestres = Orquideas %>%
   filter(OrganismType == "Herbaceous perennial")
 
-
-
 ```
 
 ```{r Rage26}
 #| error: true
-
 
 Compadre_flagged_epif <- cdb_flag(epifitas)
 
@@ -424,17 +399,12 @@ lambda_epif <- map_dbl(matA(x_epif), ~ popdemo::eigs(.x, what = "lambda"))
 
 Compadre_flagged_terrestres <- cdb_flag(terrestres)
 
-
 x_terr <- subset(
   Compadre_flagged_terrestres,
   check_NA_A == FALSE & check_ergodic == TRUE
 )
 
-
-
 lambda_terr <- map_dbl(matA(x_terr), ~ popdemo::eigs(.x, what = "lambda"))
-
-
 
 ```
 
@@ -446,8 +416,6 @@ Mediante el uso de la función summary, se analizaron las medidas de tendencia c
 
 ```{r Rage27}
 #| error: true
-
-
 
 library(flextable)
 
@@ -473,7 +441,6 @@ flextable(combined_df) |>
   autofit() |>
   theme_vanilla()
 
-
 ```
 
 Para visualizar los datos en una figura de **ggplot2**, hay que convertir estas filas en un data.frame y añadir una columna con el tipo de habitad, renombrar la columna lambda y unir los dos data.frames en uno solo.
@@ -493,7 +460,6 @@ Crear una columna con el tipo de hábitat y renombrar la columna lambda
 df_Lamb_epi = df_Lamb_epif %>%
   add_column(Habit_Type = "Epífitas") %>%
   rename(lambda = lambda_epif)
-
 
 df_Lamb_terr = as.data.frame(lambda_terr)
 df_Lamb_terr = df_Lamb_terr %>%
@@ -537,9 +503,6 @@ Para evaluar si existen diferencias significativas en los valores propios de lam
 model_lambda = lm(lambda ~ Habit_Type, data = ALL_Lambdas)
 #summary(model_lambda)
 
-
-
-
 model_lambda_epi_terr = lm(lambda ~ Habit_Type-1, data = ALL_Lambdas)
 #summary(model_lambda_epi_terr)
 
@@ -556,7 +519,6 @@ Para representar gráficamente las distribuciones de los coeficientes estimados 
 
 ```{r Rage31}
 #| error: true
-
 
 model_lambda_epi_terr %>%
   tidy() %>%
@@ -664,7 +626,6 @@ Además, el mapa es interactivo y permite hacer zoom para examinar áreas espec�
 ```{r Rage36}
 #| error: true
 
-
 PointUsePalette <- leaflet::colorFactor(
   palette = c("#009392", "#CF597E"),
   domain = c("Epiphyte", "Herbaceous perennial")
@@ -688,12 +649,3 @@ Orchid_map
 
 ------------------------------------------------------------------------
 
-::: {.hidden-note}
-http://127.0.0.1:29465/rmd_output/1/compadre_orchid-ppm-y-su-uso.html
-
-Revisión RLT:
-
-Sept 15, 2024
-
-Jan 20, 2025
-:::

@@ -2,13 +2,11 @@
 
 ## Por: Tamara Ticktin, Mariana Hernández Apolinar y Raymond L. Tremblay
 
-
 El crecimiento poblacional describe cómo cambia el tamaño de una población
 a través del tiempo como resultado de la supervivencia, el crecimiento y la
 reproducción de sus individuos. Este capítulo presenta los fundamentos
 conceptuales y matemáticos del crecimiento poblacional en el contexto de
 modelos matriciales estructurados.
-
 
 ## Crecimiento poblacional y la tasa λ en modelos estructurados
 
@@ -33,9 +31,6 @@ Este capítulo se diferencia de los anteriores porque establece el vínculo
 formal entre la estructura del ciclo de vida y la dinámica poblacional
 global, proporcionando la base teórica sobre la cual se construyen los
 análisis de manejo, conservación y simulación desarrollados más adelante.
-
-
-
 
 #### Librerías de R requeridas para el siguiente módulo
 
@@ -67,7 +62,6 @@ Ingresa la matriz de transición o genera la desde el archivo que incorpora la t
 
 #Ingresa la matriz de transición o generala desde el archivo que incorpora la transición de los individuos de un año (o un periodo de tiempo) a otro ("stage-fate dataframe"; ver el capítulo "Cálculo de transiciones de la matriz de Lefkovitch" y "Método bayesiano para el cálculo de transiciones y fecundidades"). En nuestras matrices de transición, las clases de estado se basan en el peso total de los pseudobulbos que conforman la planta. Los “adultos” corresponden a individuos que pueden reproducirse sexualmente.
 
-
 #Define los estadios 
 estadios <- c ("plantula", "juvenil", "adulto1", "adulto2")
 
@@ -87,7 +81,6 @@ Segunda matriz
 
 ```{r, cre_pop_1b, warning=FALSE, message=FALSE}
 #| error: true
-
 
 #Matriz de la poblacion 1, año 2
 mat1.2 <- matrix (c(0.43, 0.00,  0.85,  3.38,
@@ -151,7 +144,6 @@ A partir de una población inicial de 10 individuos en cada estadio (25% del tot
 
 ```{r}
 #| error: true
-
 
 pop_1 <- pop.projection(mat1.1, n = c(10, 10, 10, 10), iterations = 7)
 pop_1
@@ -240,7 +232,6 @@ Usando la función **boot.transitions** del paquete **popbio**, se pueden calcul
 #Intervalos de confianza (IC) de λ para la población 1, año 1
 #Indica el directorio de trabajo y definir los estadios
 
-
 laelia1 <- read.table("data/laelia1.txt", header = TRUE) # subir los datos de la población 1, año 1
 
 pop1.1 = laelia1 # renombrar el data frame para facilitar su uso
@@ -263,7 +254,6 @@ ic1
 ```{r, cre_pop_4b}
 #| error: true
 
-
 laelia2 <- read.table("data/laelia2.txt", header = TRUE)
 
 pop1.2 = laelia2
@@ -280,7 +270,6 @@ ic2
 # pl.pl<-0.7 #a la permanencia en plantula se le asigno el valor 0.7 
 # pl.j<-0.1 #a la transicion plantula-juvenil se le asignó el valor 0.1
 # x<-boot.transitions(pop1, 1000, add = c(1,1, pl.pl, 2,1, pl.j), sort=stages)
-
 
 ```
 
@@ -326,16 +315,12 @@ matrices <- list(mat1.1, mat1.2) # Crear una lista de matrices de las poblacione
 estocástico <- stoch.growth.rate(matrices, maxt = 50000, verbose = FALSE) # Selección aleatoria de matrices
 #estocástico
 
-
-
-
 ```
 
 Se transforma tasa de base log y se obtiene $λ_e$ por dos métodos (Tuljapukar y simulación) y los IC por simulación
 
 ```{r, cre_pop_5b}
 #| error: true
-
 
 tuljapukar <- exp(estocástico$approx)
 simulation <- exp(estocástico$sim)
@@ -345,8 +330,6 @@ simulation <- exp(estocástico$sim)
 
 ic.1 <- exp(estocástico$sim.CI[1])
 ic.2 <- exp(estocástico$sim.CI[2])
-
-
 
 #ic.1 # El intervalo de confianza de λs por simulación inferior
 #ic.2 # El intervalo de confianza de λs por simulación superior
@@ -363,10 +346,6 @@ tribble(~Método, ~λ, ~IC_2.5, ~IC_97.5,
   gt::gt() %>%
   gt::tab_header(title = md("Tasa estocástica de crecimiento $λ_e$ y IC") )%>%
   gt::cols_label(Método = "Método", λ = "λ_e", IC_2.5 = "IC 2.5%", IC_97.5 = "IC 97.5%")
-
-
-
-
 
 ```
 
@@ -399,14 +378,12 @@ ic.2 <- exp(estocástico.desigual.9$sim.CI[2])
 #ic.1
 #ic.2
 
-
 tribble(~Método, ~λ, ~IC_2.5, ~IC_97.5,
   "Tuljapukar", tuljapukar, Tul_NA, Tul_NA,
   "Simulación", simulation, ic.1, ic.2) %>%
   gt::gt() %>%
   gt::tab_header(title = md("Tasa estocástica de crecimiento $λ_e$ y IC") )%>%
   gt::cols_label(Método = "Método", λ = "λ_e", IC_2.5 = "IC 2.5%", IC_97.5 = "IC 97.5%")
-
 
 ```
 
@@ -436,7 +413,6 @@ ic.2 <- exp(estocástico.desigual.2$sim.CI[2])
 #ic.1
 #ic.2
 
-
 tribble(~Método, ~λ, ~IC_2.5, ~IC_97.5,
   "Tuljapukar", tuljapukar, Tul_NA, Tul_NA,
   "Simulación", simulation, ic.1, ic.2) %>%
@@ -455,12 +431,3 @@ La interpretación de λ se complementa con el análisis de
 elasticidad poblacional, que permite evaluar
 la importancia relativa de cada transición del ciclo de vida.
 
-::: {.hidden-note}
-Revisión:
-
-RLT 2025_01_18
-
-RLT 2025_06_01
-
-MHA 2025_06_29
-:::

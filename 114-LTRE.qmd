@@ -30,9 +30,6 @@ library(latex2exp)
 ```{r LTRE1_A, echo=FALSE}
 #| error: true
 
-
-
-
 rlt_theme <- theme(
   axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
   axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
@@ -52,9 +49,7 @@ rlt_theme <- theme(
     axis.line.y = element_line(colour = "black", linewidth = 1)
   )
 
-
 diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86", "#662E9B", "#E5A0D2",  "#A5AA99", "#1D6996", "#DBE6E2", "#4D4D4D")
-
 
 # --- 2. Combine them into a list object ---
 # This list can be added to the plot with a single '+'
@@ -65,7 +60,6 @@ rlt_style_fill <- function() {
   )
 }
 
-
 rlt_style_colour <- function() {
   list(
     rlt_theme,
@@ -75,8 +69,6 @@ rlt_style_colour <- function() {
 
                     
 ```
-
-
 
 ```{r setup-graphics, include=FALSE}
 #| error: true
@@ -163,8 +155,6 @@ Primeramente se creó el ciclo de vida por especie de hospedero utilizando el si
 ```{r LTRE1_Q_martinezii, echo=TRUE}
 #| error: true
 
-
-
 matmart <- rbind(
   c(0.68, 0.02, 3.88, 16.53),
   c(0.22, 0.76, 0.23, 0.0),
@@ -228,13 +218,11 @@ El ciclo de vida de *Oncidium brachyandrum* creciendo sobre *Quercus martinezii*
 ```{r LTRE3_Quercus_rugosa, echo=TRUE}
 #| error: true
 
-
 matrug <- rbind(
   c(0.64, 0.06, 0, 0.0045),
   c(0.27, 0.75, 0.27, 0.0),
   c(0.0, 0.08, 0.47, 0.28),
   c(0.0, 0.0, 0.27, 0.68))
-
 
 stages <- c("plántula", "infantil", "juvenil", "adulto")
 title <- NULL
@@ -327,7 +315,6 @@ Oncidium=tribble(~"names.vitalrate", ~"martinezzi", ~"rugosa",   ~"matrix",
 
 gt(Oncidium)
 
-
 ```
 
 **Cuadro 2.** Ejemplo de base para poder calcular los ERTV.
@@ -417,11 +404,9 @@ Nota que usando la función vitalsens se pueden calcular las sensibilidades y el
 ```{r LTRE10}
 #| error: true
 
-
 Martinezzi.se <- vitalsens(matrix.el, Martinezzi)
 
 Martinezzi.se # observar los resultados
-
 
 ```
 
@@ -573,7 +558,6 @@ mat.promedio <- (matmart + matrug) / 2
 
 mat.promedio
 
-
 ```
 
 ## Convertir las matrices en un vectores
@@ -600,11 +584,9 @@ Unir los vectores de las matrices *O. rugosa* y *O. martinezii*
 ```{r LTRE19}
 #| error: true
 
-
 Unido = rbind(mat_rug.vector, mat_mart.vector)
 
 Unido
-
 
 ```
 
@@ -634,7 +616,6 @@ Ob_Atrt <- lapply(
   byrow = FALSE
 )
 
-
 names(Ob_Atrt) <- Unido$Site
 
 Ob_Atrt
@@ -657,9 +638,6 @@ Convertir los resultados de ERTV en un data frame para facilitar la visualizaci�
 ```{r LTRE24,  echo=TRUE}
 #| error: true
 
-
-
-
 Ob <- LTRE(Ob_Atrt, mat.promedio) # Realizar el análisis de ERTV usando la matriz promedio
 
 Ob_df_mart <- as.data.frame(t(Ob$`Q. martinezii`)) # Convertir los resultados de *Q. martinezii* en un data frame
@@ -681,7 +659,6 @@ Ob_df$Species <- c( # Asignar nombres de especies, una asignación de nombre por
 colnames(Ob_df) <- c("a1i", "a2i", "a3i", "a4i", "Species") # Asignar nombres a las columnas
 Ob_df$t_1 <- c("ai1", "ai2", "ai3", "ai4", "ai1", "ai2", "ai3", "ai4") # Asignar nombres a las filas
 
-
 pivot_long <- tidyr::pivot_longer( # Convertir a formato largo para ggplot2
   Ob_df, # datos de entrada
   cols = c("a1i", "a2i", "a3i", "a4i"), # columnas a pivotar
@@ -696,8 +673,6 @@ pivot_long$Transitions2 <- c("a11", "a12", "a13", "a14",  # Asignar nombres a la
                              "a21", "a22", "a23", "a24",
                              "a31", "a32", "a33", "a34", 
                              "a41", "a42", "a43", "a44")
-
-
 
 # head(pivot_long)
 ```
@@ -746,8 +721,3 @@ Aquí se observa el efecto de las transiciones de las tasas vitales sobre la var
 
 Enlace sobre ERTV https://bookdown.org/cdorm/lefko3gentle/ltre.html
 
-::: hidden-note
-Revisión:
-
-RLT: 2025-06-11
-:::

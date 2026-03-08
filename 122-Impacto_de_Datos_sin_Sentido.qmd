@@ -64,9 +64,7 @@ rlt_theme <- theme(
     axis.line.y = element_line(colour = "black", linewidth = 1)
   )
 
-
 diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
-
 
 # --- 2. Combine them into a list object ---
 # This list can be added to the plot with a single '+'
@@ -76,7 +74,6 @@ rlt_style_fill <- function() {
     scale_fill_manual(values = diverging)
   )
 }
-
 
 rlt_style_colour <- function() {
   list(
@@ -105,7 +102,6 @@ Muestreos en donde no se observa mortalidad, que equivaldrían a una supervivenc
 
 ```{r, sin_sentido_2,message=FALSE}
 #| error: true
-
 
 Sp1matU <- rbind(
   c(0.0, 0.0, 0.0),
@@ -136,7 +132,6 @@ En el siguente *script* mostramos que la población no cambia después de 7-8 pe
 #| error: true
 
 n = c(50, 50, 50)
-
 
 truelambda(Sp1matU) # despues de unos periodos de tiempo vemos que el crecimiento poblacional es 1
 pop.projection(Sp1matU, n = n)$pop.changes # lista del cambio poblacional en 19 años
@@ -171,7 +166,6 @@ lambda(Sp1matA_2) # lambda es 0.995, lo que indica que la población disminuye
 
 pop.projection(Sp1matU_2, n = n)$pop.changes # lista del cambio poblacional en 19 años
 
-
 ```
 
 ::: img-float
@@ -196,7 +190,6 @@ Usando el artículo de Ticktin 2020, vemos algunos de los tamaños de muestra de
 
 ```{r, sin_sentido5, message=FALSE, echo=FALSE}
 #| error: true
-
 
 N_PPM=tribble(~Especie, ~"Población", ~Etapas,~"Tamaño de Muestrea", ~Referencia,
               "*Erycina crista-galli*", "Pop_1", "Plantulas", 41, "@mondragon2007life",
@@ -224,9 +217,6 @@ N_PPM=tribble(~Especie, ~"Población", ~Etapas,~"Tamaño de Muestrea", ~Referenc
               "",  "", "Etapa 3", 270, "",
               "",  "", "Etapa 4", 338, "")
 
-
-
-
 list_fl = N_PPM %>%
   flextable() %>%
   theme_zebra() %>%
@@ -247,7 +237,6 @@ Por tal motivo, la matriz sugiere que los juveniles no crecen para convertirse e
 
 ```{r, sin_sentido_6}
 #| error: true
-
 
 Sp1matU_NT <- rbind(
   c(0.0, 0.0, 0.0),
@@ -297,7 +286,6 @@ En el siguiente gráfico del ciclo de vida emergido, se puede observar que ningu
 ```{r, sin_sentido_8}
 #| error: true
 
-
 Sp1matU_NS <- rbind(
   c(0.0, 0.0, 0.0),
   c(0.0, 0.7, 0.0),
@@ -327,7 +315,6 @@ Uno de los error más comunes en la construcción de los elementos de la matriz 
 
 ```{r, sin_sentido_9}
 #| error: true
-
 
 SerapiaU <- rbind(
   c(0.668, 0.122, 0.294, 0.401),
@@ -370,7 +357,6 @@ Este error es el resultado del calculo de la fecundidad, que debiera ser estimad
 ```{r, sin_sentido_10}
 #| error: true
 
-
 Sp1matU_Fert <- rbind(
   c(0.0, 0.0, 0.0),
   c(0.3, 0.7, 0.0),
@@ -403,7 +389,6 @@ Si deseamos agregar una etapa de semilla a nuestro modelo, debemos incluir la et
 
 ```{r, sin_sentido_11}
 #| error: true
-
 
 Sp1matU_Fert2 <- rbind(
   c(0.0, 0.0, 0.0, 0.0),
@@ -486,9 +471,7 @@ Un método más fácil es usar la función R *propCI* de la **library(interceptC
 ```{r, sin_sentido_14}
 #| error: true
 
-
 resultado = propCI(n = 20, p = 0.05, alpha = 0.05)
-
 
 resultado
 ```
@@ -511,7 +494,6 @@ Dirichlet <- rbind(
   c(0.2, 0.0, 0.0),
   c(0.0, 0.3, 0.7)
 ) # transition matrix
-
 
 stages <- c("plantula", "juvenil", "adulto")
 
@@ -571,8 +553,6 @@ ggplot(data = All_Data3, aes(x = values, fill = ind)) +
   labs(fill = "Etapa de vida")+
   rlt_style_fill()
 
-
-
 ```
 
 Ahora calculemos el ICr del 95% de las transiciones
@@ -589,8 +569,6 @@ Aspectos importantes a tener en cuenta.
 
 ```{r, sin_sentido_18}
 #| error: true
-
-
 
 Transiciones = ddply(
   All_Data3,
@@ -642,7 +620,6 @@ levels(All_Data4$ind)[levels(All_Data3$ind) == "pi.2"] = "Juvenil"
 levels(All_Data4$ind)[levels(All_Data3$ind) == "pi.3"] = "Adulto"
 levels(All_Data4$ind)[levels(All_Data3$ind) == "pi.4"] = "Muerto"
 
-
 ggplot(data = All_Data4, aes(x = values, fill = ind)) +
   geom_density(aes(alpha = .5)) +
   scale_y_continuous(limit = c(0, 18)) +
@@ -659,7 +636,6 @@ N0te que ahora, los intervalos de confianza son más estrechos y no son negativo
 
 ```{r, sin_sentido_20}
 #| error: true
-
 
 Transiciones = ddply(
   All_Data4,
@@ -679,6 +655,3 @@ Transiciones
 
 ```
 
-::: hidden-note
-Revision=tribble(\~Revisor, \~fecha, \~"fecha de cumplimiento", "Raymond", "2024-12-25", "2024-12-26", "Demetria", "2025-02-08", "2025-02-09", "Tupac", "2025-02-14", "2025-03-22", "Raymond", "2025-03-22", "2025-06-18",)
-:::

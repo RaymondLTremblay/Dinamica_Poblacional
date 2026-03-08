@@ -2,7 +2,6 @@
 title: "Estimados bayesianos de MPP"
 ---
 
-
 # Acercamiento Bayesiano para calcular transiciones y fertilidades
 
 Por: Raymond L. Tremblay
@@ -38,7 +37,6 @@ capítulo se diferencia de los anteriores porque desplaza el énfasis desde la
 estimación puntual de parámetros hacia la inferencia probabilística completa de
 la dinámica poblacional, un enfoque especialmente relevante en biología de la
 conservación y ecología aplicada.
-
 
 ```{r, message=FALSE, warning=FALSE}
 #| error: true
@@ -78,9 +76,7 @@ rlt_theme <- theme(
     axis.line.y = element_line(colour = "black", linewidth = 1)
   )
 
-
 diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
-
 
 # --- 2. Combine them into a list object ---
 # This list can be added to the plot with a single '+'
@@ -90,7 +86,6 @@ rlt_style_fill <- function() {
     scale_fill_manual(values = diverging)
   )
 }
-
 
 rlt_style_colour <- function() {
   list(
@@ -149,7 +144,6 @@ matA <- rbind(
 )
 stages <- c("semillas", "plantulas", "adultos")
 title <- NULL
-
 
 ```
 
@@ -216,11 +210,9 @@ Una vez descargado, puedes cargar las funciones en tu entorno de trabajo en R ut
 ```{r bayes4, message=FALSE}
 #| error: true
 
-
 devtools::install_github("atyre2/raretrans", build = TRUE, build_opts = c("--no-resave-data", "--no-manual")) # instalar el paquete raretrans
 
 library(raretrans)
-
 
 ```
 
@@ -588,7 +580,6 @@ beta <- matrix(c(NA_real_, NA_real_, 1e-5,
 
 fill_fertility(TF, N, alpha = alpha, beta = beta)
 
-
 ```
 
 El cambio en la fertilidad es \< 0,0001 en comparación con el valor observado.
@@ -631,7 +622,6 @@ beta2 <- matrix(c(NA_real_, NA_real_, 1,
 RLT_0.5s <- sim_transitions(TF, N, P = RLT_Tprior, alpha = alpha2, beta = beta2,
                 priorweight = 0.5, samples = 5000)
 
-
 # extraer los valores de lambda de cada simulación en un histograma
 
 RLT_0.5 <- tibble(lposterior = map_dbl(RLT_0.5s, lambda)) # convertir la lista en un tibble
@@ -663,8 +653,6 @@ RLT_0.5_summary <- summarize(
   ICrAlto = quantile(lposterior, probs = 0.975),
   p_increase = sum(lposterior > 1.) / n()
 )
-
-
 
 ```
 
@@ -725,14 +713,3 @@ La previa uniforme "rellena" las transiciones faltantes, pero también crea prob
 
 ------------------------------------------------------------------------
 
-::: hidden-note
-Revisión RLT:
-
-Sept 15, 2024
-
-RLT: Oct 8, 2024
-
-Paola: Apr 25, 2025
-
-RLT: May 27, 2025
-:::

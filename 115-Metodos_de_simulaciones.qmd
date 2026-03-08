@@ -6,7 +6,6 @@ Este capítulo introduce las simulaciones poblacionales como herramientas
 prospectivas para evaluar trayectorias futuras, variabilidad demográfica y
 respuestas a cambios en los procesos vitales.
 
-
 Por: Raymond L. Tremblay
 
 ## Simulaciones poblacionales y exploración de escenarios dinámicos
@@ -82,7 +81,6 @@ rlt_theme <- theme(
 
 diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
 
-
 # --- 2. Combine them into a list object ---
 # This list can be added to the plot with a single '+'
 rlt_style_fill <- function() {
@@ -91,7 +89,6 @@ rlt_style_fill <- function() {
     scale_fill_manual(values = diverging)
   )
 }
-
 
 rlt_style_colour <- function() {
   list(
@@ -109,7 +106,6 @@ A continuación se describen los procedimientos para implementar simulaciones
 poblacionales a partir de matrices de proyección y transiciones demográficas,
 incluyendo ejemplos determinísticos y estocásticos.
 
-
 El termino **biología** pudiese ser un sinónimo de variación biológica. No hay dos organismos iguales, ni siquiera gemelos/clones que sean completamente idénticos. La variación biológica es una característica fundamental de la vida y es la base de la evolución, no puede haber evolución sin variación. Cuando se considera los individuos, por ejemplos humanos, fácilmente reconocemos variación, en tamaño, color de ojos, susceptibilidad a cáncer o infección y efecto que tiene el ambiente (por ejemplo la dieta o acceso a la educación) entre muchos factores que impacta la supervivencia o crecimiento y reproducción. Pero desafortunadamente cuando se considera los animales y plantas de una misma especie frecuentemente se obvia la variación en los análisis. Podemos observar variación a múltiples niveles en una misma especie
 
 -   Variación sub-individual (dentro de un individuo), un concepto bien desarrollado por Carlos Herrera de la Universidad de Sevilla [@herrera2009multiplicity]. Esta variación nunca ha sido incluido en modelos MPP.
@@ -118,7 +114,6 @@ El termino **biología** pudiese ser un sinónimo de variación biológica. No h
 -   Variación entre tiempo (entre periodos de tiempo).
 
 Todos estos componentes de variación tendrán impacto en la dispersión de los estimados de los parámetros de la matriz de transición y el crecimiento poblacional en adición del comportamiento de la población en tiempo. Hay un componente que frecuentemente se deja por olvido es el efecto de la variación en tamaño de muestra pequeña en los estimados de los parámetros de la matriz de transición y el crecimiento poblacional, este es el **efecto demográfico por tamaño de muestra**. En este capítulo se discute el efecto de la variación en tiempo y espacio en los estimados de los parámetros de la matriz de transición y el crecimiento poblacional. El efecto demográfico se discute en otros capítulos.
-
 
 ------------------------------------------------------------------------
 
@@ -172,7 +167,6 @@ Los datos provienen de un estudio de la dinámica de una población de *Serapia 
 
 ```{r sim2}
 #| error: true
-
 
 Serapia<-list(
   A1_1999=matrix(c(
@@ -243,8 +237,6 @@ nrow=4, byrow=TRUE,
   )
 )
 
-
-
 Serapia
 
 ```
@@ -268,7 +260,6 @@ Serapia.eq   <- stoch.projection(Serapia, n, nreps=1000) # simulación con igual
 
 head(Serapia.eq) # vemos las primeras 6 simulaciones de los tamaños de muestra esperada por etapa
 
-
 ```
 
 ------------------------------------------------------------------------
@@ -285,8 +276,6 @@ Para observar cuantos individuos hubiese en el futuro de la población de *Serap
 #| error: true
 
 Serapia.eq=clean_names(as.data.frame(Serapia.eq)) # convertir la lista de matrices en un data frame y limpiar los nombres de las columnas
-
-
 
 Serapia.eq %>% 
   gather(key="etapa", value="individuos") %>%  # convertir el data frame de formato ancho a largo
@@ -333,7 +322,6 @@ Serapia.uneq   <- stoch.projection(Serapia, n, nreps=1000, prob=c(.3, .3, .25, .
 
 head(Serapia.uneq) # vemos las primeras 6 simulaciones de tamaño de muestra
 
-
 ```
 
 ### Comparar la distribución de cantidad de individuos esperado por simulaciones
@@ -347,7 +335,6 @@ Serapia.uneq=clean_names(as.data.frame(Serapia.uneq))
 
 Serapia.uneq_T=Serapia.uneq %>% 
   mutate(total=rowSums(across(where(is.numeric)))) 
-
 
 ggplot(Serapia.uneq_T, aes(total))+
   geom_histogram(bins=30, aes(fill="blue"), color="white")+
@@ -411,7 +398,6 @@ Lambda Igual de probabilidades
 ```{r sim10}
 #| error: true
 
-
 exp(SGR_uneq$sim) # matrices seleccionado con igual probabilidad
 exp(SGR_uneq$sim.CI[1]) #El intervalo de confianza inferior
 exp(SGR_uneq$sim.CI[2]) #El intervalo de confianza superior
@@ -450,7 +436,6 @@ Convertir las simulaciones de las matrices de transición en un data frame y lim
 
 ```{r sim13}
 #| error: true
-
 
 Serapia.eq_A=clean_names(as.data.frame(Serapia.eq_A)) # limpiar los nombres de las columnas y convertir en un data frame
 Serapia.eq_N=clean_names(as.data.frame(Serapia.eq_N)) 
@@ -646,7 +631,6 @@ A1_2011=matrix(c(
   )
 )
 
-
  #Serapia_tiempo
   
 ```
@@ -698,7 +682,6 @@ Lo que se observa es que la variación temporal y la variación espacial es más
 ```{r sim17}
 #| error: true
 
-
 Tabla_resultado=tribble(
   ~tipo, ~lambda, ~CI_inf, ~CI_sup,~diff_ci,
   "Espacial", exp(SGR_eq$sim), exp(SGR_eq$sim.CI[1]), exp(SGR_eq$sim.CI[2]), exp(SGR_eq$sim.CI[2])-exp(SGR_eq$sim.CI[1]),
@@ -728,8 +711,6 @@ Se nota que el crecimiento poblacional intrínsico de la especies de *Serapia co
   theme(title = element_markdown())+
   scale_y_continuous(limits = c(0.90, 1.1))
 
-
-
 ```
 
 ------------------------------------------------------------------------
@@ -755,11 +736,9 @@ Se seleciona la población A3 de *Serapia cordigera* para hacer el análisis. Es
 ```{r sim19}
 #| error: true
 
-
 n <- c(2, 0, 4, 99) # población inicial por etapa
 names(n) <- c("latente", "plantula", "rosetta", "con flor")
 Serapia_A3   <- splitA(Serapia$A3) # simulación solamente la matriz A3 de la lista de matriz
-
 
 ```
 
@@ -778,7 +757,6 @@ RLT_Serapia_previa <- matrix(c(0.5, 0.1,   0.4,   0.4,
                                0.15,  0.05,  0.25,  0.2,
                                0.05,  0.025, 0.1,   0.1), 
                        byrow = TRUE, nrow = 5, ncol = 4)
-
 
 ```
 
@@ -802,7 +780,6 @@ Lo más dramático de ese primer análisis que que los intervalos de credibilida
 
 ```{r sim22}
 #| error: true
-
 
 TN <- fill_transitions(Serapia_A3, N=n, P = RLT_Serapia_previa, priorweight = .01, returnType = "TN")
 a <- TN[,1] # cambie 1 a 2, 3 etc para obtener la distribución beta marginal de cada columna, el valor representa la columna. 
@@ -864,7 +841,6 @@ Ahora vemos como se distribuye una distribución beta. Usamos los datos de la et
 ```{r sim25, warning=FALSE}
 #| error: true
 
-
 a # los valores del shape alpha 
 b # los valores del shape beta
 
@@ -913,14 +889,9 @@ Fallecidos=plot_beta(60.687, 39.303)+
     theme(text = element_text(size = 6))+
   geom_vline(xintercept = 0.607, linetype = "dashed", color = "#009392")
 
-
-
-
 ggarrange(Latentes, Plantulas, Rosetta, Adultos, Fallecidos, ncol=3, nrow=2)
 
 ggsave("mi_gragico.tiff")
-
-
 
 ```
 
@@ -934,14 +905,3 @@ La segunda ventaja de usar simulaciones es que hay que recordar que los análisi
 
 La incertidumbre por causas intrínsicas (el individuos, genética, tamaño de muestra) y extrínsicas (hábitat, tiempo, variación en polinizadores, herbívoros, ect.) se evalúa usando análisis de variación espacial, temporal y demográficos. La incertidumbre en los parámetros de la matriz de transición se puede cuantificar con intervalos de confianza o el intervalo de credibilidad (concepto Bayesiano). Es de suma importancia que se evalué la incertidumbre en los parámetros de la matriz de transición para tener un mejor entendimiento de donde proviene la variación y la incertidumbre en el crecimiento poblacional de una especies y saber si hay suficiente evidencia para tener confianza que la especies esta en declive, crece o no.
 
-
-::: {.hidden-note}
-
-Revisión:
-
-RLT 2024-09-30
-
-RLT 2025-06_12
-
-RLT 2025-06-20
-:::

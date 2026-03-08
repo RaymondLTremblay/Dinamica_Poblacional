@@ -90,7 +90,6 @@ rlt_theme <- theme(
 
 diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
 
-
 # --- 2. Combine them into a list object ---
 # This list can be added to the plot with a single '+'
 rlt_style_fill <- function() {
@@ -100,15 +99,12 @@ rlt_style_fill <- function() {
   )
 }
 
-
 rlt_style_colour <- function() {
   list(
     rlt_theme,
     scale_colour_manual(values = diverging)
   )
 }
-
-
 
 ```
 
@@ -138,9 +134,7 @@ Los datos de Tamm fueron compartidos de forma visual usando gráficos. En la fig
 ```{r OCTamm_2, echo=FALSE, out.width= "50%", out.extra='style="float:right; padding:10px"', fig.cap="Reproducción de Tamm: 1972, Dactylorhiza incarnata, dibujo por Alondra Martinez Martinez"}
 #| error: true
 
-
 knitr::include_graphics("images/Tamm_1972_Dactylorhiza_incarnata_2.jpeg")
-
 
 ```
 
@@ -157,7 +151,6 @@ En la siguiente figura se muestra la dinámica de los individuos de *Listera ova
 ```{r OCTamm_3, echo=FALSE, out.width= "50%", out.extra='style="float:right; padding:10px"', fig.cap="Dinamica del plot 17: Listera ovata, dibujo por Alondra Martinez Martinez"}
 #| error: true
 
-
 knitr::include_graphics("images/Tamm_1972_plot_48.jpeg")
 ```
 
@@ -167,7 +160,6 @@ En la publicación de 1972 [@tamm1972survival], Tamm describe la dinámica de m�
 
 ```{r OCTamm_4, echo=FALSE, message=FALSE}
 #| error: true
-
 
  Tamm=tribble(~Especies, ~"Núm de la Población", ~"Año del primer muestreo", ~"Año del último muestreo",
               "Dactylorhiza incarnata", 46, 1944, 1971,
@@ -192,8 +184,6 @@ Tamm |>
     )
   )
 
-
-
 ```
 
 En la publicación de 1972, Tamm describió la dinámica de cuatro especies de orquídeas. Esta información no están disponible en COMPADRE al momento. En *Dactylorhiza incarnata* se observa que múltiples individuos desaparece de un año a otro, que después de 1951 la población es mayormente vegetativa (sin flores). Usando las figuras, Tamm trató de ver si había un patrón en la dinámica basado en el cambio de las comunidades, por ejemplo la presencia de un árbol de pino que se estableció cerca de la población de *D. sambucina*. La población de *D. sambucina* disminuyo un poco entre 1942 a 1963, pero fue balanceado por el reclutamiento de la misma cantidad de individuos en el mismo periodo. Después de revisar sus datos, Tamm sugirió que lo que parecen ser individuos nuevos por clonaje pudiese ser realmente nuevos individuos independiente, solamente muy cerca de un individuo establecido anteriormente. La dificultad de muestrear con confianza los individuos en su ambiente es un reto en la interpretación de los datos de plantas perennes.
@@ -208,7 +198,6 @@ Una de las hipótesis de Tamm es que hay senescencia en las orquídeas. En otra 
 
 ```{r OCTamm_5, echo=FALSE, out.width= "65%", out.extra='style="float:right; padding:10px"', fig.cap="Supervivencia de Dactylorhiza sambucina"}
 #| error: true
-
 
 knitr::include_graphics("images/Tamm_D_sambucina_1945_1970_crop.jpeg")
 ```
@@ -243,7 +232,6 @@ Estos datos están limitado a la especie de *Dactylorhiza incarnata* y se tiene 
 ```{r OCTamm_7}
 #| error: true
 
-
 Tamm_1972_column <- read_excel("data/Tamm_1972.xlsx", 
     sheet = "D_incarnata_by_column")
 
@@ -263,7 +251,6 @@ Dacty_apriori=matrix(c(0.637, 0.571, 0.740,
               byrow=TRUE) # la última fila es la proporción de individuos en esta etapa que fallece. 
 
 Dacty_apriori
-
 
 ```
 
@@ -346,7 +333,6 @@ TF2
 ```{r OCTamm_11, echo=FALSE, message=FALSE, warning=FALSE}
 #| error: true
 
-
 matA=TF2$Tmat+TF2$Fmat
 
 etapas <- c("Vegetativo", "Florecido", "Latente")
@@ -388,7 +374,6 @@ digraph {
   )
 ) 
 
-
 ```
 
 ------------------------------------------------------------------------
@@ -420,7 +405,6 @@ Como es esperado, la población de *Dactylorhiza incarnata* disminuye en el tiem
 
 popbio::lambda(TF3)
 
-
 ```
 
 ## Simulando el crecimiento poblacional
@@ -433,8 +417,6 @@ Las matrices alpha2 y beta2, representan los parámetros de la distribución gam
 
 ```{r OCTamm_14, eval=TRUE}
 #| error: true
-
-
 
 alpha2 <- matrix(c(NA_real_, 1e-5,     NA_real_,
                    NA_real_, NA_real_, NA_real_,
@@ -516,18 +498,4 @@ Dacty_0.1_summary <- dplyr::summarize(
 gt(signif(Dacty_0.1_summary, digits = 3))
 
 ```
-
-::: hidden-note
-Revisión RLT: Oct 7, 2024
-
-Revisión RLT: Oct 8, 2024
-
-Revisión RLT: Oct 30, 2024
-
-Revisión RLT: el 26 de Noviembre, 2024
-
-Revisión RLT: el 18 de enero, 2025
-
-Revisión Joel Tupac: el 5 de junio, 2025
-:::
 

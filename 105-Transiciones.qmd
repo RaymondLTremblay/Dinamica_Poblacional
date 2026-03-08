@@ -2,13 +2,11 @@
 
 Por: Aucencia Emeterio-Lara, Ernesto Mujíca, Elaine González y Raymond L. Tremblay
 
-
 Las transiciones describen los cambios individuales entre estados
 demográficos —como supervivencia, crecimiento y regresión— que conectan
 el ciclo de vida con la dinámica poblacional. Este capítulo introduce el
 concepto de transiciones como los procesos fundamentales que determinan
 la estructura y evolución de una población a lo largo del tiempo.
-
 
 ## Transiciones demográficas y construcción del ciclo de vida poblacional
 
@@ -36,7 +34,6 @@ proyecciones poblacionales y modelos bayesianos, ya que cualquier cambio en
 estas métricas surge directamente de modificaciones en las transiciones
 subyacentes.
 
-
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r Trans1, message=FALSE}
@@ -46,7 +43,6 @@ library(gt)
 library(popbio)
 library(Rcompadre)
 library(DiagrammeR)
-
 
 ```
 
@@ -104,7 +100,6 @@ La suma de estas proporciones debe ser igual a 1 (o muy cercana, considerando re
 ```{r Trans2}
 #| error: true
 
-
 a=1/7
 b=2/7
 c=3/7
@@ -143,7 +138,6 @@ Aquí la lista completa de las transiciones a todas las etapas posibles.
 
 ```{r Trans3, message=FALSE, echo=FALSE}
 #| error: true
-
 
 Orchis_ficticia=tribble(~Num_ind, ~anio_1, ~anio_2, ~transición, 
                         1,  "plantas_pequeñas", "Muerto", 0.1428,
@@ -287,7 +281,6 @@ Orchis_ficticia_por_ind=tribble(~Num_ind, ~anio_1, ~anio_2, ~fertilidad,
                         )
 gt(Orchis_ficticia_por_ind) 
 
-
 ```
 
 A continuación, mostramos cómo cambiar los nombres de las columnas a **stage** y **fate**, y luego visualizar los primeros seis individuos de la tabla de datos:
@@ -318,16 +311,13 @@ projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=TRUE)
 ```{r Trans7}
 #| error: true
 
-
 Orchis_ficticia_df = as.data.frame(Orchis_ficticia_por_ind) # Nota que es importante convertir la tabla de datos a un data frame si es en formato de tibble.
 
 stages = c("plantas_pequeñas", "juvenil", "adulto") # Las etapas del modelo en el primer muestreo
 
-
 fate = c("plantas_pequeñas", "juvenil", "adulto", "Muerto") # Las etapas del modelo en el segundo periodo de muestreo
 
 projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=TRUE)
-
 
 ```
 
@@ -347,7 +337,6 @@ $$matA= \text{matT} + \text{matF}$$ donde:
 
 projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=FALSE)
 
-
 ```
 
 ------------------------------------------------------------------------
@@ -366,7 +355,6 @@ El primer paso consiste en descargar los datos desde la base de datos COMPADRE u
 #| error: true
 
 compadre <- readRDS("data/COMPADRE_2026.rds") # Usar este código para bajar los datos del repositorio de COMPADRE. Tiene que haber activado la librería de Rcompadre.
-
 
 ```
 
@@ -388,7 +376,6 @@ NOTA que se podría haber filtrado parte la **MatrixID** solamente si uno conoce
 ```{r Trans11}
 #| error: true
 
-
 Cyp_cal_matC = compadre %>%
   select(MatrixID, SpeciesAccepted, mat, Authors, DOI_ISBN, MatrixDimension) %>%
   filter(
@@ -409,7 +396,6 @@ Las matriz de transiciones de *Cypripedium calceolus* tiene una matriz de transi
 
 ```{r Trans12}
 #| error: true
-
 
 matA <- matA(Cyp_cal_matC) # extraer la matriz a partir de la base de datos de COMPADRE
 matcc=as.matrix(as.data.frame(matA)) # convertir la matriz a un data frame y luego a un objeto en forma de matriz 
@@ -436,8 +422,6 @@ Ahora vemos el ciclo de vida de *Cypripedium calceolus* en este estudio donde la
 
 ```{r Trans14}
 #| error: true
-
-
 
 #etapas <- c("A1", "A2", "A3", "A4", "A5", "A6")
 etapas <- c("Dormant", "Smallest", "Small", "Intermediate", "Large", "Extra Large") # Etapas del articulo
@@ -498,11 +482,3 @@ En el capítulo **Impacto de datos sin sentido biológico** se analizan los prob
 
 Los autores recomiendan utilizar el **método bayesiano** para el análisis de matrices de transición en la mayoría de los casos, excepto cuando el tamaño de muestra es muy grande y ninguna transición es rara. El método bayesiano es un enfoque estadístico que permite incorporar información previa y ajustar los modelos a los datos observados. Este enfoque es especialmente útil cuando se trabaja con datos escasos o transiciones poco frecuentes. Aunque su implementación puede ser más compleja, ofrece mayor flexibilidad y robustez, además de estimar la confianza en los valores de transición y fecundidad.
 
-::: {.hidden-note}
-Revisión:
-
--   RLT: Apr 19, 2025
--   Demetria:
--   RLT: May 26, 2025
--   RLT: June 25, 2025
-:::

@@ -47,7 +47,6 @@ rlt_theme <- theme(
 
 diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
 
-
 # --- 2. Combine them into a list object ---
 # This list can be added to the plot with a single '+'
 rlt_style_fill <- function() {
@@ -56,7 +55,6 @@ rlt_style_fill <- function() {
     scale_fill_manual(values = diverging)
   )
 }
-
 
 rlt_style_colour <- function() { #este es mi codigo personal de color
   list(
@@ -102,7 +100,6 @@ Tomando como ejemplo la matriz de elasticidad de *Erycina crista-galli* una orqu
 #| error: true
 
 etapas <- c ("plántula", "juvenil", "adulto1", "adulto2")
-
 
 ec <- matrix (c(0, 0, 0.004, 0.062,
                 0.195, 0, 0, 0, 
@@ -179,7 +176,6 @@ ec_df = as.data.frame(elas(ec)) |> round(3)
 
 # Sumar las elasticidades por procesos (crecimiento, permanencia y fecundidad)
 ec_df
-
 
 ec_df %>%
   gt() %>%
@@ -262,8 +258,6 @@ ec_df %>%
     )
   )
 
-
-
 ```
 
 ------------------------------------------------------------------------
@@ -344,7 +338,6 @@ EE$s = factor(
   levels = c("Fecundidad", "Estasis", "Crecimiento")
 )
 
-
 ggplot(EE, aes(x = s, y = Elasticidad, fill = Especie)) +
   geom_bar(stat = "identity", position = "dodge", color = "white") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
@@ -358,15 +351,12 @@ ggplot(EE, aes(x = s, y = Elasticidad, fill = Especie)) +
   )+
   rlt_style_fill()
 
-
-
 ```
 
 En la siguiente figura se observa la elasticidad agrupado por plántulas, individuos no reproductivos y reproductivos. Se observa que los valores de elasticidad son más altos en los s de no reproductivo en tres especies y reproductivos (adultos activos) en dos especies. Las plántulas tienen las elasticidad más pequeñas en todas las especies.
 
 ```{r Elas8, message=FALSE}
 #| error: true
-
 
 EE1 = Elasticidad_s %>%
   select(Especie, Plántulas, No_reproductivos, Reproductivos) %>%
@@ -380,7 +370,6 @@ EE1$s2 = factor(
   EE1$s,
   levels = c("Plántulas", "No_reproductivos", "Reproductivos")
 )
-
 
 ggplot(EE1, aes(x = s2, y = Elasticidad, fill = Especie)) +
   geom_bar(stat = "identity", position = "dodge", color = "white") +
@@ -444,7 +433,6 @@ Introducir los valores iniciales por estadío (vector N): Cuantos individuos hay
 ```{r Elas9b, message=FALSE, warning=FALSE}
 #| error: true
 
-
 N0_ec <- matrix(c(41, 50, 246, 226), ncol = 1)
 
 N0_ec
@@ -458,17 +446,9 @@ Para calcular los autovalores y autovectores de la matriz se usa la función `ei
 ```{r Elas10}
 #| error: true
 
-
 eigen.analysis(ec, zero = FALSE) # la función es del paquete popbio
 ```
 
 El análisis de elasticidad puede extenderse naturalmente dentro de un marco bayesiano mediante modelos de proyección poblacional Bayesian PPM, lo que permite evaluar la importancia de las transiciones considerando explícitamente la incertidumbre paramétrica.
 
-::: hidden-note
-Revisión:
-
--   Demetria : Mayo 2025
--   RLT: Mayo 2025
--   RLT: Octubre 2025
-:::
 ::::
