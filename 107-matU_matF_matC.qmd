@@ -15,6 +15,7 @@ La descomposición en U, F y C constituye un paso intermedio clave entre la defi
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r matA, message=FALSE, warning=FALSE}
+#| error: true
 
 library(DiagrammeR)
 library(Rage)
@@ -54,6 +55,7 @@ Recuerde que los individuos incluidos en un mismo estadio deben tener **probabil
 En cambio, los adultos **sí pueden regresar a la etapa juvenil** (al menos como individuos no reproductivos), posiblemente como consecuencia de **daño por herbivoría**, que reduce su tamaño.
 
 ```{r matA1}
+#| error: true
 
 matU <- rbind(
   c(0.1, 0.0, 0.0),
@@ -84,6 +86,7 @@ Los resultados mostraron una gran diferencia en la producción de plántulas:
 -   r2: 0.121.
 
 ```{r matA2}
+#| error: true
 
 matF <- rbind(
   c(0.0, 0.007, 0.121),
@@ -136,6 +139,7 @@ A continuación, se muestra un ejemplo de matriz de clonación. En la base de da
 ### Descargar la base de datos de COMPADRE
 
 ```{r mat4, message=FALSE}
+#| error: true
 
 compadre <- readRDS("data/COMPADRE_2026.rds")
 
@@ -150,6 +154,7 @@ En el siguiente script se calcula la suma de todos los valores de la matriz de c
 Del análisis se observa que 8,304 especies no tienen información registrada en **matC**. Por otro lado, una población cuya suma en matC sea superior a cero (por ejemplo, ≥ 0.001) se clasifica como una especie con clonación.
 
 ```{r mat5}
+#| error: true
 
 #Encontrar MPP con matC clonaje no cero
 compadre$clonality <- 0
@@ -182,6 +187,7 @@ Es fundamental aplicar controles de calidad a la base de datos, por ejemplo, par
 En el capítulo COMPADRE y las orquídeas se utiliza esta base de datos y se describen diversas estrategias para limpieza y selección de matrices con características específicas, garantizando que los análisis se realicen sobre datos completos y confiables.
 
 ```{r mat6}
+#| error: true
 
 compadre_flagged <- cdb_flag(compadre, checks = "check_NA_A") # Evaluar que la matA no es nula (no suma a zero)
 ```
@@ -193,6 +199,7 @@ compadre_flagged <- cdb_flag(compadre, checks = "check_NA_A") # Evaluar que la m
 Ahora filtrar para orquídeas solamente y para aquellos con **matC** no nulo (clonality \>0). Se observa que solamente dos poblaciones tienen información de clonación.
 
 ```{r mat7}
+#| error: true
 
 orchid_clonal <- compadre_flagged %>%
   filter(Family == "Orchidaceae") %>% # filtrar para orquídeas
@@ -211,6 +218,7 @@ unique(orchid_clonal$SpeciesAuthor) # hay dos poblaciones solamente en toda la b
 Seleccionamos solamente un ejemplo la Matriz de *Cypripedium calceolus*, #24262 [@garcia2010living], que es la matriz promedio de la tercera población (SpeciesAuthor == Cypripedium_calceolus_3).
 
 ```{r mat8}
+#| error: true
 
 Cyp_cal_2 <- orchid_clonal %>%
   filter(MatrixID == 242624)
@@ -225,6 +233,7 @@ Cyp_cal_2 <- orchid_clonal %>%
 En esta código, se evaluá todas las orquídeas donde tiene una matriz de clonaje y se filtra para la que tiene la suma de matC máxima. En este caso, es la misma población que se seleccionó en el script anterior.
 
 ```{r mat9}
+#| error: true
 
 for (i in 1:dim(orchid_clonal)[1]) {
   orchid_clonal$clonality[i] <- sum(orchid_clonal$mat[[i]]@matC) # suma de todos los valores de la matriz de clonación
@@ -244,6 +253,7 @@ Orchid_clonal_max
 Seleccionamos como ejemplo la matriz correspondiente a *Cypripedium calceolus* (ID #242624) [@garcia2010living]. Este estudio tuvo como objetivo evaluar la hipótesis del modelo central-marginal, que plantea que las poblaciones situadas en los márgenes de su distribución son más susceptibles que aquellas ubicadas en el centro. La especie fue modelado basado en 6 etapas, "muy pequeñas", "pequeñas", "intermedias", "grandes", "muy grandes" y "extra grandes" en adición de una etapa de "latencia". García et al. [@garcia2010living] señalan que en *Cypripedium calceolus* es difícil diferenciar entre reclutamiento sexual y asexual, y que la percepción de reclutamiento asexual probablemente sea mucho más común que la sexual [@garcia2010living; @kull1995genet].
 
 ```{r mat10}
+#| error: true
 
 Cyp_cal_2 <- orchid_clonal %>%
   filter(MatrixID == 242624)
@@ -259,6 +269,7 @@ Cyp_cal_2
 Aquí visualizamos las etapas del ciclo de vida de *Cypripedium calceolus* y la matriz de transición, fecundidad y clonación.
 
 ```{r mat11}
+#| error: true
 
 Cyp_cal_2$mat[[1]] #[[1]] ver las etapas del ciclo de vida de esta población con las tres matrices
 ```
@@ -270,6 +281,7 @@ Cyp_cal_2$mat[[1]] #[[1]] ver las etapas del ciclo de vida de esta población co
 Podemos visualizar las transiciones de las diferentes etapas por clonación. Usa la función `plot_life_cycle` de la librería **Rage** para visualizar el ciclo de vida. En este caso, las etapas son "Dormant", "Smallest", "Small", "Inter", "Large", "ExtraLarge" y la matriz de clonación es la **matC**. Si se reemplaza la matriz de clonación por la matriz **matA** se puede ver el ciclo de vida con todas las transiciones, fecundidad y clonación.
 
 ```{r mat13}
+#| error: true
 
 #remotes::install_github("jonesor/Rage") # Instalar de Github para la más reciente versión
 library(Rage)
@@ -290,6 +302,7 @@ plot_life_cycle(
 ### Ejemplo de inclusión de matC en otras familias
 
 ```{r mat14, eval=FALSE, echo=FALSE}
+#| error: true
 
 #Buscando MPM con matrix de clonación
 compadre$clonality <- 0
@@ -307,6 +320,7 @@ for (i in 1:dim(compadre)[1]) {
 Ver cual las lista especie tienen incluido la matriz de clonación, **matC**. En esta lista vemos 825 filas, donde esto incluye las poblaciones muestreadas donde matC \> 0. Hay 108 especies únicas donde la **matC** esta incluida en la dinámica de la población.
 
 ```{r mat15}
+#| error: true
 
 Clonal_Species = compadre %>%
   filter(clonality > 0) %>% # filtrar para aquellos con matC no nulo
@@ -323,6 +337,7 @@ head(Clonal_Species) # ver las primeras 6 poblaciones
 Hay 44 familias de plantas donde la **matC** esta incluida en la dinámica.
 
 ```{r mat16}
+#| error: true
 
 # Ver la lista de familias únicas con clonación
 Families = (as.data.frame(sort(unique(Clonal_Species$Family))))
@@ -335,6 +350,7 @@ head(Families) # ver las primeras 6 familias
 ### Clonación en las Bromeliaceae
 
 ```{r mat17}
+#| error: true
 
 Bromeliaceae = Clonal_Species %>%
   filter(Family == "Bromeliaceae") %>% # fpara la familia de bromelias
@@ -349,6 +365,7 @@ Bromeliaceae
 Seleccionamos una especie de bromelia, *Aechmea nudicaulis* [@sampaio2005ramet], que tiene una matriz de clonación. En este caso, la matriz de clonación es la **matC** y la matriz de transición es la **matU**. La matriz de fecundidad no está incluida en este modelo. Visualizamos la matriz de clonación y la matriz de transición. En este caso, la matriz de clonación es la **matC** y la matriz de transición es la **matU**. La matriz de fecundidad no está incluida en este modelo.
 
 ```{r mat18, echoFALSE}
+#| error: true
 
 Aechmea = compadre %>%
   filter(clonality > 0) %>% # filtrar para aquellos con matC no nulo

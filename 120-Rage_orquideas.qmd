@@ -5,6 +5,7 @@ Por: Raymond L. Tremblay
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r Rage1, message=FALSE}
+#| error: true
 
 
 library(Rcompadre) # Paquete para trabajar con la base de datos de COMPADRE y COMADRE
@@ -27,6 +28,7 @@ library(flextable)
 El presente capítulo examina una selección de funciones contenidas en el paquete **Rage**, diseñado para facilitar el análisis de datos provenientes de las bases de datos **COMPADRE** y **COMADRE**. Estos repositorios públicos reúnen información sobre la dinámica poblacional de plantas (**COMPADRE**) y animales (**COMADRE**), estructurada en matrices de transición por estados o edades (MPM). La librería `Rage` ofrece herramientas analíticas que permiten estimar parámetros demográficos clave, tales como la esperanza de vida, la edad de inicio de la reproducción, la entropía poblacional y la tasa de crecimiento, entre otros. A lo largo del capítulo, se ilustran algunas de estas funciones y se demuestra su aplicación en el estudio de la dinámica poblacional de especies de orquídeas.
 
 ```{r Rage2, echo=FALSE}
+#| error: true
 
 
 
@@ -84,6 +86,7 @@ Vea el capítulo anterior
 La obtención de datos directamente desde el sitio web de **COMPADRE** puede realizarse mediante la función `cdb_fetch()`, la cual forma parte del paquete **Rcompadre**. Esta herramienta permite acceder de manera eficiente y automatizada a los datos de dinámica poblacional disponibles en dicho repositorio, facilitando su integración en flujos de trabajo reproducibles dentro del entorno de R.
 
 ```{r Rage4, message=FALSE}
+#| error: true
 
 compadre <- readRDS("data/COMPADRE_2026.rds") # Usar este código para bajar los datos del repositorio de COMPADRE.
 
@@ -97,6 +100,7 @@ compadre <- readRDS("data/COMPADRE_2026.rds") # Usar este código para bajar los
 En este segmento del script, se realiza una simplificación del nombre de la base de datos COMPADRE, asignándole el identificador TodasSp. Aunque el paquete \`Rage recomienda convertir el objeto original de clase list en un objeto de clase CompadreDB mediante la función as_cdb(), en este caso se conserva la estructura original para facilitar el acceso directo a sus componentes. A continuación, se utiliza la función names() para visualizar los nombres de las variables contenidas en la base de datos. Esta operación revela que el conjunto de datos incluye un total de 59 variables, las cuales describen diversos atributos ecológicos y demográficos de las especies registradas.
 
 ```{r Rage5}
+#| error: true
 
 #TodasSp=as_cdb(compadre)  # Un paso critico: Convertir la base de datos anterior COM(P)ADRE (de clase 'list') en la base en un objeto CompadreDB (COMPADRE Database)
 
@@ -114,6 +118,7 @@ names(TodasSp) # La lista de los nombres de las variables en el archivo COMPADRE
 Para filtrar únicamente las especies pertenecientes a la familia Orchidaceae en la base de datos COMPADRE (ahora renombrada como TodasSp), puedes utilizar la función filter() del paquete dplyr. Aquí tienes el código en R con estilo claro y académico:
 
 ```{r Rage7}
+#| error: true
 
 Orquideas = TodasSp %>%
   filter(Family %in% c("Orchidaceae")) # Extraer las orquídeas de la base de datos.
@@ -135,6 +140,7 @@ Luego, se agrupan los datos por especie, año de publicación, tipo de organismo
 Este resumen permite visualizar de forma clara cuántas poblaciones fueron muestreadas por especie, en qué periodo se realizaron los estudios, y qué tipo de orquídea fue analizada, lo que facilita comparaciones entre especies y estudios.
 
 ```{r chap7, warning=FALSE, message=FALSE}
+#| error: true
 
 #names(Orquideas) Los nombres de las variables
 SPECIES_O = Orquideas %>%
@@ -186,6 +192,7 @@ Cúal es la frecuencia de cantidad de poblaciones por especies en la base de dat
 Este gráfico permite observar claramente la concentración de estudios en pocas poblaciones, así como los casos excepcionales con mayor cobertura. Esto puede reflejar diferencias en el diseño de los estudios, disponibilidad de datos o interés ecológico particular en ciertas especies.
 
 ```{r Rage8}
+#| error: true
 
 as.data.frame(table(SPECIES_O$n_populations)) |> 
   ggplot(aes(Var1, Freq))+
@@ -212,6 +219,7 @@ La duración de los estudios en la base de datos de orquídeas de COMPADRE varí
 La siguiente visualización muestra cómo varía la duración de los estudios según el tipo de orquídea, diferenciando entre especies epífitas y terrestres:
 
 ```{r Rage9}
+#| error: true
 
 SPECIES_O$SpeciesAccepted <- fct_reorder(
   SPECIES_O$SpeciesAccepted,
@@ -279,6 +287,7 @@ ggplot(SPECIES_O, aes(SpeciesAccepted, ymin = StudyStart, ymax = StudyEnd, color
 La siguiente figura muestra la duración de los estudios realizados sobre orquídeas epífitas y terrestres. Según los datos extraídos de la base de datos COMPADRE, la mayoría de las investigaciones tuvieron una duración relativamente corta, especialmente en el caso de las especies epífitas. Sin embargo, también se registran estudios que se extendieron por más de 20 años, lo que evidencia un compromiso a largo plazo en algunos casos para entender mejor la dinámica poblacional de estas plantas.
 
 ```{r Rage10, message=FALSE, warning=FALSE, }
+#| error: true
 
 Orquideas = Orquideas %>%
   mutate(StudyDuration = as.numeric(StudyDuration),
@@ -322,6 +331,7 @@ Posteriormente, se utiliza la función summary para obtener una descripción est
 #### Matrices ergódicas e irreductibles
 
 ```{r Rage12c}
+#| error: true
 
 Compadre_flagged <- cdb_flag(Orquideas)
 
@@ -337,6 +347,7 @@ head(cdb_metadata(Mat_erg_irred), n=2) |>
 ```
 
 ```{r Rage13, warning=FALSE, message=FALSE}
+#| error: true
 
 lambdaVals_list <- sapply(matA(Mat_erg_irred), popdemo::eigs, what = "lambda") 
 
@@ -359,6 +370,7 @@ ggplot(lambdaVals, aes(value))+
 Una metodología alternativa para calcular los valores propios dominantes ($\lambda$) de las matrices de transición poblacional consiste en utilizar la función `map_dbl` de la librería purrr. Esta función permite aplicar una operación a cada elemento de una lista, devolviendo un vector numérico de igual longitud. En este contexto, se aplica una función de cálculo de $\lambda$ a cada matriz de transición (matA), obteniendo así un valor de $\lambda$ por matriz. Esta estrategia resulta eficiente para el procesamiento simultáneo de múltiples matrices dentro de un flujo de trabajo reproducible en R.
 
 ```{r Rage23}
+#| error: true
 
 
 ## con el paquete popdemo
@@ -380,6 +392,7 @@ lambdaVals2 <- map_dbl(matA(Mat_erg_irred), ~ popbio::lambda(.x))
 En esta sección se seleccionan las especies clasificadas como epífitas y terrestres, agrupándolas en objetos distintos que contienen todas las poblaciones muestreadas correspondientes. Esta separación permite evaluar comparativamente la variación en las tasas de crecimiento poblacional entre ambos grupos funcionales, facilitando el análisis de patrones ecológicos y demográficos asociados a sus respectivos hábitos de vida.
 
 ```{r, Rage25}
+#| error: true
 
 
 epifitas = Orquideas %>%
@@ -393,6 +406,7 @@ terrestres = Orquideas %>%
 ```
 
 ```{r Rage26}
+#| error: true
 
 
 Compadre_flagged_epif <- cdb_flag(epifitas)
@@ -431,6 +445,7 @@ lambda_terr <- map_dbl(matA(x_terr), ~ popdemo::eigs(.x, what = "lambda"))
 Mediante el uso de la función summary, se analizaron las medidas de tendencia central y dispersión de los valores propios de lambda correspondientes a especies terrestres y epífitas. Los resultados indican que las especies terrestres presentan una mayor dispersión en los valores de lambda en comparación con las especies epífitas. Aunque los promedios difieren ligeramente entre ambos grupos, las medianas resultaron ser similares, lo que sugiere patrones demográficos comparables en términos de centralidad, pero con variabilidad distinta en su comportamiento poblacional.
 
 ```{r Rage27}
+#| error: true
 
 
 
@@ -464,6 +479,7 @@ flextable(combined_df) |>
 Para visualizar los datos en una figura de **ggplot2**, hay que convertir estas filas en un data.frame y añadir una columna con el tipo de habitad, renombrar la columna lambda y unir los dos data.frames en uno solo.
 
 ```{r Rage28}
+#| error: true
 
 df_Lamb_epif = as.data.frame(lambda_epif)
 df_Lamb_terr = as.data.frame(lambda_terr)
@@ -473,6 +489,7 @@ df_Lamb_terr = as.data.frame(lambda_terr)
 Crear una columna con el tipo de hábitat y renombrar la columna lambda
 
 ```{r Rage28b}
+#| error: true
 df_Lamb_epi = df_Lamb_epif %>%
   add_column(Habit_Type = "Epífitas") %>%
   rename(lambda = lambda_epif)
@@ -487,6 +504,7 @@ df_Lamb_terr = df_Lamb_terr %>%
 Unir los dos data.frame en uno solo
 
 ```{r Rage28c}
+#| error: true
 
 ALL_Lambdas = rbind(df_Lamb_epi, df_Lamb_terr) # unir los dos data frame en uno
 ```
@@ -494,6 +512,7 @@ ALL_Lambdas = rbind(df_Lamb_epi, df_Lamb_terr) # unir los dos data frame en uno
 Visualizar el crecimiento poblacional por tipo de hábitat
 
 ```{r Rage29, warning=FALSE, message=FALSE}
+#| error: true
 
 ggplot(ALL_Lambdas, aes(lambda, fill = Habit_Type)) +
   geom_histogram(colour = "white") +
@@ -513,6 +532,7 @@ ggplot(ALL_Lambdas, aes(lambda, fill = Habit_Type)) +
 Para evaluar si existen diferencias significativas en los valores propios de lambda entre especies epífitas y terrestres, se emplea un modelo lineal utilizando la función `lm`. En este análisis, la variable **Habit_Type** se utiliza como predictor del valor propio dominante ($\lambda$), lo que permite estimar el efecto del tipo de hábitat sobre la tasa de crecimiento poblacional. Los resultados del modelo indican que las especies epífitas tienden a presentar valores de lambda más bajos en comparación con las especies terrestres. Para obtener los coeficientes específicos de cada grupo, se ajusta un segundo modelo excluyendo el intercepto mediante la inclusión de `-1` en la fórmula. Esta parametrización permite calcular directamente el promedio de lambda para cada grupo funcional, facilitando la comparación entre ellos.
 
 ```{r Rage30}
+#| error: true
 
 model_lambda = lm(lambda ~ Habit_Type, data = ALL_Lambdas)
 #summary(model_lambda)
@@ -535,6 +555,7 @@ flextable(tidy_results)
 Para representar gráficamente las distribuciones de los coeficientes estimados en el modelo lineal, se emplean las librerías `ggdist` y `distributional`, utilizando la función **stat_halfeye**. Esta función permite visualizar la forma y dispersión de las distribuciones de los parámetros, proporcionando una representación intuitiva de la incertidumbre asociada a cada estimación. Es importante destacar que stat_halfeye requiere especificar explícitamente la distribución de los datos; en este análisis, se asume que los valores propios de lambda ($\lambda$) siguen una distribución normal. La información utilizada para esta visualización proviene del modelo ajustado previamente (model_lambda), lo que permite comparar directamente los coeficientes entre grupos funcionales como epífitas y terrestres.
 
 ```{r Rage31}
+#| error: true
 
 
 model_lambda_epi_terr %>%
@@ -554,6 +575,7 @@ model_lambda_epi_terr %>%
 La gráfica anterior puede ocultar la dispersión de los datos, especialmente cuando hay sesgos. Para abordar esto, se pueden añadir los datos originales a la figura. En este caso, se ha incorporado un símbolo de barra **\|** por cada valor de lambda en la parte inferior de la gráfica. Al observar esta nueva visualización, se nota que la dispersión varía significativamente si se compara la representación basada en el promedio y el error estándar con la distribución real de los datos, representada por los **\|**. Esta figura permite apreciar mejor tanto la dispersión como la distribución de los datos. En comparación con la gráfica anterior, esta ofrece una perspectiva más completa, destacando los valores que se alejan del centro de la distribución.
 
 ```{r Rage32}
+#| error: true
 
 ALL_Lambdas %>%
   expand(Habit_Type) %>%
@@ -595,12 +617,14 @@ En los casos en que no se encontraron coordenadas exactas, pero sí se identific
 Agradezco a Diana Molina Ozuma por su valiosa colaboración en la búsqueda de las coordenadas de los sitios de estudio.
 
 ```{r Rage33}
+#| error: true
 
 Orchid_data_DOI_Diana_3a <- read_excel("data/Orchid_data_DOI_Diana_3a.xlsx")
 
 ```
 
 ```{r Rage34, warning=FALSE, message=FALSE}
+#| error: true
 
 Lat_Long = Orchid_data_DOI_Diana_3a %>%
   select(SpeciesAccepted, Lon, Lat, OrganismType) |>
@@ -616,6 +640,7 @@ Lat_Long = Orchid_data_DOI_Diana_3a %>%
 Para representar la distribución geográfica de las orquídeas registradas en la base de datos `COMPADRE`, se utilizó el paquete **ggplot2**. En esta visualización, se emplea la función **borders**, que incorpora los contornos de los países al mapa. Esta función se basa en el paquete maps, el cual proporciona los datos geográficos necesarios para delinear los límites nacionales, permitiendo contextualizar espacialmente los puntos de muestreo.
 
 ```{r Rage35, message=FALSE, warning=FALSE}
+#| error: true
 
 ggplot2::ggplot(Lat_Long, aes(Lon, Lat, colour = OrganismType)) +
   annotation_borders(database = "world", fill = "grey80", col = NA) +
@@ -637,6 +662,7 @@ El mapa revela una marcada disparidad en los sitios de muestreo entre los dos ti
 Además, el mapa es interactivo y permite hacer zoom para examinar áreas específicas con mayor detalle. Presiona sobre los puntos para obtener información adicional sobre el nombre científico de la especie muestreada en este sitio.
 
 ```{r Rage36}
+#| error: true
 
 
 PointUsePalette <- leaflet::colorFactor(

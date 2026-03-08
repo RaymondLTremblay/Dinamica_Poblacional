@@ -48,6 +48,7 @@ modelos bayesianos de proyección poblacional.
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r sim1, message=FALSE, warning=FALSE}
+#| error: true
 
 library(tidyverse)
 library(ggtext)
@@ -58,6 +59,7 @@ library(ggpubr)
 ```
 
 ```{r}
+#| error: true
 
 rlt_theme <- theme(
   axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
@@ -169,6 +171,7 @@ El primer paso es definir la diferentes matriz, una por cada periodo de tiempo. 
 Los datos provienen de un estudio de la dinámica de una población de *Serapia cordigera* de 1999 al 2012 evaluando el impacto antropogénico sobre la dinámica de la población [@pellegrino2014effects]. En este caso se emplea solamente 6 matrices de transición de la población de *Serapia cordigera* en 1999, tres de estas son poblaciones que tienen impacto antropogénico (A1, A2 y A3) y tres poblaciones naturales, sin impacto antropogénico (N1, N2, N3). Nota que se construye una lista (list()) de matriz de transición, una por cada periodo de tiempo.
 
 ```{r sim2}
+#| error: true
 
 
 Serapia<-list(
@@ -257,6 +260,7 @@ La función `stoch.projection` del paquete `popbio` permite hacer simulaciones d
 La función necesita tres argumentos, la lista de matrices de transición, el tamaño de la población inicial por etapa de la vida y el número de repeticiones. En este caso se usa 1000 repeticiones para tener una buena estimación de la variación en el tamaño de la población esperado por etapa de la vida. La función devuelve una lista con las simulaciones del tamaño de la población esperado por etapa de la vida.
 
 ```{r sim3}
+#| error: true
 
 n <- c(2, 0, 4, 99) # corresponde a la cantidad de individuos por etapa en la publicación del año 2000 del artículo Pellegrino et al. 2014
 names(n) <- c("latente", "plantula", "rosetta", "con flor")
@@ -278,6 +282,7 @@ Para observar cuantos individuos hubiese en el futuro de la población de *Serap
 :::
 
 ```{r sim4}
+#| error: true
 
 Serapia.eq=clean_names(as.data.frame(Serapia.eq)) # convertir la lista de matrices en un data frame y limpiar los nombres de las columnas
 
@@ -298,6 +303,7 @@ Serapia.eq %>%
 En la siguiente figura se suma el total de individuos por simulación es una medida de la cantidad de individuos esperado en el futuro. En el siguiente gráfico se muestra la distribución de la cantidad de individuos esperado en el futuro de la población de *Serapia cordigera* si la especie se comporta como las matrices de transiciones arriba y seleccionado al azar por la misma probabilidades. Se observa que la mayoría de las simulaciones tienen menos de 10 individuos en el futuro.
 
 ```{r sim5}
+#| error: true
 
 Serapia_eq_T=Serapia.eq %>% 
   mutate(total=rowSums(across(where(is.numeric)))) # sumar la cantidad de individuos en una columna
@@ -319,6 +325,7 @@ Serapia_eq_T=Serapia.eq %>%
 La probabilidad de selección de las matrices de transición no tiene que ser igual. En el siguiente script se muestra como hacer simulaciones con diferente probabilidad de selección de las matrices de transición. En este caso se asume que hay las 3 poblaciones afectada de forma antropogénicas y que estas son más común (poblaciones afectada antropogenicamente) que las poblaciones naturales. Las 3 poblaciones naturales son poblaciones raras y poco común. En la sección del script vemos que ahora las poblaciones afectada de forma antropogénicas son seleccionadas con una probabilidad de 0.85 (.30 + .30 + .25) y las poblaciones naturales con una probabilidad de 0.15. En otra palabra las poblaciones naturales son muy raras, y la especies es dominada por sitio donde la especies es afectada de forma antropogénicas. **Importante este es una simulación y no refleja la realidad de la especies ni la publicación**.
 
 ```{r sim6}
+#| error: true
 
 n <- c(2, 0, 4, 99) # población inicial por etapa
 names(n) <- c("latente", "plantula", "rosetta", "con flor")
@@ -334,6 +341,7 @@ head(Serapia.uneq) # vemos las primeras 6 simulaciones de tamaño de muestra
 Ahora vamos a solapar las dos distribuciones (la de selección por igual y por poblaciones mayormente impactado por humanos) para ver si hay una diferencia en la distribución de tamaño de muestra entre las dos simulaciones. Los resultados de la simulaciones siguiere que las poblaciones dominado antropogénicas (rojo) tienen una mayor cantidad de individuos en el futuro si las poblaciones tienen igual de probabilidades (aquamarine).
 
 ```{r sim7}
+#| error: true
 
 Serapia.uneq=clean_names(as.data.frame(Serapia.uneq))
 
@@ -373,6 +381,7 @@ Simulaciones por selección de matriz con igual probabilidad
 -   el crecimiento es negativo y los intervalos de confianza también, dando confianza que la especies esta en declive.
 
 ```{r sim8}
+#| error: true
 
 SGR_eq=stoch.growth.rate(Serapia, maxt=50, verbose=TRUE) # matrices seleccionado con igual probabilidad
 SGR_eq
@@ -385,6 +394,7 @@ SGR_eq
 -   el crecimiento es negativo y los intervalos de confianza solapa el cero, sugiere que hay variación en el crecimiento poblacional de la especies y que no hay evidencia que la especie esta en declive ni aumentando (es estable). La interpretaciones aquí es que si la especie es dominada por poblaciones con impacto antropogénico tienen un crecimiento poblacional no negativo.
 
 ```{r sim9}
+#| error: true
 
 SGR_uneq=stoch.growth.rate(Serapia, maxt=50, prob=c(.3, .3, .25, .05, .05, .05), verbose=FALSE) # matrices seleccionado con diferente probabilidades
 
@@ -399,6 +409,7 @@ Para convertir el log(crecimiento poblacional estocástica) a lambda se usa la s
 Lambda Igual de probabilidades
 
 ```{r sim10}
+#| error: true
 
 
 exp(SGR_uneq$sim) # matrices seleccionado con igual probabilidad
@@ -415,6 +426,7 @@ Los análisis anteriores no separan las matrices de transición por el impacto a
 -   Separamos las matrices de transición en dos grupos, uno para las poblaciones afectada de forma antropogénicas y otro para las poblaciones naturales.
 
 ```{r sim11}
+#| error: true
 
 Serapia_A = Serapia[1:3] # poblaciones afectada de forma antropogénicas
 
@@ -425,6 +437,7 @@ Serapia_N=  Serapia[4:6] # poblaciones naturales
 Asumimos una probabilidad igual de selección por cada simulaciones en ambos escenarios
 
 ```{r sim12}
+#| error: true
 
 n <- c(2, 0, 4, 99) # corresponde a los datos de la especies en la publicación del año 2000
 names(n) <- c("latente", "plantula", "rosetta", "con flor")
@@ -436,6 +449,7 @@ Serapia.eq_N   <- stoch.projection(Serapia_N, n, nreps=1000)
 Convertir las simulaciones de las matrices de transición en un data frame y limpiar los nombres de las columnas. Luego sumar el total de individuos por simulación para cada etapa de la vida. Esto es necesario para poder visualizar el tamaño poblacional esperado por etapa de la vida. El resultado del análisis es que las poblaciones afectada de forma antropogénicas tienen un estimado de tamaño de poblacional más grande que las poblaciones naturales.
 
 ```{r sim13}
+#| error: true
 
 
 Serapia.eq_A=clean_names(as.data.frame(Serapia.eq_A)) # limpiar los nombres de las columnas y convertir en un data frame
@@ -452,6 +466,7 @@ Serapia_eq_N=Serapia.eq_N %>%
 Visualizar el tamaño de poblacional esperado por etapa de la vida para las poblaciones afectada de forma antropogénicas y naturales. Se observa que las poblaciones afectada de forma antropogénicas tienen un tamaño de poblacional más grande que las poblaciones naturales. la poblaciones con efecto antropogénico tienen a ser de mayor cantidad.
 
 ```{r}
+#| error: true
 diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
 ggplot(Serapia_eq_N, aes(total))+
   geom_histogram(fill= "#009392", color="white",bins=30,  alpha=.5)+
@@ -476,6 +491,7 @@ El objetivo de evaluar la variación en tiempo es para determinar si los efectos
 El primer paso en entrar los datos en una lista de matrices de transición.
 
 ```{r sim14}
+#| error: true
 
 Serapia_tiempo<-list(
   A1_1999=matrix(c(
@@ -642,6 +658,7 @@ A1_2011=matrix(c(
 El análisis evalúa la variación temporal en el crecimiento poblacional de la especies de *Serapia cordigera* en 1999 a 2012. Usando la función *stoch.projection* se observa la variación en cantidad de individuos por etapa.
 
 ```{r sim15}
+#| error: true
 
 n <- c(2, 0, 4, 99) # población inicial por etapa
 names(n) <- c("latente", "plantula", "rosetta", "con flor")
@@ -658,6 +675,7 @@ Se observa que el crecimiento poblacional es cerca de cero en la mayoría de las
 Nota que se puede cambiar la probabilidades de selección de las matrices de transición, en este caso se asume que hay igual cantidad de poblaciones afectada de forma antropogénicas y naturales. Pero considera por ejemplo que hay eventos abióticos como temperatura o lluvia fuera de lo común en un año, entonces se puede cambiar la probabilidad de selección de las matrices de transición para evaluar el efecto de estos eventos de cambio climatológico en el crecimiento poblacional de la especies. Si por ejemplo en el área donde este estas especies hay predicción que un factor abiótico, por ejemplo reducción en lluvia (aumento en sequía) en las próximas décadas se pudiese cambiar la probabilidad de selección para de las matrices que son en periodos de sequía y que sean seleccionado más frecuentemente en la simulaciones. El objetivo es de simular los efectos de cambio en tiempo sobre el crecimiento poblacional de la especies basado en un patrón esperado de factores abióticos o bióticos.
 
 ```{r sim16}
+#| error: true
 
 SGR_Temp_eq=stoch.growth.rate(Serapia_tiempo, maxt=50) # matrices seleccionado con igual probabilidad por 50 años
 SGR_Temp_eq
@@ -678,6 +696,7 @@ Comparar la variación temporal en el crecimiento poblacional de la especies de 
 Lo que se observa es que la variación temporal y la variación espacial es más o menos igual (el rango de variación, diff), pero que hay menos variación temporal que espacial. Por lo menos para los datos seleccionado de [@pellegrino2014effects] la variación temporal no es tan grande como la variación espacial y solapa el lambda de 1, al contrario la variación espacial no solapa el lambda de 1 (ambos CI son menores de 1, sugiriendo una reducción posible de las poblaciones). Note que no usamos todos los datos de Pellegrino [@pellegrino2014effects] pero un sub-grupo y por consecuencia el análisis es sesgado.
 
 ```{r sim17}
+#| error: true
 
 
 Tabla_resultado=tribble(
@@ -697,6 +716,7 @@ Observación de la variación temporal y espacial en el crecimiento poblacional 
 Se nota que el crecimiento poblacional intrínsico de la especies de *Serapia cordigera* es negativo en la mayoría de las simulaciones cuando se evalúa múltiple poblaciones, pero la población **A1** en general tiene un crecimiento positivo o es estable cuando se evalúa tomando en cuanta la variación temporal. La linea horizontal representa el crecimiento poblacional de 1, si el crecimiento poblacional es mayor de 1 la población crece, si es menor de 1 la población decrece. En el análisis temporal vemos que el intervalo de confianza solapa el 1, sugiere que no hay evidencia que el crecimiento poblacional es diferente de estable.
 
 ```{r sim18}
+#| error: true
  
   ggplot(Tabla_resultado, aes(x=tipo, y=lambda, color=tipo))+
   geom_point(stat="identity", colour="black")+
@@ -733,6 +753,7 @@ La otra ventaja de usar la función Dirichlet es que se basa en la distribución
 Se seleciona la población A3 de *Serapia cordigera* para hacer el análisis. Esta población es una de las poblaciones afectada de forma antropogénicas, y tiene un tamaño de muestra pequeño, lo que hace que sea interesante para ver el efecto del tamaño de muestra en los parámetros de la matriz de transición.
 
 ```{r sim19}
+#| error: true
 
 
 n <- c(2, 0, 4, 99) # población inicial por etapa
@@ -749,6 +770,7 @@ Serapia_A3   <- splitA(Serapia$A3) # simulación solamente la matriz A3 de la li
 En el siguiente paso vamos a asignar una previa a los datos. Estas previas proviene de Tremblay, no representa la visión de los autores del artículo. Se añade una previa también para la proporción de plantas que fallece en cada etapa (la quita fila). Nota que es importante que la suma de cada columna sea igual a 1. Típicamente uno debería obtener la previa de la literatura o de un especialista en la biología de la especies antes de la recoleccción de datos, pero en este caso no se tiene información previa.
 
 ```{r sim20}
+#| error: true
 
 RLT_Serapia_previa <- matrix(c(0.5, 0.1,   0.4,   0.4,
                                0.2,  0.,    0.0,   0.0,
@@ -779,6 +801,7 @@ En el script vemos los intervalos de confianza de la matriz de transición de *S
 Lo más dramático de ese primer análisis que que los intervalos de credibilidad son bien grandes, casi todos los intervalos de credibilidad **lcl** y **ucl** de muy cerca de cero a valores muy grande. Esto sugiere que hay mucha incertidumbre en los datos. Este resultado es esperado, porque la muestra es muy pequeña, solamente 2 individuos fueron muestreado en el campo de esta etapa.
 
 ```{r sim22}
+#| error: true
 
 
 TN <- fill_transitions(Serapia_A3, N=n, P = RLT_Serapia_previa, priorweight = .01, returnType = "TN")
@@ -798,6 +821,7 @@ A3df_lat
 Ahora vemos que pasa con la etapa que tenemos más datos, los adultos con flores. En este caso vemos que los intervalos de credibilidad son más pequeños, pero todavía son grandes, ya que el tamaño de muestra es de 99 para esta etapa.
 
 ```{r sim23}
+#| error: true
 
 TN <- fill_transitions(Serapia_A3, N=n, P = RLT_Serapia_previa, priorweight = 0.01, returnType = "TN")
 a <- TN[,4] # cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. 
@@ -817,6 +841,7 @@ A3df
 Como ejercicio, vemos que tipo de intervalos si tuviésemos tamaño de muestra de 500 individuos en la etapa de adulto. Nota que aun que los intervalos de credibilidad son más pequeños, no se debería asumir que no hay variación demográfica en la etapa de adulto, por procesos estocásticos.
 
 ```{r sim24}
+#| error: true
 
 n500 <- c(2, 0, 4, 500) # población inicial por etapa
 TN <- fill_transitions(Serapia_A3, N=n500, P = RLT_Serapia_previa, priorweight = 0.01, returnType = "TN")
@@ -837,6 +862,7 @@ A3df
 Ahora vemos como se distribuye una distribución beta. Usamos los datos de la etapa de adulto con flores con 99 individuos. Se observa que ninguna de la transiciones o estasis tiene una distribución normal. La distribución que demuestra bien este patrón son los adultos con flores que pasan a latente. La linea roja vertical representa el promedio, o sea el valor en la matriz de transición.
 
 ```{r sim25, warning=FALSE}
+#| error: true
 
 
 a # los valores del shape alpha 

@@ -46,6 +46,7 @@ poblacional.
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r, OCTamm_1, eval= TRUE, message=FALSE}
+#| error: true
 
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(janitor, tidyverse, devtools, popbio, knitr, gt)
@@ -135,6 +136,7 @@ Los datos de Tamm fueron compartidos de forma visual usando gráficos. En la fig
 -   línea bifurcada: individuo que se clonan
 
 ```{r OCTamm_2, echo=FALSE, out.width= "50%", out.extra='style="float:right; padding:10px"', fig.cap="Reproducción de Tamm: 1972, Dactylorhiza incarnata, dibujo por Alondra Martinez Martinez"}
+#| error: true
 
 
 knitr::include_graphics("Figures/Tamm_1972_Dactylorhiza_incarnata_2.jpeg")
@@ -153,6 +155,7 @@ Tamm estableció en el campo parcela de 0.5m x 0.5m o de 1.0m x 1.0m y muestreó
 En la siguiente figura se muestra la dinámica de los individuos de *Listera ovata* muestreados por Tamm desde 1944 a 1971 [@tamm1972survival]. En esta figura se puede ver la variabilidad temporal en la reproducción y supervivencia de las plantas, basado en su presencia o ausencia, si eran reproductivas o no, reclutamiento e individuos que se clonan en adición de si las plantas eran latentes. El utilizo un sistema de presentación de la dinámica de los individuos usando una línea por individuo y identificando en que etapa estuviese en cada año. El sitio (plot 48) es bosque mésico con un dosel casi cerrado.
 
 ```{r OCTamm_3, echo=FALSE, out.width= "50%", out.extra='style="float:right; padding:10px"', fig.cap="Dinamica del plot 17: Listera ovata, dibujo por Alondra Martinez Martinez"}
+#| error: true
 
 
 knitr::include_graphics("Figures/Tamm_1972_plot_48.jpeg")
@@ -163,6 +166,7 @@ knitr::include_graphics("Figures/Tamm_1972_plot_48.jpeg")
 En la publicación de 1972 [@tamm1972survival], Tamm describe la dinámica de múltiples especies de orquídeas, y algunas especies en múltiples sitios.
 
 ```{r OCTamm_4, echo=FALSE, message=FALSE}
+#| error: true
 
 
  Tamm=tribble(~Especies, ~"Núm de la Población", ~"Año del primer muestreo", ~"Año del último muestreo",
@@ -203,6 +207,7 @@ En *Orchis macula*, (ahora *Dactylorhiza maculata*) Tamm observa claramente que 
 Una de las hipótesis de Tamm es que hay senescencia en las orquídeas. En otra palabra la probabilidad de sobrevivir disminuye con la edad. Él evaluá el patrón de supervivencia en cuatro especies, *Dactylorhiza incarnata*, *Dactylorhiza sambucina*, *Listera ovata* y *Orchis mascula*. Él usó figuras de supervivencia para evaluar la probabilidad de sobrevivir de un año a otro en una escala logarítmica. Tamm predijo que si la supervivencia no es ligado a la edad, la probabilidad de supervivencia debería seguir una línea recta de mortandad [@tamm1972survival].
 
 ```{r OCTamm_5, echo=FALSE, out.width= "65%", out.extra='style="float:right; padding:10px"', fig.cap="Supervivencia de Dactylorhiza sambucina"}
+#| error: true
 
 
 knitr::include_graphics("Figures/Tamm_D_sambucina_1945_1970_crop.jpeg")
@@ -223,6 +228,7 @@ Primero se estará digitalizando los datos, seguido de construcción de matriz y
 Para instalar **raretrans** remover el **\#** antes de correr el script para tener acceso a los códigos de **raretrans**. Este paquete no está disponible en CRAN, pero se puede instalar desde GitHub.
 
 ```{r OCTamm_6, evalFALSE, messae=FALSE, warning=FALSE}
+#| error: true
 
 #devtools::install_github("atyre2/raretrans", build = TRUE, build_opts = c("--no-resave-data", "--no-manual")) # Instalar el paquete 'raretrans' desde GitHub
 
@@ -235,6 +241,7 @@ Se puede tener acceso a los datos de Tamm en el archivo "Tamm_1972.xlsx" en la c
 Estos datos están limitado a la especie de *Dactylorhiza incarnata* y se tiene información de los 35 individuos monitoreado en los años 1944 hasta 1971.
 
 ```{r OCTamm_7}
+#| error: true
 
 
 Tamm_1972_column <- read_excel("data/Tamm_1972.xlsx", 
@@ -246,6 +253,7 @@ Tamm_1972_column %>% head()
 El primer paso es encontrar una matriz de valores *prior* para añadir al modelo de construcción de los parámetros de la matriz. Como no podemos discutir de estos valores con Tamm, usamos valores de la literatura. Hay dos especies de *Dactylorhiza* con matrices en COMPADRE, usando la matriz que más se parece a los datos de los datos de Tamm, se usó como valores **prior** los de *Dacylorhiza lapponica* [@sletvold2010long]. Se modificó la matriz porque podemos solamente determinar si un individuo falleció después de ser latente. Entonces la suma de probabilidades de vegetativo y reproductivo suman a 1.0 y los latentes no suma a 1.0 (la diferencia es los fallecidos).
 
 ```{r OCTamm_8}
+#| error: true
 
 Dacty_apriori=matrix(c(0.637, 0.571, 0.740,
                        0.273, 0.271, 0.049,
@@ -276,6 +284,7 @@ Dacty_apriori
     -   Un individuo fallecido no puede regresar en un estado en el futuro (una condición lógica).
 
 ```{r OCTamm_9}
+#| error: true
 
 Tmat_D <- Tamm_1972_column %>%
   dplyr::select(Year, stage, next_stage, Fertility) %>%
@@ -316,6 +325,7 @@ Para tomar en cuenta la fecundidad, se necesita una matriz de fertilidad. En est
 ## Crear la matriz de fecundidad
 
 ```{r OCTamm_10}
+#| error: true
 
 Fmat <- matrix(0, nrow = 3, ncol = 3) # crear una matriz de ceros.
 Fmat[1, 2] <- 15 / 9 # contar 9 adultos reproductivos en el tiempo t y 15 nuevos individuos en el tiempo t+i en la población. Añadir el valor en la posición correcta de la matriz de fertilidad (nnota es la primera fila, segunda columna).
@@ -334,6 +344,7 @@ TF2
 -   amarillo: individuos que producen nuevos individuos en la población
 
 ```{r OCTamm_11, echo=FALSE, message=FALSE, warning=FALSE}
+#| error: true
 
 
 matA=TF2$Tmat+TF2$Fmat
@@ -391,6 +402,7 @@ Antes de seguir, comparamos la matriz original con los valores de la matriz post
 El valor de 0.01, es que se usa 1% de los valores prior y 99% de los valores del campo. Por consecuencia dominará los valores del campo. Nota que en la matriz posterior se observa valores en parámetros que originalmente eran cero (ejemplo: plantas con flores que se queden con flores, valores que no se observaron del campo). Nota ahora tenemos un valor de 2% de individuos que florecen en un año particular que se quedan con flores en el año siguiente. Eso no fue un valor observado en los datos de campo, pero es un valor que se puede calcular con los datos que tenemos, y es probable que sea realista ya que ocurre en otras especies de orquídeas del mismo género. Nota también que hay una pequeña probabilidad que una planta latente sea fértil en el año siguiente (0.004).
 
 ```{r OCTamm_12, warning=FALSE, message=FALSE}
+#| error: true
 
 TF2$Tmat
 
@@ -404,6 +416,7 @@ El estimado de $\lambda$
 Como es esperado, la población de *Dactylorhiza incarnata* disminuye en el tiempo y el indice de crecimiento es menor que 1.0. El valor de crecimiento intrínsico es de 0.84, que siguiere una disminución de la población de aproximadamente 16% por año. Era de esperar que el crecimiento poblacional sea menor que 1.0, ya que la mayoría de los individuos en la población son vegetativos y que la mayoría de los individuos que florecen en un año particular no florecen en el año siguiente, hay poco reclutamiento y el nivel de mortandad es alta.
 
 ```{r OCTamm_13}
+#| error: true
 
 popbio::lambda(TF3)
 
@@ -419,6 +432,7 @@ Para estimar los intervalos de credibilidad se simula la matriz, tomando en cons
 Las matrices alpha2 y beta2, representan los parámetros de la distribución gamma con media alpha/beta. En este caso se usa valores muy pequeños para los valores alpha y beta, para que la distribución gamma no sea informativa (non-informative priors) y que los valores de lambda sean muy dispersos. En otras palabras no ponemos mucho peso en los valores prior de la fertilidad, y dejamos que los valores del campo dominen los análisis.
 
 ```{r OCTamm_14, eval=TRUE}
+#| error: true
 
 
 
@@ -444,6 +458,7 @@ Ahora unimos todos los valores, para simular el crecimiento poblacional de *Dact
 -   **samples** es la cantidad de simulaciones que queremos generar.
 
 ```{r OCTamm_15, eval=TRUE, echo=TRUE, warning=FALSE, message=FALSE}
+#| error: true
 
 Dacty_0.1 <- sim_transitions(
   TF2,
@@ -460,6 +475,7 @@ Dacty_0.1 <- sim_transitions(
 Se convierte el objeto "Dacty_0.1" en un tibble para poder visualizar la distribución de los lambda que proviene de la simulación.
 
 ```{r OCTamm_16, eval=TRUE, echo=TRUE}
+#| error: true
 
 Dacty_0.1b <- tibble(lposterior = map_dbl(Dacty_0.1, lambda))
 
@@ -470,6 +486,7 @@ Dacty_0.1b <- tibble(lposterior = map_dbl(Dacty_0.1, lambda))
 Se nota claramente que la población de *Dactylorhiza incarnata* muestreado por Tamm desde 1944 a 1971 tiene un crecimiento poblacional menor que 1.0. Nota que esta simulación considera variación demográfica en los datos.
 
 ```{r OCTamm_17, message=FALSE, warning=FALSE}
+#| error: true
 
 ggplot(data = Dacty_0.1b, mapping = aes(x = lposterior)) +
   geom_histogram(binwidth = 0.01, colour = "white") +
@@ -480,6 +497,7 @@ ggplot(data = Dacty_0.1b, mapping = aes(x = lposterior)) +
 Para concluir, la población de *Dactylorhiza incarnata* muestreado por Tamm desde 1944 a 1971 tiene un crecimiento poblacional menor que 1.0 (lambda promedio de 0.84), con un intervalo de confianza de 0.79 a 0.89. Esto indica que la población esta reduciendo en el tiempo por aproximadamente 16%, pero que realmente la reducción pudiese ser entre 21% a 11%. El índice de *pincrease* es el valor de *p* para evaluar si la población esta creciendo o decreciendo. En este caso el valor es \<0.001, lo que indica que la población está decreciendo.
 
 ```{r OCTamm_18, eval=T}
+#| error: true
 
 Dacty_0.1bdf = as.data.frame(Dacty_0.1b)
 Dacty_0.1_summary <- dplyr::summarize(
@@ -493,6 +511,7 @@ Dacty_0.1_summary <- dplyr::summarize(
 ```
 
 ```{r OCTamm_19, eval=T}
+#| error: true
 
 gt(signif(Dacty_0.1_summary, digits = 3))
 

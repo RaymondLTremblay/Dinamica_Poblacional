@@ -11,6 +11,7 @@ La elasticidad describe cuánto cambia la tasa de crecimiento poblacional (λ) a
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r Elas1, message=FALSE, warning=FALSE, comment=FALSE}
+#| error: true
 library(popdemo)
 library(popbio)
 library(ggplot2)
@@ -24,6 +25,7 @@ library(ftExtra)
 ```
 
 ```{r}
+#| error: true
 rlt_theme <- theme(
   axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
   axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
@@ -97,6 +99,7 @@ La diferencia entre sensibilidad y elasticidad es que la sensibilidad mide el im
 Tomando como ejemplo la matriz de elasticidad de *Erycina crista-galli* una orquídea de ramilla [@mondragon2007life], podremos recapitular todo lo previamente dicho (Tabla 1), así, lo **primero** que hay que recalcar es que el valor más alto de elasticidad para esta orquídea corresponde a la permanencia de los individuos adultos 2, es decir que cualquier pequeño cambio en el valor de dicha entrada (en la matriz de transición), tendrá el mayor impacto en el valor de \*\lambda\* al comparar con otras estados de vida; **segundo**, es importante observar que al sumar todas las entradas de la matriz se obtiene un valor de uno. Lo mismo se mantiene cuando se suman todos los valores de elasticidad por o por proceso. Es decir, si sumamos todos los valores de cada columna, tendremos el valor de elasticidad de cada elemento, para este caso el valor más alto lo ostenta el de adultos 2 (0.818), lo que implica que el destino de la población de \*E. crista-galli\* depende mayormente de lo que les pase a los individuos adultos.
 
 ```{r Elas2, message=FALSE, warning=FALSE}
+#| error: true
 
 etapas <- c ("plántula", "juvenil", "adulto1", "adulto2")
 
@@ -113,6 +116,7 @@ ec <- matrix (c(0, 0, 0.004, 0.062,
 ```
 
 ```{r Elas3, echo=FALSE}
+#| error: true
 #elas(ec)
 
 # Convertir la matriz de elasticidad en un data frame
@@ -129,6 +133,7 @@ ec_df = ec_df %>%
 how to add a column with the names of the stages to the script below
 
 ```{r, Elas3b, echo=FALSE, warning = FALSE, message= FALSE}
+#| error: true
 
 ec_df <- ec_df %>%
   mutate(stages = c("plántula", "juvenil", "adulto1", "adulto2", "suma")) %>%  # Add the new column
@@ -165,6 +170,7 @@ La suma de cada grupo:
 -   Fecundidad: 0.058
 
 ```{r Elas4}
+#| error: true
 
 #elas(ec)
 
@@ -291,6 +297,7 @@ Se observa que en los valores de elasticidad están más altos en los procesos d
 <br> <br> <br> <br> <br> <br><br>
 
 ```{r Elas5, echo=FALSE}
+#| error: true
 
 Elasticidad_s =tribble(~Especie, ~Fecundidad, ~Estasis, ~Crecimiento, ~Plántulas, ~No_reproductivos, ~Reproductivos,
                               "*Erycina crista-galli*",  0.035, 0.718, 0.247, 0.0345, 0.0456, 0.9197,
@@ -301,6 +308,7 @@ Elasticidad_s =tribble(~Especie, ~Fecundidad, ~Estasis, ~Crecimiento, ~Plántula
 ```
 
 ```{r Elas6, echo=FALSE}
+#| error: true
 
 Elasticidad_s %>% 
   flextable() %>%
@@ -323,6 +331,7 @@ Elasticidad_s %>%
 <br>
 
 ```{r, Elas7, message=FALSE, echo=TRUE}
+#| error: true
 EE = Elasticidad_s %>%
   select(Especie, Fecundidad, Estasis, Crecimiento) %>%
   pivot_longer(
@@ -357,6 +366,7 @@ ggplot(EE, aes(x = s, y = Elasticidad, fill = Especie)) +
 En la siguiente figura se observa la elasticidad agrupado por plántulas, individuos no reproductivos y reproductivos. Se observa que los valores de elasticidad son más altos en los s de no reproductivo en tres especies y reproductivos (adultos activos) en dos especies. Las plántulas tienen las elasticidad más pequeñas en todas las especies.
 
 ```{r Elas8, message=FALSE}
+#| error: true
 
 
 EE1 = Elasticidad_s %>%
@@ -406,6 +416,7 @@ Una de las limitaciones principales de los análisis de elasticidad tradicional 
 ### Introducir los nombres de los estadíos o categorías de tamaño, según sea su caso
 
 ```{r}
+#| error: true
 
 etapas <- c ("plántula", "juvenil", "adulto1", "adulto2")
 ```
@@ -415,6 +426,7 @@ etapas <- c ("plántula", "juvenil", "adulto1", "adulto2")
 Capturar los datos de la matriz para *Erycina crita-galli* [@mondragon2007life] (tabla 4 del artículo)
 
 ```{r Elas9, message=FALSE, warning=FALSE}
+#| error: true
 
 ec <- matrix (c(0, 0, 0.004, 0.062,
                 0.195, 0, 0, 0, 
@@ -431,6 +443,7 @@ ec
 Introducir los valores iniciales por estadío (vector N): Cuantos individuos hay en cada estadío al inicio del análisis.
 
 ```{r Elas9b, message=FALSE, warning=FALSE}
+#| error: true
 
 
 N0_ec <- matrix(c(41, 50, 246, 226), ncol = 1)
@@ -444,6 +457,7 @@ N0_ec
 Para calcular los autovalores y autovectores de la matriz se usa la función `eigen.analysis` del paquete `popbio`. Se optiene el crecimiento intrinsico **Lambda**, las sensitividad, elasticidad, valor reproductivo y damping ratio. En el capitulo () se presenta la interpretación de los valores reproductivos y el damping ratio.
 
 ```{r Elas10}
+#| error: true
 
 
 eigen.analysis(ec, zero = FALSE) # la función es del paquete popbio

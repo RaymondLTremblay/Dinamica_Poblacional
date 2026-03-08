@@ -1,6 +1,7 @@
 # Largo y Expectativa de Vida
 
 ```{r, LV1, message=FALSE, warning=FALSE}
+#| error: true
 library(Rcompadre) # Paquete para trabajar con la base de datos de COMPADRE y COMADRE
 library(tidyverse) # Paquete para activar multiples paquetes
 library(Rage) # Paquete para calcular métricas demográficas a partir de matrices de proyección
@@ -8,6 +9,7 @@ library(gt) # Paquete para crear tablas bonitas
 ```
 
 ```{r LV2, echo=FALSE}
+#| error: true
 
 
 
@@ -53,6 +55,7 @@ rlt_style_colour <- function() {
 ```
 
 ```{r LV3, message=FALSE, warning=FALSE}
+#| error: true
 
 compadre <- readRDS("data/COMPADRE_2026.rds") # Usar este código para bajar los datos del repositorio de COMPADRE.
 
@@ -75,6 +78,7 @@ Para que las comparaciones entre especies sean válidas, es fundamental que las 
 En este análisis, se construyó un data frame que incluye únicamente las especies que cumplen con los criterios necesarios para ser evaluadas. Tras aplicar los filtros correspondientes, se retuvieron 34 especies de orquídeas aptas para el cálculo de esperanza de vida, 11 especie epífitas y 23 terrestres.
 
 ```{r LV4}
+#| error: true
 index_O_filtrado <- Orquideas %>%
   filter(ProjectionInterval == 1.0) |> # filtrar para matriz de un año solamente
   filter(
@@ -108,6 +112,7 @@ Como resultado, se retuvieron 31 matrices válidas, lo que indica que 3 matrices
 Este paso garantiza una mayor confiabilidad en los cálculos de esperanza de vida y evita errores derivados de datos inconsistentes.
 
 ```{r LV5}
+#| error: true
 
 index_O_filtrado_final <- index_O_filtrado %>%
   filter(sapply(matU, function(mat) {
@@ -147,6 +152,7 @@ Se calculan los intervalos de confianza del 95% para la esperanza de vida: Este 
 Finalmente, se reordena la variable OrganismType según la mediana del largo de vida, facilitando la visualización comparativa entre tipos de organismos.
 
 ```{r LV6}
+#| error: true
 
 lifeExpectancy <- function(matU, startLife) {
   N <- solve(diag(nrow(matU)) - matU)
@@ -166,6 +172,7 @@ index_O_calculado <- index_O_filtrado_final %>%
 ## Creamos una tabla de los resultados y veamos las tres primeras filas
 
 ```{r, LV7}
+#| error: true
 OrchidLS = index_O_calculado %>%
   select(
     mat,
@@ -187,6 +194,7 @@ head(cdb_metadata(OrchidLS), n = 3) |>
 #### Finalmente de visualiza los datos
 
 ```{r LV8}
+#| error: true
 index_O_calculado_subset=index_O_calculado |> 
   select(mat, SpeciesAccepted, OrganismType, life_expectancy, var_life_expectancy, 
          low_CI_var_LS, high_CI_var_LS) |> 
@@ -328,6 +336,7 @@ Posterior a este análisis es importante regresar a cada modelo/especie/poblaci�
 ## Longevidad de vida
 
 ```{r, LV9, eval=FALSE, echo=FALSE}
+#| error: true
 longevity_O <- index_O_filtrado_final %>%
   mutate(
     longevidad1 = mapply(longevity, matU, start = 1, lx_crit = 0.05),
@@ -362,6 +371,7 @@ main.plot
 ```
 
 ```{r, LV10, echo=TRUE, eval=FALSE}
+#| error: true
 
 
 #index_O_calculado <- index_O_filtrado_final %>%
@@ -438,6 +448,7 @@ main.plot_median
 La longevidad es el largo de vida máximo que puede alcanzar un individuo en una población. En este caso se usa la función **longevity** para calcular el tiempo para un cohorte llegue a un 5% de supervivencia. La función **longevity** requiere la matriz de transición **matU** y la etapa de inicio de la vida **start_life**.
 
 ```{r, LV11}
+#| error: true
 # names(index_O_calculado)
 
 index_O_calculado_subset=index_O_calculado |> 
@@ -456,6 +467,7 @@ longevity_O <- index_O_filtrado_final %>%
 ```
 
 ```{r, LV12}
+#| error: true
 #names(longevity_O)
 
 index_O_filtrado_final <- index_O_filtrado %>%
@@ -590,6 +602,7 @@ longevidad_plot
 Estimar el largo de
 
 ```{r LV13, eval=FALSE, echo=FALSE}
+#| error: true
 Orquideas %>%
   filter(ProjectionInterval == 1.0) |> # filtrar para matriz de un año solamente
   filter(
@@ -619,6 +632,7 @@ Orquideas %>%
 Figura del largo de vida promedio y su varianza para las orquídeas terrestres y epifitas.
 
 ```{r LV14, eval=FALSE}
+#| error: true
 
 lifeExpectancy <- function(matU, startLife) {
   N <- solve(diag(nrow(matU)) - matU)
@@ -653,6 +667,7 @@ compadre_life_expect <- Orquideas %>%
 ```
 
 ```{r LV15, eval=FALSE, echo=FALSE}
+#| error: true
 sort(names(New_Data))
 compadre_life_expect <- New_Data %>%
   # Filter based on metadata first to reduce the size of the database
@@ -688,6 +703,7 @@ compadre_life_expect <- New_Data %>%
 ```
 
 ```{r LV16, eval=FALSE, echo=FALSE}
+#| error: true
 
 OrchidLS = compadre_life_expect %>%
   select(
@@ -704,6 +720,7 @@ OrchidLS = compadre_life_expect %>%
 ```
 
 ```{r LV17, eval=FALSE, echo=FALSE}
+#| error: true
 
 New_Data@data %>%
   filter(ProjectionInterval == 1.0) |> # filtrar para matriz de un año
@@ -728,6 +745,7 @@ Visualizar el largo de vida por plantas epifitas versus terrestres. Nota aquí q
 Calculando el promedio y la desviación estándar de la esperanza de vida de las orquídeas.
 
 ```{r LV18, eval=FALSE}
+#| error: true
 index_O_calculado |>
   group_by(OrganismType) |>
   summarize(
@@ -747,6 +765,7 @@ index_O_calculado |>
 Haciendo una figura del largo de vida de las especies epífitas y terrestres. Nota que la escala es logarítmica.
 
 ```{r LV19, eval=FALSE}
+#| error: true
 
 ggplot2::ggplot(
   index_O_calculado,
@@ -772,6 +791,7 @@ En el siguiente script y gráfico vemos la visualización por genero de los esti
 low_CI_var_LS high_CI_var_LS
 
 ```{r LV20, eval=FALSE}
+#| error: true
 
 #SPECIES_O$SpeciesAccepted <- fct_reorder(SPECIES_O$SpeciesAccepted, SPECIES_O$StudyStart, .desc = FALSE) # Ordenar por fecha de inicio del estudio
 
@@ -800,6 +820,7 @@ EWl largo de vida de las Caladenia solamente
 Evaluando el largo de vida de las especies de *Caladenia* solamente
 
 ```{r LV21, ech=FALSE, eval=FALSE}
+#| error: true
 
 #SPECIES_O$SpeciesAccepted <- fct_reorder(SPECIES_O$SpeciesAccepted, SPECIES_O$StudyStart, .desc = FALSE)
 
@@ -829,6 +850,7 @@ index_O_calculado |>
 ```
 
 ```{r LV22, echo=FALSE, eval=FALSE}
+#| error: true
 
 unique(compadre_life_expect$OrganismType) #Test difference in life span.
 
@@ -873,6 +895,7 @@ Para el siguiente análisis se necesita instalar el paquete **WRS2**.
 Y se necesita cargar el archivo de funciones de **Rallfun-v38.txt** que se encuentra en el siguiente enlace \<<https://github.com/rrwilcox/Rallfun>\> y guardarlo en su directorio de trabajo. Pudiese ser que haya versiones más recientes de este archivo. Nota que la dirección abajo funciona para mi computadora, uds tienen que ajustar la dirección del archivo a su directorio de trabajo.
 
 ```{r LV22a, echo=FALSE, eval=FALSE}
+#| error: true
 
 source(
   "/Users/rlt/Library/CloudStorage/Dropbox/GitHub_Dropbox_Drive/GitHub/Diagnostico_Poblacional/Diagnostico_Poblacional/Rallfun-v38.txt",
@@ -884,6 +907,7 @@ source(
 ```
 
 ```{r LV23, eval=FALSE, echo=FALSE}
+#| error: true
 
 unique(compadre_life_expect$OrganismType)
 
@@ -910,6 +934,7 @@ yuenbt(
 ```
 
 ```{r LV24,  echo=FALSE, eval=FALSE}
+#| error: true
 
 data(Compadre)
 
@@ -939,6 +964,7 @@ Compadre$null_stages <- sapply(matA(Compadre), NullStages)
 ### Calcular el promedio y la varianza en la expectativa de vida de un modelo de matriz poblacional
 
 ```{r LV25,  echo=FALSE, eval=FALSE}
+#| error: true
 
 # función para calcular la esperanza de vida
 
@@ -967,6 +993,7 @@ Para que las comparaciones entre especies sean válidas, es fundamental que las 
 En este análisis, se construyó un data frame que incluye únicamente las especies que cumplen con los criterios necesarios para ser evaluadas. Tras aplicar los filtros correspondientes, se retuvieron 34 especies de orquídeas aptas para el cálculo de esperanza de vida.
 
 ```{r LV26}
+#| error: true
 index_O_filtrado <- Orquideas %>%
   filter(ProjectionInterval == 1.0) |> # filtrar para matriz de un año solamente
   filter(
@@ -1000,6 +1027,7 @@ Como resultado, se retuvieron 31 matrices válidas, lo que indica que 3 matrices
 Este paso garantiza una mayor confiabilidad en los cálculos de esperanza de vida y evita errores derivados de datos inconsistentes.
 
 ```{r LV27}
+#| error: true
 
 index_O_filtrado_final <- index_O_filtrado %>%
   filter(sapply(matU, function(mat) {
@@ -1041,6 +1069,7 @@ Se calculan los intervalos de confianza del 95% para la esperanza de vida:
 Finalmente, se reordena la variable OrganismType según la mediana del largo de vida, facilitando la visualización comparativa entre tipos de organismos.
 
 ```{r LV28}
+#| error: true
 
 lifeExpectancy <- function(matU, startLife) {
   N <- solve(diag(nrow(matU)) - matU)
@@ -1060,6 +1089,7 @@ index_O_calculado <- index_O_filtrado_final %>%
 #### Finalmente de visualiza los datos
 
 ```{r LV29}
+#| error: true
 index_O_calculado_subset=index_O_calculado |> 
   select(mat, SpeciesAccepted, OrganismType, life_expectancy, var_life_expectancy, 
          low_CI_var_LS, high_CI_var_LS, OrganismType) |> 
@@ -1193,6 +1223,7 @@ final_plot
 USING Quartiles
 
 ```{r LV30}
+#| error: true
 longevity_O <- index_O_filtrado_final %>%
   mutate(
     longevidad1 = mapply(longevity, matU, start = 1, lx_crit = 0.05),
@@ -1227,6 +1258,7 @@ main.plot
 ```
 
 ```{r, LV31}
+#| error: true
 
 index_O_calculado_median <- index_O_filtrado_final %>%
   mutate(life_expectancy = mapply(lifeExpectancy, matU, start_life)) %>%
@@ -1274,6 +1306,7 @@ main.plot_median
 La longevidad es el largo de vida máximo que puede alcanzar un individuo en una población. En este caso se usa la función **longevity** para calcular el tiempo para un cohorte llegue a un 5% de supervivencia. La función **longevity** requiere la matriz de transición **matU** y la etapa de inicio de la vida **start_life**.
 
 ```{r LV32}
+#| error: true
 # names(index_O_calculado)
 
 index_O_calculado_subset=index_O_calculado |> 
@@ -1292,6 +1325,7 @@ longevity_O <- index_O_filtrado_final %>%
 ```
 
 ```{r LV33}
+#| error: true
 #names(longevity_O)
 
 index_O_filtrado_final <- index_O_filtrado %>%
@@ -1426,6 +1460,7 @@ longevidad_plot
 Estimar el largo de
 
 ```{r LV34, eval=FALSE, echo=FALSE}
+#| error: true
 Orquideas %>%
   filter(ProjectionInterval == 1.0) |> # filtrar para matriz de un año solamente
   filter(
@@ -1455,6 +1490,7 @@ Orquideas %>%
 Figura del largo de vida promedio y su varianza para las orquídeas terrestres y epifitas.
 
 ```{r LV35, eval=FALSE}
+#| error: true
 
 lifeExpectancy <- function(matU, startLife) {
   N <- solve(diag(nrow(matU)) - matU)
@@ -1489,6 +1525,7 @@ compadre_life_expect <- Orquideas %>%
 ```
 
 ```{r LV36, eval=FALSE, echo=FALSE}
+#| error: true
 sort(names(New_Data))
 compadre_life_expect <- New_Data %>%
   # Filter based on metadata first to reduce the size of the database
@@ -1524,6 +1561,7 @@ compadre_life_expect <- New_Data %>%
 ```
 
 ```{r LV37, eval=FALSE, echo=FALSE}
+#| error: true
 
 OrchidLS = compadre_life_expect %>%
   select(
@@ -1540,6 +1578,7 @@ OrchidLS = compadre_life_expect %>%
 ```
 
 ```{r LV38, eval=FALSE, echo=FALSE}
+#| error: true
 
 New_Data@data %>%
   filter(ProjectionInterval == 1.0) |> # filtrar para matriz de un año
@@ -1564,6 +1603,7 @@ Visualizar el largo de vida por plantas epifitas versus terrestres. Nota aquí q
 Calculando el promedio y la desviación estándar de la esperanza de vida de las orquídeas.
 
 ```{r LV39, eval=FALSE}
+#| error: true
 index_O_calculado |>
   group_by(OrganismType) |>
   summarize(
@@ -1583,6 +1623,7 @@ index_O_calculado |>
 Haciendo una figura del largo de vida de las especies epífitas y terrestres. Nota que la escala es logarítmica.
 
 ```{r LV40, eval=FALSE}
+#| error: true
 
 ggplot2::ggplot(
   index_O_calculado,
@@ -1608,6 +1649,7 @@ En el siguiente script y gráfico vemos la visualización por genero de los esti
 low_CI_var_LS high_CI_var_LS
 
 ```{r LV41, eval=FALSE}
+#| error: true
 
 #SPECIES_O$SpeciesAccepted <- fct_reorder(SPECIES_O$SpeciesAccepted, SPECIES_O$StudyStart, .desc = FALSE) # Ordenar por fecha de inicio del estudio
 
@@ -1636,6 +1678,7 @@ EWl largo de vida de las Caladenia solamente
 Evaluando el largo de vida de las especies de *Caladenia* solamente
 
 ```{r LV42, ech=FALSE, eval=FALSE}
+#| error: true
 
 #SPECIES_O$SpeciesAccepted <- fct_reorder(SPECIES_O$SpeciesAccepted, SPECIES_O$StudyStart, .desc = FALSE)
 
@@ -1665,6 +1708,7 @@ index_O_calculado |>
 ```
 
 ```{r LV43, echo=FALSE, eval=FALSE}
+#| error: true
 
 unique(compadre_life_expect$OrganismType) #Test difference in life span.
 
@@ -1679,6 +1723,7 @@ leveneTest(life_expectancy ~ OrganismType, data = compadre_life_expect) # equal 
 ```
 
 ```{r LV44, echo=FALSE, eval=FALSE}
+#| error: true
 
 source(
   "/Users/rlt/Library/CloudStorage/Dropbox/GitHub_Dropbox_Drive/GitHub/Diagnostico_Poblacional/Diagnostico_Poblacional/Rallfun-v38.txt",
@@ -1690,6 +1735,7 @@ source(
 ```
 
 ```{r LV45, eval=FALSE, echo=FALSE}
+#| error: true
 
 unique(compadre_life_expect$OrganismType)
 
@@ -1716,6 +1762,7 @@ yuenbt(
 ```
 
 ```{r LV46,  echo=FALSE, eval=FALSE}
+#| error: true
 
 data(Compadre)
 
@@ -1745,6 +1792,7 @@ Compadre$null_stages <- sapply(matA(Compadre), NullStages)
 ### Calcular el promedio y la varianza en la expectativa de vida de un modelo de matriz poblacional
 
 ```{r LV47,  echo=FALSE, eval=FALSE}
+#| error: true
 
 # función para calcular la esperanza de vida
 

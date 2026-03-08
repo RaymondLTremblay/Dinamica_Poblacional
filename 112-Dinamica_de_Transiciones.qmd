@@ -19,6 +19,7 @@ A continuación se presentan los enfoques utilizados para representar transicion
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r, transA, warning=FALSE, message=FALSE}
+#| error: true
 
 ## Librerías de R requeridas para el análisis
 
@@ -34,6 +35,7 @@ library(gt)
 ```
 
 ```{r, echo=FALSE, message=FALSE}
+#| error: true
 # Mi tema de formato de las gráficas de ggplot2 personal
 
 rlt_theme <- theme(
@@ -133,6 +135,7 @@ En el siguiente recuadro incorporamos la información de *L. rubripetala* en *R*
 <br>
 
 ```{r trans1, message=FALSE}
+#| error: true
 
 #Capturar los datos de la matriz para L. rubripetala (Tremblay et al. 2015)
 Lr1 <- matrix(c(0.4324, 0,      0,     0.15,
@@ -154,6 +157,7 @@ Lr1
 Estructura de la población inicial
 
 ```{r trans2, echo=FALSE}
+#| error: true
 
 #Estructura de estados inicial
 n0 = c(0, 46, 38, 82)
@@ -170,6 +174,7 @@ El crecimiento de la población de tipo asintótico, $λ$ (de ahora en adelante 
 En el siguiente recuadro se calcula $λ_{max}$ para la población 1 de *L. rubripetala*. El resultado indica que la tasa de crecimiento poblacional es de 1.007. Esto implica que si existieran 1000 individuos en la población, a esta tasa la población aumentaría en siete individuos del primer mes ($t_{0}$) al siguiente ($t_{1}$). Este ejemplo sólo permite ilustrar el concepto, ya que las poblaciones de *Lepanthes* nunca serán tan grandes en la naturaleza [@tremblay1997distribution].
 
 ```{r trans3}
+#| error: true
 
 #Análisis asintótico (i.e. largo plazo) del crecimiento poblacional de L. rubripetala
 #La orquídea florece y produice frutos todo el año, por lo que el seguimiento de la población fue mensual. 
@@ -214,6 +219,7 @@ Límite inferior (1,0,0,0), todos los individuos de la población se encuentran 
 En este caso, se observa que la población decrece rápidamente y se estabiliza en un valor cercano a 0.6, lo que indica que el tamaño relativo poblacional es menor que el tamaño poblacional del crecimiento asintótico (1.007) aún después de proyectar su crecimiento a un intervalo de 50 meses. A partir de lo anterior, se sugiere que la población no se recupera y que la estructura de la población no es favorable para el crecimiento poblacional de *L. rubripetala*.
 
 ```{r trans4, warning=FALSE, message=FALSE}
+#| error: true
 
 # DINÁMICA POBLACIONAL ABSOLUTA.    
 
@@ -263,6 +269,7 @@ ggplot(pr1df, aes(time, pr1)) +
 En este escenario, se supone que la población tiene una mayor proporción de individuos en las categorías juvenil y adulto no reproductivo (0.15, 0.35, 0.30, 0.20). En este caso, la población decrece rápidamente en los primeros periodos pero y despues de unos 5 periodos de tiempo la poblacion comienza a crecer y tiene un tamaño población relativo al comienzo despues de ±16 periodos de tiempo. Esto indica que la población se recupera rápidamente y alcanza un tamaño poblacional estable en un periodo relativamente corto.
 
 ```{r trans5, echo = FALSE}
+#| error: true
 
 
 # DINÁMICA POBLACIONAL ABSOLUTA.
@@ -283,6 +290,7 @@ pr2df$time <- seq(1, nrow(pr2df), 1)
 Como la población tiene una estructura estable, la población no tiene un crecimiento diferente a 1, por lo que alcanza un tamaño poblacional estable en un periodo relativamente corto o inmediato. Debido que la población tiene una estructura estable, el tamaño relativo de la población es constante.
 
 ```{r trans6, message=FALSE}
+#| error: true
 
 #Escenario 3. Estructura estable
 # Estructura estable de estados
@@ -321,6 +329,7 @@ ggplot(pr3df, aes(time, pr3)) +
 En este escenario, se supone que la población tiene una mayor proporción de plántulas y una proporción similar en las categorías juvenil, adulto no reproductivo y adulto reproductivo (0.4, 0.2, 0.2, 0.2). En este caso, la población decrece rápidamente en los primeros periodos pero y después de unos ±7 periodos de tiempo la población comienza a crecer y tiene un tamaño población relativo al comienzo después de ±36 periodos de tiempo. Esto indica que la población se recupera rápidamente y alcanza un tamaño poblacional estable en un periodo relativamente corto, si la población comienza con esta estructura demográfica.
 
 ```{r trans7, message=FALSE}
+#| error: true
 # DINÁMICA POBLACIONAL ABSOLUTA.
 
 nLr4 <- c(66, 33, 33, 33)
@@ -339,6 +348,7 @@ pr4df$time <- seq(1, nrow(pr4df), 1)
 En este escenario, se supone que la población tiene una mayor proporción de individuos en la categoría de adulto reproductivo (0,0,0,1). En el escenario 5, la población crece rápidamente en los primeros periodos, sufriendo una reducción después de ±5 meses; no obstante, se reconoce que la población aumenta rápidamente.
 
 ```{r trans8, message=FALSE}
+#| error: true
 
 #Escenario 5. Límite superior
 nLr5 <- c(0, 0, 0, 166)
@@ -371,6 +381,7 @@ ggplot(pr5df, aes(time, pr5)) +
 En el siguiente recuadro se integran en una sola gráfica los resultados de la dinámica absoluta de *L. rubripetala* para los escenarios 1, 3 y 5.
 
 ```{r trans9, echo=FALSE}
+#| error: true
 
 pr1df <- rename(pr1df, Pop = pr1) # renombrar la columna con el nombre de la proyección
 pr1df$Escenario <- "Límite inferior" # añadir una columna con el nombre de la proyección
@@ -393,6 +404,7 @@ Population_density <- bind_rows(pr1df, pr3df, pr5df) # combine the data frames i
 ### Gráfica de la dinámica absoluta
 
 ```{r trans10,  message=FALSE}
+#| error: true
 
 ggplot(Population_density, aes(time, Pop, color = Escenario)) +
   geom_line(size = 1) +
@@ -409,6 +421,7 @@ ggplot(Population_density, aes(time, Pop, color = Escenario)) +
 ------------------------------------------------------------------------
 
 ```{r trans11, echo=FALSE, eval=FALSE}
+#| error: true
 
 ### Segunda alternativa de gráfica de la dinámica absoluta
 
@@ -459,6 +472,7 @@ En el árticulo de Tremblay y colaboradores [@tremblay2015stable], la dinámica 
 En el siguiente recuadro se estima el crecimiento poblacional de *L. rubripetala* sin efecto de la dinámica asintótica para tres escenarios: 1, 3 y 5. En el cálculo de la dinámica de corto plazo se proyecta se usa la matriz de transición de la población 1 de *L. reubripetala* y el correspondiente vector inicial de la población.
 
 ```{r trans12}
+#| error: true
 ## PROYECCIÓN DE LA DINÁMICA DE CORTO PLAZO. 
 
 #Vector de estructura inicial: abundancia por categoría de acuerdo con  el estado
@@ -493,6 +507,7 @@ pr2.5 <- project(
 ```
 
 ```{r, trans13, echo =FALSE, results=FALSE}
+#| error: true
 ## PROYECCIÓN DE LA DINÁMICA DE CORTO PLAZO. 
 
 #Vector de estructura inicial: abundancia por categoría de acuerdo con  el estado 
@@ -524,6 +539,7 @@ pr2.4 <- project(
 La proyección de la dinámica transitoria para los tres escenarios definidos (1, 3, y 5) tiene un comportamiento contrastante, lo cual es evidente en la gráfica del siguiente recuadro. El crecimiento es constante (i.e. lambda =1) cuando se considera la estructura estable de estados. Cuando la estructura poblacional corresponde al Inicio I se determina un decremento en la población en los primeros 5 meses, el cual se mantiene en el tiempo a lo largo de la proyección. Si la población está representada por adultos reproductivos, ésta crece en los primeros cinco meses y este crecimiento se mantiene a lo largo de los 50 meses.
 
 ```{r, echo=FALSE}
+#| error: true
 safe_log_ylim <- function(y, mult_pad = 0.1) {
   y <- y[is.finite(y) & y > 0]
   if (!length(y)) return(c(0.9, 1.1))
@@ -546,6 +562,7 @@ safe_log_ticks <- function(yr, n = 3) {
 
 
 ```{r trans14}
+#| error: true
 # DINÁMICA POBLACIONAL TRANSITORIA ESTANDARIZADA ---------- #
 # Gráfica de la Dinámica transitoria específica de la población  
 
@@ -579,6 +596,7 @@ axis(2, at = safe_log_ticks(yr), labels = signif(safe_log_ticks(yr), 3))
 En el siguiente recuadro se integran en una sola gráfica los resultados de la dinámica poblacional transitoria estandarizada de *L. rubripetala* para los escenarios 1, 3 y 5.
 
 ```{r trans15, echo = FALSE}
+#| error: true
 len <- nrow(pr2.1)
 Population_density <- rbind(
   data.frame(Projection = pr2.1, Escenario = "Límite inferior"),
@@ -608,6 +626,7 @@ trans.plot
 La gráfica a continuación corresponde a los cinco escenarios planteados para la población 1 de *L. rubripetala*, semejante a la figura 2B del artículo de Tremblay y colaboradores [@tremblay2015stable]; aunque cabe señalar que no se integran los índices transitorios, los cuales abordamos a continuación.
 
 ```{r trans16, echo=FALSE, eval=FALSE}
+#| error: true
 
 
 
@@ -663,6 +682,7 @@ Se determinan los *límites de la dinámica transitoria* con el fin de evaluar e
 -   Escenario 1 (límite inferior):
 
 ```{r trans17, message=FALSE, warning=FALSE}
+#| error: true
 
 #Escenario 1 (límite inferior):
 lim.trans <- as.data.frame(matrix(NA, 5, 3))
@@ -686,6 +706,7 @@ lim.trans[1, 3] <- inertia1
 -   Escenario 3 (estructura estable):
 
 ```{r trans18,  message=FALSE, warning=FALSE}
+#| error: true
 
 #Escenario 3 (estructura estable):
 reac3 <- reac(Lr1, vector = nLr3)
@@ -702,6 +723,7 @@ lim.trans[3, 3] <- inertia3
 -   Escenario 5 (límite superior):
 
 ```{r trans19,  message=FALSE, warning=FALSE}
+#| error: true
 
 #Escenario 5. Límite superior
 reac5 <- reac(Lr1, vector = nLr5)
@@ -719,6 +741,7 @@ lim.trans[5, 3] <- inertia5
 #### Crear una tabla de los indices transitorios
 
 ```{r trans20,  results = FALSE, message=FALSE, warning=FALSE}
+#| error: true
 #Escenario 2 (inicio I):
 reac2 <- reac(Lr1, vector = nLr2)
 reac2
@@ -750,6 +773,7 @@ lim.trans[4, 3] <- inertia4
 En la tabla del siguiente recuadro se resumen los valores estimados por escenario.
 
 ```{r trans21, message=FALSE, warning=FALSE}
+#| error: true
 gt(lim.trans)
 
 
@@ -762,6 +786,7 @@ gt(lim.trans)
 En el siguiente recuadro se integran en una sola gráfica los resultados de la dinámica transitoria estandarizada de *L. rubripetala* para los escenarios 1, 3 y 5.
 
 ```{r trans22,   message=FALSE, warning=FALSE}
+#| error: true
 
 len <- nrow(pr2.1)
 Population_density <- rbind(
@@ -822,6 +847,7 @@ trans.plot +
 La gráfica a continuación corresponde a los cinco escenarios planteados para la población 1 de *L. rubripetala*, equivalente a la figura 2B del artículo de Tremblay y colaboradores ([@tremblay2015stable]). Esta permitirá comparar tus resultados y verificar que los escenarios que haz desarrollado estén correctos.
 
 ```{r trans23, eval=FALSE, echo = FALSE, message=FALSE, warning=FALSE}
+#| error: true
 len <- nrow(pr2.1)
 
 
