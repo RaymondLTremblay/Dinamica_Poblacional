@@ -1,57 +1,178 @@
 /*-- scss:defaults --*/
 
-@import 'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible&display=swap';
+// Typography (same as light)
+@import 'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Source+Code+Pro:wght@400;600&display=swap';
 
-$font-family: "Atkinson Hyperlegible", sans-serif;
+$font-family-sans-serif: "Atkinson Hyperlegible", sans-serif;
+$font-family-monospace: "Source Code Pro", monospace;
+$font-size-root: 17px;
+$line-height-base: 1.7;
+
+// Brand colors (dark variants)
+$orchid-teal:       #7AACB0;
+$orchid-teal-light: #2A3F40;
+$orchid-teal-dark:  #9ECDD0;
+$orchid-warm:       #E8B89E;
 
 // Base document colors
-$body-bg: #181818;
-$body-color: white;
-$link-color: #75AADB;
+$body-bg:    #161E1E;
+$body-color: #D8E8E8;
+$link-color: $orchid-teal-dark;
 
-$light: #525252;
+// Headings
+$headings-color:       $orchid-teal-dark;
+$headings-font-weight: 700;
+$headings-line-height: 1.3;
 
-// Navigation element colors
-$footer-bg: #181818;
-$navbar-bg: #303030;
-$sidebar-bg: #303030;
+// Navigation
+$navbar-bg:  #1F2E2E;
+$navbar-fg:  #D8E8E8;
+$sidebar-bg: #1A2626;
+$footer-bg:  #1F2E2E;
 
-// Code blocks
-$code-block-bg-alpha: -.8;
+// Code
+$code-bg:    #1E2D2D;
+$code-color: #88C8CC;
+$code-block-bg: #1A2828;
+$code-block-border-left: $orchid-teal;
 
-// Bootstrap popovers
-$popover-bg: #242424;
+// Tables
+$table-border-color: #2E4445;
 
 // Bootstrap inputs
-$input-bg: #242424;
-
+$input-bg:   #1E2D2D;
+$popover-bg: #1E2D2D;
 
 /*-- scss:rules --*/
 
-.layout-example {
-  background: $gray-700;
+// ── Body & headings ────────────────────────────────────────────────────────────
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
-.render-commit-push {
-  padding: 0.5em 0.5em 0em 3em;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  background: #181818 5px center/3em no-repeat;
-  border-top: 1px solid #adadad;
-  border-bottom: 1px solid #adadad;
-
-  background-size: 2em;
-  background-position: 0.5em 0.5em;
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
 }
 
-.pull {
-  padding: 0.5em 0.5em 0em 3em;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  background: #181818 5px center/3em no-repeat;
-  border-top: 1px solid #adadad;
-  border-bottom: 1px solid #adadad;
+h2 {
+  border-bottom: 2px solid $orchid-teal-light;
+  padding-bottom: 0.3em;
+  margin-top: 2em;
+}
 
-  background-size: 2em;
-  background-position: 0.5em 0.5em;
+// ── Links ──────────────────────────────────────────────────────────────────────
+
+a {
+  text-decoration: none;
+  border-bottom: 1px solid rgba($orchid-teal-dark, 0.35);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+a:hover {
+  color: $orchid-warm;
+  border-bottom-color: $orchid-warm;
+}
+
+// ── Navbar ─────────────────────────────────────────────────────────────────────
+
+.navbar {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+
+.navbar-title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+// ── Sidebar ────────────────────────────────────────────────────────────────────
+
+.sidebar {
+  border-right: 1px solid $orchid-teal-light;
+}
+
+.sidebar-item-text {
+  font-size: 0.88rem;
+}
+
+// ── Code blocks ────────────────────────────────────────────────────────────────
+
+pre.sourceCode {
+  border-radius: 6px;
+  border: 1px solid #2A3D3E;
+  font-size: 0.88em;
+}
+
+code {
+  border-radius: 3px;
+  padding: 0.15em 0.35em;
+  font-size: 0.9em;
+}
+
+// ── Tables ─────────────────────────────────────────────────────────────────────
+
+table {
+  width: 100%;
+  font-size: 0.93rem;
+}
+
+table thead th {
+  background-color: #1F3233;
+  color: $orchid-teal-dark;
+  font-weight: 700;
+  border-bottom: 2px solid $orchid-teal;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #1C2C2C;
+}
+
+table th, table td {
+  vertical-align: top;
+  padding: 0.5em 0.75em;
+}
+
+// ── Figure captions ────────────────────────────────────────────────────────────
+
+figcaption, .figure-caption {
+  font-size: 0.85rem;
+  color: rgba($body-color, 0.6);
+  font-style: italic;
+  text-align: center;
+  margin-top: 0.4em;
+}
+
+// ── Semantic matrix colors ─────────────────────────────────────────────────────
+
+.fecundidad    { color: #FFD060; }
+.supervivencia { color: #6AAEDE; }
+.crecimiento   { color: #72C476; }
+.retroceso     { color: #C07ADE; }
+.permanencia   { color: #7AA8D4; }
+
+// Label chips
+.label-chip {
+  display: inline-block;
+  padding: 0.05rem 0.4rem;
+  border-radius: 0.25rem;
+  font-weight: 700;
+  font-size: 0.85em;
+  line-height: 1.3;
+  border: 1px solid rgba(255,255,255,0.12);
+  letter-spacing: 0.01em;
+}
+
+.label-chip.fecundidad    { color: #FFF0B3; background-color: #3D3000; border-color: #FFD060; }
+.label-chip.supervivencia { color: #C5D8ED; background-color: #0A1E30; border-color: #6AAEDE; }
+.label-chip.crecimiento   { color: #C8E6CA; background-color: #0A2010; border-color: #72C476; }
+.label-chip.retroceso     { color: #EDD8F5; background-color: #280A38; border-color: #C07ADE; }
+.label-chip.permanencia   { color: #C5D8ED; background-color: #0A1828; border-color: #7AA8D4; }
+
+// ── Footer ─────────────────────────────────────────────────────────────────────
+
+.nav-footer {
+  font-size: 0.82rem;
+  opacity: 0.85;
+  border-top: 1px solid $orchid-teal-light;
 }
