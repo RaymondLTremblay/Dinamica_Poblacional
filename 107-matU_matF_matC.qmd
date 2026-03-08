@@ -1,40 +1,16 @@
 # Matrices de transición, fecundidad y reproducción clonal {#MatricesTFC}
 
-Las matrices U, F y C descomponen la dinámica poblacional en sus componentes
-demográficos fundamentales: supervivencia y crecimiento, fecundidad y
-transiciones complementarias. Este capítulo introduce estas matrices como
-herramientas conceptuales y analíticas para representar explícitamente los
-procesos que estructuran la dinámica poblacional.
+Las matrices U, F y C descomponen la dinámica poblacional en sus componentes demográficos fundamentales: supervivencia y crecimiento, fecundidad y transiciones complementarias. Este capítulo introduce estas matrices como herramientas conceptuales y analíticas para representar explícitamente los procesos que estructuran la dinámica poblacional.
 
 Raymond L. Tremblay
 
 ## Descomposición matricial de la dinámica poblacional
 
-En los modelos de proyección poblacional estructurados, la matriz de
-proyección puede descomponerse en componentes que representan procesos
-demográficos distintos. Las matrices **U**, **F** y **C** permiten separar la
-dinámica poblacional en supervivencia y crecimiento (U), fecundidad (F) y
-otras transiciones complementarias (C), facilitando la interpretación
-biológica y analítica del modelo.
+En los modelos de proyección poblacional estructurados, la matriz de proyección puede descomponerse en componentes que representan procesos demográficos distintos. Las matrices **U**, **F** y **C** permiten separar la dinámica poblacional en supervivencia y crecimiento (U), fecundidad (F) y otras transiciones complementarias (C), facilitando la interpretación biológica y analítica del modelo.
 
-En este capítulo se presenta la lógica conceptual de esta descomposición,
-mostrando cómo cada matriz captura un conjunto específico de procesos del
-ciclo de vida. La matriz **U** describe las transiciones no reproductivas
-entre estadios, incluyendo estasis y crecimiento. La matriz **F** representa
-la contribución reproductiva a los estadios iniciales, integrando producción
-reproductiva y supervivencia temprana. En casos particulares, la matriz
-**C** permite incorporar transiciones adicionales que no encajan
-directamente en U o F, ampliando la flexibilidad del modelo.
+En este capítulo se presenta la lógica conceptual de esta descomposición, mostrando cómo cada matriz captura un conjunto específico de procesos del ciclo de vida. La matriz **U** describe las transiciones no reproductivas entre estadios, incluyendo estasis y crecimiento. La matriz **F** representa la contribución reproductiva a los estadios iniciales, integrando producción reproductiva y supervivencia temprana. En casos particulares, la matriz **C** permite incorporar transiciones adicionales que no encajan directamente en U o F, ampliando la flexibilidad del modelo.
 
-La descomposición en U, F y C constituye un paso intermedio clave entre la
-definición de transiciones individuales y el análisis de propiedades
-poblacionales. Este enfoque permite evaluar separadamente el papel de cada
-proceso demográfico en el crecimiento poblacional y sirve como base para
-análisis posteriores de elasticidad, sensibilidad, LTRE y simulaciones. A
-diferencia de capítulos previos, este capítulo se enfoca en la
-representación estructural explícita de los procesos demográficos dentro de
-la matriz, proporcionando un puente entre la biología del ciclo de vida y
-las herramientas analíticas desarrolladas más adelante.
+La descomposición en U, F y C constituye un paso intermedio clave entre la definición de transiciones individuales y el análisis de propiedades poblacionales. Este enfoque permite evaluar separadamente el papel de cada proceso demográfico en el crecimiento poblacional y sirve como base para análisis posteriores de elasticidad, sensibilidad, LTRE y simulaciones. A diferencia de capítulos previos, este capítulo se enfoca en la representación estructural explícita de los procesos demográficos dentro de la matriz, proporcionando un puente entre la biología del ciclo de vida y las herramientas analíticas desarrolladas más adelante.
 
 #### Librerías de R requeridas para el siguiente módulo
 
@@ -47,16 +23,14 @@ library(dplyr)
 library(purrr)
 
 ```
+
 ## Construcción y cálculo de las matrices U, F y C
 
-A continuación se describe cómo definir y calcular las matrices U, F y C a
-partir de transiciones demográficas y datos empíricos.
+A continuación se describe cómo definir y calcular las matrices U, F y C a partir de transiciones demográficas y datos empíricos.
 
 ## Tres tipos de matrices
 
-Para facilitar los análisis e interpretaciones es necesario tener claro el ciclo de vida de la especie y el origen de los parámetros de transiciones, fecundidades y clonaje. Para lo cual, hay que recordar que la matriz A (matA), para evaluar varios de los parámetros del crecimiento poblacional, es el resultado de la suma de las submatrices de transición, de fecundidad y de clonación. Un ejemplo de por qué es necesario crear submatrices es que, para calcular la supervivencia promedia y sus intervalos de confianza, se necesita la matriz de transiciones **matU** separado de la matriz de fecundidad, mientras que para calcular la tasa de crecimiento poblacional, se necesita **matA**. En adición si uno quiere un estimado de la endogamia es importante reconocer la importancia de la clonación en la dinámica poblacional, se necesita incluir **matC**. Por consecuencia, es importante tener claro el ciclo de vida y la forma de reproducción de la especie que se está estudiando. La definición de las matrices U, F y C se basa directamente en los procesos
-de transición descritos en el capítulo sobre transiciones demográficas. La combinación de las matrices U, F y C permite derivar la tasa de
-crecimiento poblacional discutida en el capítulo sobre crecimiento poblacional.
+Para facilitar los análisis e interpretaciones es necesario tener claro el ciclo de vida de la especie y el origen de los parámetros de transiciones, fecundidades y clonaje. Para lo cual, hay que recordar que la matriz A (matA), para evaluar varios de los parámetros del crecimiento poblacional, es el resultado de la suma de las submatrices de transición, de fecundidad y de clonación. Un ejemplo de por qué es necesario crear submatrices es que, para calcular la supervivencia promedia y sus intervalos de confianza, se necesita la matriz de transiciones **matU** separado de la matriz de fecundidad, mientras que para calcular la tasa de crecimiento poblacional, se necesita **matA**. En adición si uno quiere un estimado de la endogamia es importante reconocer la importancia de la clonación en la dinámica poblacional, se necesita incluir **matC**. Por consecuencia, es importante tener claro el ciclo de vida y la forma de reproducción de la especie que se está estudiando. La definición de las matrices U, F y C se basa directamente en los procesos de transición descritos en el capítulo sobre transiciones demográficas. La combinación de las matrices U, F y C permite derivar la tasa de crecimiento poblacional discutida en el capítulo sobre crecimiento poblacional.
 
 Definiciones de las matrices
 
@@ -95,8 +69,7 @@ plot_life_cycle(matU, stages = stages)
 
 ## MatF: Matriz de fecundidad
 
-La matriz F se construye a partir de los parámetros de fecundidad
-calculados en el capítulo sobre cálculo de fecundidad. Al analizar la figura siguiente, se observa que algunos individuos en la segunda etapa pueden producir plántulas. Por ello, sería más apropiado cambiar el nombre de esta etapa de “juvenil” a “adultos pequeños”, ya que el término juvenil podría interpretarse como individuos no reproductivos.
+La matriz F se construye a partir de los parámetros de fecundidad calculados en el capítulo sobre cálculo de fecundidad. Al analizar la figura siguiente, se observa que algunos individuos en la segunda etapa pueden producir plántulas. Por ello, sería más apropiado cambiar el nombre de esta etapa de “juvenil” a “adultos pequeños”, ya que el término juvenil podría interpretarse como individuos no reproductivos.
 
 En el ciclo de vida se aprecia que las plántulas provienen tanto de adultos pequeños como de adultos grandes. Esta separación en categorías de adultos es recomendable cuando las probabilidades de fecundidad difieren significativamente entre clases de tamaño.
 
@@ -417,7 +390,7 @@ Esta omisión es preocupante, ya que la clonación puede:
 
 Por lo tanto, es crucial integrar la clonación en los modelos de dinámica poblacional y en estudios evolutivos cuando esté presente.
 
-::: {.hidden-note}
+::: hidden-note
 Revisión
 
 RLT: Nov 26th, 2024

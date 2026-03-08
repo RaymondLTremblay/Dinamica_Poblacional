@@ -4,17 +4,94 @@ Raymond L. Tremblay
 
 #### Librerías de R requeridas para el siguiente módulo
 
-```{r CV_1, message=FALSE, warning=FALSE}
+
+```{r CV1-setup-diagrams, include=FALSE}
 
 
-library(Rage) # para crear diagramas de ciclo de vida y métricas de historia de vida 
-library(rsvg) # trabajar con imágenes 
-library(tidyverse)
+# Install (if needed) and load
+pkgs <- c("DiagrammeR", "DiagrammeRsvg", "rsvg", "Rage", "knitr", "ggplot2")
+to_install <- setdiff(pkgs, rownames(installed.packages()))
+if (length(to_install)) install.packages(to_install, dependencies = TRUE)
 
-#devtools::install_github("rich-iannone/DiagrammeR") # Instalar directamente de github para tener la versión más reciente
+library(DiagrammeR)
+library(DiagrammeRsvg)  # export_svg()
+library(rsvg)           # rsvg_png()
+library(Rage)
+library(knitr)
+library(ggplot2)
 
-library(DiagrammeR) # para crear diagramas de ciclo de vida
+# Carpeta de salida para PNGs
+out_dir <- "figs"
+if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE)
 
+PNG_WIDTH  <- 2400
+PNG_HEIGHT <- 1600
+
+# Helper: DOT -> PNG
+grviz_dot_to_png <- function(dot, outfile, width = PNG_WIDTH, height = PNG_HEIGHT) {
+  g   <- DiagrammeR::grViz(dot)             # crea el widget (no se imprime aquí)
+  svg <- DiagrammeRsvg::export_svg(g)       # SVG en texto
+  rsvg::rsvg_png(charToRaw(svg), outfile, width = width, height = height)
+  outfile
+}
+
+# Helper: construir DOT a partir de nodos / aristas
+build_dot <- function(nodes, edges, title = NULL) {
+  paste(
+    "
+digraph {
+  {
+    graph[overlap=false];
+    rank=same;
+    node [shape=", "egg", ", fontsize=", 12, "];",
+    nodes, "
+  }",
+    "ordering=out
+  x [style=invis]
+  x -> {", nodes, "} [style=invis]", edges,
+    "labelloc=\"t\";
+  label=\"", ifelse(is.null(title), "", title), "\"
+}",
+    sep = ""
+  )
+}
+
+# Helper: construir nodos/aristas (como en el capítulo)
+make_nodes_edges <- function(stages, mat, cols, minlen_scale = 3, digits = 3, fontsize = 10) {
+  graph <- expand.grid(to = stages, from = stages)
+  graph$trans <- round(c(mat), digits)
+  graph <- graph[graph$trans > 0, ]
+
+  nodes <- paste(paste0("'", stages, "'"), collapse = "; ")
+  graph$min_len <- (as.numeric(graph$to) - as.numeric(graph$from)) * minlen_scale
+
+  if (length(cols) != nrow(graph)) {
+    stop("Longitud de 'cols' (", length(cols), ") != número de aristas (", nrow(graph), ").")
+  }
+
+  edges <- paste0(
+    "'", graph$from, "'", " -> ", "'", graph$to, "'",
+    "[minlen=", graph$min_len,
+    ",fontsize=", fontsize,
+    ",color=", cols,
+    ",xlabel=", "\"", graph$trans, "\"",
+    "]\n",
+    collapse = ""
+  )
+
+  list(nodes = nodes, edges = edges)
+}
+
+# Helper: mostrar en HTML el widget; en PDF, PNG estático
+render_dual <- function(dot, png_name) {
+  if (knitr::is_html_output()) {
+    DiagrammeR::grViz(dot)
+  } else {
+    pngfile <- file.path(out_dir, png_name)
+    grviz_dot_to_png(dot, pngfile)
+    knitr::include_graphics(pngfile)
+  }
+}
 
 
 ```
@@ -38,53 +115,20 @@ En este primer ejemplo se presenta un ciclo de vida simple con tres estados: sem
 La matriz de transición para este ciclo es la siguiente: el 50 % de las semillas germinan y se convierten en plántulas, el 40 % de las plántulas alcanzan la etapa adulta y cada adulto produce en promedio 3.2 semillas. En el diagrama, las líneas verdes representan crecimiento y las líneas amarillas representan reproducción.
 
 ```{r CV_2}
+# 1) Build data/state as you already do
 
 matA <- rbind(
   c(0.0, 0.0, 3.2),
   c(0.5, 0.0, 0.0),
   c(0.0, 0.4, 0.0)
 )
-
-
 etapas <- c("semillas", "plantulas", "adultos")
-title <- "Especie hipotética" # si no quiere titulo, pon title <- NULL
-graph <- expand.grid(to = etapas, from = etapas)
-graph$trans <- round(c(matA), 3)
-graph <- graph[graph$trans > 0, ]
-nodes <- paste(paste0("'", etapas, "'"), collapse = "; ")
-graph$min_len <- (as.numeric(graph$to) - as.numeric(graph$from)) * 3
-graph$col <- c(
-  "PaleGreen4", "PaleGreen4", "Goldenrod1"
-)
-edges <- paste0("'", graph$from, "'", " -> ", "'", graph$to, "'",
-  "[minlen=", graph$min_len,
-  ",fontsize=", 10,
-  ",color=", graph$col,
-  ",xlabel=", paste("\"", graph$trans),
-  "\"]\n",
-  collapse = ""
-)
-grViz(
-  paste(
-    "
-digraph {
-  {
-    graph[overlap=false];
-    rank=same;
-    node [shape=", "egg", ", fontsize=", 12, "];",
-    nodes, "
-  }",
-    "ordering=out
-  x [style=invis]
-  x -> {", nodes, "} [style=invis]", edges,
-    "labelloc=\"t\";
-  label=\"", title, "\"
-}"
-  )
-)  # %>%
-   # export_svg %>% charToRaw %>% rsvg_png("graph.png")
+cols   <- c("PaleGreen4", "PaleGreen4", "Goldenrod1")
 
+ne  <- make_nodes_edges(etapas, matA, cols, minlen_scale = 3, digits = 3, fontsize = 10)
+dot <- build_dot(ne$nodes, ne$edges, title = "Especie hipotética")
 
+render_dual(dot, "CV_2.png")
 
 ```
 
@@ -95,55 +139,20 @@ digraph {
 El ciclo de vida hipotético de una orquídea epífita se representa en el gráfico mediante líneas verdes para indicar transición entre etapas, líneas rojas para señalar permanencia y líneas amarillas para la reproducción. El ciclo comienza con la germinación de la semilla sobre la corteza de un árbol, seguida por las fases de plántula, juvenil y adulto, etapa en la cual ocurre la floración y producción de semillas. Exceptuando la fase de semilla, cada etapa puede prolongarse de un año a otro, lo que evidencia un ciclo plurianual; esta característica se refleja en la diagonal principal de la matriz de transición, cuyos valores son mayores a cero cuando existe permanencia. Solo los individuos adultos son capaces de reproducirse. Si el diagrama correspondiera a datos empíricos, sería necesario contar con información para todas las etapas (semilla, plántula, juvenil y adulto); sin embargo, la revisión bibliográfica realizada no identificó estudios que incluyan datos completos, debido principalmente a la dificultad de localizar semillas y plántulas en condiciones naturales, dado su tamaño extremadamente reducido (milimétrico) y la complejidad de seguir su desarrollo a lo largo del tiempo.
 
 ```{r CV_3}
-# hidden code to produce figures
+
 matA_ho <- rbind(
   c(0.0, 0.0, 0.0, 3.2),
   c(0.5, 0.3, 0.0, 0.0),
   c(0.0, 0.4, 0.20, 0.0),
   c(0.0, 0.0, 0.40, 0.80)
 )
-
-
 etapas_ho <- c("semillas", "plantulas", "juvenil", "adultos")
-title <- NULL
-graph <- expand.grid(to = etapas_ho, from = etapas_ho)
-graph$trans <- round(c(matA_ho), 3)
-graph <- graph[graph$trans > 0, ]
-nodes <- paste(paste0("'", etapas_ho, "'"), collapse = "; ")
-graph$min_len <- (as.numeric(graph$to) - as.numeric(graph$from)) * 3
-graph$col <- c(
-  "PaleGreen4", 
-  "red", "PaleGreen4", 
-  "red", "PaleGreen4", 
-  "Goldenrod1", "red"
-)
-edges <- paste0("'", graph$from, "'", " -> ", "'", graph$to, "'",
-  "[minlen=", graph$min_len,
-  ",fontsize=", 10,
-  ",color=", graph$col,
-  ",xlabel=", paste("\"", graph$trans),
-  "\"]\n",
-  collapse = ""
-)
-grViz(
-  paste(
-    "
-digraph {
-  {
-    graph[overlap=false];
-    rank=same;
-    node [shape=", "egg", ", fontsize=", 12, "];",
-    nodes, "
-  }",
-    "ordering=out
-  x [style=invis]
-  x -> {", nodes, "} [style=invis]", edges,
-    "labelloc=\"t\";
-  label=\"", title, "\"
-}"
-  )
-) 
+cols      <- c("PaleGreen4", "red", "PaleGreen4", "red", "PaleGreen4", "Goldenrod1", "red")
 
+ne  <- make_nodes_edges(etapas_ho, matA_ho, cols, minlen_scale = 3, digits = 3, fontsize = 10)
+dot <- build_dot(ne$nodes, ne$edges, title = NULL)
+
+render_dual(dot, "CV_3.png")
 
 
 ```
@@ -180,48 +189,14 @@ matA_Ls <- rbind(
   c(0.0, 0.0, 0.07, 0.76, 0.0),
   c(0.0, 0.0, 0.00, 0.24, 0.75)
 )
-
-
 etapas_Ls <- c("semillas", "plántulas", "adulto 1", "adulto 2", "adulto 3")
-title <- NULL
-graph <- expand.grid(to = etapas_Ls, from = etapas_Ls)
-graph$trans <- round(c(matA_Ls), 5)
-graph <- graph[graph$trans > 0, ]
-nodes <- paste(paste0("'", etapas_Ls, "'"), collapse = "; ")
-graph$min_len <- (as.numeric(graph$to) - as.numeric(graph$from)) * 3
-graph$col <- c(
-  "PaleGreen4", 
-  "PaleGreen4", 
-  "red", "PaleGreen4", 
-  "Goldenrod1", "red", "PaleGreen4",
-  "Goldenrod1", "red"
-)
-edges <- paste0("'", graph$from, "'", " -> ", "'", graph$to, "'",
-  "[minlen=", graph$min_len,
-  ",fontsize=", 10,
-  ",color=", graph$col,
-  ",xlabel=", paste("\"", graph$trans),
-  "\"]\n",
-  collapse = ""
-)
-grViz(
-  paste(
-    "
-digraph {
-  {
-    graph[overlap=false];
-    rank=same;
-    node [shape=", "egg", ", fontsize=", 12, "];",
-    nodes, "
-  }",
-    "ordering=out
-  x [style=invis]
-  x -> {", nodes, "} [style=invis]", edges,
-    "labelloc=\"t\";
-  label=\"", title, "\"
-}"
-  )
-) 
+cols      <- c("PaleGreen4","PaleGreen4","red","PaleGreen4","Goldenrod1","red","PaleGreen4",
+               "Goldenrod1","red")
+
+ne  <- make_nodes_edges(etapas_Ls, matA_Ls, cols, minlen_scale = 3, digits = 5, fontsize = 10)
+dot <- build_dot(ne$nodes, ne$edges, title = NULL)
+
+render_dual(dot, "CV_5.png")
 
 
 
@@ -241,50 +216,19 @@ Cabe destacar que los individuos adultos grandes presentan una mayor contribuci�
 ```{r CV_6Telipogon_helleri}
 
 
-matA_Th=matrix(c(0.1548, 0.1573, 0.5309,
-                 0.2738, 0.4425, 0.1606,
-                 0.0238, 0.4060, 0.7368), byrow=TRUE,ncol=3)
-
-matA_Th
-
+matA_Th <- matrix(c(0.1548, 0.1573, 0.5309,
+                    0.2738, 0.4425, 0.1606,
+                    0.0238, 0.4060, 0.7368),
+                  byrow = TRUE, ncol = 3)
 etapas_Th <- c("inmaduros", "reproductivo_pequeños", "reproductivo_grandes")
-title <- NULL
-graph <- expand.grid(to = etapas_Th, from = etapas_Th)
-graph$trans <- round(c(matA_Th), 3)
-graph <- graph[graph$trans > 0, ]
-nodes <- paste(paste0("'", etapas_Th, "'"), collapse = "; ")
-graph$min_len <- (as.numeric(graph$to) - as.numeric(graph$from)) * 3
-graph$col <- c(
-  "red", "PaleGreen4", "PaleGreen4", 
-  "Goldenrod1", "red", "PaleGreen4", 
-  "Goldenrod1", "MediumOrchid4", "red" 
-)
-edges <- paste0("'", graph$from, "'", " -> ", "'", graph$to, "'",
-  "[minlen=", graph$min_len,
-  ",fontsize=", 10,
-  ",color=", graph$col,
-  ",xlabel=", paste("\"", graph$trans),
-  "\"]\n",
-  collapse = ""
-)
-grViz(
-  paste(
-    "
-digraph {
-  {
-    graph[overlap=false];
-    rank=same;
-    node [shape=", "egg", ", fontsize=", 12, "];",
-    nodes, "
-  }",
-    "ordering=out
-  x [style=invis]
-  x -> {", nodes, "} [style=invis]", edges,
-    "labelloc=\"t\";
-  label=\"", title, "\"
-}"
-  )
-) 
+cols      <- c("red","PaleGreen4","PaleGreen4","Goldenrod1","red","PaleGreen4",
+               "Goldenrod1","MediumOrchid4","red")
+
+ne  <- make_nodes_edges(etapas_Th, matA_Th, cols, minlen_scale = 3, digits = 3, fontsize = 10)
+dot <- build_dot(ne$nodes, ne$edges, title = NULL)
+
+render_dual(dot, "CV_6Telipogon_helleri.png")
+
 
 ```
 
@@ -301,53 +245,21 @@ El tránsito a la fase de latencia vegetativa se indica en azul, en verde el cre
 ```{r CV7Prasophyllum_correctum}
 
 
+
 matA_lat <- rbind(
-  c(0.0,     0.0,  0.0125,  0.0000),
-  c(0.0,  0.2874,  0.3750,  0.1364),
-  c(0.0,  0.0230,  0.1500,  0.0303),
-  c(1.0,  0.6897,   0.4750,  0.7475) 
+  c(0.0, 0.0, 0.0125, 0.0000),
+  c(0.0, 0.2874, 0.3750, 0.1364),
+  c(0.0, 0.0230, 0.1500, 0.0303),
+  c(1.0, 0.6897, 0.4750, 0.7475)
 )
-
-
 etapas_lat <- c("plántulas", "adultos vegetativos", "adultos reproductivos", "latencia")
-title <- NULL
-graph <- expand.grid(to = etapas_lat, from = etapas_lat)
-graph$trans <- round(c(matA_lat), 4)
-graph <- graph[graph$trans > 0, ]
-nodes <- paste(paste0("'", etapas_lat, "'"), collapse = "; ")
-graph$min_len <- (as.numeric(graph$to) - as.numeric(graph$from)) * 2
-graph$col <- c(
-  "black", 
-  "red", "palegreen4", "black",
-  "goldenrod1", "blue", "red", "black",
-  "blue", "blue", "red"
-)
-edges <- paste0("'", graph$from, "'", " -> ", "'", graph$to, "'",
-  "[minlen=", graph$min_len,
-  ",fontsize=", 10,
-  ",color=", graph$col,
-  ",xlabel=", paste("\"", graph$trans),
-  "\"]\n",
-  collapse = ""
-)
-grViz(
-  paste(
-    "
-digraph {
-  {
-    graph[overlap=false];
-    rank=same;
-    node [shape=", "egg", ", fontsize=", 12, "];",
-    nodes, "
-  }",
-    "ordering=out
-  x [style=invis]
-  x -> {", nodes, "} [style=invis]", edges,
-    "labelloc=\"t\";
-  label=\"", title, "\"
-}"
-  )
-) 
+cols       <- c("black","red","palegreen4","black","goldenrod1","blue","red","black",
+                "blue","blue","red")
+
+ne  <- make_nodes_edges(etapas_lat, matA_lat, cols, minlen_scale = 2, digits = 4, fontsize = 10)
+dot <- build_dot(ne$nodes, ne$edges, title = NULL)
+
+render_dual(dot, "CV7Prasophyllum_correctum.png")
 
 
 
@@ -362,51 +274,19 @@ Dado que el análisis se enfoca en la sobrevivencia, en el estudio no se incluye
 ```{r CV8_Ophrys}
 
 
-G1=matrix(c(0.0080, 0.0184,   0.0149, 0.0148,
-            0.0180,  0.4249,  0.1214, 0.1214,
-            0.1853,  0.2770,  0,      0,
-            0,       0,       0.3050, 0), byrow=TRUE,ncol=4)
-
-
+G1 <- matrix(c(0.0080, 0.0184, 0.0149, 0.0148,
+               0.0180, 0.4249, 0.1214, 0.1214,
+               0.1853, 0.2770, 0,      0,
+               0,      0,      0.3050, 0),
+             byrow = TRUE, ncol = 4)
 etapas_Op <- c("Vegetativa", "Ind. con Flores", "Latencia año 1", "Latencia año 2")
-title <- NULL
-graph <- expand.grid(to = etapas_Op, from = etapas_Op)
-graph$trans <- round(c(G1), 4)
-graph <- graph[graph$trans > 0, ]
-nodes <- paste(paste0("'", etapas_Op, "'"), collapse = "; ")
-graph$min_len <- (as.numeric(graph$to) - as.numeric(graph$from)) * 2
-graph$col <- c(
-  "red", "PaleGreen4", "blue",
-  "PaleGreen4", "red", "blue",
-  "PaleGreen4", "PaleGreen4",  "blue",
-  "PaleGreen4", "PaleGreen4"
-)
-edges <- paste0("'", graph$from, "'", " -> ", "'", graph$to, "'",
-  "[minlen=", graph$min_len,
-  ",fontsize=", 10,
-  ",color=", graph$col,
-  ",xlabel=", paste("\"", graph$trans),
-  "\"]\n",
-  collapse = ""
-)
-grViz(
-  paste(
-    "
-digraph {
-  {
-    graph[overlap=false];
-    rank=same;
-    node [shape=", "egg", ", fontsize=", 12, "];",
-    nodes, "
-  }",
-    "ordering=out
-  x [style=invis]
-  x -> {", nodes, "} [style=invis]", edges,
-    "labelloc=\"t\";
-  label=\"", title, "\"
-}"
-  )
-) 
+cols      <- c("red","PaleGreen4","blue","PaleGreen4","red","blue",
+               "PaleGreen4","PaleGreen4","blue","PaleGreen4","PaleGreen4")
+
+ne  <- make_nodes_edges(etapas_Op, G1, cols, minlen_scale = 2, digits = 4, fontsize = 10)
+dot <- build_dot(ne$nodes, ne$edges, title = NULL)
+
+render_dual(dot, "CV8_Ophrys.png")
 
 
 
@@ -450,47 +330,27 @@ $$\\[2in]$$
 
 ```{r CV9_Os, echo=FALSE}
 
+
+matA_Os <- matrix(c(
+  0.000, 0.000, 0, 0.00, 0.000, 84.88725,
+  0.012, 0.000, 0, 0.00, 0.000,  0.00000,
+  0.000, 0.041, 0, 0.00, 0.000,  0.00000,
+  0.000, 0.000, 1, 0.75, 0.000,  0.00000,
+  0.000, 0.000, 0, 0.25, 0.615,  0.62500,
+  0.000, 0.000, 0, 0.00, 0.385,  0.37500),
+  byrow=TRUE, ncol=6)
+
 etapas_Os <- c("Protocormos", "tuberculos", "Plantulas", "Juveniles", "Sin Flores", "Con Flores")
-title <- NULL
-graph <- expand.grid(to = etapas_Os, from = etapas_Os)
-graph$trans <- round(c(matA_Os), 3)
-graph <- graph[graph$trans > 0, ]
-nodes <- paste(paste0("'", etapas_Os, "'"), collapse = "; ")
-graph$min_len <- (as.numeric(graph$to) - as.numeric(graph$from)) * 2
-graph$col <- c(
-   "PaleGreen4",
-  "PaleGreen4",
-  "PaleGreen4",
-  "red", "PaleGreen4",  
-  "red", "PaleGreen4", 
-  "Goldenrod1","MediumOrchid4", "red"
-)
-edges <- paste0("'", graph$from, "'", " -> ", "'", graph$to, "'",
-  "[minlen=", graph$min_len,
-  ",fontsize=", 10,
-  ",color=", graph$col,
-  ",xlabel=", paste("\"", graph$trans),
-  "\"]\n",
-  collapse = ""
-)
-grViz(
-  paste(
-    "
-digraph {
-  {
-    graph[overlap=false];
-    rank=same;
-    node [shape=", "egg", ", fontsize=", 12, "];",
-    nodes, "
-  }",
-    "ordering=out
-  x [style=invis]
-  x -> {", nodes, "} [style=invis]", edges,
-    "labelloc=\"t\";
-  label=\"", title, "\"
-}"
-  )
-) 
+cols      <- c("PaleGreen4","PaleGreen4","PaleGreen4","red","PaleGreen4",
+               "red","PaleGreen4","Goldenrod1","MediumOrchid4","red")
+
+ne  <- make_nodes_edges(etapas_Os, matA_Os, cols, minlen_scale = 2, digits = 3, fontsize = 10)
+dot <- build_dot(ne$nodes, ne$edges, title = NULL)
+
+render_dual(dot, "CV9_Os.png")
+
+
+
 ```
 
 ------------------------------------------------------------------------
@@ -501,55 +361,20 @@ La importancia de este capítulo radica en reconocer la diferencia entre la hist
 
 Además de los anteriores, existes otros problemas. La recolección de datos en campo puede ser irreal en el contexto de historia de vida y la base matemática del modelo representado. Para más detalles ver el capitulo “Impacto de datos sin sentidos”. A qué me refiero, en la siguiente figura aparecen tres errores comunes durante la recolectan datos de la historia de vida de una especie. El primero es que no hay mortalidad de los individuos en una de las etapas (juveniles), el segundo es que todos los individuos se mueren (plántulas) y el tercero es que los individuos se mantienen en la misma etapa de desarrollo (adultos) y no hay muerte. Dada la muerte de las plántulas, no hay flecha que una este estado a otros estados. La falta de continuidad o conexión entre las etapas del ciclo de vida son errores que ocurren típicamente cuando el tamaño de muestra es pequeña o la probabilidad de transición es rara o poco frecuente; por ejemplo, los árboles grandes no fallecen. Estos son los tres errores típicos que a los que nos enfrentamos cuando se lleva a cabo un análisis de dinámica poblacional en especies con transiciones poco comunes.
 
-```{r CV10, echo=FALSE}
 
-
+```{r cv10_incompleto}
 matA_incom <- rbind(
   c(0.0, 0.0, 3.2),
   c(0.0, 1.0, 0.1),
   c(0.0, 0.0, 0.9)
 )
-
-
 etapas_incom <- c("plántula", "juvenil", "adulto")
-title <- NULL
-graph <- expand.grid(to = etapas_incom, from = etapas_incom)
-graph$trans <- round(c(matA_incom), 3)
-graph <- graph[graph$trans > 0, ]
-nodes <- paste(paste0("'", etapas_incom, "'"), collapse = "; ")
-graph$min_len <- (as.numeric(graph$to) - as.numeric(graph$from)) * 3
-graph$col <- c(
-  "red", 
-  "Goldenrod1", 
-  "MediumOrchid4",  "red"
-)
-edges <- paste0("'", graph$from, "'", " -> ", "'", graph$to, "'",
-  "[minlen=", graph$min_len,
-  ",fontsize=", 10,
-  ",color=", graph$col,
-  ",xlabel=", paste("\"", graph$trans),
-  "\"]\n",
-  collapse = ""
-)
-grViz(
-  paste(
-    "
-digraph {
-  {
-    graph[overlap=false];
-    rank=same;
-    node [shape=", "egg", ", fontsize=", 12, "];",
-    nodes, "
-  }",
-    "ordering=out
-  x [style=invis]
-  x -> {", nodes, "} [style=invis]", edges,
-    "labelloc=\"t\";
-  label=\"", title, "\"
-}"
-  )
-) 
+cols         <- c("red","Goldenrod1","MediumOrchid4","red")
 
+ne  <- make_nodes_edges(etapas_incom, matA_incom, cols, minlen_scale = 3, digits = 3, fontsize = 10)
+dot <- build_dot(ne$nodes, ne$edges, title = NULL)
+
+render_dual(dot, "CV10.png")
 
 
 ```
@@ -560,14 +385,80 @@ digraph {
 
 En la graficación del ciclo de vida podemos usar otro paquete de R (Rage). La diferencia es que no se pueden cambiar los colores de las líneas y los nodos (círculos que representan los estados de desarrollo). Esta es una opción más sencilla para crear diagramas de ciclo de vida, además de ser práctica para publicaciones donde no se necesita cambiar los colores de las líneas y nodos.
 
-```{r CV11, message=FALSE, warning=FALSE}
+```{r cv11_rage, echo=FALSE, message=FALSE, warning=FALSE}
+
+## 0) Packages you may need
+pkgs <- c("Rage", "DiagrammeRsvg", "rsvg", "htmlwidgets", "webshot2", "ggplot2")
+to_install <- setdiff(pkgs, rownames(installed.packages()))
+if (length(to_install)) install.packages(to_install, dependencies = TRUE)
+
+library(Rage)
+library(ggplot2)
+
+## 1) Helper: save either ggplot or htmlwidget to PNG
+save_plot_png <- function(obj, file, width_px = 2400, height_px = 1600, dpi = 300, zoom = 1.5) {
+  dir.create(dirname(file), showWarnings = FALSE, recursive = TRUE)
+
+  if (inherits(obj, "ggplot")) {
+    # ggplot path
+    ggsave(filename = file, plot = obj, width = width_px / dpi, height = height_px / dpi, dpi = dpi)
+    message("Saved ggplot to: ", file)
+    return(invisible(file))
+  }
+
+  if (inherits(obj, "htmlwidget") || inherits(obj, "grViz")) {
+    # Preferred: export_svg -> rsvg_png (crisp, vector-based)
+    ok <- FALSE
+    if (requireNamespace("DiagrammeRsvg", quietly = TRUE) && requireNamespace("rsvg", quietly = TRUE)) {
+      try({
+        svg_txt <- DiagrammeRsvg::export_svg(obj)
+        rsvg::rsvg_png(charToRaw(svg_txt), file, width = width_px, height = height_px)
+        message("Saved htmlwidget via SVG->PNG to: ", file)
+        ok <- TRUE
+      }, silent = TRUE)
+    }
+    # Fallback: webshot2 (headless browser screenshot)
+    if (!ok) {
+      if (!requireNamespace("htmlwidgets", quietly = TRUE) ||
+          !requireNamespace("webshot2", quietly = TRUE)) {
+        stop("Need packages 'DiagrammeRsvg'+'rsvg' or 'htmlwidgets'+'webshot2' to save htmlwidgets.")
+      }
+      htmlfile <- tempfile(fileext = ".html")
+      htmlwidgets::saveWidget(obj, file = htmlfile, selfcontained = TRUE)
+      webshot2::webshot(htmlfile, file = file, vwidth = width_px, vheight = height_px, zoom = zoom)
+      message("Saved htmlwidget via webshot2 to: ", file)
+    }
+    return(invisible(file))
+  }
+
+  stop("Unsupported object class: ", paste(class(obj), collapse = ", "))
+}
+
+```
 
 
+```{r cv11_rage_plot}
+## 2) Your example rewritten correctly
+out_dir <- "figs"
+dir.create(out_dir, showWarnings = FALSE)
 
+matA <- rbind(
+  c(0.0, 0.0, 3.2),
+  c(0.5, 0.0, 0.0),
+  c(0.0, 0.4, 0.0)
+)
 
-plot_life_cycle(matA, stages=c("semillas", "plantulas", "adultos"),fontsize = 0.1)
+p <- Rage::plot_life_cycle(
+  matA,
+  stages   = c("semillas", "plantulas", "adultos"),
+  fontsize = 0.1
+)
 
+# Show in interactive session (optional)
+print(p)
 
+# Save to PNG regardless of whether it's ggplot or htmlwidget
+save_plot_png(p, file = file.path(out_dir, "CV11_Rage_plot.png"), width_px = 2400, height_px = 1600)
 
 ```
 
@@ -577,7 +468,7 @@ plot_life_cycle(matA, stages=c("semillas", "plantulas", "adultos"),fontsize = 0.
 
 ```
 
-::: {.hidden-note}
+::: hidden-note
 Revision:
 
 RLT Sept 14, 2024

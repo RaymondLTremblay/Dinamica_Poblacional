@@ -1,41 +1,16 @@
 # Experimento de Respuesta de Tabla de Vida {#ERTV}
 
-
-Los análisis LTRE (Life Table Response Experiments) permiten descomponer las
-diferencias observadas en el crecimiento poblacional entre poblaciones,
-tratamientos o periodos de tiempo en contribuciones demográficas
-específicas. Este capítulo introduce el enfoque LTRE como una herramienta
-retrospectiva para identificar los procesos vitales responsables de cambios
-en la dinámica poblacional.
+Los análisis LTRE (Life Table Response Experiments) permiten descomponer las diferencias observadas en el crecimiento poblacional entre poblaciones, tratamientos o periodos de tiempo en contribuciones demográficas específicas. Este capítulo introduce el enfoque LTRE como una herramienta retrospectiva para identificar los procesos vitales responsables de cambios en la dinámica poblacional.
 
 por : Adriana Ramírez-Martínez y Demetria Mondragón
 
 ## Experimentos de respuesta de tablas de vida: un enfoque retrospectivo
 
-Los Life Table Response Experiments (LTRE) constituyen un marco analítico
-diseñado para explicar **por qué** dos o más poblaciones, tratamientos o
-escenarios difieren en su tasa de crecimiento poblacional. A diferencia de
-los análisis prospectivos de sensibilidad y elasticidad, que evalúan la
-importancia potencial de cambios hipotéticos en las tasas vitales, los LTRE
-son análisis retrospectivos que cuantifican la contribución real de las
-diferencias observadas en los parámetros demográficos.
+Los Life Table Response Experiments (LTRE) constituyen un marco analítico diseñado para explicar **por qué** dos o más poblaciones, tratamientos o escenarios difieren en su tasa de crecimiento poblacional. A diferencia de los análisis prospectivos de sensibilidad y elasticidad, que evalúan la importancia potencial de cambios hipotéticos en las tasas vitales, los LTRE son análisis retrospectivos que cuantifican la contribución real de las diferencias observadas en los parámetros demográficos.
 
-En este capítulo se presenta el fundamento conceptual de los LTRE, mostrando
-cómo las diferencias en matrices de proyección pueden descomponerse en
-contribuciones asociadas a transiciones específicas del ciclo de vida. Se
-discute la lógica de comparar matrices observadas con una matriz de
-referencia y cómo esta elección influye en la interpretación biológica de
-los resultados.
+En este capítulo se presenta el fundamento conceptual de los LTRE, mostrando cómo las diferencias en matrices de proyección pueden descomponerse en contribuciones asociadas a transiciones específicas del ciclo de vida. Se discute la lógica de comparar matrices observadas con una matriz de referencia y cómo esta elección influye en la interpretación biológica de los resultados.
 
-Asimismo, se analiza cómo los LTRE permiten identificar qué procesos
-demográficos —como supervivencia, crecimiento o fecundidad— explican
-cambios en el crecimiento poblacional entre condiciones contrastantes. Este
-capítulo se diferencia de los anteriores porque desplaza el enfoque desde la
-predicción de efectos potenciales hacia la explicación causal de patrones
-observados, proporcionando una herramienta clave para interpretar respuestas
-poblacionales a variación ambiental, manejo o perturbaciones. Los LTRE
-constituyen un puente conceptual entre la teoría de la dinámica poblacional y
-su aplicación empírica en estudios comparativos.
+Asimismo, se analiza cómo los LTRE permiten identificar qué procesos demográficos —como supervivencia, crecimiento o fecundidad— explican cambios en el crecimiento poblacional entre condiciones contrastantes. Este capítulo se diferencia de los anteriores porque desplaza el enfoque desde la predicción de efectos potenciales hacia la explicación causal de patrones observados, proporcionando una herramienta clave para interpretar respuestas poblacionales a variación ambiental, manejo o perturbaciones. Los LTRE constituyen un puente conceptual entre la teoría de la dinámica poblacional y su aplicación empírica en estudios comparativos.
 
 #### Librerías de R requeridas para el siguiente módulo
 
@@ -47,6 +22,7 @@ library(Rage)
 library(DiagrammeR)
 library(popbio)
 library(popdemo)
+library(latex2exp)
 
 ```
 
@@ -98,6 +74,23 @@ rlt_style_colour <- function() {
                     
 ```
 
+
+
+```{r setup-graphics, include=FALSE}
+
+# Use a UTF‑8 aware device when building PDF (no effect on HTML)
+if (!knitr::is_html_output()) {
+  # Option 1: high‑quality PNGs via Cairo (very robust)
+  knitr::opts_chunk$set(
+    dev = "png",
+    dev.args = list(type = "cairo"),
+    dpi = 300
+  )
+  # Option 2: ragg (also excellent); uncomment if you prefer ragg
+  # knitr::opts_chunk$set(dev = "ragg_png", dpi = 300)
+}
+```
+
 ## Introducción a **Experimento de Respuesta de Tabla de Vida**
 
 La variación en los valores estimados de los parámetros de la matriz son inherentes a la biología. Esa variación puede ser consecuencia de múltiples factores individuales y/o de combinaciones, incluyendo efectos de tiempo, espaciales, genéticos, de tamaño de muestra y por su puesto suerte [@hernandez2024natural]. La variación en los parámetros de la historia de vida de una especie se pueden evaluar a diferentes niveles: genético, demográfico, espacial o temporal. En ecología la variación es la norma ¿Cuál es esta variación? ¿en otra palabras qué es lo que varía? y ¿cómo los individuos responden a las variables bióticas y abióticas? son aspectos importantes para determinar la ecología, evolución y conservación de las especies. La causa de la variación en una población se puede resumir en tres componentes principales: la genética, el efecto del ambiente y la interacción entre ambiente y genética (plasticidad fenotípica) [@hastings2021effects; @sun2019multivariate]. En general se asume que el tamaño de muestra es lo suficientemente grande para no ser la causa de la variación, pero dentro de un contexto de dinámica poblacional las condiciones en las que se encuentran los individuos en las poblaciones varían, ya sea durante tratamientos manipulados, entre localidades o periodos de tiempo, y por consecuencia los datos que colectamos con diferencias en espacio/tiempo también varían y pudieran tener efecto sobre la matriz de proyección poblacional $matA$. Por tanto, las entradas (los parámetros) de esa matriz **A** variarán en tiempo/espacio o experimento y esto tendría un impacto sobre la tasa de crecimiento poblacional $\lambda$ y en los estimados de dispersión (Intervalo de confianza o credibilidad); [@caswell2000matrix; @caswell2010life].
@@ -116,18 +109,7 @@ A diferencia de la elasticidad, el cual es un tipo de análisis de perturbación
 
 ## Formulación y cálculo de los LTRE
 
-A continuación se describe la formulación matemática de los LTRE y su
-implementación computacional para descomponer diferencias en el crecimiento
-poblacional.  A diferencia del análisis de
-elasticidad poblacional,
-los LTRE explican diferencias observadas en lugar de evaluar cambios
-hipotéticos en los parámetros demográficos.  A diferencia del análisis de
-elasticidad poblacional,
-los LTRE explican diferencias observadas en lugar de evaluar cambios
-hipotéticos en los parámetros demográficos. Las contribuciones LTRE pueden descomponerse en términos de matrices
-**U** y **F**, introducidas en el capítulo sobre
-matrices U, F y C.
-------------------------------------------------------------------------
+A continuación se describe la formulación matemática de los LTRE y su implementación computacional para descomponer diferencias en el crecimiento poblacional. A diferencia del análisis de elasticidad poblacional, los LTRE explican diferencias observadas en lugar de evaluar cambios hipotéticos en los parámetros demográficos. A diferencia del análisis de elasticidad poblacional, los LTRE explican diferencias observadas en lugar de evaluar cambios hipotéticos en los parámetros demográficos. Las contribuciones LTRE pueden descomponerse en términos de matrices **U** y **F**, introducidas en el capítulo sobre matrices U, F y C. ------------------------------------------------------------------------
 
 ## Métodos
 
@@ -295,7 +277,7 @@ El ciclo de vida de *Oncidium brachyandrum* creciendo sobre *Quercus rugosa*. La
 Para facilitar e entendimiento de cómo se calcula ERTV se creó la matriz con los términos de referencia (Cuadro 1).
 
 | Estadío | Plántulas (1) | Infantiles (2) | Juveniles (3) | Adultos (4) |
-|----|----|----|----|----|
+|---------------|---------------|---------------|---------------|---------------|
 | Plántulas (1) | p~11~ (permanencia de plántulas) | g~21~ (retroceso de infantiles a plántulas) | f~31~ (plántulas generadas)<br>g~31~ (retroceso de juveniles a plántulas) | f~41~ (plántulas generadas) |
 | Infantiles (2) | g~12~ (crecimiento de plántulas a infantiles) | p~22~ (permanencia de infantiles) | g~32~ (retroceso de juveniles a infantiles) | g~42~ (retroceso de adultos a infantiles) |
 | Juveniles (3) | g~13~ (crecimiento de plántulas a juveniles) | g~23~ (crecimiento de infantiles a juveniles) | p~33~ (permanencia de juveniles) | g~43~ (retroceso de adultos a juveniles) |
