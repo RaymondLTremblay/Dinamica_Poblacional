@@ -140,6 +140,8 @@ A continuación, se muestra un ejemplo de matriz de clonación. En la base de da
 
 ```{r mat4, message=FALSE}
 #| error: true
+#| cache: true
+compadre <- readRDS("data/COMPADRE_2026.rds")
 
 compadre <- readRDS("data/COMPADRE_2026.rds")
 
@@ -155,13 +157,15 @@ Del análisis se observa que 8,304 especies no tienen información registrada en
 
 ```{r mat5}
 #| error: true
+#| cache: true
+compadre <- readRDS("data/COMPADRE_2026.rds")
+
 
 #Encontrar MPP con matC clonaje no cero
 compadre$clonality <- 0
 
-for (i in 1:dim(compadre)[1]) {
-  compadre$clonality[i] <- sum(compadre$mat[[i]]@matC) # suma de todos los valores de la matriz de clonación
-}
+
+compadre$clonality <- sapply(compadre$mat, function(m) sum(m@matC))
 
 #table(compadre$clonality) # Remover el "#" para ver todos los resultados,
 
@@ -197,6 +201,8 @@ Ahora filtrar para orquídeas solamente y para aquellos con **matC** no nulo (cl
 
 ```{r mat7}
 #| error: true
+#| cache: true
+compadre <- readRDS("data/COMPADRE_2026.rds")
 
 orchid_clonal <- compadre_flagged %>%
   filter(Family == "Orchidaceae") %>% # filtrar para orquídeas
@@ -232,9 +238,8 @@ En esta código, se evaluá todas las orquídeas donde tiene una matriz de clona
 ```{r mat9}
 #| error: true
 
-for (i in 1:dim(orchid_clonal)[1]) {
-  orchid_clonal$clonality[i] <- sum(orchid_clonal$mat[[i]]@matC) # suma de todos los valores de la matriz de clonación
-}
+# Replace the for loop in mat5 with this:
+compadre$clonality <- sapply(compadre$mat, function(m) sum(m@matC))
 
 Orchid_clonal_max=orchid_clonal %>%
   filter(clonality == max(clonality)) # filtrar para la suma de matC máximo
@@ -303,9 +308,8 @@ plot_life_cycle(
 #Buscando MPM con matrix de clonación
 compadre$clonality <- 0
 
-for (i in 1:dim(compadre)[1]) {
-  compadre$clonality[i] <- sum(compadre$mat[[i]]@matC) # suma de todos los valores de la matriz de clonación
-}
+# Replace the for loop in mat5 with this:
+compadre$clonality <- sapply(compadre$mat, function(m) sum(m@matC))
 
 ```
 
@@ -399,4 +403,3 @@ Esta omisión es preocupante, ya que la clonación puede:
 -   Influir en la adaptación a cambios ambientales.
 
 Por lo tanto, es crucial integrar la clonación en los modelos de dinámica poblacional y en estudios evolutivos cuando esté presente.
-
