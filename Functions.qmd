@@ -1,0 +1,215 @@
+---
+title: "Appendix: Functions Used in This Book"
+---
+```{r}
+#| label: setup
+#| include: false
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(tibble)
+  library(knitr)
+})
+```
+```{r}
+#| label: scan-and-build
+#| echo: false
+#| message: false
+#| warning: false
+
+# ---- 1. Find all .qmd files (excluding this appendix) ----
+this_file <- knitr::current_input()
+
+qmd_files <- list.files(
+  path       = ".",
+  pattern    = "\\.qmd$",
+  recursive  = TRUE,
+  full.names = TRUE
+)
+
+if (!is.null(this_file)) {
+  qmd_files <- qmd_files[!grepl(
+    tools::file_path_sans_ext(basename(this_file)),
+    qmd_files, fixed = TRUE
+  )]
+}
+
+if (length(qmd_files) == 0) stop("No .qmd files found.")
+
+# ---- 2. Extract R code chunks ----
+extract_r_code <- function(file) {
+  lines    <- readLines(file, warn = FALSE)
+  in_chunk <- FALSE
+  chunk    <- character()
+  chunks   <- list()
+  for (ln in lines) {
+    if (grepl("^```\\{r", ln))          { in_chunk <- TRUE;  next }
+    if (in_chunk && grepl("^```\\s*$", ln)) {
+      in_chunk <- FALSE
+      if (length(chunk) > 0)
+        chunks[[length(chunks) + 1]] <- paste(chunk, collapse = "\n")
+      chunk <- character()
+      next
+    }
+    if (in_chunk) chunk <- c(chunk, ln)
+  }
+  unlist(chunks, use.names = FALSE)
+}
+
+all_code <- unlist(lapply(qmd_files, extract_r_code))
+
+# ---- 3. Extract function calls via parse-tree walk ----
+extract_functions <- function(code_str) {
+  expr <- tryCatch(parse(text = code_str), error = function(e) NULL)
+  if (is.null(expr) || length(expr) == 0) return(character(0))
+  calls <- character(0)
+  walk <- function(node) {
+    if (is.call(node)) {
+      fn <- node[[1]]
+      if (is.name(fn)) calls <<- c(calls, as.character(fn))
+      lapply(as.list(node)[-1], walk)
+    } else if (is.recursive(node)) {
+      lapply(as.list(node), walk)
+    }
+  }
+  for (e in as.list(expr)) tryCatch(walk(e), error = function(e) NULL)
+  unique(calls)
+}
+
+functions_used <- sort(unique(unlist(lapply(all_code, extract_functions))))
+
+# ---- 4. Exclusion list ----
+exclude_fns <- c(
+  "library", "require", "requireNamespace",
+  "setwd", "options", "getOption",
+  "print", "message", "cat", "paste", "paste0",
+  "c", "list", "vector", "character", "numeric", "logical",
+  "if", "for", "while", "repeat", "return", "break", "next",
+  "function", "local", "invisible", "do.call",
+  "{", "(", "[", "[[", "<-", "=", "~", ":",
+  "+", "-", "*", "/", "^", "%%", "%/%",
+  "==", "!=", "<", ">", "<=", ">=", "&", "|", "!",
+  "%>%", "|>", "%in%", "$", "@"
+)
+functions_used <- setdiff(functions_used, exclude_fns)
+
+# ---- 5. Build a master lookup: function -> package (all installed pkgs) ----
+# This is the key fix: search ALL installed packages, not just loaded ones
+build_pkg_lookup <- function(fns) {
+  # Get all installed packages
+  all_pkgs <- rownames(installed.packages())
+  
+  # Build reverse map from all loaded + installed namespaces
+  # First pass: fast search in already-loaded namespaces
+  loaded_ns <- loadedNamespaces()
+  lookup <- setNames(rep(NA_character_, length(fns)), fns)
+  
+  for (fn in fns) {
+    for (ns in loaded_ns) {
+      if (exists(fn, envir = asNamespace(ns), inherits = FALSE)) {
+        lookup[fn] <- ns
+        break
+      }
+    }
+  }
+  
+  # Second pass: for still-NA functions, search installed package NAMESPACE exports
+  still_na <- names(lookup)[is.na(lookup)]
+  if (length(still_na) > 0) {
+    for (pkg in all_pkgs) {
+      if (length(still_na) == 0) break
+      exports <- tryCatch(
+        getNamespaceExports(pkg),
+        error = function(e) character(0)
+      )
+      found <- intersect(still_na, exports)
+      if (length(found) > 0) {
+        lookup[found] <- pkg
+        still_na <- setdiff(still_na, found)
+      }
+    }
+  }
+  lookup
+}
+
+cat("Searching installed packages for function origins (this may take ~30s)...\n")
+pkg_lookup <- build_pkg_lookup(functions_used)
+
+# ---- 6. Get one-line description from help Rd files ----
+get_description <- function(fn, pkg) {
+  if (is.na(pkg)) return(NA_character_)
+  tryCatch({
+    rd_db <- tools::Rd_db(pkg)
+    # Find the Rd topic matching our function
+    for (topic in rd_db) {
+      aliases <- tryCatch(
+        as.character(unlist(tools:::.Rd_get_metadata(topic, "alias"))),
+        error = function(e) character(0)
+      )
+      if (fn %in% aliases) {
+        title <- tryCatch(
+          as.character(unlist(tools:::.Rd_get_metadata(topic, "title"))),
+          error = function(e) NA_character_
+        )
+        return(trimws(paste(title, collapse = " ")))
+      }
+    }
+    NA_character_
+  }, error = function(e) NA_character_)
+}
+
+# ---- 7. Build final data frame ----
+# Base R packages to exclude from the appendix
+base_pkgs <- c("base", "stats", "utils", "graphics",
+               "grDevices", "methods", "datasets")
+
+functions_df <- tibble(
+  func_name = functions_used,
+  package   = pkg_lookup[functions_used]
+) |>
+  # Remove base R functions
+  filter(!package %in% base_pkgs | is.na(package)) |>
+  mutate(
+    description = mapply(get_description, func_name, package)
+  ) |>
+  arrange(package, func_name)
+
+# ---- 8. Save outputs ----
+write.csv(functions_df, "function_appendix.csv", row.names = FALSE)
+saveRDS(functions_df,   "function_appendix.rds")
+```
+
+## Functions Used in This Book
+
+
+
+
+Functions from contributed and user-defined packages, with brief descriptions.
+
+
+```{r}
+#| label: render-table
+#| echo: false
+library(gt)
+
+functions_df |>
+  mutate(
+    description = description |>
+      gsub(pattern = "\n+|\\s+", replacement = " ", x = _) |>
+      trimws()
+  ) |>
+  select(Function = func_name, Package = package, Description = description) |>
+  gt() |>
+  tab_caption("Functions used across all chapters") |>
+  cols_width(
+    Function    ~ px(180),
+    Package     ~ px(130),
+    Description ~ px(500)
+  ) |>
+  tab_style(
+    style = cell_text(font = "monospace"),
+    locations = cells_body(columns = Function)
+  )
+```
+
+
+**Total:** `r nrow(functions_df)` functions from `r n_distinct(functions_df$package, na.rm = TRUE)` packages.

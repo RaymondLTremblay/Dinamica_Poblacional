@@ -4,7 +4,7 @@ Autores: "Demetria Mondragón, Ernesto Mujica y Elaine González"
 
 La elasticidad poblacional permite identificar qué transiciones del ciclo de vida tienen el mayor impacto proporcional sobre la tasa de crecimiento poblacional (λ). Este capítulo introduce la lógica, el cálculo y la interpretación aplicada de esta métrica.
 
-## Elasticidad poblacional: por qué pequeñas variaciones importan
+## Elasticidad poblacional: porqué pequeñas variaciones importan
 
 La elasticidad describe cuánto cambia la tasa de crecimiento poblacional (λ) ante pequeñas variaciones proporcionales en los parámetros vitales de la matriz (supervivencia, crecimiento, fecundidad). A diferencia de la sensibilidad, que evalúa cambios absolutos, la elasticidad normaliza por la magnitud del parámetro y permite comparar la influencia relativa de transiciones con escalas distintas. En este módulo se muestra: (i) cómo derivar elasticidades a partir del modelo matricial de Leslie/Lefkovitch, (ii) por qué ciertas etapas (p. ej., supervivencia en adultos de larga vida) dominan λ en especies longevas, y (iii) cómo interpretar estos resultados para priorizar acciones de manejo (protección de etapas clave, reducción de variabilidad en vital rates críticos). Incluimos ejemplos reproducibles con matrices reales y gráficos que contrastan elasticidades vs. sensibilidades, destacando cuándo la decisión de manejo cambiaría si usamos una u otra métrica. Finalizamos con recomendaciones prácticas: cómo reportar elasticidades con intervalos de confianza, cómo evitar interpretaciones erróneas cuando existen correlaciones entre transiciones, y cómo integrar elasticidades en un análisis LTRE o en simulaciones de escenarios. Esta lección se diferencia de las anteriores (fecundidad, crecimiento poblacional) porque conecta directamente la teoría con decisiones de conservación, mostrando el impacto marginal de cada transición sobre λ en términos comparables y accionables.
 
@@ -64,7 +64,7 @@ rlt_style_colour <- function() { #este es mi codigo personal de color
 }
 ```
 
-## Qué es la Elasticidad
+## Qué es la elasticidad
 
 Las matrices de elasticidad son un complemento de las matrices de transición, que nos permiten evaluar el efecto de “pequeños cambios” en los parámetros de la matriz de transición sobre la tasa de crecimiento de la población ($\lambda$); así, las entradas de la matriz de elasticidad que presenten los valores más altos, serán aquellas que más impacto tendrán sobre el comportamiento de lambda ($\lambda$) [@caswell2001matrix; @de1986elasticity]. Esos cambios pueden tener un efecto positivo o negativo sobre el crecimiento poblacional [@caswell2001matrix]. El uso de las elasticidades en ecología de plantas se remonta a 1974 cuando Sarukan y Gadgil trataron de evaluar la importancia relativa de la reproducción sexual versus la reproducción vegetativa de tres especies de *Ranunculus* [@sarukhan1974studies; @de1986elasticity].
 
@@ -86,7 +86,7 @@ Las matrices de elasticidad tienen la ventaja de que la suma de las entradas sum
 
 ------------------------------------------------------------------------
 
-### Sensibilidad y Elasticidad
+### Sensibilidad y elasticidad
 
 La diferencia entre sensibilidad y elasticidad es que la sensibilidad mide el impacto en λ de cambiar la magnitud absoluta de una tasa vital particular en relación con el cambio de otras tasas vitales [@caswell1989analysis], lo que implica que los cambios en las tasas de crecimiento, permanencia tendrán un valor de uno (ya que se estas tasas son proporciones), en tanto que los cambios en fecundidad podrán ser desde uno hasta cientos o miles, ya que se la fecundidad se calcula con en base a otra escala biológica (tal como número de semillas o plántulas). La elasticidad por su parte, calcula la sensibilidad proporcional de λ a los cambios en una tasa vital [@de1986elasticity] evitando de esta forma el efecto de la magnitud del cambio. Cuanto mayor sea el valor de la elasticidad de la tasa vital, mayor será la contribución relativa de esa tasa vital a $\lambda$.
 
@@ -155,7 +155,7 @@ ec_df %>%
 
 ------------------------------------------------------------------------
 
-### Efecto de cambio en las transiciones, de crecimiento, permanencia y fecundidad
+### Efecto de cambio en las transiciones, crecimiento, permanencia y de fecundidad
 
 En la tabla se ve los diferentes valores de elasticidad por procesos en *Erycina crista-galli* [@mondragon2007life] y el impacto por diferentes procesos de la historia de vida de la población. Ahora, si lo que quisiéramos saber es determinar que proceso o tasa vital es lo que rige el comportamiento de la población, lo que se hace es sumar las entradas de la matriz que lo representan, en este caso hemos puesto en diferentes colores las entradas que manifiestan cada tasa, en rojo es la permanencia, en azul el crecimiento, en amarillo el decrecimiento o retrogresión y en verde la fecundidad. Eso nos permite determinar que es el impacto de elasticidad por procesos y tasas vitales, sumando cada uno de los valores en cada categoría. Es claro que el impacto principal de la población de *E. crista-galli* depende de la permanencia de los individuos, seguido por el crecimiento, en tanto que la fecundidad y la retrogresión tienen un impacto menor.
 
@@ -262,7 +262,7 @@ ec_df %>%
 
 ------------------------------------------------------------------------
 
-### ¿Como se usa los análisis de elasticidad en un plan de conservación?
+### ¿Cómo se usan los análisis de elasticidad en un plan de conservación?
 
 Por lo que, de manera simplista, pudiéramos decir que, si quisiéramos desarrollar un plan de conservación para esta especie, nuestros esfuerzos debieran enfocarse a asegurar la supervivencia de los individuos adultos, ya que remover o la mortandad de los individuos adultos tiene el mayor impacto sobre la persistencia de la población. En tanto que si quisiéramos hacer un uso sustentable de esta orquídea lo recomendable sería recolectar individuos juveniles, cuyos valores de elasticidad son menores a la de los s adultos. El impacto de remover plántulas o juveniles de la población tendría menos impacto a largo plazo sobre la supervivencia de la población.
 
@@ -388,7 +388,7 @@ ggplot(EE1, aes(x = s2, y = Elasticidad, fill = Especie)) +
 
 ------------------------------------------------------------------------
 
-:::: img-float
+::: img-float
 ![*Laelia speciosa*. Foto: Eduardo A. Pérez García](images/Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg){style="float: right; margin: 10px;width: 40% ; "}
 
 ## Limitaciones
@@ -401,7 +401,7 @@ Una de las limitaciones principales de los análisis de elasticidad tradicional 
 
 ## Resumen corto de los pasos
 
-### Introducir los nombres de los estadíos o categorías de tamaño, según sea su caso
+### Introducir los nombres de los estadíos o categorías de tamaño según sea su caso
 
 ```{r}
 #| error: true
@@ -439,7 +439,7 @@ N0_ec
 
 ```
 
-## La función **eigen.analysis**
+## La función `eigen.analysis`
 
 Para calcular los autovalores y autovectores de la matriz se usa la función `eigen.analysis` del paquete `popbio`. Se optiene el crecimiento intrinsico **Lambda**, las sensitividad, elasticidad, valor reproductivo y damping ratio. En el capitulo () se presenta la interpretación de los valores reproductivos y el damping ratio.
 
@@ -450,5 +450,4 @@ eigen.analysis(ec, zero = FALSE) # la función es del paquete popbio
 ```
 
 El análisis de elasticidad puede extenderse naturalmente dentro de un marco bayesiano mediante modelos de proyección poblacional Bayesian PPM, lo que permite evaluar la importancia de las transiciones considerando explícitamente la incertidumbre paramétrica.
-
-::::
+:::
