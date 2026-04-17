@@ -169,7 +169,7 @@ compadre$clonality <- sapply(compadre$mat, function(m) sum(m@matC))
 
 #table(compadre$clonality) # Remover el "#" para ver todos los resultados,
 
-head(table(compadre$clonality)) #Se observa la suma de las matrices de clonaje, hay 8304 especies que no tiene información en matC, una población con un matC que su suma es 0.001, etc.
+as.data.frame(head(table(compadre$clonality))) |> flextable() #Se observa la suma de las matrices de clonaje, hay 8304 especies que no tiene información en matC, una población con un matC que su suma es 0.001, etc.
 
 summary(compadre$clonality[compadre$clonality>0],) # Resumen estadístico de la clonación en la base de datos de las especies que tienen clonación
 
@@ -327,7 +327,7 @@ Clonal_Species = compadre %>%
   select(mat, SpeciesAuthor, Family, clonality) %>% # seleccionar las columnas de interes
   arrange(desc(clonality)) # ordenar por la columna de clonación
 
-head(Clonal_Species) # ver las primeras 6 poblaciones
+head(Clonal_Species) |> select(-mat) |> flextable() # ver las primeras 6 poblaciones
 ```
 
 ------------------------------------------------------------------------
@@ -342,7 +342,7 @@ Hay 44 familias de plantas donde la **matC** esta incluida en la dinámica.
 # Ver la lista de familias únicas con clonación
 Families = (as.data.frame(sort(unique(Clonal_Species$Family))))
 
-head(Families) # ver las primeras 6 familias
+head(Families) |> flextable() # ver las primeras 6 familias
 ```
 
 ------------------------------------------------------------------------

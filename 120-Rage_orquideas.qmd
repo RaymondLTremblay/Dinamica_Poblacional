@@ -9,7 +9,6 @@ Por: Raymond L. Tremblay
 
 library(Rcompadre) # Paquete para trabajar con la base de datos de COMPADRE y COMADRE
 library(tidyverse) # Paquete para activar multiples paquetes
-library(gt) # Paquete para formatear tablas
 library(kableExtra) # Paquete para formatear tablas
 library(readxl)
 library(broom)
@@ -20,7 +19,7 @@ library(Rage) # función para calcular el largo de vida esperada entre otras
 library(car)
 library(popdemo)
 library(skimr)
-library(flextable)
+library(flextable) # Paquete para formatear tablas
 
 ```
 
@@ -107,6 +106,10 @@ names(TodasSp) # La lista de los nombres de las variables en el archivo COMPADRE
 
 Para filtrar únicamente las especies pertenecientes a la familia Orchidaceae en la base de datos COMPADRE (ahora renombrada como TodasSp), puedes utilizar la función filter() del paquete dplyr. Aquí tienes el código en R con estilo claro y académico:
 
+```{=latex}
+\begin{landscape}
+```
+
 ```{r Rage7}
 #| error: true
 
@@ -114,8 +117,12 @@ Orquideas = TodasSp %>%
   filter(Family %in% c("Orchidaceae")) # Extraer las orquídeas de la base de datos.
 
 # Assuming Orquideas is a CompadreDB object
-head(cdb_metadata(Orquideas), n = 3) |> 
-  gt()
+head(cdb_metadata(Orquideas), n = 3) |>
+  flextable() |> ft_wide()
+```
+
+```{=latex}
+\end{landscape}
 ```
 
 ------------------------------------------------------------------------
@@ -162,7 +169,7 @@ SPECIES_O = Orquideas %>%
   ungroup()
   
 
-gt(head(SPECIES_O))
+flextable(head(SPECIES_O))
 
 #write_csv(SPECIES_O, "DATA/Species_O.csv")
 ```
@@ -314,6 +321,10 @@ Posteriormente, se utiliza la función summary para obtener una descripción est
 
 #### Matrices ergódicas e irreductibles
 
+```{=latex}
+\begin{landscape}
+```
+
 ```{r Rage12c}
 #| error: true
 
@@ -324,9 +335,13 @@ Mat_erg_irred <- subset(
   check_NA_A == FALSE & check_irreducible == TRUE & check_ergodic == TRUE
 ) # para evaluar si las matrices son ergódicas e irreducibles al mismo tiempo
 
-head(cdb_metadata(Mat_erg_irred), n=2) |> 
-  gt()
+head(cdb_metadata(Mat_erg_irred), n=2) |>
+  flextable() |> ft_wide()
 
+```
+
+```{=latex}
+\end{landscape}
 ```
 
 ```{r Rage13, warning=FALSE, message=FALSE}
@@ -336,7 +351,7 @@ lambdaVals_list <- sapply(matA(Mat_erg_irred), popdemo::eigs, what = "lambda")
 
 lambdaVals=as_tibble(lambdaVals_list)
 
-tidy(lambdaVals) |> gt()
+tidy(lambdaVals) |> flextable()
 
 ggplot(lambdaVals, aes(value))+
   geom_histogram(aes(fill="lightblue"), colour="white")+
@@ -437,9 +452,7 @@ combined_df$Habit <- rownames(combined_df)
 combined_df <- combined_df[, c("Habit", names(epif_summary))]
 
 # Crear la tabla con flextable
-flextable(combined_df) |>
-  autofit() |>
-  theme_vanilla()
+flextable(combined_df)
 
 ```
 
@@ -623,6 +636,8 @@ El mapa revela una marcada disparidad en los sitios de muestreo entre los dos ti
 
 Además, el mapa es interactivo y permite hacer zoom para examinar áreas específicas con mayor detalle. Presiona sobre los puntos para obtener información adicional sobre el nombre científico de la especie muestreada en este sitio.
 
+::: {.content-visible when-format="html"}
+
 ```{r Rage36}
 #| error: true
 
@@ -646,6 +661,15 @@ Orchid_map
 # htmltools::save_html(Orchid_map, file = "Orchid_map.html") # El script para crear un archivo aparte del mapa
 
 ```
+
+:::
+
+::: {.content-visible when-format="pdf"}
+
+*El mapa interactivo de distribución de orquídeas está disponible únicamente en la versión HTML del libro.*
+
+:::
+
 
 ------------------------------------------------------------------------
 

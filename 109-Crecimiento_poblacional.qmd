@@ -21,7 +21,7 @@ library(popbio)
 library(readr)
 library(Rage)
 library(tidyverse)
-library(gt)
+library(flextable)
 
 ```
 
@@ -94,7 +94,7 @@ eig1.2$lambda
 
 t = tribble(~Año, ~lambda, "Año 1", eig1.1$lambda, "Año 2", eig1.2$lambda)
 
-gt::gt(t)
+flextable(t)
 
 ```
 
@@ -323,9 +323,9 @@ Tul_NA=NA
 tribble(~Método, ~λ, ~IC_2.5, ~IC_97.5,
   "Tuljapukar", tuljapukar, Tul_NA, Tul_NA,
   "Simulación", simulation, ic.1, ic.2) %>%
-  gt::gt() %>%
-  gt::tab_header(title = md("Tasa estocástica de crecimiento $λ_e$ y IC") )%>%
-  gt::cols_label(Método = "Método", λ = "λ_e", IC_2.5 = "IC 2.5%", IC_97.5 = "IC 97.5%")
+  flextable() %>%
+  set_header_labels(Método = "Método", λ = "λ_e", IC_2.5 = "IC 2.5%", IC_97.5 = "IC 97.5%") %>%
+  set_caption(caption = "Tasa estocástica de crecimiento λ_e y IC")
 
 ```
 
@@ -361,9 +361,9 @@ ic.2 <- exp(estocástico.desigual.9$sim.CI[2])
 tribble(~Método, ~λ, ~IC_2.5, ~IC_97.5,
   "Tuljapukar", tuljapukar, Tul_NA, Tul_NA,
   "Simulación", simulation, ic.1, ic.2) %>%
-  gt::gt() %>%
-  gt::tab_header(title = md("Tasa estocástica de crecimiento $λ_e$ y IC") )%>%
-  gt::cols_label(Método = "Método", λ = "λ_e", IC_2.5 = "IC 2.5%", IC_97.5 = "IC 97.5%")
+  flextable() %>%
+  set_header_labels(Método = "Método", λ = "λ_e", IC_2.5 = "IC 2.5%", IC_97.5 = "IC 97.5%") %>%
+  set_caption(caption = "Tasa estocástica de crecimiento λ_e y IC")
 
 ```
 
@@ -396,9 +396,9 @@ ic.2 <- exp(estocástico.desigual.2$sim.CI[2])
 tribble(~Método, ~λ, ~IC_2.5, ~IC_97.5,
   "Tuljapukar", tuljapukar, Tul_NA, Tul_NA,
   "Simulación", simulation, ic.1, ic.2) %>%
-  gt::gt() %>%
-  gt::tab_header(title = md("Tasa estocástica de crecimiento $λ_e$ y IC") )%>%
-  gt::cols_label(Método = "Método", λ = "λ_e", IC_2.5 = "IC 2.5%", IC_97.5 = "IC 97.5%")
+  flextable() %>%
+  set_header_labels(Método = "Método", λ = "λ_e", IC_2.5 = "IC 2.5%", IC_97.5 = "IC 97.5%") %>%
+  set_caption(caption = "Tasa estocástica de crecimiento λ_e y IC")
 ```
 
 En general, $λ_e$, al igual que $λ$, es útil cuando se caracterizan las condiciones, ya sea actuales o pasadas del periodo de tiempo en que se monitorea a las poblaciones. También es una herramienta poderosa para explorar la fuerza relativa de diferentes factores en el crecimiento poblacional. Sin embargo, al igual que $λ$, $λ_e$ no debe interpretarse literalmente para predecir el futuro.

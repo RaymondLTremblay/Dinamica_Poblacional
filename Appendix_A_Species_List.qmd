@@ -26,9 +26,9 @@ En la siguiente tabla se presentan los estudios de dinámica poblacional en orqu
 library(readr)
 library(tidyverse)
 library(dplyr)
-library(gt)
 library(flextable)
 library(ftExtra)
+library(kableExtra)
 ```
 
 ------------------------------------------------------------------------
@@ -72,7 +72,7 @@ listsp <-dplyr::tribble(
 "*Dendrophylax*", "*lindenii*", "Si", "-" , "Si", "-", "-", "-","Efecto de densidad, **Los datos de la matriz  no estan disponible**" ,"@gonzalez2009dinamica @raventos2015population ",
 "*Epidendrum*", "*xanthinum*", "Si", "Si" , "-", "-", "-", "-", "Comparación de poblaciones","@farfan2008estrategias",
 "*Epipactis*", "*atrorubens*", "Si", "Si" , "Si", "Si ", "-", "-","Incorporación de variable de endogamía" ,"@hens2017low",
-"*Epipactis*", "atrorubens", "-", "-" , "-", "- ", "-", "-","" ,"@jakalaniemi2011orchids",
+"*Epipactis*", "*atrorubens*", "-", "-" , "-", "- ", "-", "-","" ,"@jakalaniemi2011orchids",
 "*Erycina*", "*crista-galli*", "Si", "Si" , "-", "-", "-", "-","-","@mondragon2007life",
 "*Erycina*", "*crista-galli*", "-", "-" , "-", "-", "-", "-","-","@maldonado2005patron",
 "*Guarianthe*", "*aurantiaca*", "Si", "Si" , "-", "-", "-", "-","Efecto de cosecha","@mondragon2009population",
@@ -95,7 +95,7 @@ listsp <-dplyr::tribble(
 "*Lepanthes*", "*rubripetala*", "-", "-" , "-", "-", "-", "-","Tamaño efectivo de Población, Ne y largo de vida", "@tremblay2001gene",
 "*Lepanthes*", "*rubripetala*", "Si", "Si" , "Si", "-", "-", "-","Dinamica de transiciones","@tremblay2015stable",
 "*Lepanthes*", "*rupestris*", "-", "-" , "-", "-", "-", "-","Tamaño efectivo de Población, Ne y largo de vida","@tremblay2001gene",
-"*Lepanthes*", "acuminata", "Si", "-" , "-", "-", "-", "-","Dinamica de transiciones","@raventos2018comparison",
+"*Lepanthes*", "*acuminata*", "Si", "-" , "-", "-", "-", "-","Dinamica de transiciones","@raventos2018comparison",
 "*Lycaste*" , "*aromatica*", "Si", "-" , "Si", "-", "-", "-","Metapopulation approach","@winkler2009population",
 "*Neotinea*", "*ustulata*", "Si", "Si" , "-", "Si", "-", "Si","Metodo de estimar latencia, Tremblay","@shefferson2007dormancy",
 "*Oeceoclades*", "*maculata*", "Si", "Si" , "Si", "-", "-", "-","Especie invasiva","@riveron2019spatio",
@@ -109,7 +109,7 @@ listsp <-dplyr::tribble(
  "*Platanthera*", "*macrophylla*", "Si", "Si" , "Si", "-", "-", "-","Incluye estado de protocormo", "@cleavitt2017life @berry2021population",
  "*Platanthera*", "*orbiculata*", "Si", "Si" , "Si", "-", "-", "-","Incluye estado de protocormo","@cleavitt2017life @berry2021population",
  "*Prasophyllum*", "*correctum*", "Si", "" , "Si", "Si", "-", "-","Efecto de fuego","@coates2006effects",
- "Pseudorchis", "albida", "-", "-" , "-", "-", "-", "-","-","@stipkova2013mowing",
+ "*Pseudorchis*", "*albida*", "-", "-" , "-", "-", "-", "-","-","@stipkova2013mowing",
  "*Rodriguezia*", "*granadensis*", "Si", "Si" , "Si", "-", "-", "","Efecto antropogénico, **to be digitized**","@ospina2023effect",
  "*Serapias*", "*cordigera*", "Si", "Si" , "Si", "Si", "-", "-","Efecto antropogénico","@pellegrino2014effects",
  "*Spathoglottis*", "*plicata*", "Si", "Si" , "Si", "-", "-", "-","Orquídea invasiva y interacciones bióticas", "@falcon2017quantifying",
@@ -119,12 +119,40 @@ listsp <-dplyr::tribble(
 
  "*Telipogon*", "*helleri*", "Si", "-" , "-", "-", "-", "Si","Dinámica de transición","@raventos2018comparison",
  "*Tolumnia*", "*variegata*", "Si", "Si" , "Si", "-", "-", "Si","El costo de reproducción","@calvo1993evolutionary",
- "*Trichocentrum*", "*undulatum*", "-", "-" , "-", "-", "-", "","Efecto de aislamiento","@borrero2023populations" ) %>% 
-  flextable() %>%
-  flextable::autofit(add_w=0.2)
+ "*Trichocentrum*", "*undulatum*", "-", "-" , "-", "-", "-", "","Efecto de aislamiento","@borrero2023populations" )
 
-listsp
+listsp_clean <- listsp %>%
+  mutate(
+    Genero = gsub("\\*", "", Genero),
+    Especies = gsub("\\*", "", Especies)
+  )
 ```
+
+::: {.content-visible when-format="html"}
+```{r lista2-html, echo=FALSE, message=FALSE, warning=FALSE}
+#| error: true
+listsp %>%
+  flextable() %>%
+  colformat_md() %>%
+  flextable::autofit(add_w = 0.2)
+```
+:::
+
+::: {.content-visible when-format="pdf"}
+```{r lista2-pdf, echo=FALSE, message=FALSE, warning=FALSE}
+#| error: true
+listsp_pdf <- listsp_clean %>%
+  mutate(Ref = gsub("@", "", Ref))
+
+kableExtra::kbl(listsp_pdf,
+  booktabs = TRUE, longtable = TRUE) %>%
+  kableExtra::kable_styling(
+    latex_options = c("repeat_header", "scale_down", "HOLD_position"),
+    font_size = 7) %>%
+  kableExtra::column_spec(1, italic = TRUE) %>%
+  kableExtra::column_spec(2, italic = TRUE)
+```
+:::
 
 ::: img-float
 ![*Trichocentrum undulatum*. Foto: Hong Liu](images/Trichocentrum_undulatum_8_Hong_Liu.jpg){style="margin: 10px;width: 50% ; "}
@@ -163,7 +191,7 @@ NO_matrix <-dplyr::tribble(
 "*Cyclopogon*", "*luteoalbus*", "no matrix","@juarez2014viability",
 "*Cypripedium*", "*calceolus*", "no matrix" ,"@davison2013contributions",
 "*Cypripedium*", "*candidum*", "no matrix" ,"@shefferson2017predicting",
-"Gymnadenia", "conopsea","no matrix","@oien2002flowering",
+"*Gymnadenia*", "*conopsea*","no matrix","@oien2002flowering",
 
 "*Ophrys*", "*sphegodes*","no matrix","@hutchings2010population",
 "*Ophrys*", "*sphegodes*","no matrix" ,"@shefferson2017predicting",
@@ -176,16 +204,37 @@ NO_matrix <-dplyr::tribble(
 
 <br>
 
-```{r lista4, echo=FALSE, message=FALSE, warning=FALSE}
+```{r lista4-prep, echo=FALSE, message=FALSE, warning=FALSE}
 #| error: true
-
-list_no_matrix=NO_matrix %>%
-  flextable() %>%
-  theme_zebra() %>%
-  theme_box() |> 
-  set_table_properties(layout = "fixed", width = 1)
-
-list_no_matrix
-
+NO_matrix_clean <- NO_matrix %>%
+  mutate(
+    Genero = gsub("\\*", "", Genero),
+    Especies = gsub("\\*", "", Especies)
+  )
 ```
+
+::: {.content-visible when-format="html"}
+```{r lista4-html, echo=FALSE, message=FALSE, warning=FALSE}
+#| error: true
+NO_matrix %>%
+  flextable() %>%
+  colformat_md()
+```
+:::
+
+::: {.content-visible when-format="pdf"}
+```{r lista4-pdf, echo=FALSE, message=FALSE, warning=FALSE}
+#| error: true
+NO_matrix_pdf <- NO_matrix_clean %>%
+  mutate(Ref = gsub("@", "", Ref))
+
+kableExtra::kbl(NO_matrix_pdf,
+  booktabs = TRUE, longtable = TRUE) %>%
+  kableExtra::kable_styling(
+    latex_options = c("repeat_header", "scale_down", "HOLD_position"),
+    font_size = 8) %>%
+  kableExtra::column_spec(1, italic = TRUE) %>%
+  kableExtra::column_spec(2, italic = TRUE)
+```
+:::
 

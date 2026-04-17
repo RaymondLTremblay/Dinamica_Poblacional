@@ -28,7 +28,6 @@ A continuación se describen los métodos y protocolos utilizados para la recopi
 library(knitr)
 library(tidyverse)
 library(dplyr)
-library(gt)
 library(ftExtra)
 library(flextable)
 library(Rcompadre)
@@ -241,7 +240,7 @@ zones=tribble(
 
 ```{r Datos_2, echo=FALSE}
 #| error: true
-gt(zones)
+flextable(zones)
 ```
 
 Es la siguiente tabla damos unos ejemplos de orquídeas en cada una de las zonas. Nota que no es una lista exhaustiva, ya que hay muchas más especies que pueden encontrarse en cada una de las zonas. En adición la arquitectura de cada árbol, va influenciar la presencia de cada zona y hay orquídeas que se encuentra en más una zona. Hay especies que se van a encontrar en más de una zona. [@tremblay1997lepanthes]
@@ -268,11 +267,7 @@ Epifitas_zonas=dplyr::tribble(
 #| error: true
 
 list_epi = Epifitas_zonas %>%
-  flextable() %>%
-  theme_zebra() %>%
-  theme_box() |>
-
-  set_table_properties(layout = "fixed", width = 1)
+  flextable()
 
 list_epi
 ```
@@ -456,20 +451,11 @@ Variable_Censo = tribble(
 ```{r DC2, echo=FALSE, message=FALSE}
 #| error: true
 
-gt(Variable_Censo) |>
-  tab_header(
-    title = md("**Variables esenciales en un censo demográfico**"),
-    subtitle = ""
-  ) |>
-  tab_footnote(
-    footnote = md(
-      "Especificar si se trata de individuos procedentes de semilla o si su origen es por clonación (v.g. keikis, pseudobulbos separados, activación de yemas de reserva en pseudobulbos y rizomas, etc.)."
-    ),
-    locations = cells_body(
-      columns = "Muestreo posterior t+1",
-      rows = 6
-    )
-  )
+flextable(Variable_Censo) |>
+  set_caption(caption = "Variables esenciales en un censo demográfico") |>
+  add_footer_lines(values = "Nota: Especificar si se trata de individuos procedentes de semilla o si su origen es por clonación (v.g. keikis, pseudobulbos separados, activación de yemas de reserva en pseudobulbos y rizomas, etc.).") |>
+  fontsize(size = 8, part = "footer") |>
+  italic(part = "footer")
 
 ```
 

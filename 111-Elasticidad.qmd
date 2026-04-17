@@ -17,9 +17,8 @@ library(popbio)
 library(ggplot2)
 library(dplyr)
 library(scales)
-library(gt)
 library(janitor)
-library(tidyr) 
+library(tidyr)
 library(flextable)
 library(ftExtra)
 ```
@@ -137,20 +136,8 @@ ec_df <- ec_df %>%
   relocate(stages, .before = everything())
 
 ec_df %>%
-  gt() %>%
-  data_color(
-    columns = c(adulto2),
-    colors = c("#009392"),
-    domain = NULL
-  ) %>%
-  tab_style(
-    style = cell_fill('#CF597E'),
-    locations = cells_body(
-      columns = c(adulto2),
-      rows = 5
-    )
-  )
-  
+  flextable()
+
 ```
 
 ------------------------------------------------------------------------
@@ -178,85 +165,7 @@ ec_df = as.data.frame(elas(ec)) |> round(3)
 ec_df
 
 ec_df %>%
-  gt() %>%
-  tab_style(
-    style = cell_fill(color = 'lightgreen'),
-    locations = cells_body(
-      columns = c(4),
-      rows = c(1)
-    )
-  ) %>%
-  tab_style(
-    style = cell_fill(color = 'lightblue'),
-    locations = cells_body(
-      columns = c(1),
-      rows = c(2)
-    )
-  ) %>%
-  tab_style(
-    style = cell_fill(color = 'lightblue'),
-    locations = cells_body(
-      columns = c(1),
-      rows = c(3)
-    )
-  ) %>%
-  tab_style(
-    style = cell_fill(color = 'lightblue'),
-    locations = cells_body(
-      columns = c(1),
-      rows = c(4)
-    )
-  ) %>%
-  tab_style(
-    style = cell_fill(color = 'lightblue'),
-    locations = cells_body(
-      columns = c(2),
-      rows = c(3)
-    )
-  ) %>%
-  tab_style(
-    style = cell_fill(color = 'lightblue'),
-    locations = cells_body(
-      columns = c(2),
-      rows = c(4)
-    )
-  ) %>%
-  tab_style(
-    style = cell_fill(color = 'yellow'),
-    locations = cells_body(
-      columns = c(3),
-      rows = c(1)
-    )
-  ) %>%
-  tab_style(
-    style = cell_fill(color = 'lightblue'),
-    locations = cells_body(
-      columns = c(3),
-      rows = c(4)
-    )
-  ) %>%
-  tab_style(
-    style = cell_fill(color = 'yellow'),
-    locations = cells_body(
-      columns = c(4),
-      rows = c(3)
-    )
-  ) %>%
-
-  tab_style(
-    style = cell_fill(color = 'red'),
-    locations = cells_body(
-      columns = c(3),
-      rows = c(3)
-    )
-  ) %>%
-  tab_style(
-    style = cell_fill(color = 'red'),
-    locations = cells_body(
-      columns = c(4),
-      rows = c(4)
-    )
-  )
+  flextable()
 
 ```
 
@@ -304,11 +213,8 @@ Elasticidad_s =tribble(~Especie, ~Fecundidad, ~Estasis, ~Crecimiento, ~Plántula
 ```{r Elas6, echo=FALSE}
 #| error: true
 
-Elasticidad_s %>% 
-  flextable() %>%
-  theme_zebra() %>%
-  theme_box() |> 
-  set_table_properties(layout = "fixed", width = 1)
+Elasticidad_s %>%
+  flextable()
 ```
 
 <br>

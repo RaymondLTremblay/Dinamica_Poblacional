@@ -65,8 +65,8 @@ de armonización.
 
 library(Rcompadre) # Paquete para trabajar con la base de datos de COMPADRE y COMADRE
 library(tidyverse) # Paquete para activar multiples paquetes
-library(gt) # Paquete para formatear tablas
 library(kableExtra) # Paquete para formatear tablas
+library(flextable) # Paquete para formatear tablas
 
 library(broom)
 library(ggdist)
@@ -153,11 +153,19 @@ Para evaluar si la base de datos contiene información sobre especies particular
 
 Como podrán notar, solamente existen datos para una de las tres que probamos en la base de datos de COMPADRE.
 
+```{=latex}
+\begin{landscape}
+```
+
 ```{r compr7}
 #| error: true
 
 especies<- c("Epidendrum xanthinum", "Epipactis gigantea", "Caladenia latifolia")
-cdb_check_species(TodasSp, especies) |> gt()
+cdb_check_species(TodasSp, especies) |> flextable() |> ft_wide()
+```
+
+```{=latex}
+\end{landscape}
 ```
 
 ------------------------------------------------------------------------
@@ -180,9 +188,17 @@ index_O = TodasSp %>%
 
 Con la función **cdb_metadata()** se puede evaluar la metadata de la base de datos. La función muestra el número de filas y columnas, que incluye mútliples variables, tal como el nombre de la especies usada en la fuente de información ‘SpeciesAuthor’, el nombre del taxón reconocido “SpeciesAccepted”, la fuente de información como el DOI_ISBN, los años de estudio, sus coordenadas geográficas, el tipo de hábitat, la fuente de la información, entre otros.
 
+```{=latex}
+\begin{landscape}
+```
+
 ```{r Compr9}
 #| error: true
-cdb_metadata(index_O) %>% head() |> gt() # Evaluar la metadata de la base de datos de COMPADRE
+cdb_metadata(index_O) %>% head() |> flextable() |> ft_wide() # Evaluar la metadata de la base de datos de COMPADRE
+```
+
+```{=latex}
+\end{landscape}
 ```
 
 ------------------------------------------------------------------------
@@ -195,12 +211,20 @@ Vamos a seleccionar solamente unas matrices de transición de estados de poblaci
 
 Observamos que hay 4 matriz en la lista. La matriz de transición de estados de poblaciones (matU), la matriz de fecundidad (matF), la matriz de clonación (matC) y la suma de las tres matrices (matA=matU+MatF+matC).
 
+```{=latex}
+\begin{landscape}
+```
+
 ```{r Compr10}
 #| error: true
-index_O %>% filter(SpeciesAccepted %in% c("Laelia speciosa")) -> Laeliasp # Extraer la información de la especie 
+index_O %>% filter(SpeciesAccepted %in% c("Laelia speciosa")) -> Laeliasp # Extraer la información de la especie
 
-head(cdb_metadata(Laeliasp), n = 3) |> 
-  gt()  # Visualizar la información de la especie Laelia speciosa
+head(cdb_metadata(Laeliasp), n = 3) |>
+  flextable() |> ft_wide()  # Visualizar la información de la especie Laelia speciosa
+```
+
+```{=latex}
+\end{landscape}
 ```
 
 ------------------------------------------------------------------------
@@ -237,16 +261,24 @@ Laeliasp$mat[[2]]
     -   Aquí seleccionamos todas las matrices del género **Epipactis**.
     -   Nota que hay 59 filas, que corresponde típicamente a 59 matrices de diferentes poblaciones, tiempo o un análisis teóricos.
 
+```{=latex}
+\begin{landscape}
+```
+
 ```{r Compr13}
 #| error: true
 
 Epipactis = TodasSp %>%
   filter(Genus %in% c("Epipactis")) # Filtrar la información de *Epipactis* en la base de datos.
 
-head(cdb_metadata(Epipactis), n = 3) |> 
-  gt()
+head(cdb_metadata(Epipactis), n = 3) |>
+  flextable() |> ft_wide()
 
 # Nota que en el genero *Epipactis*, tenemos 51 fila, pero todas son de la misma especie de dos estudios distintos.
+```
+
+```{=latex}
+\end{landscape}
 ```
 
 ------------------------------------------------------------------------
@@ -336,6 +368,10 @@ Usando la función **cdb_flag** se identifican problemas potenciales en las matr
 
 Para facilitar el análisis usamos solamente las especies de *Caladenia* y enseñamos solamente las tres primeras filas.
 
+```{=latex}
+\begin{landscape}
+```
+
 ```{r Compr17, warnings=FALSE, message=FALSE}
 #| error: true
 
@@ -346,8 +382,12 @@ Compadre_flagged <- cdb_flag(Caladenia) # Evaluación de todas las opciones en l
 
 flagged=Compadre_flagged %>% select(mat, SpeciesAccepted, starts_with("check"))
 
-head(cdb_metadata(flagged), n = 3) |> 
-  gt()
+head(cdb_metadata(flagged), n = 3) |>
+  flextable() |> ft_wide()
+```
+
+```{=latex}
+\end{landscape}
 ```
 
 ------------------------------------------------------------------------
@@ -358,6 +398,10 @@ En los siguientes procedimientos se aplican filtros específicos a matrices de t
 
 #### Matrices ergódicas
 
+```{=latex}
+\begin{landscape}
+```
+
 ```{r Rage12}
 #| error: true
 
@@ -365,11 +409,19 @@ Mat_ergodic <- subset(
   Compadre_flagged,
   check_NA_A == FALSE & check_ergodic == TRUE
 ) # para evaluar si las matrices son ergódicas solamente
-head(cdb_metadata(Mat_ergodic), n=2) |> 
-  gt()
+head(cdb_metadata(Mat_ergodic), n=2) |>
+  flextable() |> ft_wide()
+```
+
+```{=latex}
+\end{landscape}
 ```
 
 #### Matrices irreductibles
+
+```{=latex}
+\begin{landscape}
+```
 
 ```{r Rage12b}
 #| error: true
@@ -379,11 +431,19 @@ Mat_irred <- subset(
   check_NA_A == FALSE & check_irreducible == TRUE
 ) # para evaluar si las matrices son irreducibles solamente
 
-head(cdb_metadata(Mat_irred), n=2) |> 
-  gt()
+head(cdb_metadata(Mat_irred), n=2) |>
+  flextable() |> ft_wide()
+```
+
+```{=latex}
+\end{landscape}
 ```
 
 #### Matrices ergódicas e irreductibles
+
+```{=latex}
+\begin{landscape}
+```
 
 ```{r Rage12c}
 #| error: true
@@ -392,9 +452,13 @@ Mat_erg_irred <- subset(
   check_NA_A == FALSE & check_irreducible == TRUE & check_ergodic == TRUE
 ) # para evaluar si las matrices son ergódicas e irreducibles al mismo tiempo
 
-head(cdb_metadata(Mat_erg_irred), n=2) |> 
-  gt()
+head(cdb_metadata(Mat_erg_irred), n=2) |>
+  flextable() |> ft_wide()
 
+```
+
+```{=latex}
+\end{landscape}
 ```
 
 Sept 9, 2025

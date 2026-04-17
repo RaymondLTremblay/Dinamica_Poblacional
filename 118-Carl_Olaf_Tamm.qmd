@@ -22,14 +22,13 @@ A continuación se presentan los principales aspectos de la trayectoria científ
 #| error: true
 
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(janitor, tidyverse, devtools, popbio, knitr, gt)
+pacman::p_load(janitor, tidyverse, devtools, popbio, knitr, flextable)
 
 library(tidyverse)
 library(janitor)
 library(popbio)
 library(knitr)
 library(tidyverse)
-library(gt)
 library(readxl)
 library(Rage)
 library(DiagrammeR)
@@ -146,16 +145,7 @@ En la publicación de 1972 [@tamm1972survival], Tamm describe la dinámica de m�
               "Listera ovata", 48, 1944, 1971)
 
 Tamm |>
-  gt() |>
-  tab_style(
-    style = list(
-      cell_fill(color = "lightcyan"),
-      cell_text(style = "italic")
-    ),
-    locations = cells_body(
-      columns = Especies
-    )
-  )
+  flextable()
 
 ```
 
@@ -208,7 +198,7 @@ Estos datos están limitado a la especie de *Dactylorhiza incarnata* y se tiene 
 Tamm_1972_column <- read_excel("data/Tamm_1972.xlsx", 
     sheet = "D_incarnata_by_column")
 
-Tamm_1972_column %>% head()
+Tamm_1972_column %>% head() |> flextable()
 ```
 
 El primer paso es encontrar una matriz de valores *prior* para añadir al modelo de construcción de los parámetros de la matriz. Como no podemos discutir de estos valores con Tamm, usamos valores de la literatura. Hay dos especies de *Dactylorhiza* con matrices en COMPADRE, usando la matriz que más se parece a los datos de los datos de Tamm, se usó como valores **prior** los de *Dacylorhiza lapponica* [@sletvold2010long]. Se modificó la matriz porque podemos solamente determinar si un individuo falleció después de ser latente. Entonces la suma de probabilidades de vegetativo y reproductivo suman a 1.0 y los latentes no suma a 1.0 (la diferencia es los fallecidos).
@@ -286,6 +276,8 @@ Para tomar en cuenta la fecundidad, se necesita una matriz de fertilidad. En est
 
 ```{r OCTamm_10}
 #| error: true
+#| tidy: true
+#| tidy.opts: list(width.cutoff = 60)
 
 Fmat <- matrix(0, nrow = 3, ncol = 3) # crear una matriz de ceros.
 Fmat[1, 2] <- 15 / 9 # contar 9 adultos reproductivos en el tiempo t y 15 nuevos individuos en el tiempo t+i en la población. Añadir el valor en la posición correcta de la matriz de fertilidad (nnota es la primera fila, segunda columna).
@@ -414,6 +406,8 @@ Ahora unimos todos los valores, para simular el crecimiento poblacional de *Dact
 
 ```{r OCTamm_15, eval=TRUE, echo=TRUE, warning=FALSE, message=FALSE}
 #| error: true
+#| tidy: true
+#| tidy.opts: list(width.cutoff = 60)
 
 Dacty_0.1 <- sim_transitions(
   TF2,
@@ -468,6 +462,6 @@ Dacty_0.1_summary <- dplyr::summarize(
 ```{r OCTamm_19, eval=T}
 #| error: true
 
-gt(signif(Dacty_0.1_summary, digits = 3))
+flextable(signif(Dacty_0.1_summary, digits = 3))
 
 ```

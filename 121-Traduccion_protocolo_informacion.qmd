@@ -7,7 +7,6 @@
 library(Rage)
 library(DiagrammeR)
 library(tibble)
-library(gt)
 ```
 
 ## "A standard protocol to report discrete stage-structured demographic information"
@@ -193,15 +192,11 @@ Descripcion_censo=tribble(~"Atributo del censo", ~"Ejemplo",
 
 
 
-gt(Descripcion_censo) %>% 
-  cols_align(
-    align = "right",
-    columns = 2
-  ) %>% 
-  tab_footnote(
-    footnote = "Pico de reproducción = Birth-Pulse",
-    locations = cells_body(columns = Ejemplo, rows = 4),
-    placement = "right")
+flextable(Descripcion_censo) |>
+  align(j = 2, align = "right", part = "body") |>
+  add_footer_lines(values = "Pico de reproducción = Birth-Pulse") |>
+  fontsize(size = 8, part = "footer") |>
+  italic(part = "footer")
 
 
 ```
@@ -222,12 +217,8 @@ Etapas=tribble(~"Número de las Etapas", ~"Nombre de la Etapa", ~"Critrio de Cla
                
 )
 
-gt(Etapas) %>% 
-  cols_align(
-    align = "left",
-    columns = 1
-    
-  )
+flextable(Etapas) |>
+  align(j = 1, align = "left", part = "body")
 ```
 
 ------------------------------------------------------------------------
@@ -298,7 +289,7 @@ Vector=tribble(~"Etapa", ~"Cantidad", ~"Intervalo de Confienza de 95%*",
                 "3", "300", "290-310"
 
 )
-gt(Vector)
+flextable(Vector)
 
 
 ```

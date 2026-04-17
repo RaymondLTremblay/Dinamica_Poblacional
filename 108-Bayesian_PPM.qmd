@@ -26,7 +26,6 @@ library(devtools) # para instalar el paquete desde github
 library(raretrans) # vea abajo para instalar esta libreria
 library(DiagrammeR)
 library(Rage)
-library(gt)
 
 ```
 
@@ -235,7 +234,7 @@ Podemos utilizar la función `popbio::projection.matrix` para obtener los datos 
 #| error: true
 
 data("L_elto") # carga el conjunto de datos `L_elto` en la memoria de la computadora (los datos están incluido en el paquete `raretrans`)
-head(L_elto) 
+head(L_elto) |> flextable()
 ```
 
 ## Organización de los datos en el "data.frame"
@@ -278,7 +277,7 @@ A partir de este punto los análisis se llevan a cabo considerando **s** (plánt
 
 # popbio::projection.matrix no funciona con el formato *tibbles*, por consecuencia se convierte en data.frame
 
-head(onepop) # Ahora tenemos solamente datos de la población #250 del periodo 5
+head(onepop) |> flextable() # Ahora tenemos solamente datos de la población #250 del periodo 5
 # Crear TF = TRUE, añadir para formatear correctamente.
 TF <- popbio::projection.matrix(
   as.data.frame(onepop),
@@ -636,7 +635,7 @@ RLT_0.5_summary <- summarize(
 ```{r bayes21}
 #| error: true
 
-gt::gt(signif(RLT_0.5_summary, digits = 2))
+flextable(signif(RLT_0.5_summary, digits = 2))
 ```
 
 ------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 project:
   type: book
   output-dir: docs
+  pre-render: rm -rf _freeze && rm -f index.tex index.log index.aux index.toc index.out index.idx index.lof index.lot && rm -f docs/*.pdf
   resources:
     - header.tex
     - google2352045df3d1e270.html
@@ -72,6 +73,7 @@ format:
     toc-depth: 3
     code-copy: true
     code-fold: true
+    code-tools: true
     code-overflow: wrap
     math: mathjax
   pdf:
@@ -89,13 +91,16 @@ format:
     include-in-header: header.tex
 
 execute:
-  freeze: auto
+  freeze: false
   warning: false
   message: false
   error: false
 
 knitr:
   opts_chunk:
+    tidy: 'formatR'
+    tidy.opts:
+      width.cutoff: 60
     R.options:
       cli.hyperlink: false
       cli.hyperlink_help: false

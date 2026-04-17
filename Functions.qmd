@@ -189,7 +189,6 @@ Functions from contributed and user-defined packages, with brief descriptions.
 ```{r}
 #| label: render-table
 #| echo: false
-library(gt)
 
 functions_df |>
   mutate(
@@ -198,17 +197,8 @@ functions_df |>
       trimws()
   ) |>
   select(Function = func_name, Package = package, Description = description) |>
-  gt() |>
-  tab_caption("Functions used across all chapters") |>
-  cols_width(
-    Function    ~ px(180),
-    Package     ~ px(130),
-    Description ~ px(500)
-  ) |>
-  tab_style(
-    style = cell_text(font = "monospace"),
-    locations = cells_body(columns = Function)
-  )
+  flextable() |>
+  set_caption(caption = "Functions used across all chapters")
 ```
 
 
