@@ -1,15 +1,15 @@
 project:
   type: book
   output-dir: docs
-  pre-render: rm -rf _freeze && rm -f index.tex index.log index.aux index.toc index.out index.idx index.lof index.lot && rm -f docs/*.pdf
+  pre-render: rm -rf _freeze
   resources:
-    - header.tex
     - google2352045df3d1e270.html
     - theme.scss
     - theme-dark.scss
     - images
     - favicon
     - robots.txt
+    - PDF_Dinamica_Poblacional
 book:
   title: Introducción a la Dinámica Poblacional de Orquídeas
   description: >
@@ -68,7 +68,8 @@ format:
       dark:
         - cosmo
         - theme-dark.scss
-    mainfont: Atkinson Hyperlegible
+    mainfont: "EB Garamond"
+    monofont: "JetBrains Mono"
     toc: true
     toc-depth: 3
     code-copy: true
@@ -76,19 +77,39 @@ format:
     code-tools: true
     code-overflow: wrap
     math: mathjax
-  pdf:
+  typst:
     output-file: Introduccion-a-la-Dinamica-Poblacional-de-Orquideas.pdf
-    pdf-engine: xelatex
-    code-overflow: wrap
-    code-block-font-size: \scriptsize
-    documentclass: book
     toc: true
+    toc-depth: 3
     number-sections: true
-    papersize: letter
-    geometry: margin=1in
-    fontsize: 12pt
-    colorlinks: true
-    include-in-header: header.tex
+    # 1.1.1 = up to three levels of numbered sections (chapter.section.subsection).
+    # Deeper levels (####) appear unnumbered.
+    section-numbering: 1.1.1
+    papersize: us-letter
+    fontsize: 11pt
+    margin:
+      x: 1.6cm
+      y: 2.2cm
+    columns: 1
+    # Explicit font paths so Typst finds user-installed fonts on macOS.
+    # ~/Library/Fonts/ is the user-fonts directory; /Library/Fonts/ is system fonts.
+    font-paths:
+      - "~/Library/Fonts"
+      - "/Library/Fonts"
+    # The Homebrew Cask version of EB Garamond installs as separate optical-size
+    # families ("EB Garamond 08", "EB Garamond 12"). We use the 12 variant for
+    # body text. If you install the modern single-family version from Google
+    # Fonts instead, change this to just "EB Garamond".
+    mainfont: "EB Garamond 12"
+    monofont: "JetBrains Mono"
+    keep-typ: false
+    # Allow HTML widgets (DiagrammeR, leaflet, etc.) to be rendered as static
+    # PNG screenshots via webshot2, instead of failing the build.
+    prefer-html: true
+    # Clean title block: no placeholder colored bands behind title/author text.
+    # Quarto's default title-block uses light-blue panels; we suppress them and
+    # rely on Typst's clean default cover layout.
+    title-block-style: none
 
 execute:
   freeze: false
@@ -98,9 +119,7 @@ execute:
 
 knitr:
   opts_chunk:
-    tidy: 'formatR'
-    tidy.opts:
-      width.cutoff: 60
+    tidy: false
     R.options:
       cli.hyperlink: false
       cli.hyperlink_help: false

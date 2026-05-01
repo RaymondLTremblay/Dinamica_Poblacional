@@ -1,11 +1,18 @@
 library(pdftools)
 
-pdf_in <- "docs/Introducción-a-la-Dinámica-Poblacional-de-Orquídeas.pdf"
+# NOTE: This script splits the rendered book PDF into per-chapter PDFs.
+# Updated to point at the Typst-rendered PDF (replaced the old LaTeX output
+# as of 2026-04-30). After re-rendering with `quarto render --to typst`,
+# verify the page numbers below — Typst pagination may differ from LaTeX,
+# and the front-matter offset will likely need adjustment.
+
+pdf_in  <- "docs/Introduccion-a-la-Dinamica-Poblacional-de-Orquideas.pdf"
 out_dir <- "chapter_pdfs"
 dir.create(out_dir, showWarnings = FALSE)
 
-# The PDF has 18 pages of front matter before book page 1.
-# All TOC page numbers need +18 to get actual PDF page number.
+# Front-matter offset: number of pages before book page 1.
+# Re-check this after the first Typst render — Typst typically has fewer
+# front-matter pages than LaTeX `book` class.
 offset <- 18
 
 chapters <- list(

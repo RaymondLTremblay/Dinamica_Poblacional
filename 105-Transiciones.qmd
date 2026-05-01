@@ -49,9 +49,9 @@ library(DiagrammeR)
 
 En este capítulo se explica cómo calcular las transiciones para la matriz de Lefkovitch (transiciones por etapas). La primera parte aborda el cálculo tradicional a mano, mientras que la segunda muestra cómo realizarlo de manera más eficiente utilizando funciones disponibles en paquetes de R.
 
-Los métodos presentados son una adaptación de los propuestos por [@caswell2000matrix] y se incluye una aplicación en orquídeas [@tremblay2003population]. Si ya has realizado análisis de matrices de transición, probablemente conozcas el método tradicional y podrías omitir esta sección. Este procedimiento consiste en calcular las proporciones de individuos que transitan de una clase de edad o etapa a otra, pero hacerlo manualmente puede ser tedioso y propenso a errores. Aun así, es recomendable realizarlo al menos una vez para comprender la mecánica del cálculo.
+Los métodos presentados son una adaptación de los propuestos por Caswell [@caswell2001matrix] y se incluye una aplicación en orquídeas [@tremblay2003population]. Si ya has realizado análisis de matrices de transición, probablemente conozcas el método tradicional y podrías omitir esta sección. Este procedimiento consiste en calcular las proporciones de individuos que transitan de una clase de edad o etapa a otra, pero hacerlo manualmente puede ser tedioso y propenso a errores. Aun así, es recomendable realizarlo al menos una vez para comprender la mecánica del cálculo.
 
-En la segunda parte del capítulo se muestra cómo calcular las transiciones utilizando la función projection.matrix del paquete popbio, una alternativa más eficiente y menos susceptible a errores que el método manual.
+En la segunda parte del capítulo se muestra cómo calcular las transiciones utilizando la función `projection.matrix` del paquete `popbio`, una alternativa más eficiente y menos susceptible a errores que el método manual.
 
 ## Definición y parametrización de transiciones
 
@@ -108,7 +108,7 @@ sum=a+b+c+d
 sum
 ```
 
-La suma de la proporciones calculado de las proporciones
+La suma de las proporciones calculadas
 
 ```{r Trans2b}
 #| error: true
@@ -123,7 +123,7 @@ Ahora calculamos las otras transiciones de juveniles a otras clases
 
 -   0/6 = 0.0000, transitaron de "juveniles" a "plantas pequeñas"
 -   3/6 = 0.5000, transitaron de "juveniles" a "juveniles"
--   2/6 = 0.3333, transitaron de "juveniles" a "adultos" '
+-   2/6 = 0.3333, transitaron de "juveniles" a "adultos"
 -   1/6 = 0.1666, murieron entre el primer y segundo periodo
 
 De adultos a otras clases
@@ -223,11 +223,11 @@ projection.matrix(
   transitions, # el nombre de la tabla de datos con los estados de los individuos en dos periodos de tiempo
   stage = NULL, # el nombre de la columna con los estados en el primer tiempo
   fate = NULL, # el nombre de la column con los estados en el segundo tiempo
-  fertility = NULL, la información sobre la fertilidad
+  fertility = NULL, # la información sobre la fecundidad
   sort = NULL, # si se quiere ordenar los estados de la historia de vida
   add = NULL,
   stages = NULL, # los nombres de las etapas del modelo en el primer y el segundo muestreo
-  TF = FALSE # si quiere que la matriz de transiciones y de fertilidad sean separados usa = TRUE 
+  TF = FALSE # si quiere que la matriz de transiciones y de fecundidad sean separadas, usa TF = TRUE
    )
 ```
 
@@ -236,7 +236,7 @@ projection.matrix(
 El output de la función `projection.matrix` es una lista que contiene dos matrices:
 
 -   **T**: incluye únicamente los valores de transición entre etapas.
--   **F**: incluye únicamente los valores de fertilidad, es decir, la cantidad de individuos que se incorporan a cada clase de edad por reproducción no clonal.
+-   **F**: incluye únicamente los valores de fecundidad, es decir, la cantidad de individuos que se incorporan a cada clase de edad por reproducción no clonal.
 
 ## Preparación de los datos antes del análisis
 
@@ -292,19 +292,19 @@ head(Orchis_ficticia_por_ind) |> flextable()
 
 ```
 
-Una vez que hemos asignado los nombres a las columnas, podemos utilizar la función projection.matrix para calcular las transiciones y la fertilidad.
+Una vez que hemos asignado los nombres a las columnas, podemos utilizar la función `projection.matrix` para calcular las transiciones y la fecundidad.
 
-En este contexto, la columna “fertilidad” representa la cantidad de individuos que se incorporan a cada clase de edad en el siguiente periodo.
+En este contexto, la columna "fertilidad" representa la cantidad de individuos que se incorporan a cada clase de edad en el siguiente periodo.
 
-En nuestro caso, solo los adultos pueden reproducirse, añadiendo nuevos individuos a la clase “plantas pequeñas”. La fertilidad se calcula como:
+En nuestro caso, solo los adultos pueden reproducirse, añadiendo nuevos individuos a la clase "plantas pequeñas". La fecundidad se calcula como:
 
-Fertilidad=$\frac{1}{6}$ = 0.1666
+$$\text{Fecundidad} = \frac{1}{6} = 0.1666$$
 
-Esto significa que, en promedio, cada adulto añade un nuevo individuo a la clase “plantas pequeñas” en el segundo periodo de tiempo.
+Esto significa que, en promedio, cada adulto añade un nuevo individuo a la clase "plantas pequeñas" en el segundo periodo de tiempo.
 
-Aquí un ejemplo de la función
+Aquí un ejemplo de la función:
 
-projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=TRUE)
+`projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=TRUE)`
 
 ```{r Trans7}
 #| error: true
@@ -321,14 +321,16 @@ projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=TRUE)
 
 ## Unión de matrices
 
-Si deseas obtener una matriz que combine tanto las transiciones como la fertilidad, puedes utilizar el argumento **TF** = FALSE en relación con **matA**.
+Si deseas obtener una matriz que combine tanto las transiciones como la fecundidad, puedes utilizar el argumento **TF** = FALSE en relación con **matA**.
 
 En este caso, la matriz resultante se define como:
 
-$$matA= \text{matT} + \text{matF}$$ donde:
+$$matA = \text{matT} + \text{matF}$$
 
--   matT es la matriz de transiciones.
--   matF es la matriz de fertilidad.
+donde:
+
+-   `matT` es la matriz de transiciones.
+-   `matF` es la matriz de fecundidad.
 
 ```{r Trans8}
 #| error: true
@@ -358,18 +360,18 @@ compadre <- readRDS("data/COMPADRE_2026.rds") # Usar este código para bajar los
 
 ------------------------------------------------------------------------
 
-### Extracción de COMPADRE las matrices *Cypripedium calceolus*.
+### Extracción de las matrices de *Cypripedium calceolus* desde COMPADRE
 
-Segundo extraer de la base de datos de COMPADRE las matrices de transiciones de *Cypripedium calceolus* del artículo mencionado arriba.
+El segundo paso es extraer de la base de datos COMPADRE las matrices de transiciones de *Cypripedium calceolus* del artículo mencionado arriba.
 
-Los pasos son los siguientes
+Los pasos son los siguientes:
 
--   Filtrar la base de datos para *Cypripedium calceolus*
--   Filtrar la base de datos para el DOI del artículo
--   Filtrar la base de datos para la dimensión de la matriz de transiciones (6x6)
--   Filtrar la base base de datos para una matriz en particular (242623)
+-   Filtrar la base de datos para *Cypripedium calceolus*.
+-   Filtrar la base de datos para el DOI del artículo.
+-   Filtrar la base de datos para la dimensión de la matriz de transiciones (6x6).
+-   Filtrar la base de datos para una matriz en particular (242623).
 
-NOTA que se podría haber filtrado parte la **MatrixID** solamente si uno conoce la identificación de esta matriz en la base de datos.
+NOTA: se podría haber filtrado a partir del **MatrixID** solamente, si uno conoce la identificación de esta matriz en la base de datos.
 
 ```{r Trans11}
 #| error: true
@@ -390,7 +392,7 @@ Cyp_cal_matC = compadre %>%
 
 ### matA de *Cypripedium calceolus*, MatrixID = 242623
 
-Las matriz de transiciones de *Cypripedium calceolus* tiene una matriz de transiciones de fecundidad y de clonaje, matA=matU+matF+matC
+La matriz de transiciones de *Cypripedium calceolus* tiene una matriz de transiciones, una de fecundidad y una de clonaje: matA = matU + matF + matC.
 
 ```{r Trans12}
 #| error: true
@@ -405,7 +407,7 @@ matcc
 
 NOTE que la matriz de clonaje es la siguiente.
 
-Lo que se observa es que hay NUEVOS INDIVIDUOS en el tiempo $\text{t}_{i+1}$, que provienen de los individuos en el tiempo $\text{t}_i$. En este caso, son individuos de provienen de a las etapas 4, 5 y 6 que producen individuos nuevos (por clonaje) en la etapa 3 y 4.
+Lo que se observa es que hay nuevos individuos en el tiempo $\text{t}_{i+1}$ que provienen de los individuos en el tiempo $\text{t}_i$. En este caso, son individuos que provienen de las etapas 4, 5 y 6 los que producen nuevos individuos (por clonaje) en las etapas 3 y 4.
 
 ```{r Trans13}
 #| error: true
@@ -416,13 +418,13 @@ matC
 
 ### El ciclo de vida de *Cypripedium calceolus* con clonaje
 
-Ahora vemos el ciclo de vida de *Cypripedium calceolus* en este estudio donde las lineas azules son las transiciones de una etapa a otra por clonaje.
+Ahora vemos el ciclo de vida de *Cypripedium calceolus* en este estudio, donde las líneas azules son las transiciones de una etapa a otra por clonaje.
 
 ```{r Trans14}
 #| error: true
 
 #etapas <- c("A1", "A2", "A3", "A4", "A5", "A6")
-etapas <- c("Dormant", "Smallest", "Small", "Intermediate", "Large", "Extra Large") # Etapas del articulo
+etapas <- c("Dormant", "Smallest", "Small", "Intermediate", "Large", "Extra Large") # Etapas del artículo
 
 etapas <- factor(etapas, levels =  c("Dormant", "Smallest", "Small", "Intermediate", "Large", "Extra Large"))
 title <- NULL

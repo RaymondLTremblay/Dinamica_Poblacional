@@ -87,6 +87,8 @@ render_dual <- function(dot, png_name) {
     DiagrammeR::grViz(dot)
   } else {
     pngfile <- file.path(out_dir, png_name)
+    # Ensure the output directory exists (e.g. figs/images/) before writing.
+    dir.create(dirname(pngfile), recursive = TRUE, showWarnings = FALSE)
     grviz_dot_to_png(dot, pngfile)
     knitr::include_graphics(pngfile)
   }
@@ -234,7 +236,7 @@ render_dual(dot, "images/CV_6Telipogon_helleri.png")
 
 En el trabajo de Coates y colaboradores con *Prasophyllum correctum* se recolectaron datos de la etapa de plántula, juvenil, adulto y latencia de los individuos [@coates2006effects]. La historia de vida de la especie está representada por 4 etapas. Los datos provienen de la figura 4 de la publicación de [@coates2006effects], donde hay un periodo de 3 o más años entre los periodos de régimen de fuegos. Una de la etapas distintivas de esta especie es la latencia vegetativa, lo que significa que las plantas no emergen cada año sus tubérculos (estructura de perennación) se mantienen vivos debajo del suelo. Muchas especies de orquídeas terrestres tienen latencia en las etapas de plántulas, juvenil y adultos.
 
-En *P. correctum*, al igual que en otras especies terrestres, es difícil estimar su muerte debido a la presencia de latencia vegetativa. Esto típicamente es un problema de muestreo y no de la biología de la especie, ya que es muy difícil estimar la muerte de los individuos. La ausencia de una planta marcada no significa que este muerte, sino que potencialmente está en su fase latente. Poder diferencia un estado de otro, también es difícil, ya que no es ético modificar el hábitat para determinar si la planta esta viva o muerta, más aún si condieramos que muchas de las especies terrestres están en peligro de extinción. Una manera de dar solición a esta situación es hacer unos análisis para determinar cuál es la probabilidad de que esté vivo un individuo con latencia vegetativa de múltiples años. En este caso, se hace unos análisis usando análisis bayesiano [@tremblay2009dormancy] para determinar cual es la probabilidad que un individuo con latencia de múltiples
+En *P. correctum*, al igual que en otras especies terrestres, es difícil estimar su muerte debido a la presencia de latencia vegetativa. Esto típicamente es un problema de muestreo y no de la biología de la especie, ya que es muy difícil estimar la muerte de los individuos. La ausencia de una planta marcada no significa que esté muerta, sino que potencialmente está en su fase latente. Poder diferenciar un estado de otro también es difícil, ya que no es ético modificar el hábitat para determinar si la planta está viva o muerta, más aún si consideramos que muchas de las especies terrestres están en peligro de extinción. Una manera de dar solución a esta situación es hacer análisis para determinar cuál es la probabilidad de que esté vivo un individuo con latencia vegetativa de múltiples años. En este caso, se realizan análisis usando un enfoque bayesiano [@tremblay2009dormancy] para determinar cuál es la probabilidad de que un individuo con latencia de múltiples años se encuentre vivo.
 
 El tránsito a la fase de latencia vegetativa se indica en azul, en verde el crecimiento, en amarillo la reproducción y en rojo la permanencia en una misma etapa, incluyendo latente a latente.
 
@@ -260,7 +262,7 @@ render_dual(dot, "images/CV7Prasophyllum_correctum.png")
 
 #### *Ophrys sphegodes*
 
-En el trabajo de Waite y Hutchings 1991 con *Ophrys sphegodes*, se recolectaron datos de la etapa vegetativa, plantas en flor y latencia de un año y dos años, por consecuencia la historia de vida está representada por 4 etapas. Los datos provienen de la figura 1 y la tabla 3b (periodo de herbivoría por oveja) de la publicación de (periodo de herbivoría por oveja) de la publicación de [@waite1991effects]. ). En este caso, se hace análisis para determinar cuál es la probabilidad que un individuo con latencia vegetativa múltiple (uno o dos años) este vivo al comparar poblaciones que están sujetas a la herbivoría por ovejas o ganado.
+En el trabajo de Waite y Hutchings 1991 con *Ophrys sphegodes* se recolectaron datos de la etapa vegetativa, plantas en flor y latencia de uno y dos años; por consecuencia, la historia de vida está representada por 4 etapas. Los datos provienen de la figura 1 y la tabla 3b (periodo de herbivoría por oveja) de la publicación de [@waite1991effects]. En este caso, se hacen análisis para determinar cuál es la probabilidad de que un individuo con latencia vegetativa múltiple (uno o dos años) esté vivo, al comparar poblaciones que están sujetas a la herbivoría por ovejas o ganado.
 
 Dado que el análisis se enfoca en la sobrevivencia, en el estudio no se incluye la reproducción (no hay línea amarilla). Las etapas que pasen a latente el siguiente año se señalan en azul, las que se quedan en la misma etapa están en rojo, mientras que en verde el tránsito a una etapa no latente.
 
@@ -291,34 +293,15 @@ render_dual(dot, "images/CV8_Ophrys.png")
 
 La dimensiones de la matriz y la cantidad de etapas o años incluidos en un análisis depende de múltiples factores. Cuando se trabaja con datos de campo, el acceso a individuos de cada etapa del ciclo de vida es, sin duda, un factor determinante. En la revisión de la publicaciones sobre orquídeas se encuentran análisis matriciales que varían entre 3 y 29 etapas de desarrollo, en promedio 5.6 etapas (desv. estandard de 3.2). El trabajo con mayor número de etapas es el de [@shefferson2014life], que utilizó 29 en *Cypripedium parviflorum* var. *parviflorum*.
 
-El costo de pasar a una fase latente después de diferentes etapas se evaluó en *Epipactus atrorubens*. En este análisis se definieron 11 estados, considerando la posibilidad de entrar en latencia vegetativa desde todas estas fases emergentes [@jakalaniemi2011orchids]. En *Orchis purpurea*, los autores modelaron el diagrama del ciclo de vida, definiendo 6 etapas de desarrollo: protocormos, turberculos, plántulas, juveniles (más de un año y menos de 3 hojas), plantas sin flores (más de 3 hojas) y plantas con flores, a continuación se presenta la matriz correspondiente tomada de [@jacquemyn2010seed]. La transiciones a una etapa subsiguiente se señalan en verde, en violeta las transiciones a una etapa más pequeña y la reproducción en amarillo. En este ciclo de vida las etapas de protocormos, tuberculos, plántulas son de un año cada una. Si estos individuos no crecen a la próxima etapa se supone que mueren.
+El costo de pasar a una fase latente después de diferentes etapas se evaluó en *Epipactus atrorubens*. En este análisis se definieron 11 estados, considerando la posibilidad de entrar en latencia vegetativa desde todas estas fases emergentes [@jakalaniemi2011orchids]. En *Orchis purpurea*, los autores modelaron el diagrama del ciclo de vida, definiendo 6 etapas de desarrollo: protocormos, turberculos, plántulas, juveniles (más de un año y menos de 3 hojas), plantas sin flores (más de 3 hojas) y plantas con flores, a continuación se presenta la matriz correspondiente tomada de [@jacquemyn2010seed]. La transiciones a una etapa subsiguiente se señalan en verde, en violeta las transiciones a una etapa más pequeña y la reproducción en amarillo. En este ciclo de vida las etapas de protocormos, tubérculos y plántulas son de un año cada una. Si estos individuos no crecen a la próxima etapa se supone que fallecieron.
 
 ::: img-float
 ![*Orchis purpurea*. Foto: Hans Jacquemyn](images/Orchis_purpurea_2_Hans_Jacquemyn.jpg){style="float: right; margin: 20px;width: 45% ; "}
 :::
 
-Aquí se visualiza la matriz de *Orchis purpurea* de la publicación de. La transiciones a una etapa subsiguiente son en verde, las transiciones a una etapa más pequeña son en violeta y la reproducción en amarillo. En este ciclo de vida las etapas de protocormos, tubérculos, plántulas son de un año cada una. Si estos individuos no crecen a la próxima etapa se asume que fallecieron.
-
-$$\\[1in]$$
-
-```{r CV9}
-#| error: true
-
-matA_Os=matrix(c(
-0.000, 0.000, 0, 0.00, 0.000, 84.88725,
-0.012, 0.000, 0, 0.00, 0.000,  0.00000,
-0.000, 0.041, 0, 0.00, 0.000,  0.00000,
-0.000, 0.000, 1, 0.75, 0.000,  0.00000,
-0.000, 0.000, 0, 0.25, 0.615,  0.62500,
-0.000, 0.000, 0, 0.00, 0.385,  0.37500), byrow=TRUE,ncol=6)
-
-matA_Os  
-
-```
+<br>
 
 ------------------------------------------------------------------------
-
-$$\\[2in]$$
 
 ```{r CV9_Os, echo=FALSE}
 #| error: true
@@ -345,14 +328,17 @@ render_dual(dot, "images/CV9_Os.png")
 
 ------------------------------------------------------------------------
 
-### Ejemplo de un ciclo de vida incompleto (y biológicamente erróneos)
+### Ejemplo de un ciclo de vida incompleto (y biológicamente erróneo)
 
 La importancia de este capítulo radica en reconocer la diferencia entre la historia de vida real de un organismo y la información que se puede recolectar en el campo. En los estudios poblacionales de orquídeas, dos desafios en su investigación y muestreo son la dificultad, por un lado, de rastrear y hacer una seguimiento de las semillas en el campo y, por otro, el determinar los sitios adecuados para su germinación (sitios seguros). Este segundo aspecto implica considerar la presencia de micorrizas, cuya asociación con las semillas es determinante para su germinación. Estas etapas tempranas en del ciclo de vida de las orquídeas suelen estar rodeadas de gran incertidumbre, lo que limita los análisis e interpretaciones de su evolución y conservación.
 
-Además de los anteriores, existes otros problemas. La recolección de datos en campo puede ser irreal en el contexto de historia de vida y la base matemática del modelo representado. Para más detalles ver el capitulo “Impacto de datos sin sentidos”. A qué me refiero, en la siguiente figura aparecen tres errores comunes durante la recolectan datos de la historia de vida de una especie. El primero es que no hay mortalidad de los individuos en una de las etapas (juveniles), el segundo es que todos los individuos se mueren (plántulas) y el tercero es que los individuos se mantienen en la misma etapa de desarrollo (adultos) y no hay muerte. Dada la muerte de las plántulas, no hay flecha que una este estado a otros estados. La falta de continuidad o conexión entre las etapas del ciclo de vida son errores que ocurren típicamente cuando el tamaño de muestra es pequeña o la probabilidad de transición es rara o poco frecuente; por ejemplo, los árboles grandes no fallecen. Estos son los tres errores típicos que a los que nos enfrentamos cuando se lleva a cabo un análisis de dinámica poblacional en especies con transiciones poco comunes.
+Además de los anteriores, existen otros problemas. La recolección de datos en campo puede ser irreal en el contexto de la historia de vida y la base matemática del modelo representado. Para más detalles ver el capítulo "Impacto de datos sin sentido". Por ejemplo, en la @fig-cv10 aparecen tres errores comunes durante la recolección de datos de la historia de vida de una especie. El primero es que no hay mortalidad de los individuos en una de las etapas (juveniles), el segundo es que todos los individuos se mueren (plántulas) y el tercero es que los individuos se mantienen en la misma etapa de desarrollo (adultos) y no hay muerte. Dada la muerte de las plántulas, no hay flecha que una a este estado con otros estados. La falta de continuidad o conexión entre las etapas del ciclo de vida son errores que ocurren típicamente cuando el tamaño de muestra es pequeño o la probabilidad de transición es rara o poco frecuente; por ejemplo, los árboles grandes no fallecen. Estos son los tres errores típicos a los que nos enfrentamos cuando se lleva a cabo un análisis de dinámica poblacional en especies con transiciones poco comunes.
 
-```{r cv10_incompleto}
+```{r}
 #| error: true
+#| label: fig-cv10
+#| fig-cap: "Ejemplo de un ciclo de vida incompleto con tres errores típicos durante la recolección de datos: ausencia de mortalidad en juveniles, mortalidad total de plántulas y permanencia perpetua en adultos sin muerte."
+
 matA_incom <- rbind(
   c(0.0, 0.0, 3.2),
   c(0.0, 1.0, 0.1),
@@ -372,7 +358,7 @@ render_dual(dot, "images/CV10.png")
 
 ## Ejemplo de un diagrama de un ciclo de vida usando el paquete ggplot
 
-En la graficación del ciclo de vida podemos usar otro paquete de R (Rage). La diferencia es que no se pueden cambiar los colores de las líneas y los nodos (círculos que representan los estados de desarrollo). Esta es una opción más sencilla para crear diagramas de ciclo de vida, además de ser práctica para publicaciones donde no se necesita cambiar los colores de las líneas y nodos.
+En la graficación del ciclo de vida podemos usar otro paquete de R, `Rage` (ver @fig-cv11). La diferencia es que no se pueden cambiar los colores de las líneas y los nodos (círculos que representan los estados de desarrollo). Esta es una opción más sencilla para crear diagramas de ciclo de vida, además de ser práctica para publicaciones donde no se necesita cambiar los colores de las líneas y nodos.
 
 ```{r cv11_rage, echo=FALSE, message=FALSE, warning=FALSE}
 #| error: true
@@ -426,8 +412,11 @@ save_plot_png <- function(obj, file, width_px = 2400, height_px = 1600, dpi = 30
 
 ```
 
-```{r cv11_rage_plot}
+```{r}
 #| error: true
+#| label: fig-cv11
+#| fig-cap: "Diagrama de ciclo de vida construido con el paquete `Rage`."
+
 ## 2) Your example rewritten correctly
 out_dir <- "figs"
 dir.create(out_dir, showWarnings = FALSE)
