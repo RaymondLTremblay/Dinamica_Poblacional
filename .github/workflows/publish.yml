@@ -37,12 +37,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            cmake gdal-bin pandoc poppler-data \
+            cmake gdal-bin pandoc \
             libabsl-dev libcairo2-dev libcurl4-openssl-dev \
             libfontconfig1-dev libfreetype6-dev libfribidi-dev \
             libgdal-dev libgeos-dev libgit2-dev libglpk-dev \
             libharfbuzz-dev libicu-dev libjpeg-dev libnode-dev \
-            libpng-dev libpoppler-cpp-dev libproj-dev librsvg2-dev \
+            libpng-dev libproj-dev librsvg2-dev \
             libsqlite3-dev libssl-dev libtiff-dev libudunits2-dev \
             libuv1-dev libwebp-dev libx11-dev libxml2-dev \
             zlib1g-dev
@@ -52,14 +52,6 @@ jobs:
         env:
           PKG_SYSREQS: "false"
           CHROMOTE_CHROME: ${{ steps.setup-chrome.outputs.chrome-path }}
-
-      - name: Install raretrans from GitHub
-        shell: Rscript {0}
-        run: |
-          if (!requireNamespace("raretrans", quietly = TRUE)) {
-            install.packages("remotes")
-            remotes::install_github("atyre2/raretrans")
-          }
 
       - name: Install Quarto
         uses: quarto-dev/quarto-actions/setup@v2

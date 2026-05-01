@@ -66,12 +66,10 @@ Dinamica_Poblacional/
 # 1. Clone the repo
 #    git clone https://github.com/RaymondLTremblay/Dinamica_Poblacional.git
 
-# 2. Install R packages
-install.packages("remotes")
-remotes::install_github("atyre2/raretrans")
-# Install remaining packages from DESCRIPTION
+# 2. Install R packages (all available on CRAN)
 install.packages(c("knitr", "rmarkdown", "tidyverse", "popbio", "popdemo",
-                   "Rage", "Rcompadre", "MCMCpack", "leaflet", "flextable"))
+                   "Rage", "Rcompadre", "MCMCpack", "leaflet", "flextable",
+                   "raretrans"))
 
 # 3. Render the book (from RStudio Terminal)
 #    quarto render --to html
