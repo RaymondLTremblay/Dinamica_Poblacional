@@ -31,17 +31,27 @@ jobs:
 
       - name: Install Chrome (for chromote/webshot2)
         uses: browser-actions/setup-chrome@v1
+        id: setup-chrome
 
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
+          sudo apt-get install -y \
+            cmake gdal-bin pandoc poppler-data \
+            libabsl-dev libcairo2-dev libcurl4-openssl-dev \
+            libfontconfig1-dev libfreetype6-dev libfribidi-dev \
+            libgdal-dev libgeos-dev libgit2-dev libglpk-dev \
+            libharfbuzz-dev libicu-dev libjpeg-dev libnode-dev \
+            libpng-dev libpoppler-cpp-dev libproj-dev librsvg2-dev \
+            libsqlite3-dev libssl-dev libtiff-dev libudunits2-dev \
+            libuv1-dev libwebp-dev libx11-dev libxml2-dev \
+            zlib1g-dev
 
       - name: Install R packages
         uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::rmarkdown
-          dependencies: '"hard"'
+        env:
+          PKG_SYSREQS: "false"
+          CHROMOTE_CHROME: ${{ steps.setup-chrome.outputs.chrome-path }}
 
       - name: Install raretrans from GitHub
         shell: Rscript {0}
