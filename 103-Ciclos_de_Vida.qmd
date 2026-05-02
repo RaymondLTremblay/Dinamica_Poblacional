@@ -413,12 +413,13 @@ save_plot_png <- function(obj, file, width_px = 2400, height_px = 1600, dpi = 30
 
 ```
 
-```{r}
+```{r cv11_rage_build, echo=FALSE, message=FALSE, warning=FALSE}
 #| error: true
-#| label: fig-cv11
-#| fig-cap: "Diagrama de ciclo de vida construido con el paquete `Rage`."
 
-## 2) Your example rewritten correctly
+## 2) Generar el diagrama y guardarlo como PNG estático.
+## La referencia cruzada se hace con la imagen ![](...){#fig-cv11} más abajo,
+## de modo que el cross-ref no depende de que el htmlwidget se renderice
+## correctamente en cada salida (HTML/PDF).
 out_dir <- "figs"
 dir.create(out_dir, showWarnings = FALSE)
 
@@ -434,13 +435,13 @@ p <- Rage::plot_life_cycle(
   fontsize = 0.1
 )
 
-# Show in interactive session (optional)
-print(p)
-
 # Save to PNG regardless of whether it's ggplot or htmlwidget
 save_plot_png(p, file = file.path(out_dir, "CV11_Rage_plot.png"), width_px = 2400, height_px = 1600)
 
 ```
+
+![Diagrama de ciclo de vida construido con el paquete `Rage`.](figs/CV11_Rage_plot.png){#fig-cv11}
+
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 #| error: true
