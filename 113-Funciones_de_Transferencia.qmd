@@ -30,11 +30,7 @@ del sistema se transfieren a otros componentes. Las funciones de transferencia
 constituyen un vínculo conceptual entre la estructura del ciclo de vida, las
 transiciones demográficas y las respuestas poblacionales observadas, y son
 especialmente útiles para integrar mecanismos biológicos, covariables
-ambientales y supuestos de manejo en modelos dinámicos más realistas. Las funciones de transferencia se construyen a partir de los procesos
-demográficos descritos en el capítulo sobre
-transiciones poblacionales. Las funciones de transferencia permiten incorporar mecanismos específicos en
-las simulaciones poblacionales descritas en el capítulo sobre
-métodos de simulaciones.
+ambientales y supuestos de manejo en modelos dinámicos más realistas. Las funciones de transferencia se construyen a partir de los procesos demográficos descritos en el capítulo de [Transiciones](105-Transiciones.qmd). Las funciones de transferencia permiten incorporar mecanismos específicos en las simulaciones poblacionales descritas en el capítulo de [Métodos de simulaciones](115-Metodos_de_simulaciones.qmd).
 
 ## Definición e implementación de funciones de transferencia
 
@@ -58,17 +54,21 @@ Los modelos de dinámica transitoria constituyen una alternativa para analizar l
 
 Continuando con los análisis de la dinámica transitoria en *Lepanthes rubripetala* realizados por Tremblay y colaboradores [@tremblay2015stable], en este capítulo abordaremos los análisis de perturbación transitoria. Estos permiten proyectar cómo responde la dinámica poblacional transitoria ante la manipulación de las tasas vitales (supervivencia, reproducción y crecimiento) y de la estructura poblacional (abundancia relativa de individuos de diferentes edades, tamaños o estados) [@stott2016perturbation]. Dichos análisis son herramientas clave para identificar qué individuos o tasas vitales son más relevantes para la dinámica a corto plazo. A partir de estos resultados, es posible definir estrategias de conservación y manejo más eficientes, que permitan alcanzar tasas de crecimiento planificadas para la especie de interés ($\lambda = 1$, $\lambda < 1$ o $\lambda > 1$), con el mínimo esfuerzo o costo [@stott2016perturbation].
 
-En el modelo de crecimiento asintótico o de largo plazo, tratado en el capítulo sobre Elasticidad, se realizaron dos análisis de perturbación: sensibilidad y elasticidad, que estiman los efectos absolutos y relativos, respectivamente, de pequeñas perturbaciones sobre la tasa de crecimiento poblacional ($\lambda$) [@caswell2001matrix]. Sin embargo, estos análisis no son adecuados para evaluar la dinámica a corto plazo, ya que resultan poco eficientes para describir la respuesta poblacional ante perturbaciones de gran magnitud [@stott2011framework; @stott2012beyond]. Además, dichos análisis asumen una relación lineal entre la perturbación y el crecimiento poblacional en modelos asintóticos, lo cual no refleja la respuesta no lineal característica de los modelos de dinámica transitoria [@stott2011framework; @stott2012beyond].
+En el modelo de crecimiento asintótico o de largo plazo, tratado en el capítulo de [Elasticidad](#Elasticidad), se realizaron dos análisis de perturbación: sensibilidad y elasticidad, que estiman los efectos absolutos y relativos, respectivamente, de pequeñas perturbaciones sobre la tasa de crecimiento poblacional ($\lambda$) [@caswell2001matrix]. Sin embargo, estos análisis no son adecuados para evaluar la dinámica a corto plazo, ya que resultan poco eficientes para describir la respuesta poblacional ante perturbaciones de gran magnitud [@stott2011framework; @stott2012beyond]. Además, dichos análisis asumen una relación lineal entre la perturbación y el crecimiento poblacional en modelos asintóticos, lo cual no refleja la respuesta no lineal característica de los modelos de dinámica transitoria [@stott2011framework; @stott2012beyond].
 
 Dado que algunas poblaciones están sujetas a perturbaciones repentinas o intensas en ciertos periodos, su comportamiento poblacional puede ser altamente variable [@bierzychudek1999looking; @hastings2001transient]. Por ello, existe un interés creciente en evaluar cuantitativamente la sensibilidad y la elasticidad no lineal [@stott2012beyond; @stott2016perturbation]. Entre los métodos desarrollados para este fin, en este capítulo abordaremos el análisis de la función de transferencia aplicado a matrices de proyección poblacional.
 
 ### Análisis de elasticidad: lineales y no lineales
 
-Es importante destacar que los análisis de perturbación a largo plazo [@caswell2001matrix; @de2000elasticities], explicados en el capítulo de Elasticidad, asumen que la tasa de crecimiento poblacional ($\lambda$) varía de manera lineal cuando se modifica algún elemento de la dinámica poblacional. Esto implica que un cambio en un componente del sistema se traduce en un cambio proporcional en la tasa de crecimiento. Esta suposición es válida cuando las perturbaciones son pequeñas, ya que el efecto sobre $\lambda$ será igualmente reducido.
+Es importante destacar que los análisis de perturbación a largo plazo [@caswell2001matrix; @de2000elasticities], explicados en el capítulo de [Elasticidad](#Elasticidad), asumen que la tasa de crecimiento poblacional ($\lambda$) varía de manera lineal cuando se modifica algún elemento de la dinámica poblacional. Esto implica que un cambio en un componente del sistema se traduce en un cambio proporcional en la tasa de crecimiento. Esta suposición es válida cuando las perturbaciones son pequeñas, ya que el efecto sobre $\lambda$ será igualmente reducido.
 
 Sin embargo, cuando las perturbaciones son grandes, los efectos no necesariamente siguen un patrón lineal [@bialic2018using]. En tales casos, los resultados derivados de los análisis tradicionales pueden ser subóptimos, llegando a subestimar o sobreestimar la importancia absoluta o relativa de las tasas vitales o de las categorías de la variable de estado sobre la tasa de crecimiento poblacional.
 
 Por el contrario, los análisis de perturbación transitorios no presuponen este comportamiento lineal, lo que los hace más adecuados para evaluar la respuesta de una población ante eventos de perturbación de gran magnitud [@hodgson2004methodological]. Estos análisis permiten capturar la complejidad y la naturaleza no lineal de la dinámica transitoria, ofreciendo una visión más realista del comportamiento poblacional en escenarios de cambio abrupto.
+
+::: callout-important
+**La elasticidad clásica supone linealidad — y esa suposición se rompe con perturbaciones grandes.** Sensibilidad y elasticidad asumen que un cambio del 10% en una entrada produce el doble del efecto que un cambio del 5%. Esta suposición se cumple bien para perturbaciones pequeñas (≲ 1–2%), pero para cambios grandes (e.g., reducir mortalidad adulta a la mitad, eliminar reproducción de un estadio) la respuesta de λ es típicamente **no lineal**. Las funciones de transferencia calculan la respuesta exacta de λ para cualquier magnitud de perturbación, sin asumir linealidad.
+:::
 
 ------------------------------------------------------------------------
 
@@ -93,11 +93,11 @@ Al combinar estos componentes mediante multiplicaciones y sumas según la ecuaci
 
 $$A_{\delta}= A + \delta de^T$$
 
-En esta ecuación, la matriz $A$ presenta propiedades emergentes, lo que implica un crecimiento asintótico o de largo plazo definido por $\lambda_{max}$, acompañado de un eigenvector derecho ($v$, valor reproductivo) y un eigenvector izquierdo ($w$, estructura estable). Por su parte, la matriz perturbada $A_{\delta}$ también exhibe propiedades emergentes propias: una tasa de crecimiento asintótico distinta, así como su propia estructura poblacional estable y valor reproductivo, determinados por el elemento perturbado y la magnitud de la perturbación [@stott2012beyond]. El parámetro $\delta$ representa los valores continuos de perturbación o cambios en los elementos de la matriz, afectando la tasa de crecimiento $\lambda_{max}(A_\delta)$. La relación exacta entre $\delta$ y $\lambda_{max}$ se expresa mediante la siguiente ecuación:
+En esta ecuación, la matriz $A$ presenta propiedades emergentes, lo que implica un crecimiento asintótico o de largo plazo definido por $\lambda_{max}$, acompañado de un eigenvector derecho ($w$, estructura estable) y un eigenvector izquierdo ($v$, valor reproductivo). Por su parte, la matriz perturbada $A_{\delta}$ también exhibe propiedades emergentes propias: una tasa de crecimiento asintótico distinta, así como su propia estructura poblacional estable y valor reproductivo, determinados por el elemento perturbado y la magnitud de la perturbación [@stott2012beyond]. El parámetro $\delta$ representa los valores continuos de perturbación o cambios en los elementos de la matriz, afectando la tasa de crecimiento $\lambda_{max}(A_\delta)$. La relación exacta entre $\delta$ y $\lambda_{max}$ se expresa mediante la siguiente ecuación:
 
 $$\delta^{-1}=e^T\left(\lambda I-A\right)^{-1}d$$
 
-Esta ecuación corresponde a las elasticidades no lineales; donde, $I$ es la matriz identidad que presenta la misma dimensión de $A$.
+Esta ecuación corresponde a las elasticidades no lineales, donde $I$ es la matriz identidad que presenta la misma dimensión de $A$.
 
 ## Elasticidad no lineal: métodos basados en la función de transferencia
 
@@ -108,7 +108,16 @@ Los análisis de elasticidad no lineal realizados por Tremblay y colaboradores [
 
 El primer método permite estimar el impacto no lineal de una perturbación específica sobre la tasa de crecimiento poblacional ($\lambda$), mientras que el segundo evalúa dicho efecto sobre la inercia poblacional, es decir, la capacidad de la población para alcanzar su estructura estable tras una perturbación [@stott2012beyond].
 
-Ambos análisis se implementaron utilizando el paquete **popdemo**, cuyo código fue desarrollado por Stott y colaboradores [@stott2012beyond; @stott2012popdemo].
+Ambos análisis se implementaron utilizando el paquete `popdemo`, cuyo código fue desarrollado por Stott y colaboradores [@stott2012beyond; @stott2012popdemo].
+
+::: callout-note
+**Dos funciones de transferencia, dos preguntas.**
+
+- **`tfa_lambda()` / `tfam_lambda()`:** ¿cómo cambia la **tasa asintótica de crecimiento** ($\lambda$) ante una perturbación en una entrada de la matriz? Útil para evaluar manejo a largo plazo.
+- **`tfa_inertia()` / `tfam_inertia()`:** ¿cómo cambia la **inercia poblacional** —el comportamiento transitorio— ante la misma perturbación? Útil para evaluar respuesta inmediata a un disturbio.
+
+La diferencia entre ambas refleja la diferencia entre "¿hacia dónde irá la población?" y "¿cómo le irá en el corto plazo?". Las dos pueden dar respuestas distintas.
+:::
 
 ------------------------------------------------------------------------
 
@@ -157,9 +166,9 @@ Lr1
 
 ### Elasticidad lineal ($E$)
 
-La matriz de elasticidad lineal se obtiene mediante el comando `elas` del paquete `popdemo` en **R**. Como se explicó en el capítulo sobre Elasticidad, la suma de todos los elementos de esta matriz es igual a uno, lo que facilita su interpretación.
+La matriz de elasticidad lineal se obtiene mediante la función `elas()` del paquete `popbio` en **R**. Como se explicó en el capítulo de [Elasticidad](#Elasticidad), la suma de todos los elementos de esta matriz es igual a uno, lo que facilita su interpretación.
 
-En este caso, la permanencia en el estado adulto no reproductivo (NR) presenta el mayor impacto proporcional sobre la tasa de crecimiento poblacional, con un valor de 0.313. Esto significa que una pequeña perturbación en este elemento de la matriz produciría un cambio aproximado de 0.313 en $\lambda$. Por el contrario, la transición de adulto no reproductivo a reproductivo (R) tiene un impacto mucho menor, con un valor de 0.083.
+En este caso, la permanencia en el estado adulto no reproductivo (NR) presenta el mayor impacto proporcional sobre la tasa de crecimiento poblacional, con un valor de 0.313. Esto significa que una pequeña perturbación en este elemento de la matriz produciría un cambio aproximado de 0.313 en $\lambda$. Por el contrario, la transición de adulto no reproductivo a reproductivo (AR) tiene un impacto mucho menor, con un valor de 0.083.
 
 Es importante destacar que los cambios reflejados en la matriz de elasticidad son lineales y, por lo tanto, su validez se limita a escenarios donde las perturbaciones son pequeñas.
 
@@ -190,7 +199,7 @@ Siguiendo la misma lógica, si se desea conocer el efecto sobre $\lambda_{\max}$
 
 $$d = c(0, 0, 1, 0), \quad e = c(0, 0, 0, 1)$$
 
-Es importante recordar que la ubicación de los elementos en la matriz se interpreta de izquierda a derecha, donde el primer índice corresponde a la columna ($d$) y el segundo al renglón ($e$).
+Es importante recordar que la ubicación de los elementos en la matriz se interpreta como $A[i, j]$, donde el primer índice corresponde al renglón (destino, $e$) y el segundo a la columna (origen, $d$).
 
 ### Definición de la magnitud de la perturbación
 
@@ -219,6 +228,15 @@ Posteriormente, en la gráfica que se genera para analizar la respuesta transito
 prange = seq(-0.7954, 0.0205, 0.01)
 
 ```
+
+::: callout-tip
+**Define `prange` a partir de los límites biológicos del elemento perturbado.** Para una transición $a_{ij}$ con valor original $a$:
+
+- **Mínimo** = $-a$ (anula completamente la transición).
+- **Máximo** = $1 - \sum_{k} a_{kj}$ (lleva la columna $j$ a sumar 1, eliminando toda mortalidad — el mejor escenario biológico posible).
+
+Para fecundidad, el máximo no tiene un techo natural: conviene usar el rango observado en otras poblaciones o entre años en la misma población. El paso (cuarto argumento de `seq()`) controla la resolución del análisis; 0.01 suele ser suficiente.
+:::
 
 Una vez definidos los cuatro elementos de nuestra lista, procederemos a calcular la elasticidad no lineal para nuestra población a través de los dos métodos de análisis de transferencia.
 
@@ -431,6 +449,15 @@ Respecto a la magnitud de la perturbación, los valores predefinidos por el auto
 
 Por estas razones, para controlar mejor las variables del modelo y adaptarlo a la especie de estudio, se recomienda utilizar la función `tfa_lambda` y agrupar las gráficas manualmente, de forma similar a `tfmat_lamb`. En la última sección del capítulo se presenta el código correspondiente en `ggplot2`.
 
+::: callout-warning
+**Cuidado con los rangos `Plim` y `Flim` predeterminados.** Las funciones `tfam_lambda()` y `tfam_inertia()` usan rangos de perturbación fijos (`Plim = c(-1, 10)` y `Flim = c(-1, 10)`) que **no pueden modificarse**. Esto produce dos problemas:
+
+- El límite superior (`+10`) puede generar valores de probabilidad mayores a 1, biológicamente imposibles.
+- El mismo rango se aplica a transiciones y a fecundidad, ignorando que cada elemento tiene un rango natural distinto.
+
+Cuando los resultados parecen extremos o poco realistas, conviene usar `tfa_lambda()` por elemento con un `prange` específico (basado en la biología de la especie) y agrupar las gráficas manualmente con `cowplot::plot_grid()`.
+:::
+
 ### Resultados del análisis con `tfam_lambda`
 
 En el ejemplo aplicado a *L. rubripetala*, se obtuvieron los siguientes resultados al ejecutar `tfam_lambda` junto con la función `elementtype`. Se generaron 10 gráficas, correspondientes a los 10 elementos distintos de cero en la matriz $A$. Cada gráfica se ubica en la posición del elemento analizado. Los resultados muestran que nueve de estas perturbaciones tienen un efecto no lineal sobre $\lambda$. En las gráficas, los valores del eje X (intervalo de perturbación, $p$) y del eje Y ($\lambda$) no comparten la misma escala. Las gráficas incluyen únicamente la tendencia de la elasticidad no lineal, aunque es posible añadir la línea de sensibilidad asintótica mediante la función `abline`, como se hizo en los ejemplos anteriores.
@@ -457,7 +484,7 @@ plot(tfmat_lamb)
 
 Tras una perturbación repentina en la estructura poblacional, pueden producirse cambios en la densidad de individuos que modifican la forma en que la población persiste a corto plazo, fenómeno conocido como inercia poblacional. Esto ocurre porque, después de la perturbación, las poblaciones presentan un comportamiento inestable que genera patrones de crecimiento distintos a los esperados en una población equivalente con distribución estable de estado o tamaño, en adelante denominada población estable [@stott2012beyond].
 
-Como se explicó en el capítulo sobre Elasticidad, una población estable crece de manera exponencial a una tasa constante ($\lambda$) y mantiene una estructura proporcionalmente invariable. Este patrón se altera cuando la población no está en equilibrio estable: el crecimiento puede fluctuar y, a corto plazo, producir densidades superiores o inferiores a las previstas bajo una distribución estable. De igual forma, la estructura poblacional deja de mantenerse proporcionalmente constante [@stott2012beyond]. La función de transferencia permite calcular el efecto de la elasticidad no lineal sobre la inercia poblacional a partir de la matriz de transición de la especie y de los cambios en el vector de estructura poblacional. Este cálculo se expresa como el cociente entre la densidad a corto plazo de una población no estable y la densidad correspondiente a una población estable. Su estimación se basa en una extensión de la segunda ecuación del método de función de transferencia aplicado a $\lambda$ [@koons2007population; @stott2012beyond], presentada previamente en este capítulo. La extensión se formula de la siguiente manera:
+Como se explicó en el capítulo de [Elasticidad](#Elasticidad), una población estable crece de manera exponencial a una tasa constante ($\lambda$) y mantiene una estructura proporcionalmente invariable. Este patrón se altera cuando la población no está en equilibrio estable: el crecimiento puede fluctuar y, a corto plazo, producir densidades superiores o inferiores a las previstas bajo una distribución estable. De igual forma, la estructura poblacional deja de mantenerse proporcionalmente constante [@stott2012beyond]. La función de transferencia permite calcular el efecto de la elasticidad no lineal sobre la inercia poblacional a partir de la matriz de transición de la especie y de los cambios en el vector de estructura poblacional. Este cálculo se expresa como el cociente entre la densidad a corto plazo de una población no estable y la densidad correspondiente a una población estable. Su estimación se basa en una extensión de la segunda ecuación del método de función de transferencia aplicado a $\lambda$ [@koons2007population; @stott2012beyond], presentada previamente en este capítulo. La extensión se formula de la siguiente manera:
 
 $$
 \mathbf{P}_\infty = \frac{\mathbf{v}^\top \hat{\mathbf{n}}_0 \, \|\mathbf{w}\|_1}{\mathbf{v}^\top \mathbf{w}}
@@ -612,7 +639,7 @@ plot(tfmat_I)
 
 ### Uso de ggplot2 para la matriz de figuras generadas con la función de transferencia
 
-En esta sección se presenta el código con *ggplot2* para agrupar en una sola gráfica las 10 figuras generadas una por una para la matriz $A$ (ver *Estimación de la elasticidad lineal por elemento perturbado*) y las cuales ilustran el efecto de la perturbación de cada elemento distinto de 0 sobre la inercia poblacional. Esta sección resulta de gran utilidad y es una alternativa muy buena al uso de **tfam_lambda** y **tfam_inertia**, ya que se evitarán los valores predeterminados en el código original para `Flim` y `Plim`, permitiendo la descripción del comportamiento de la especie con mayor certeza y basada en sus parámetros poblacionales propios.
+En esta sección se presenta el código con `ggplot2` para agrupar en una sola gráfica las 10 figuras generadas una por una para la matriz $A$ (ver §"Cambios en la estructura de perturbación y su efecto en la tasa de crecimiento poblacional") y las cuales ilustran el efecto de la perturbación de cada elemento distinto de 0 sobre la inercia poblacional. Esta sección resulta de gran utilidad y es una alternativa muy buena al uso de `tfam_lambda()` y `tfam_inertia()`, ya que se evitarán los valores predeterminados en el código original para `Flim` y `Plim`, permitiendo la descripción del comportamiento de la especie con mayor certeza y basada en sus parámetros poblacionales propios.
 
 Finalmente, cabe señalar que con los ajustes necesarios, este código puede ser aplicado a los resultados elemento por elemento de **tfa_inertia**.
 

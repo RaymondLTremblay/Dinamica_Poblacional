@@ -94,7 +94,7 @@ El capítulo está dividido en dos partes:
 Aquí veremos características básicas que debe cumplir una matriz para que el análisis sea válido:
 
 -   **Dimensión cuadrada**: la matriz debe tener el mismo número de filas y columnas.
--   **Ergocidad**: asegura que, con el tiempo, todas las partes del sistema se conecten.
+-   **Ergodicidad**: asegura que, con el tiempo, todas las partes del sistema se conecten.
 -   **No negatividad**: los valores de la matriz no pueden ser negativos.
 -   **Irreducibilidad**: indica que no se puede dividir la matriz en bloques independientes.
 -   **Primitividad**: garantiza que, después de varias iteraciones, la matriz se estabiliza.
@@ -131,7 +131,7 @@ Lr1 <- matrix(c(0.4324, 0,      0,     0.15,
                 0,      0.0034, 0.7954,0.2300,
                 0,      0.0890, 0.1841,0.7510), byrow=TRUE,ncol=4)
 
-# Capturar las categorias de estado
+# Capturar las categorías de estado
 estadios <- c("PL", "J", "NR", "AR")
 colnames(Lr1) <- rownames(Lr1) <- estadios
 
@@ -287,15 +287,33 @@ En el caso de *L. rubripetala*, la matriz es primitiva: al elevarla a potencias 
 
 Una matriz no primitiva tendría una dinámica inestable a largo plazo, como ocurre en poblaciones con comportamiento cíclico, donde las proporciones entre categorías oscilan sin llegar a estabilizarse.
 
-Es importante señalar que:
+::: callout-note
+**Irreducible vs primitiva: la sutileza.**
 
--   Toda matriz irreducible es primitiva.
--   Pero no toda matriz primitiva es irreducible. Por ejemplo, una matriz puede ser primitiva sin ser irreducible si incluye un ciclo de vida completo pero alguna etapa no influye en el crecimiento poblacional (como las fases postreproductivas).
+- **Toda matriz primitiva es irreducible:** la primitividad requiere conectividad completa entre estadios *más* aperiodicidad.
+- **No toda matriz irreducible es primitiva:** una matriz irreducible con estructura periódica (los individuos retornan al mismo estadio cada $k$ pasos exactos) no converge a una estructura estable, sino que oscila. Su valor propio dominante no es único en módulo.
+
+Por eso `popdemo` ofrece tanto `isIrreducible()` como `isPrimitive()`: los modelos poblacionales bien comportados deben pasar **ambos** chequeos.
+:::
 
 ```{r Indice8}
 #| error: true
 isPrimitive(Lr1)
 ```
+
+::: callout-important
+**Verifica estos cinco supuestos antes de calcular λ, sensibilidades o elasticidades.** Si la matriz falla alguno, los análisis posteriores pueden ser inválidos o difíciles de interpretar:
+
+| Propiedad | Función en R | Por qué importa |
+|---|---|---|
+| Cuadrada | `dim()` | Origen y destino deben ser comparables. |
+| No negativa | `IsPositive()` | No tiene sentido biológico tener entradas negativas. |
+| Irreducible | `popdemo::isIrreducible()` | Asegura que todas las etapas estén conectadas. |
+| Primitiva | `popdemo::isPrimitive()` | Asegura una tasa de crecimiento única (no oscilaciones). |
+| Ergódica | `popbio::isErgodic()` | Asegura que la dinámica asintótica no dependa del estado inicial. |
+
+Cuando alguna falla, conviene revisar el ciclo de vida y las matrices originales (ver el capítulo de [Ciclos de Vida](#Ciclo_Vida)) antes de pasar a análisis avanzados.
+:::
 
 ------------------------------------------------------------------------
 
@@ -317,6 +335,10 @@ La estructura poblacional estable ($W$, también conocida como eigenvector derec
 Este índice supone que la tasa de crecimiento poblacional ($\lambda$) se mantiene constante en el tiempo, lo cual solo ocurre bajo condiciones ambientales estables. Sin embargo, en la naturaleza esto es poco común. Además, la estructura estable asume que el periodo de muestreo y las condiciones abióticas y bióticas son típicas y no cambian.
 
 En la revisión de Williams y colaboradores [@williams2011distance], se reportó que más del 80% de las poblaciones analizadas no cumplían con la condición de estructura estable, especialmente en especies con matrices grandes (n × n) y tiempos generacionales prolongados. De manera similar, Tremblay (com. pers.) observó que la mayoría de las orquídeas estudiadas no estaban en estructura estable al inicio del muestreo poblacional.
+
+::: callout-warning
+**La estructura estable rara vez se observa en la naturaleza.** Williams et al. [@williams2011distance] reportan que más del 80% de las poblaciones analizadas no estaban en estructura estable, especialmente en especies longevas con matrices grandes. Esto significa que las proyecciones basadas en λ describen el comportamiento que **tendría** la población si las condiciones se mantuvieran constantes —no necesariamente lo que observaremos en el corto plazo. Para poblaciones lejos del equilibrio, conviene complementar λ con análisis de dinámica transitoria (ver capítulo de [Dinámica de transiciones](112-Dinamica_de_Transiciones.qmd)).
+:::
 
 ```{r Indice9}
 #| error: true
@@ -510,7 +532,7 @@ labs(
   subtitle = "La población se estabiliza a un equilibrio de 1000",
   x = "Tiempo",
   y = "Tamaño poblacional",
-  color = expression("Amortigamento (" * zeta * ")")
+  color = expression("Amortiguamiento (" * zeta * ")")
 ) +
   # Customize the plot theme for better aesthetics
   rlt_style_colour() +
@@ -534,21 +556,34 @@ La respuesta de la población ante cuatro índices de amortiguamiento es la sigu
 -   **Sobreamortiguado** ($\zeta = 2.0$): Esta respuesta es lenta y se aproxima al punto de equilibrio sin oscilaciones. En comparación con el caso críticamente amortiguado, tarda mucho más en estabilizarse, ya que la fuerza de amortiguamiento es muy grande.
 -   **Sobreamortiguado** ($\zeta = 3.0$): Similar al caso anterior, pero con un amortiguamiento aún mayor. La respuesta es muy lenta y se acerca al equilibrio de manera gradual sin oscilaciones.
 
+::: callout-note
+**Cuatro regímenes de amortiguamiento.**
+
+| ζ | Régimen | Comportamiento |
+|---|---|---|
+| < 1 | **Subamortiguado** | Sobrepasa el equilibrio y oscila; la amplitud decrece con el tiempo. |
+| = 1 | **Críticamente amortiguado** | Retorno más rápido posible sin oscilaciones. |
+| > 1 (moderado) | **Sobreamortiguado** | Retorno lento sin oscilaciones; la fuerza de amortiguamiento es alta. |
+| ≫ 1 | **Muy sobreamortiguado** | Retorno extremadamente lento; el sistema apenas reacciona. |
+
+En poblaciones reales, la mayoría de las matrices de proyección se encuentran en el régimen sobreamortiguado: regresan al equilibrio sin oscilar, pero pueden tardar muchas generaciones.
+:::
+
 #### Tiempo de Convergencia
 
-El tiempo de convergencia es el periodo estimado que tarda la población en alcanzar su estructura estable. Este índice es relevante porque facilita entender el comportamiento poblacional a largo plazo. En **R** este cálculo puede realizarse con dos funciones del paquete `popdemo`: `dr` y `convt`. La función `dr` calcula el amortiguamiento, y a partir de éste puede estimarse el tiempo de la convergencia de la siguiente manera:
+El tiempo de convergencia es el periodo estimado que tarda la población en alcanzar su estructura estable. Este índice es relevante porque facilita entender el comportamiento poblacional a largo plazo. En **R** este cálculo puede realizarse con dos funciones del paquete `popdemo`: `dr` y `convt`. La función `dr` calcula el amortiguamiento, y a partir de éste puede estimarse el tiempo de convergencia de la siguiente manera:
 
 $$
-t = \frac{\log(dr)}{\log(x)}
+t = \frac{\log(x)}{\log(\rho)}
 $$
 
-dónde
+donde
 
--   $dr$ es el índice de amortiguamiento (damping ratio)
--   $x$ es un factor de comparación
+-   $\rho$ es el índice de amortiguamiento (*damping ratio*, $\rho = \lambda_1 / |\lambda_2|$)
+-   $x$ es el factor por el cual la influencia del valor propio dominante debe superar a la del subdominante (por ejemplo, $x = 10$ significa "tiempo hasta que el dominante pese 10 veces más que el subdominante")
 -   $t$ representa el tiempo en la misma unidad en que se construyó la matriz (días, meses, años, etc.).
 
-El análisis de amortiguamiento estima la rapidez con la que una población converge a su estructura estable después de un disturbio [@jiang2020life]. El índice de amortiguamiento ($d > 0$) sugiere que mientras mayor sea su valor, más rápida será la convergencia. El tiempo de amortiguamiento se calcula como $\tau = 1/d$, donde $\tau$ expresa la duración del proceso de convergencia en unidades de tiempo consistentes con la matriz poblacional. Cabe señalar que se ha demostrado que existe una relación entre el índice de amortiguamiento y el tiempo generacional de una especie [@jiang2020life].
+Mientras mayor sea $\rho$, más rápida será la convergencia: una matriz con $\rho = 2$ converge mucho más rápido que una con $\rho = 1.05$. El análisis de amortiguamiento estima la rapidez con la que una población converge a su estructura estable después de un disturbio [@jiang2020life]. Cabe señalar que se ha demostrado que existe una relación entre el índice de amortiguamiento y el tiempo generacional de una especie [@jiang2020life].
 
 ```{r Incidex14}
 #| error: true
@@ -560,6 +595,16 @@ dr(Lr1, return.time = TRUE, x = 10) # cuanto tiempo toma aumentar la población 
 A partir de la función `convt` del paquete `popdemo` se puede estimar el tiempo esperado en que una población alcanza su estructura estable, considerando la estructura poblacional observada al inicio del estudio. Esta función simula el modelo y determina manualmente cuándo la población converge, dado un nivel de exactitud específico (*accuracy*). Entre más estricta sea la exactitud, mayor será el tiempo de convergencia. Para utilizar esta función es necesario indicar la estructura inicial, es decir, el número de individuos en cada estadio. En el caso de *L. rubripetala* se espera que el tiempo de convergencia sea de 18 ciclos (meses) para alcanzar su estructura estable.
 
 Por ejemplo, si se comienza con una población inicial de 8, 20, 27 y 34 individuos en las categorías de plántulas, juveniles, adultos no reproductivos y adultos reproductivos, respectivamente, la población alcanzaría en 6 meses, aproximadamente, la estructura estable. En contraste, si la población inicial estuviera sesgada (compuesta únicamente por plántulas, por ejemplo), el tiempo de convergencia sería mucho mayor. Este enfoque resulta muy útil al definir estrategias de conservación; por ejemplo, al establecer una nueva población con una distribución inicial determinada.
+
+::: callout-tip
+**La estructura inicial determina cuánto tarda la convergencia.** Para la misma matriz de *L. rubripetala*:
+
+- Estructura inicial cercana a la estable (ej. 8, 20, 27, 34): convergencia en ~6 meses.
+- Estructura inicial moderadamente sesgada: ~18 meses.
+- Estructura completamente sesgada (sólo plántulas): ~25 meses.
+
+Esto tiene implicaciones prácticas en conservación: si introduces una nueva población o una población en restauración, la composición inicial determina cuándo el modelo asintótico empieza a aplicar. Para acelerar la convergencia, conviene introducir individuos en proporciones cercanas a la estructura estable cuando sea factible.
+:::
 
 ```{r, Inice15}
 #| error: true
@@ -607,10 +652,10 @@ transition_matrix <- matrix(c(0.4324, 0, 0, 0.15,
 )
 
 # --- Simular la Dinámica de la Población y Calcular Proporciones ---
-# Nombres de las etapas en el orden especificado
+# Nombres de las etapas en el orden de la matriz (PL, J, NR, AR)
 stage_names <- c(
-  "juvenil",
   "plántula",
+  "juvenil",
   "adulto no reproductivo",
   "adulto reproductivo"
 )

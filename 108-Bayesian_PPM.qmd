@@ -68,6 +68,28 @@ rlt_style_colour <- function() {
 }
 ```
 
+## ¿Qué es un análisis bayesiano? Un primer rápido
+
+En estadística clásica (frecuentista), tratamos los parámetros (e.g., la probabilidad de transición de plántula a juvenil) como **valores fijos pero desconocidos**, y los datos como variables aleatorias. La inferencia consiste en estimar el parámetro a partir de los datos: si observamos 2 transiciones de 7 plántulas, el estimador puntual es 2/7 = 0.286, sin más información.
+
+En el marco bayesiano, invertimos la perspectiva: los **datos son lo que observamos**, y los **parámetros se tratan como variables aleatorias** sobre las que tenemos creencias. Esas creencias se expresan como una **distribución previa** (lo que sabíamos antes de mirar los datos) y se actualizan a una **distribución posterior** (lo que sabemos después). La regla de actualización es la fórmula de Bayes:
+
+$$\underbrace{P(\theta \mid \text{datos})}_{\text{posterior}} \propto \underbrace{P(\text{datos} \mid \theta)}_{\text{verosimilitud}} \times \underbrace{P(\theta)}_{\text{previa}}$$
+
+En español plano: la posterior es proporcional a la previa multiplicada por la verosimilitud. La previa aporta información cuando los datos son escasos; la verosimilitud (los datos) domina cuando hay muchas observaciones. **Esta propiedad es exactamente lo que necesitamos para especies raras**: si observamos 2 plántulas y 0 transiciones a juvenil, el estimador frecuentista da $\hat{p} = 0$ (lo cual implica imposibilidad biológica), mientras que el estimador bayesiano combina las 2 observaciones con la previa y da una probabilidad pequeña pero positiva, con incertidumbre cuantificada.
+
+::: callout-note
+**La regla de Bayes en lenguaje cotidiano.**
+
+$$\text{Lo que crees ahora} \;\propto\; \text{Lo que creías antes} \;\times\; \text{Lo que dicen los datos}$$
+
+Cuando los datos son muchos y consistentes, dominan: la posterior se parece a la verosimilitud. Cuando los datos son escasos o ambiguos, la previa importa: la posterior se parece a la previa. El método bayesiano hace este equilibrio explícito y reproducible.
+:::
+
+::: callout-tip
+**Por qué leer este capítulo (incluso si nunca has hecho un análisis bayesiano).** La estimación clásica de matrices de transición —`projection.matrix()`— es perfectamente adecuada cuando el tamaño de muestra es grande y cada transición se observó muchas veces. Pero en estudios reales de orquídeas, casi nunca es así: las muestras son pequeñas, varias transiciones tienen 0 observaciones, y el resultado es una matriz con ceros que la biología sabe que no son cero. El enfoque bayesiano resuelve esto sin "inventar" datos: usa explícitamente lo que ya sabes sobre el ciclo de vida (la previa) y produce estimaciones realistas con intervalos de credibilidad. Aprender a usarlo es una de las inversiones de mayor retorno en la dinámica poblacional aplicada.
+:::
+
 ## Introducción al MPP Bayesiano
 
 Este capítulo presenta una alternativa bayesiana para estimar los parámetros de las matrices de transición y fecundidad en modelos poblacionales, especialmente útil en el estudio de especies raras. Estas especies suelen tener tamaños de muestra reducidos o transiciones vitales poco frecuentes, lo que dificulta obtener estimaciones confiables. El enfoque bayesiano propuesto permite incorporar conocimiento previo sobre el ciclo de vida de la especie para generar estimaciones más realistas.
@@ -95,14 +117,11 @@ El paquete `raretrans` fue desarrollado para abordar este tipo de situaciones. U
 
 ### Ejemplos de interpretaciones no realistas
 
--   Algunas interpretaciones biológicamente poco plausibles que pueden surgir del análisis de datos limitados incluyen:
+Algunas interpretaciones biológicamente poco plausibles que pueden surgir del análisis de datos limitados incluyen:
 
 -   Todas las semillas germinan y se convierten en plántulas.
-
 -   Ninguna plántula sobrevive ni alcanza la etapa adulta.
-
 -   Todos los adultos sobreviven sin mortalidad.
-
 -   Ningún adulto produce semillas.
 
 **Nota**: Aunque estos resultados pueden surgir directamente de los datos recolectados, muchas veces son consecuencia de tamaños de muestra pequeños o de eventos raros que no se observaron durante el periodo de muestreo. Por ello, es esencial considerar tanto la biología de la especie como las limitaciones del muestreo al interpretar los datos.
@@ -142,7 +161,7 @@ plot_life_cycle(matA, stages = stages)
 
 ```
 
-### Interpretaciones biológicamente irreales de los datos existentes.
+### Interpretaciones biológicamente irreales de los datos existentes
 
 Al estudiar especies longevas como *Sequoia sempervirens*, es común enfrentar interpretaciones erróneas derivadas de datos limitados o mal contextualizados. Esta especie puede alcanzar tamaños extraordinarios (diámetros a la altura del pecho, *dbh*, mayores a 3 metros) y tener una longevidad estimada entre 1,200 y 2,200 años.
 
@@ -219,7 +238,7 @@ Podemos utilizar la función `popbio::projection.matrix` para obtener los datos 
 ::: {style="display: flex; justify-content: center; gap: 10px;"}
 ![*Lepanthes eltoroensis*. Foto: Edwin Guevara](images/Lepanthes_eltoroensis_Edwin_Guevara.jpg)
 
-![Lepanthes eltoroensis. Foto: Edwin Guevara](images/Lepanthes_eltoroensis_Phorophyte_Edwin_Guevara.jpg)
+![*Lepanthes eltoroensis*. Foto: Edwin Guevara](images/Lepanthes_eltoroensis_Phorophyte_Edwin_Guevara.jpg)
 :::
 
 ------------------------------------------------------------------------
@@ -392,16 +411,13 @@ fill_transitions(TF, N, P = RLT_Tprior)
 
 ### Modificar el peso de los valores *a priori*
 
-Cuando usamos previas informativas en el modelo, podemos ajustar su peso modificando el tamaño de muestra a priori para cada etapa del ciclo de vida.
+Cuando usamos previas informativas en el modelo, podemos ajustar su peso para reflejar cuánto creemos en la previa frente a los datos. Esto se hace con el argumento `priorweight` de `fill_transitions()`.
 
-### ¿Por qué ajustar el peso?
+**¿Cómo funciona `priorweight` exactamente?** El argumento es un **multiplicador sobre el tamaño de muestra observado** $N$:
 
--   Si tenemos alta confianza en los valores a priori (por ejemplo, por experiencia o estudios previos), podemos asignarles un peso mayor.
--   Si tenemos poca confianza, es mejor asignarles un peso pequeño, permitiendo que los datos de campo tengan mayor influencia en los resultados.
-
-#### ¿Cómo se interpreta el peso?
-
-El peso se especifica como el tamaño de muestra a priori. Por defecto, cada columna de la matriz de previas suma 1, lo que equivale a un tamaño de muestra a priori de 1. Puedes modificar esta suma para reflejar mayor o menor certeza en los valores propuestos.
+- La contribución efectiva de la previa = `priorweight` × $N$ (en unidades de "observaciones equivalentes").
+- El tamaño de muestra efectivo total = $N$ + `priorweight` × $N$ = $N \times (1 + \text{priorweight})$.
+- Por defecto `priorweight = -1`, lo que hace que la previa contribuya solamente su suma original (típicamente 1, ya que cada columna de la matriz de previas se construye para sumar 1).
 
 ```{r bayes14}
 #| error: true
@@ -409,9 +425,28 @@ El peso se especifica como el tamaño de muestra a priori. Por defecto, cada col
 fill_transitions(TF, N, P = RLT_Tprior, priorweight = 0.5)
 ```
 
-En este caso, el `priorweight` se pondera con la mitad del número de transiciones observadas. Por ejemplo: Si se observaron solo 2 transiciones, entonces priorweight = 1, lo que equivale a un tamaño de muestra a priori de 1. Si se observaran más transiciones, por ejemplo 20, entonces priorweight = 10, lo que permite que los datos observados tengan mayor influencia en el resultado final.
+::: callout-important
+**El "peso de la previa" es un tamaño de muestra equivalente.** Asignar `priorweight = 0.5` con $N = 2$ observaciones es como decir: "antes de salir al campo, mi creencia tiene la misma fuerza que $0.5 \times 2 = 1$ observación adicional". Si tu previa tiene peso efectivo 5 y observas 50 transiciones, los datos pesarán 10 veces más que la previa. La regla práctica es dejar que los datos dominen: el peso de la previa debería ser **mucho menor** que el tamaño de muestra observado, salvo que tengas razones biológicas muy fuertes para confiar en la previa.
+:::
 
-**Recomendación** Siempre se debe asignar a las previas un peso menor (preferiblemente mucho menor) que el tamaño de muestra observado. Esto garantiza que los datos reales del campo tengan mayor peso en el análisis y evita que el conocimiento previo domine injustamente los resultados.
+Algunos valores típicos de `priorweight`:
+
+- `priorweight = -1` (defecto): la previa contribuye su suma original, típicamente 1 observación equivalente. Útil como previa débil.
+- `priorweight = 0.1` a `0.5`: la previa pesa entre 10% y 50% del tamaño de muestra observado. Apropiado cuando hay conocimiento experto pero los datos deben dominar.
+- `priorweight = 1`: la previa pesa lo mismo que los datos. Sólo justificado si los datos son muy escasos y la previa es muy confiable.
+- `priorweight > 1`: la previa pesa más que los datos. Rara vez justificado en estudios poblacionales.
+
+::: callout-warning
+**Cuándo no usar una previa informativa fuerte.** Las previas informativas son apropiadas cuando hay conocimiento biológico sólido que no aparece en los datos (e.g., experiencia directa con la especie, estudios en poblaciones cercanas). **No** son apropiadas cuando:
+
+- El tamaño de muestra ya es grande y todas las transiciones se observaron varias veces — la previa solo introduce sesgo.
+- No hay base experta para definir la previa — usar valores "razonables sin justificación" es proyectar incertidumbre como si fuera conocimiento.
+- Se está comparando entre poblaciones — usar la misma previa para todas puede borrar diferencias reales.
+
+En estos casos, conviene usar previas débiles (poco peso) o reportar resultados con y sin previa para mostrar la sensibilidad a la elección.
+:::
+
+**Recomendación general:** asigna a las previas un peso menor (preferiblemente mucho menor) que el tamaño de muestra observado. Esto garantiza que los datos reales tengan mayor peso en el análisis y evita que el conocimiento previo domine injustamente los resultados.
 
 **Resultado**
 
@@ -427,7 +462,20 @@ La nueva matriz de transición:
 
 Una vez ajustada la matriz de transición con los datos observados y las previas informativas, podemos calcular los intervalos de credibilidad (ICr) para cada entrada de la matriz.
 
-**¿Cómo se calculan?** Cada elemento de la matriz de transición ajustada sigue una distribución beta, ya que proviene de una distribución posterior marginal de una multinomial. Esto permite calcular intervalos de credibilidad para las tasas de transición.
+::: callout-note
+**Por qué Dirichlet (transiciones) y Gamma (fecundidad).** Cada columna de una matriz de transición es un vector de probabilidades que suman 1. La distribución natural sobre tales vectores es la **distribución Dirichlet**, generalización multidimensional de la Beta. Al observar transiciones (datos multinomiales) y combinar con una previa Dirichlet, la posterior **también es Dirichlet** (es una previa conjugada) — esto hace los cálculos exactos y rápidos. Para cada entrada individual de la matriz, la distribución marginal es **Beta**, lo cual permite calcular intervalos de credibilidad directamente con `qbeta()`. La fecundidad, por ser un conteo positivo no acotado, se modela con una previa **Gamma** sobre la tasa de Poisson.
+:::
+
+::: callout-note
+**Intervalo de confianza (IC) versus intervalo de credibilidad (ICr).** Aunque suenan parecidos, significan cosas distintas:
+
+- **IC frecuentista al 95%:** "si repitiéramos este estudio infinitas veces, el 95% de los intervalos calculados contendrían el valor verdadero". No es una afirmación sobre el parámetro en este estudio.
+- **ICr bayesiano al 95%:** "dada la previa y los datos, hay un 95% de probabilidad de que el verdadero valor del parámetro esté en este intervalo". Es una afirmación directa sobre el parámetro.
+
+Lo que la mayoría de las personas *intuitivamente quieren decir* al leer un IC frecuentista es la interpretación bayesiana — y los intervalos de credibilidad son los que efectivamente se la dan.
+:::
+
+**¿Cómo se calculan?** Cada elemento de la matriz de transición ajustada sigue una distribución beta, ya que proviene de una distribución posterior marginal de una Dirichlet (multinomial-Dirichlet). Esto permite calcular intervalos de credibilidad para las tasas de transición.
 
 Para obtener estos valores, se puede usar el tipo de retorno TN, que proporciona:
 
@@ -479,7 +527,7 @@ Una de las grandes ventajas de usar el paquete `raretrans` es que podemos calcul
 
 Cuando se aumenta el **tamaño de muestra efectivo**, los **intervalos de credibilidad** se vuelven más estrechos, lo que indica mayor confianza en las estimaciones puntuales. Aumentar el tamaño de muestra efectivo a $20$ especificando: `priorweight`$= 9 (9*2 = 18 + 2 = 20)$ hace que los intervalos de credibilidad se reduzcan bastante. Entonces, es importante enfatizar en que el tamaño de muestra tiene gran impacto sobre la confianza que se tiene sobre el estimador puntual (el promedio) de las transiciones, permanencias y mortalidad. Note en la figura como el tamaño del intervalo de credibilidad cambia drásticamente cuando se aumenta el número de datos.
 
-La tasa de transición de plántula a juvenil se reduce cuando el tamaño de la muestra es demasiado grande.
+El intervalo de credibilidad se estrecha cuando el tamaño de muestra efectivo aumenta, reflejando mayor confianza en el estimador puntual.
 
 IMPORTANTE: Aunque este ejemplo muestra cómo el tamaño de muestra afecta la credibilidad, en la práctica:
 
@@ -609,9 +657,9 @@ ggplot(data = RLT_0.5,
 
 ------------------------------------------------------------------------
 
-## Determinar si el $\lambda$ es significativamente diferente de 1
+## Probabilidad posterior de que la población esté creciendo (λ > 1)
 
-Esta prueba está basada en la simulación de la distribución posterior. Se calcula la distribución de las $\lambda$ y se determina si la $\lambda$ observada es significativamente más grande que 1. También podemos calcular algunas estadísticas descriptivas, donde `p_increase` es la probabilidad de que $\lambda > 1$. En este caso, el valor de $\lambda$ no es significativamente más grande que 1, ya que se obtuvo un valor de 0.14. Aunque el histograma sugiere que el crecimiento es menor que 1, la probabilidad de que $\lambda$ sea mayor que 1 es de 0.14, lo que indica que hay una probabilidad del 14% de que la población esté creciendo, dando poco apoyo a que la población esté creciendo.
+A diferencia de un contraste de hipótesis frecuentista (donde se obtiene un valor-p), el marco bayesiano nos permite responder directamente la pregunta de interés: **¿con qué probabilidad la población está creciendo?** Lo hacemos contando qué proporción de las simulaciones de la distribución posterior produjo $\lambda > 1$. En este caso, $P(\lambda > 1 \mid \text{datos}, \text{previas}) = 0.14$, lo que indica que sólo en el 14% de los escenarios consistentes con los datos y la previa la población crece. La evidencia para crecimiento poblacional es débil; lo más probable es que la población esté en declive. La estadística `p_increase` reporta exactamente este valor.
 
 ```{r bayes20}
 #| error: true

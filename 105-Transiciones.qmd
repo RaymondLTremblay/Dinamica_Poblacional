@@ -1,6 +1,6 @@
 # Transiciones {#MatricesT}
 
-Por: Aucencia Emeterio-Lara, Ernesto Mujíca, Elaine González y Raymond L. Tremblay
+Por: Aucencia Emeterio-Lara, Ernesto Mujica, Elaine González y Raymond L. Tremblay
 
 Las transiciones describen los cambios individuales entre estados
 demográficos —como supervivencia, crecimiento y regresión— que conectan
@@ -89,12 +89,16 @@ Para calcular las transiciones, debemos obtener la proporción de individuos que
 
 Esto se traduce en las siguientes proporciones:
 
--   Plantas pequeñas → Plantas pequeñas: $\frac{1}{7}$ = 0.142871
--   Plantas pequeñas → Juveniles: $\frac{2}{7}$ = 0.285772
--   Plantas pequeñas → Adultos: $\frac{3}{7}$ = 0.428573
--   Plantas pequeñas → Muerto: $\frac{1}{7}$ = 0.142871
+-   Plantas pequeñas → Plantas pequeñas: $\frac{1}{7}$ = 0.142857
+-   Plantas pequeñas → Juveniles: $\frac{2}{7}$ = 0.285714
+-   Plantas pequeñas → Adultos: $\frac{3}{7}$ = 0.428571
+-   Plantas pequeñas → Muerto: $\frac{1}{7}$ = 0.142857
 
 La suma de estas proporciones debe ser igual a 1 (o muy cercana, considerando redondeos).
+
+::: callout-important
+**La suma de cada columna debe ser 1 (incluyendo mortalidad).** Cada individuo que estaba en el estado $j$ en el periodo inicial tiene que terminar en algún destino: otro estadio o "muerto". Por eso la suma de los destinos vivos más la mortalidad debe ser 1. Si la suma de una columna es distinta de 1 (más allá del redondeo), hay un error: o bien faltan transiciones, o bien algún individuo se está contando dos veces.
+:::
 
 ```{r Trans2}
 #| error: true
@@ -150,7 +154,7 @@ Orchis_ficticia=tribble(~Num_ind, ~anio_1, ~anio_2, ~transición,
                         7,  "adulto", "Muerto", 0.3333,
                         7,  "adulto", "plantas_pequeñas", 0.0000,
                         8,  "adulto", "juvenil", 0.0000,
-                        9,  "adulto", "adulto", 0.6777
+                        9,  "adulto", "adulto", 0.6667
                         )
 flextable(Orchis_ficticia)
 ```
@@ -166,9 +170,15 @@ Ahora utilizamos los valores calculados anteriormente para construir la matriz d
 -   Las columnas representan el estado en el primer periodo.
 -   Las filas representan el estado en el segundo periodo.
 
+::: callout-important
+**Convención: columnas = origen, filas = destino.** Cada **columna** $j$ corresponde al estado del individuo en el periodo inicial; cada **fila** $i$ al estado en el siguiente periodo. La entrada $a_{ij}$ es entonces "la proporción de individuos que estaban en $j$ y terminaron en $i$". Confundir filas con columnas invierte el sentido biológico de cada transición y distorsiona todos los análisis posteriores. Conviene siempre asignar `rownames()` y `colnames()` para detectar el error visualmente.
+:::
+
 Las transiciones hacia el estado “Muerto” no se incluyen en la matriz, ya que los análisis reconocen automáticamente que la proporción de mortalidad se obtiene como:
 
-$$Proporción-de-fallecimiento = 1 − suma-de-las-transiciones-en-la-fila$$
+$$P_{\text{mortalidad},\, j} = 1 - \sum_{i} a_{ij}$$
+
+donde la suma corre sobre las entradas de la columna $j$ (estado de origen).
 
 Para crear la matriz en `R`, se utiliza la función *matrix()*, que incluye los siguientes argumentos:
 
@@ -180,7 +190,7 @@ Para crear la matriz en `R`, se utiliza la función *matrix()*, que incluye los 
 
 ficticia_matrix=matrix(c(0.1428, 0.0000, 0.0000,
                          0.2857, 0.5000, 0.0000,
-                         0.4285, 0.3333, 0.6777), nrow=3, byrow=TRUE)
+                         0.4285, 0.3333, 0.6667), nrow=3, byrow=TRUE)
 
 ficticia_matrix
 ```
@@ -339,9 +349,21 @@ projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=FALSE)
 
 ```
 
+::: callout-note
+**Descomposición estándar de la matriz de proyección.**
+
+$$\mathbf{A} = \mathbf{U} + \mathbf{F} + \mathbf{C}$$
+
+donde $\mathbf{U}$ contiene las **transiciones** entre estadios (supervivencia × cambio de estado), $\mathbf{F}$ las **fecundidades** (reproducción sexual: nuevos individuos incorporados al primer estadio por cada adulto reproductor) y $\mathbf{C}$ el **clonaje** (reproducción asexual: nuevos individuos genéticamente idénticos a la planta madre). Mantener las tres matrices separadas permite analizarlas por separado y es la convención usada en bases de datos como COMPADRE.
+:::
+
 ------------------------------------------------------------------------
 
 ## Matriz de Clonaje
+
+::: callout-warning
+**El clonaje no es fecundidad.** Aunque ambos procesos generan individuos nuevos, evolutivamente son distintos: la fecundidad sexual produce descendencia genéticamente diferente, mientras que el clonaje (keikis, división de rizomas) produce *ramets* con el mismo genoma que la planta madre. Sumarlos en una sola matriz $\mathbf{F}$ confunde dos procesos demográfica y evolutivamente diferentes; conviene separar $\mathbf{C}$ para análisis correctos de selección, deriva genética y estructura poblacional.
+:::
 
 Muchas orquídeas se reproducen por clonación, lo que significa que los individuos son genéticamente idénticos y se originan a partir de la planta madre. En algunos casos, estos clones se separan mediante un keiki o por división de los rizomas cuando estos se deterioran o mueren. Este es un método de reproducción asexual.
 
@@ -478,7 +500,11 @@ En este contexto, el clonaje se entiende como una forma de reproducción asexual
 
 El uso de métodos tradicionales, ya sea mediante cálculos manuales o utilizando la función `projection.matrix` del paquete popbio, puede resultar problemático. Las dificultades surgen principalmente por condiciones de muestreo, especialmente cuando el tamaño de muestra es pequeño o cuando las transiciones son naturalmente raras [@tremblay2021population; @gascoigne2023standard], situación común en especies poco frecuentes.
 
-En el capítulo **Impacto de datos sin sentido biológico** se analizan los problemas que ocurren cuando los datos carecen de coherencia biológica, cómo construir matrices más confiables y cuándo es apropiado emplear el método bayesiano en los análisis. Este enfoque permite resolver inconsistencias y garantizar que las matrices sean más compatibles con la biología de la especie estudiada, aumentando así la relevancia de los resultados.
+En el capítulo [Impacto de datos sin sentido biológico](122-Impacto_de_Datos_sin_Sentido.qmd) se analizan los problemas que ocurren cuando los datos carecen de coherencia biológica, cómo construir matrices más confiables y cuándo es apropiado emplear el método bayesiano en los análisis. Este enfoque permite resolver inconsistencias y garantizar que las matrices sean más compatibles con la biología de la especie estudiada, aumentando así la relevancia de los resultados.
 
 Los autores recomiendan utilizar el **método bayesiano** para el análisis de matrices de transición en la mayoría de los casos, excepto cuando el tamaño de muestra es muy grande y ninguna transición es rara. El método bayesiano es un enfoque estadístico que permite incorporar información previa y ajustar los modelos a los datos observados. Este enfoque es especialmente útil cuando se trabaja con datos escasos o transiciones poco frecuentes. Aunque su implementación puede ser más compleja, ofrece mayor flexibilidad y robustez, además de estimar la confianza en los valores de transición y fecundidad.
+
+::: callout-tip
+**Cambia al método bayesiano cuando los datos son escasos o las transiciones son raras.** El método tradicional (`projection.matrix()`) asume que las proporciones observadas estiman bien las probabilidades de transición. Esta suposición se rompe cuando el tamaño de muestra es pequeño o cuando alguna transición ocurrió con frecuencia 0/n (común en transiciones raras). En esos casos, el método bayesiano incorpora información a priori, evita probabilidades exactamente 0 o 1, y produce intervalos de confianza explícitos. Ver el capítulo [Acercamiento bayesiano para calcular transiciones y fecundidades](108-Bayesian_PPM.qmd).
+:::
 

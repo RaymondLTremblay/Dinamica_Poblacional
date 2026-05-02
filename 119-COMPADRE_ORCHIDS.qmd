@@ -58,6 +58,16 @@ reclutamiento pueden variar entre estudios; por ello, al comparar poblaciones
 conviene revisar la documentación asociada y mantener criterios consistentes
 de armonización.
 
+::: callout-warning
+**COMPADRE agrega estudios diversos — la armonización es responsabilidad del usuario.** Las matrices de la base provienen de estudios con definiciones de estadios distintas, periodos de muestreo variables (mensual a multianual) y supuestos de reclutamiento diferentes. La columna `MatrixComposite` indica si una matriz es individual, promedio o *pooled*. Antes de comparar matrices entre estudios, conviene revisar:
+
+- `MatrixDimension`: ¿el número de estadios es comparable?
+- `StudyDuration` y `Periodicity`: ¿los pasos de tiempo son iguales?
+- `MatrixCriteriaSize` / `MatrixCriteriaAge` / `MatrixCriteriaOntogeny`: ¿los criterios de clasificación son compatibles?
+
+Sin esta armonización, las "comparaciones entre especies" pueden ser artefactos del diseño metodológico, no diferencias biológicas reales.
+:::
+
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r Compr1, message=FALSE}
@@ -77,68 +87,70 @@ library(popdemo)
 
 ```
 
-Uno de los esfuerzos más grandes para compilar el conocimiento actual sobre la ecología de poblaciones es la creación y mantenimiento de las bases de datos de COMPADRE y COMADRE. COMPADRE es una base de datos de matrices de transición de estados de poblaciones de plantas y COMADRE es una base de datos de matrices de transición de estados de poblaciones de animales. Estas bases de datos son una fuente de información para evaluar la dinámica de poblaciones de plantas y animales. En este capítulo se presenta una introducción a la base de datos de COMPADRE y algunas de las funciones en los paquetes de **Rcompadre**. En el próximo capítulo se presentarán funciones incluidas en el paquete **Rage**. La información aquí no sustituye la información provista en la página web de COMPADRE \<<https://compadre-db.org/>\> y los tutoriales provistos en la sección de Education de la misma página\<<https://compadre-db.org/Education>\>.
+Uno de los esfuerzos más grandes para compilar el conocimiento actual sobre la ecología de poblaciones es la creación y mantenimiento de las bases de datos de COMPADRE y COMADRE. COMPADRE es una base de datos de matrices de proyección poblacional de **plantas**; COMADRE es la base correspondiente para **animales**. En este capítulo se presenta una introducción a COMPADRE y algunas de las funciones del paquete `Rcompadre`. En el próximo capítulo se presentan funciones del paquete `Rage`. La información aquí no sustituye la documentación oficial en la [página web de COMPADRE](https://compadre-db.org/) ni los tutoriales en la [sección Education](https://compadre-db.org/Education).
 
 El valor de las bases de datos reside en tener en un mismo sitio una gran cantidad de información  organizada de manera uniforme y accesible, además de que su formato permite utilizarla directamente en diferentes análisis. En el caso de COMPADRE y COMADRE, la información está organizada en matrices de transición de estados de poblaciones (MPM) que se pueden usar para evaluar la dinámica de poblaciones de plantas y animales y con múltiples variables, tal como sus coordenadas geográficas, el tipo de hábitat, la temporalidad de los datos, la fuente de la información, entre otros.
 
-En este capítulo se aprenderá a utilizar la base de datos de COMPADRE para evaluar la dinámica de poblaciones de orquídeas. Se evaluará cómo extraer diferentes tipos de datos para responder a preguntas específicas.
+En este capítulo se aprenderá a utilizar COMPADRE para evaluar la dinámica de poblaciones de orquídeas, extrayendo diferentes tipos de datos para responder preguntas específicas.
+
+::: callout-tip
+**Flujo de trabajo recomendado con COMPADRE.**
+
+1. **Cargar** la base completa una sola vez (`compadre`).
+2. **Filtrar** a la familia, género o especie de interés (`filter()`).
+3. **Validar** con `cdb_flag()` para detectar problemas (NAs, no ergodicidad, etc.).
+4. **Extraer** las matrices (`matU()`, `matF()`, `matC()`, `matA()`).
+5. **Analizar** con `popbio`/`popdemo`/`Rage` según la pregunta.
+
+Este capítulo cubre los pasos 1–4. El paso 5 se desarrolla en los capítulos analíticos (elasticidad, LTRE, simulaciones, funciones de transferencia).
+:::
 
 ------------------------------------------------------------------------
 
-### Acceso a los datos de COMPADRE.
+## Acceso a los datos de COMPADRE
 
-#### Descargando el archivo de datos
+Hay tres formas de obtener la base. Las tres dejan en el entorno un objeto llamado `compadre` que contiene todas las matrices y metadatos.
 
-Hay dos métodos de tener acceso a los datos de COMPADRE (datos de dinámica poblacional de plantas) y COMADRE (datos de dinámica poblacional de animales). Se puede acceder a los datos directamente de la página web o bajar el archivo de datos desde el siguiente enlace \<<https://compadre-db.org/Data/Compadre>\> seleccionando la pestaña de **Download COMPADRE** o **Download COMADRE**.
+### Opción 1 — Descarga manual desde la página web
 
-Para tener acceso a los datos cuando no cuente con conexión a internet es necesario descargar el archivo en su ordenador y cargarlos en su proyecto de RStudio. Al momento de la edición de este libro la versión más reciente de COMPADRE es la versión 6.28.8.0 (fecha de la base de datos: agosto_14_2025) y se puede descargar en el siguiente enlace: \<\<<https://compadre-db.org/Data/Compadre/COMPADRE_v>.
+La forma más sencilla es descargar el archivo `.RData` desde la página oficial: <https://compadre-db.org/Data/Compadre>. Al momento de la edición de este libro la versión más reciente es la 6.28.8.0 (agosto 2025). Una vez descargado, se carga con `load()`:
 
-##### Acceso a los datos desde su computadora (ordenador)
+```{r}
+#| eval: false
 
--   USAR el código siguiente si ha descargado los datos en su computadora.
-
-load(dirección/al/archivo/a/su/proyecto/de/RStudio) si tiene el repositorio en su computadora (preferiblemente en su proyecto de RStudio)
-
-```{r Compr3, eval=FALSE, echo=FALSE}
-#| error: true
-
-#load("~/Library/CloudStorage/Dropbox/GitHub_Dropbox_Drive/GitHub/Diagnostico_Poblacional/Diagnostico_Poblacional/COMPADRE_v.6.23.5.0.RData")
-
-#load("~/Dropbox/GitHub_Dropbox_Drive/GitHub/Diagnostico_Poblacional/Diagnostico_Poblacional/COMPADRE_v.6.23.5.0.RData") # work computer
+load("ruta/a/COMPADRE_v.6.28.8.0.RData")
 ```
 
-------------------------------------------------------------------------
+### Opción 2 — Descarga directa desde R
 
-#### Carga de datos con el enlace de web
+El paquete `Rcompadre` incluye la función `cdb_fetch()` que descarga la última versión directamente desde R, sin necesidad de descargar el archivo manualmente:
 
--   Usando la función *cdb_fetch()* se pueden descargar los datos directamente de la página web de COMPADRE. Esta función se encuentra en el paquete de **Rcompadre**.
+```{r}
+#| eval: false
+
+compadre <- cdb_fetch("compadre")
+```
+
+### Opción 3 — Archivo precompilado de este libro
+
+Para garantizar reproducibilidad, este libro distribuye una copia local del *snapshot* de COMPADRE usado en los ejemplos. Esta es la opción que se usa en el resto del capítulo:
 
 ```{r Compr4, message=FALSE}
 #| error: true
 
-compadre <- readRDS("data/COMPADRE_2026.rds") # Usar este código para bajar los datos del repositorio de COMPADRE.
-
+compadre <- readRDS("data/COMPADRE_2026.rds")
 ```
 
 ------------------------------------------------------------------------
 
-#### Renombrar la base datos a algo sencillo
+### Verificar la base cargada
 
-Se considera una buena práctica renombrar los objetos de forma tal que sea simple llamarlos posteriormente en nuestro script. Para ello, en este ejemplo se renombrará la base de datos de COMPADRE a algo más sencillo **TodasSp**, reemplazando **compadre**. - Se visualiza el nombre de cada columna en la base de datos. - Hay 59 variables en la base de datos de COMPADRE.
-
-```{r Compr5}
-#| error: true
-
-TodasSp=compadre
-#names(TodasSp) # La lista de los nombres de las variables en el archivo COMPADRE, Nota que 59 variables en la base de datos de COMPADRE.
-```
-
--   Conocer la dimensión de la base de dato. Al momento de la edición de este libro la base de datos de COMPADRE tiene 9149 filas y 59 columnas (variables).
+Una vez cargada, conviene verificar el tamaño y la estructura. Al momento de edición la base tiene 9149 filas (matrices) y 59 columnas (variables/metadatos).
 
 ```{r Compr6}
 #| error: true
-dim(TodasSp) 
 
+dim(compadre)
 ```
 
 ------------------------------------------------------------------------
@@ -159,7 +171,7 @@ Como podrán notar, solamente existen datos para una de las tres que probamos en
 #| error: true
 
 especies<- c("Epidendrum xanthinum", "Epipactis gigantea", "Caladenia latifolia")
-cdb_check_species(TodasSp, especies) |> flextable() |> ft_wide()
+cdb_check_species(compadre, especies) |> flextable() |> ft_wide()
 ```
 
 ```{=latex}
@@ -172,11 +184,11 @@ cdb_check_species(TodasSp, especies) |> flextable() |> ft_wide()
 
 Antes de seguir vamos a extraer de la base de datos de COMPADRE las especies de orquídeas y crear un nuevo objeto con todas las especies de orquídeas. La ventaja de crear un conjunto de datos es reducir el tamaño del archivo y facilitar los análisis posteriores.
 
-Seleccionaremos todas las matrices que pertenecen a la familia Orchidaceae. Se observa que la base 788 filas, por consecuencia 788 matrices de transición de estados de poblaciones de orquídeas.
+Seleccionaremos todas las matrices que pertenecen a la familia *Orchidaceae*. Se observa que la base contiene 788 filas, es decir 788 matrices de transición de estados de poblaciones de orquídeas.
 
 ```{r compr8}
 #| error: true
-index_O = TodasSp %>%
+index_O = compadre %>%
   filter(Family %in% c("Orchidaceae")) # Extraer la orquídeas de la base de datos.
 ```
 
@@ -184,7 +196,7 @@ index_O = TodasSp %>%
 
 ### La metadata de la base de datos de COMPADRE
 
-Con la función **cdb_metadata()** se puede evaluar la metadata de la base de datos. La función muestra el número de filas y columnas, que incluye mútliples variables, tal como el nombre de la especies usada en la fuente de información ‘SpeciesAuthor’, el nombre del taxón reconocido “SpeciesAccepted”, la fuente de información como el DOI_ISBN, los años de estudio, sus coordenadas geográficas, el tipo de hábitat, la fuente de la información, entre otros.
+Con la función **cdb_metadata()** se puede evaluar la metadata de la base de datos. La función muestra el número de filas y columnas, que incluye múltiples variables, tal como el nombre de la especies usada en la fuente de información ‘SpeciesAuthor’, el nombre del taxón reconocido “SpeciesAccepted”, la fuente de información como el DOI_ISBN, los años de estudio, sus coordenadas geográficas, el tipo de hábitat, la fuente de la información, entre otros.
 
 ```{=latex}
 \begin{landscape}
@@ -266,7 +278,7 @@ Laeliasp$mat[[2]]
 ```{r Compr13}
 #| error: true
 
-Epipactis = TodasSp %>%
+Epipactis = compadre %>%
   filter(Genus %in% c("Epipactis")) # Filtrar la información de *Epipactis* en la base de datos.
 
 head(cdb_metadata(Epipactis), n = 3) |>
@@ -283,7 +295,11 @@ head(cdb_metadata(Epipactis), n = 3) |>
 
 ## Matrices promedio
 
-Para un estudio y especie determinados, la base de datos COMPADRE puede contener múltiples matrices que reflejan diferentes combinaciones de población, año y/o tratamiento. Hay una función que permite obtener una única matriz de promedio general para cada grupo de interés (p. ej., `MatrixPopulation`) y, por lo tanto, limitar la pseudorreplicación. El término usado es *colapsar* las matrices, con la función `mpm_mean`.
+::: callout-tip
+**Pseudorreplicación: cuándo colapsar matrices.** Cuando un estudio reporta múltiples matrices para la misma población-año (e.g., diferentes tratamientos o réplicas dentro de un sitio), incluirlas todas en un análisis comparativo entre estudios infla artificialmente el tamaño de muestra. La función `mpm_mean()` reduce el conjunto a una sola matriz promedio por grupo, eliminando la pseudorreplicación. Para ver la dispersión interna del grupo, `mpm_sd()` calcula la matriz de desviaciones estándar elemento por elemento.
+:::
+
+Para un estudio y especie determinados, la base de datos COMPADRE puede contener múltiples matrices que reflejan diferentes combinaciones de población, año y/o tratamiento. Hay una función que permite obtener una única matriz promedio para cada grupo de interés (p. ej., `MatrixPopulation`) y, por lo tanto, limitar la pseudorreplicación. El término usado es *colapsar* las matrices, con la función `mpm_mean`.
 
 Seleccionamos la búsqueda anterior y seleccionamos solamente el estudio de Hens et al. en 2017.
 
@@ -309,10 +325,10 @@ De igual manera se puede calcular la desviación estándar de los elementos de l
 
 ```{r Compr15}
 #| error: true
-mpm_sd(mpms) # calcular la desviación estander de los elementos de la matriz de transición de estados de poblaciones. Se consigue una matriz para matA, matU, matF y matC.
+mpm_sd(mpms) # calcular la desviación estándar de los elementos de la matriz de transición de estados de poblaciones. Se consigue una matriz para matA, matU, matF y matC.
 ```
 
-Muchas veces es poco tedioso evaluar la base de datos completa de COMPADRE. Una manera facilitar el acceso a los datos es extraer las matrices con la función cdb_flatten. Nota lo que hace esta función es extraer todas las matrices de transición de estados de poblaciones (matA, matU, matF, matC) y las etapas de cada matriz y crear una lista con esa información.
+Muchas veces es tedioso evaluar la base de datos completa de COMPADRE. Una manera facilitar el acceso a los datos es extraer las matrices con la función cdb_flatten. Nota lo que hace esta función es extraer todas las matrices de transición de estados de poblaciones (matA, matU, matF, matC) y las etapas de cada matriz y crear una lista con esa información.
 
 Aquí hay 49 filas que corresponden a las 49 matrices de transición de estados de poblaciones de orquídeas del estudio de Hens et al. 2017.
 
@@ -328,17 +344,17 @@ Epi_flat$matA[1] # miramos solamente la primera matriz
 
 ### Evaluación de cumplimiento de condiciones
 
-Es sumamente importante el cumplimiento de los supuestos de los análisis. Si no evaluamos críticamente las condiciones de las matrices, pudiese ser que los resultados no sean biológicamente relevantes. Para los análisis de PMP es necesario que las matrices cumplan con ciertas condiciones y dependiendo de la pregunta científica se tiene que evaluar las condiciones específicas. Una de estas condiciones es la ergodicidad e irreducibilidad.
+::: callout-note
+**`cdb_flag()` agrega una columna por cada chequeo.** Para una base con muchas matrices, no se filtran las problemáticas: se les agrega banderas (`check_NA_A`, `check_ergodic`, `check_irreducible`, etc.) y luego el usuario decide qué excluir según la pregunta. Por ejemplo, para análisis de elasticidad se requiere ergodicidad e irreducibilidad; para descripciones cualitativas del ciclo de vida, una matriz reducible puede ser perfectamente válida. La filosofía es **transparencia**: nunca se eliminan matrices automáticamente, siempre se documenta por qué se excluyen.
+:::
 
--   **check_ergodic**: Para la definición de ergodicidad.
-
--   **check_irreducible**: Para la definición de irreducibilidad.
+Es sumamente importante el cumplimiento de los supuestos de los análisis. Si no evaluamos críticamente las condiciones de las matrices, los resultados podrían no ser biológicamente relevantes. Para los análisis de MPP es necesario que las matrices cumplan ciertas condiciones, y dependiendo de la pregunta científica se evalúan las condiciones específicas. La función `cdb_flag()` corre todos los chequeos de calidad disponibles y agrega una columna por cada uno; los principales son:
 
 -   **check_NA_A**: Determinar si hay valores faltantes en 'matA' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices.
 
--   **check_NA_U**: Determinar si hay valores faltantes en 'matU' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices. La matriz de supervivencia es la matriz más importante para evaluar el Caladlargo de vida de una especie.
+-   **check_NA_U**: Determinar si hay valores faltantes en 'matU' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices. La matriz de supervivencia es la matriz más importante para evaluar el cálculo del largo de vida de una especie.
 
--   **check_NA_F**: Determinar si hay valores faltantes en 'matF' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices. La matriz de fecundidad es la matriz más importante para evaluar el crecimiento de la población, cualquier especie donde no tiene fecundidad se verá que tiende disminiur a través del tiempo.
+-   **check_NA_F**: Determinar si hay valores faltantes en 'matF' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices. La matriz de fecundidad es la matriz más importante para evaluar el crecimiento de la población, cualquier especie sin fecundidad tenderá a disminuir a través del tiempo.
 
 -   **check_NA_C**: Determinar si hay valores faltantes en 'matC'. Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices.
 
@@ -354,11 +370,11 @@ Es sumamente importante el cumplimiento de los supuestos de los análisis. Si no
 
 -   **check_ergodic**: Determinar si 'matA' es ergódico (ver isErgodic). Algunos cálculos matriciales requieren que el MPM ("matA") sea ergódico. Los MPM ergódicos son aquellos en los que existe un único estado estable asintótico que no depende de la estructura de la etapa inicial. Por el contrario, los MPM no ergódicos son aquellos en los que existen múltiples estados estables asintóticos, que dependen de la estructura de la etapa inicial. Los MPM que no son ergódicos suelen ser biológicamente irracionales, tanto en términos de la descripción de su ciclo de vida como de su dinámica proyectada. Por tanto, hacen que algunos cálculos fallen.
 
--   **check_irreductible**: Determinar si 'matA' es irreducible (ver isIrreducible). Algunos cálculos matriciales requieren que el MPM ("matA") sea irreducible. Los MPM irreductibles son aquellos en los que las tasas de transición parametrizadas facilitan el paso de todas las etapas a todas las demás etapas. Por el contrario, los MPM reducibles representan ciclos de vida incompletos donde no son posibles caminos desde todas las etapas a todas las demás etapas. Los MPM que son reducibles suelen ser biológicamente irracionales (pero no siempre), tanto en términos de la descripción de su ciclo de vida como de su dinámica proyectada. Por ello, hacen que algunos cálculos fallen. La irreductibilidad es necesaria pero no suficiente para la ergodicidad.
+-   **check_irreducible**: Determinar si 'matA' es irreducible (ver isIrreducible). Algunos cálculos matriciales requieren que el MPM ("matA") sea irreducible. Los MPM irreductibles son aquellos en los que las tasas de transición parametrizadas facilitan el paso de todas las etapas a todas las demás etapas. Por el contrario, los MPM reducibles representan ciclos de vida incompletos donde no son posibles caminos desde todas las etapas a todas las demás etapas. Los MPM que son reducibles suelen ser biológicamente irracionales (pero no siempre), tanto en términos de la descripción de su ciclo de vida como de su dinámica proyectada. Por ello, hacen que algunos cálculos fallen. La irreductibilidad es necesaria pero no suficiente para la ergodicidad.
 
--   **check_primitive**: Deteminar si 'matA' es primitivo (ver isPrimitive). Una matriz primitiva es una matriz no negativa que es irreducible y tiene un solo valor propio de módulo máximo. Por lo tanto, esta verificación es redundante debido a la superposición con 'check_irreducible' y 'checkErdogic'.
+-   **check_primitive**: Determinar si 'matA' es primitivo (ver isPrimitive). Una matriz primitiva es una matriz no negativa que es irreducible y tiene un solo valor propio de módulo máximo. Por lo tanto, esta verificación es redundante debido a la superposición con 'check_irreducible' y 'checkErdogic'.
 
--   **check_surv_gte_1**: Determinar si 'matU' contiene valores iguales o mayores que 1. La supervivencia está limitada entre 0 y 1. Los valores superiores a 1 no son biológicamente razonables (vea capítulo Impacto de Datos sin sentidos).
+-   **check_surv_gte_1**: Determinar si 'matU' contiene valores iguales o mayores que 1. La supervivencia está limitada entre 0 y 1. Los valores superiores a 1 no son biológicamente razonables (ver el capítulo de [Impacto de datos sin sentido](122-Impacto_de_Datos_sin_Sentido.qmd)).
 
 Usando la función cdb_flag se puede evaluar todas las opciones en la base de datos de COMPADRE.
 
@@ -459,4 +475,15 @@ head(cdb_metadata(Mat_erg_irred), n=2) |>
 \end{landscape}
 ```
 
-Sept 9, 2025
+------------------------------------------------------------------------
+
+## ¿Qué sigue?
+
+Una vez identificadas las matrices que cumplen los chequeos relevantes para tu pregunta, los siguientes pasos típicos son:
+
+- **Calcular métricas demográficas** (esperanza de vida, edad de primera reproducción, generación) con el paquete `Rage` — ver el capítulo siguiente.
+- **Comparar λ entre poblaciones, especies o tratamientos** — ver los capítulos de [Crecimiento poblacional](109-Crecimiento_poblacional.qmd) y [LTRE](#ERTV).
+- **Evaluar sensibilidad y elasticidad** — ver el capítulo de [Elasticidad](#Elasticidad).
+- **Simular dinámicas bajo escenarios alternativos** — ver el capítulo de [Métodos de simulación](115-Metodos_de_simulaciones.qmd).
+
+El conjunto filtrado (`Mat_erg_irred` en el ejemplo) está listo para alimentar cualquiera de estos análisis sin preocuparse por matrices defectuosas.
