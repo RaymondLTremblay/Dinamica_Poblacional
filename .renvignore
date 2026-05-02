@@ -1,7 +1,25 @@
-# Files ignored by renv::dependencies() — and therefore by grateful::scan_packages().
-# Add utility scripts here that reference packages NOT needed to render the book,
-# so CI builds don't try to install them.
+# Files and folders ignored by renv::dependencies().
+# Note: renv does NOT read .gitignore — anything excluded from package scanning
+# must be listed here even if it's already in .gitignore.
 
-# Splits the rendered PDF into per-chapter PDFs. Uses pdftools, which we don't
-# want to require on the CI runner (needs libpoppler-cpp-dev system library).
+# ---------------------------------------------------------------------------
+# Build output / regenerable artifacts
+# ---------------------------------------------------------------------------
+_archive/
+_freeze/
+_site/
+docs/
+.quarto/
+*_cache/
+*_files/
+
+# ---------------------------------------------------------------------------
+# Editor / agent working directories
+# ---------------------------------------------------------------------------
+.claude/
+
+# ---------------------------------------------------------------------------
+# Utility scripts whose packages aren't needed to render the book
+# ---------------------------------------------------------------------------
+# split_chapters.R uses pdftools — would force libpoppler-cpp-dev on CI.
 split_chapters.R

@@ -290,10 +290,27 @@ https://raymondltremblay.github.io/Dinamica_Poblacional/
 
 ## Lista de paquetes usados en el libro
 
-```{r, warning=FALSE, message=FALSE, results='hide'}
-#install.packages("grateful", dependencies = TRUE)
-library(grateful)
-scan_packages()
+La lista a continuación se genera automáticamente escaneando todos los archivos del libro. Si planea reproducir los ejemplos, asegúrese de tener instalados los paquetes listados.
+
+```{r, warning=FALSE, message=FALSE}
+# renv::dependencies() escanea todos los .qmd y .R del proyecto en busca de
+# llamadas a library(), require() y pkg::función(). Respeta .renvignore para
+# excluir scripts utilitarios (ej. split_chapters.R).
+deps <- renv::dependencies(quiet = TRUE)
+pkgs <- sort(unique(deps$Package))
+
+# Versión instalada — NA si el paquete no está instalado (no falla).
+safe_version <- function(p) {
+  tryCatch(as.character(utils::packageVersion(p)),
+           error = function(e) NA_character_)
+}
+
+data.frame(
+  Paquete = pkgs,
+  Version = vapply(pkgs, safe_version, character(1)),
+  row.names = NULL
+) |>
+  knitr::kable()
 ```
 
 ```{r, echo=FALSE, eval=FALSE, warning=FALSE}
