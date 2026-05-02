@@ -16,7 +16,7 @@ suppressPackageStartupMessages({
 #| message: false
 #| warning: false
 
-# ---- 1. Find all .qmd files (excluding this appendix) ----
+# ---- 1. Encontrar todos los .qmd (excluyendo este apéndice) ----
 this_file <- knitr::current_input()
 
 qmd_files <- list.files(
@@ -92,14 +92,14 @@ exclude_fns <- c(
 )
 functions_used <- setdiff(functions_used, exclude_fns)
 
-# ---- 5. Build a master lookup: function -> package (all installed pkgs) ----
-# This is the key fix: search ALL installed packages, not just loaded ones
+# ---- 5. Construir un índice maestro: función -> paquete (todos los instalados) ----
+# Punto clave: buscar en TODOS los paquetes instalados, no sólo los cargados
 build_pkg_lookup <- function(fns) {
-  # Get all installed packages
+  # Obtener todos los paquetes instalados
   all_pkgs <- rownames(installed.packages())
   
-  # Build reverse map from all loaded + installed namespaces
-  # First pass: fast search in already-loaded namespaces
+  # Construir mapa inverso desde los espacios de nombres cargados e instalados
+  # Primera pasada: búsqueda rápida en espacios de nombres ya cargados
   loaded_ns <- loadedNamespaces()
   lookup <- setNames(rep(NA_character_, length(fns)), fns)
   
@@ -112,7 +112,7 @@ build_pkg_lookup <- function(fns) {
     }
   }
   
-  # Second pass: for still-NA functions, search installed package NAMESPACE exports
+  # Segunda pasada: para funciones aún NA, buscar exportes de NAMESPACE de paquetes instalados
   still_na <- names(lookup)[is.na(lookup)]
   if (length(still_na) > 0) {
     for (pkg in all_pkgs) {
@@ -134,12 +134,12 @@ build_pkg_lookup <- function(fns) {
 cat("Searching installed packages for function origins (this may take ~30s)...\n")
 pkg_lookup <- build_pkg_lookup(functions_used)
 
-# ---- 6. Get one-line description from help Rd files ----
+# ---- 6. Obtener descripción de una línea desde los archivos Rd ----
 get_description <- function(fn, pkg) {
   if (is.na(pkg)) return(NA_character_)
   tryCatch({
     rd_db <- tools::Rd_db(pkg)
-    # Find the Rd topic matching our function
+    # Encontrar el tópico Rd que corresponde a la función
     for (topic in rd_db) {
       aliases <- tryCatch(
         as.character(unlist(tools:::.Rd_get_metadata(topic, "alias"))),
@@ -158,7 +158,7 @@ get_description <- function(fn, pkg) {
 }
 
 # ---- 7. Build final data frame ----
-# Base R packages to exclude from the appendix
+# Paquetes base de R que se excluyen del apéndice
 base_pkgs <- c("base", "stats", "utils", "graphics",
                "grDevices", "methods", "datasets")
 

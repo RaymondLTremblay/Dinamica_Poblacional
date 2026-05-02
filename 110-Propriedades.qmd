@@ -37,12 +37,12 @@ rlt_theme <- theme(
   axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
 ) +
   theme(
-    # Remover los border
+    # Remover los bordes
     panel.border = element_blank(),
-    # Remover las lineas
+    # Remover las líneas
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
-    # Remove el fondo del panel
+    # Remover el fondo del panel
     panel.background = element_blank(),
     # añadir lineas más gruesas
     axis.line.x = element_line(colour = "black", linewidth = 1),
@@ -51,8 +51,8 @@ rlt_theme <- theme(
 
 diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
 
-# --- 2. Combine them into a list object ---
-# This list can be added to the plot with a single '+'
+# --- 2. Combinarlos en un objeto de tipo lista ---
+# Esta lista se puede añadir al gráfico con un solo '+'
 rlt_style_fill <- function() {
   list(
     rlt_theme,
@@ -70,15 +70,15 @@ rlt_style_colour <- function() {
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 #| error: true
-# Use a UTF‑8 aware device when building PDF (no effect on HTML)
+# Usar un dispositivo UTF-8 al construir el PDF (sin efecto en HTML)
 if (!knitr::is_html_output()) {
-  # Option 1: high‑quality PNGs via Cairo (very robust)
+  # Opción 1: PNG de alta calidad vía Cairo (muy robusto)
   knitr::opts_chunk$set(
     dev = "png",
     dev.args = list(type = "cairo"),
     dpi = 300
   )
-  # Option 2: ragg (also excellent); uncomment if you prefer ragg
+  # Opción 2: ragg (también excelente); descomente si prefiere ragg
   # knitr::opts_chunk$set(dev = "ragg_png", dpi = 300)
 }
 ```
@@ -478,17 +478,17 @@ tiempo_total <- 50
 # Paso de tiempo para la simulación (más pequeño para una curva más suave)
 etapa_tiempo <- 0.1
 
-# --- Generate the Damped Oscillation Data for Multiple Ratios ---
-# Create an empty data frame to store all the data
+# --- Generar los datos de oscilación amortiguada para múltiples coeficientes ---
+# Crear un data frame vacío para almacenar todos los datos
 todo_data_df <- data.frame()
 
 # Recorra cada relación de amortiguamiento para generar los datos
 for (zeta in amortiguamiento) {
-  # Create a sequence of time points
+ # Crear una secuencia de puntos de tiempo
   time_points <- seq(0, tiempo_total, by = etapa_tiempo)
 
-  # Calculate the population at each time point based on the damping ratio.
-  # The mathematical form of the step response changes depending on the damping ratio.
+  # Calcular la población en cada punto de tiempo según el coeficiente de amortiguamiento.
+  # La forma matemática de la respuesta al escalón cambia según el coeficiente de amortiguamiento.
 
   if (zeta < 1) {
     # Underdamped case: damped sine wave
@@ -511,22 +511,22 @@ for (zeta in amortiguamiento) {
         (s2 * exp(s1 * time_points) - s1 * exp(s2 * time_points)) / (s2 - s1))
   }
 
-  # Add the data for the current damping ratio to a temporary data frame
+  # Añadir los datos del coeficiente actual a un data frame temporal
   temp_df <- data.frame(
     Time = time_points,
     Population = population_data,
     DampingRatio = factor(zeta) # Store damping ratio as a factor for coloring
   )
 
-  # Bind the temporary data frame to the main data frame
+  # Unir el data frame temporal al data frame principal
   todo_data_df <- rbind(todo_data_df, temp_df)
 }
 
-# --- Create the Plot using ggplot2 ---
+# --- Crear el gráfico usando ggplot2 ---
 ggplot(todo_data_df, aes(x = Time, y = Population, color = DampingRatio)) +
-  # Add the lines for each damping ratio
+  # Añadir las líneas para cada coeficiente de amortiguamiento
   geom_line(linewidth = 1.2) +
-  # Set the title and labels
+  # Establecer el título y las etiquetas
 labs(
   title = "El efecto de amortiguamiento \n sobre el tamaño de población",
   subtitle = "La población se estabiliza a un equilibrio de 1000",
@@ -534,7 +534,7 @@ labs(
   y = "Tamaño poblacional",
   color = expression("Amortiguamiento (" * zeta * ")")
 ) +
-  # Customize the plot theme for better aesthetics
+  # Personalizar el tema del gráfico para mejor estética
   rlt_style_colour() +
   theme_minimal(base_size = 14) +
   theme(
@@ -569,7 +569,7 @@ La respuesta de la población ante cuatro índices de amortiguamiento es la sigu
 En poblaciones reales, la mayoría de las matrices de proyección se encuentran en el régimen sobreamortiguado: regresan al equilibrio sin oscilar, pero pueden tardar muchas generaciones.
 :::
 
-#### Tiempo de Convergencia
+### Tiempo de convergencia
 
 El tiempo de convergencia es el periodo estimado que tarda la población en alcanzar su estructura estable. Este índice es relevante porque facilita entender el comportamiento poblacional a largo plazo. En **R** este cálculo puede realizarse con dos funciones del paquete `popdemo`: `dr` y `convt`. La función `dr` calcula el amortiguamiento, y a partir de éste puede estimarse el tiempo de convergencia de la siguiente manera:
 
@@ -721,8 +721,8 @@ convergence_times_df <- data.frame(
   Time = numeric()
 )
 
-# Bucle a través de cada etapa para encontrar el primer paso de tiempo donde
-# la proporción está dentro de la tolerancia de la SSD
+# Bucle por cada etapa para encontrar el primer paso de tiempo donde
+# la proporción está dentro de la tolerancia de la DEE
 for (i in 1:length(stage_names)) {
   stage_name <- stage_names[i]
   ssd_proportion <- stable_stage_distribution_df[
@@ -791,7 +791,7 @@ labs(
   ) +
   xlim(0, max(all_data_df$Time))
 
-# Imprimir el trazado final
+# Imprimir el gráfico final
 print(population_plot)
 
 ```

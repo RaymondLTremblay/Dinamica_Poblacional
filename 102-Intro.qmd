@@ -31,17 +31,31 @@ pre.r {
 
 Por: Raymond L Tremblay, Ernesto Mujica, Demetria Mondragón
 
-La dinámica poblacional estudia cómo y por qué cambian las poblaciones a través del tiempo como resultado de los procesos demográficos fundamentales: supervivencia, crecimiento y reproducción. Este libro introduce los conceptos, modelos y herramientas necesarios para comprender la dinámica poblacional desde una perspectiva estructurada y cuantitativa.
+Las matrices de proyección poblacional (MPP) son la herramienta cuantitativa estándar para responder preguntas sobre el destino de las poblaciones: ¿están creciendo, en declive, o estables? ¿qué etapa del ciclo de vida es más vulnerable? ¿es viable la cosecha sostenible? ¿qué tan rápido se recuperaría la población después de una intervención de manejo? La dinámica poblacional, como disciplina, vincula los procesos demográficos individuales —supervivencia, crecimiento y reproducción— con los patrones observados a nivel de población.
 
-## Dinámica poblacional: procesos, estructura y proyección
+Construir una MPP a partir de datos de campo es relativamente directo. La parte difícil —y la parte que rara vez se enseña en libros de texto— es **hacerlo bien**: con datos que respeten la biología del organismo, con métodos que respeten los supuestos del modelo, y con resultados que sobrevivan la revisión crítica de un comité editorial, un panel de financiamiento o un reanálisis varios años después.
 
-La dinámica poblacional proporciona un marco formal para vincular los procesos demográficos individuales con los patrones observados a nivel poblacional. A través del uso de modelos estructurados por estadios o tamaños, es posible representar explícitamente cómo las transiciones individuales entre estados del ciclo de vida determinan el crecimiento, la estabilidad o el declive de una población.
+Este libro está organizado alrededor de esa idea. No pretende ser un tratado completo de dinámica poblacional, para lo cual existen referencias clásicas como Caswell [-@caswell2001matrix], Ebert [-@ebert1999demography] y Morris y Doak [-@morris2002quantitative]. Es, en cambio, una guía práctica que enseña al lector a **construir, diagnosticar, defender e interpretar** un análisis matricial poblacional para una especie determinada, usando como ejemplo recurrente la familia *Orchidaceae*.
 
-En este libro se presenta la dinámica poblacional como una secuencia lógica de conceptos interconectados. En primer lugar, se introducen las transiciones demográficas como los procesos causales fundamentales que describen la supervivencia, el crecimiento y la reproducción de los individuos. A partir de estas transiciones, se construyen matrices de proyección poblacional que permiten derivar la tasa de crecimiento poblacional (λ) y analizar el comportamiento asintótico de la población.
+::: callout-tip
+## Las cuatro tareas de un demógrafo
 
-Posteriormente, se exploran las propiedades estructurales de las matrices de proyección, incluyendo la estructura estable por estadios y el valor reproductivo, que explican cómo se distribuyen los individuos y cuál es la contribución relativa de cada estadio al crecimiento futuro. Sobre esta base, se introducen herramientas analíticas como la sensibilidad y la elasticidad, que permiten evaluar la importancia relativa de las transiciones y orientar decisiones de manejo y conservación.
+1.  **Construir** el modelo: capítulos sobre ciclo de vida, recolección de datos, transiciones, fecundidad y descomposición U/F/C.
+2.  **Diagnosticar** los datos y la matriz: capítulo sobre métodos bayesianos para transiciones raras y, sobre todo, el capítulo sobre impactos de datos sin sentido biológico.
+3.  **Analizar** el comportamiento: capítulos sobre crecimiento, propiedades, elasticidad, dinámica transitoria, funciones de transferencia, LTRE y simulaciones.
+4.  **Comunicar y defender** los resultados: capítulo con la traducción del protocolo estándar para reportar MPP de Gascoigne et al. [@gascoigne2023standard].
+:::
 
-Finalmente, el libro incorpora extensiones modernas de los modelos clásicos, incluyendo modelos de proyección poblacional bayesianos y métodos de simulación, que permiten integrar explícitamente la incertidumbre y evaluar escenarios alternativos. Esta estructura progresiva proporciona una base conceptual sólida para el análisis y la aplicación de la dinámica poblacional en ecología y biología de la conservación.
+¿Por qué orquídeas? Porque su historia de vida es lo bastante extrema —semillas microscópicas, dependencia obligada de hongos micorrízicos para germinación, longevidad alta, eventos reproductivos raros, fenómenos de latencia— para poner a prueba los supuestos clásicos del modelado matricial. Si los métodos del libro funcionan para orquídeas, funcionan para casi cualquier planta o animal cuyo ciclo de vida quiera modelarse.
+
+::: callout-note
+## Cómo leer este libro
+
+- **Si está empezando** y nunca ha construido una MPP: lea en orden. Los capítulos del 4 al 11 dan los fundamentos.
+- **Si ya tiene una matriz preliminar** y quiere validarla antes de seguir: vaya directamente al capítulo sobre impactos de datos sin sentido biológico —es la lista de verificación más útil del libro.
+- **Si va a publicar resultados de MPP**: lea el capítulo del protocolo estandarizado antes de redactar la sección de métodos.
+- **Si quiere usar COMPADRE** para análisis comparativos: los capítulos sobre `Rcompadre` y `Rage` son guías prácticas.
+:::
 
 #### Librerías de R requeridas para el siguiente módulo
 
@@ -117,12 +131,12 @@ rlt_theme <- theme(
   axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
 ) +
   theme(
-    # Remover los border
+    # Remover los bordes
     panel.border = element_blank(),
-    # Remover las lineas
+    # Remover las líneas
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
-    # Remove el fondo del panel
+    # Remover el fondo del panel
     panel.background = element_blank(),
     # añadir lineas más gruesas
     axis.line.x = element_line(colour = "black", linewidth = 1),
@@ -157,8 +171,8 @@ cbPalette2 <- c(
 
 diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
 
-# --- 2. Combine them into a list object ---
-# This list can be added to the plot with a single '+'
+# --- 2. Combinarlos en un objeto de tipo lista ---
+# Esta lista se puede añadir al gráfico con un solo '+'
 rlt_style_fill <- function() {
   list(
     rlt_theme,

@@ -1,12 +1,13 @@
 # COMPADRE y Orquídeas {#Compadre}
 
-Los datos demográficos comparables son la base para analizar la dinámica de
-poblaciones de orquídeas a través de especies, regiones y contextos
-ambientales. Este capítulo presenta el conjunto de datos de orquídeas
-derivado de la base COMPADRE y describe su organización para su uso en los
-modelos y análisis desarrollados en capítulos anteriores.
+*Por: Raymond L. Tremblay*
 
-Por: Raymond L. Tremblay
+::: callout-note
+## Qué es este capítulo
+Este capítulo es una **guía práctica de uso del paquete `Rcompadre`**. No introduce conceptos nuevos sobre dinámica poblacional —para eso están los capítulos del 4 al 16—, sino que enseña a manejar la base COMPADRE con confianza: cómo descargarla, filtrarla, validar las matrices, extraer las submatrices U/F/C, y conectar los datos con los análisis del resto del libro. El paquete `Rcompadre` no es trivial: tiene su propia clase de objetos (`CompadreDB`), funciones con nombres similares pero comportamientos distintos, y trampas que cuestan tiempo si uno las descubre por prueba y error. Este capítulo busca acortar esa curva de aprendizaje.
+:::
+
+Los datos demográficos comparables son la base para analizar la dinámica de poblaciones de orquídeas a través de especies, regiones y contextos ambientales. Este capítulo presenta el conjunto de datos de orquídeas derivado de la base COMPADRE y describe su organización para usarlos en los modelos y análisis del libro.
 
 ## Alcance y organización de los datos demográficos de orquídeas
 
@@ -103,6 +104,56 @@ En este capítulo se aprenderá a utilizar COMPADRE para evaluar la dinámica de
 5. **Analizar** con `popbio`/`popdemo`/`Rage` según la pregunta.
 
 Este capítulo cubre los pasos 1–4. El paso 5 se desarrolla en los capítulos analíticos (elasticidad, LTRE, simulaciones, funciones de transferencia).
+:::
+
+::: callout-tip
+## ¿Qué función de `Rcompadre` necesito? — Árbol de decisión
+
+| Si quiero…                                                         | Use                                                                |
+|--------------------------------------------------------------------|--------------------------------------------------------------------|
+| Bajar la base completa por primera vez                             | `cdb_fetch("compadre")`                                            |
+| Ver los metadatos (especie, año, ubicación, etc.)                  | `cdb_metadata(x)`                                                  |
+| Filtrar a una familia                                              | `subset(x, Family == "Orchidaceae")` *o* `x %>% filter(Family == "Orchidaceae")` |
+| Filtrar a una especie                                              | `subset(x, SpeciesAccepted == "Lepanthes caritensis")`             |
+| Marcar matrices con problemas (NAs, no-ergódicas, no-irreducibles) | `cdb_flag(x)` — añade columnas `check_*`, no filtra                |
+| Quedarme sólo con matrices "limpias"                               | `subset(cdb_flag(x), check_NA_A == FALSE & check_ergodic == TRUE)` |
+| Extraer la matriz de transición completa A                         | `matA(x)` → lista de matrices                                      |
+| Extraer las submatrices                                            | `matU(x)`, `matF(x)`, `matC(x)`                                    |
+| Una matriz individual                                              | `matA(x)[[i]]` (la i-ésima)                                        |
+| Aplicar una función a todas las matrices                           | `purrr::map_dbl(matA(x), ~ popbio::lambda(.x))`                    |
+
+**Regla práctica.** Si no está seguro de qué función usar, casi siempre necesita: `cdb_fetch()` → `subset()` o `filter()` → `cdb_flag()` → `subset(check_* )` → `matU()` / `matF()` / `matA()`.
+:::
+
+::: callout-warning
+## Trampas comunes con `Rcompadre`
+
+-   **`subset()` no es base-R.** `Rcompadre` exporta su propio método `subset()` para objetos `CompadreDB`; la sintaxis se parece a base-R pero respeta la estructura interna del objeto. **No** uses `[]` para subconjuntos directos.
+-   **`mat` ≠ `matA()`**. `mat` es una columna del data-frame interno; `matA()` es la función que extrae la matriz A de cada fila. Use siempre la función.
+-   **`cdb_flag()` añade columnas, no filtra**. Después de `cdb_flag()` hay que filtrar manualmente con las columnas `check_*` (`check_NA_A`, `check_ergodic`, `check_irreducible`).
+-   **`Lat` y `Lon` a veces son `character`, no `numeric`**. Verifíquelo con `class()` antes de mapear o calcular distancias; convierta con `as.numeric()` si es necesario.
+-   **`MatrixComposite`** indica si una matriz fue promediada o agrupada (*pooled*). Para análisis comparativo conviene quedarse con `MatrixComposite == "Individual"` para evitar pseudoreplicación.
+-   **`MatrixCriteriaSize` / `MatrixCriteriaAge` / `MatrixCriteriaOntogeny`** describen cómo se definieron los estadios. Antes de comparar matrices entre estudios, conviene verificar que estos criterios sean compatibles.
+:::
+
+::: callout-note
+## Campos de metadatos esenciales
+
+De los más de 50 campos en COMPADRE, estos 9 son los que usará el 95% del tiempo:
+
+| Campo                  | Qué contiene                                                            |
+|------------------------|-------------------------------------------------------------------------|
+| `Family`               | Familia taxonómica (ej. `"Orchidaceae"`)                                |
+| `SpeciesAccepted`      | Nombre científico aceptado                                              |
+| `MatrixPopulation`     | Identificador de la población (varias por especie en muchos estudios)   |
+| `StudyStart`/`StudyEnd`| Años de inicio y fin del muestreo                                       |
+| `MatrixDimension`      | Número de estadios en la matriz                                         |
+| `OrganismType`         | "Epiphyte", "Herbaceous perennial", etc.                                |
+| `Lat`, `Lon`           | Coordenadas de la población (a menudo como texto, ver Trampas)          |
+| `MatrixComposite`      | "Individual" / "Mean" / "Pooled" — clave para análisis comparativos     |
+| `DOI_ISBN`             | Identificador del estudio original                                      |
+
+Para la lista completa: `?Rcompadre::CompadreDB` y la documentación oficial.
 :::
 
 ------------------------------------------------------------------------
@@ -487,3 +538,43 @@ Una vez identificadas las matrices que cumplen los chequeos relevantes para tu p
 - **Simular dinámicas bajo escenarios alternativos** — ver el capítulo de [Métodos de simulación](115-Metodos_de_simulaciones.qmd).
 
 El conjunto filtrado (`Mat_erg_irred` en el ejemplo) está listo para alimentar cualquiera de estos análisis sin preocuparse por matrices defectuosas.
+
+------------------------------------------------------------------------
+
+## Ejercicios — Pruebe usted mismo
+
+Aprender `Rcompadre` requiere ensuciarse las manos. Estos ejercicios usan exclusivamente las funciones presentadas en este capítulo. Las soluciones se construyen combinando `cdb_fetch()`, `subset()`/`filter()`, `cdb_flag()`, `matU()`/`matF()`/`matA()` y verbos de `dplyr`.
+
+::: callout-tip
+## Ejercicio 1 — *Lepanthes* en COMPADRE
+
+¿Cuántas matrices de proyección hay en COMPADRE para el género *Lepanthes*? ¿Cuántas son ergódicas e irreducibles al mismo tiempo? ¿De cuántas especies distintas son?
+
+**Pista:** filtre por `Genus == "Lepanthes"`, aplique `cdb_flag()`, y use `length(unique(SpeciesAccepted))`.
+:::
+
+::: callout-tip
+## Ejercicio 2 — Cosecha sostenible
+
+Encuentre todas las matrices de orquídeas en COMPADRE asociadas a estudios de cosecha (busque las palabras clave `harvest` o `cosecha` en `Authors` o el DOI). ¿Qué especies aparecen? ¿Para cuáles existen matrices de la misma población con y sin cosecha?
+
+**Pista:** la base no tiene un campo "cosecha" estructurado; tendrá que filtrar el conjunto cargado por palabras en metadatos como `MatrixPopulation` o usar `DOI_ISBN` para identificar pares de estudios.
+:::
+
+::: callout-tip
+## Ejercicio 3 — Estudios largos
+
+Liste todas las orquídeas de COMPADRE cuyo estudio duró ≥ 5 años (`StudyEnd - StudyStart >= 5`) y que tengan al menos 4 estadios en la matriz (`MatrixDimension >= 4`). ¿Qué tienen en común estas especies en términos de hábitat (`OrganismType`)?
+
+**Pista:** este filtro le permite identificar el subconjunto de estudios "robustos" para análisis comparativos —tamaño de muestra suficiente y resolución demográfica suficiente.
+:::
+
+::: callout-tip
+## Ejercicio 4 — Calidad de los datos
+
+Para el conjunto del ejercicio 3, ¿qué proporción de matrices pasa los tres chequeos (`check_NA_A == FALSE`, `check_ergodic == TRUE`, `check_irreducible == TRUE`)? ¿Las que fallan, fallan por NAs, por reducibilidad, o por no-ergodicidad?
+
+**Pista:** después de `cdb_flag()`, use `table(Mat$check_NA_A, Mat$check_ergodic)` o `summarise()` con `dplyr` para contar los modos de falla.
+:::
+
+Estos ejercicios son representativos del trabajo real con COMPADRE: nunca se cargan todas las matrices, siempre se filtra primero, casi siempre hay que combinar criterios biológicos (hábitat, género) con criterios técnicos (`check_*`), y a menudo el resultado es un conjunto menor de matrices "limpias" sobre las que se hacen los análisis del resto del libro.
