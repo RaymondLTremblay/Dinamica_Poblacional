@@ -22,7 +22,7 @@ library(flextable) # Paquete para formatear tablas
 
 ```
 
-El presente capítulo examina una selección de funciones contenidas en el paquete **Rage**, diseñado para facilitar el análisis de datos provenientes de las bases de datos **COMPADRE** y **COMADRE**. Estos repositorios públicos reúnen información sobre la dinámica poblacional de plantas (**COMPADRE**) y animales (**COMADRE**), estructurada en matrices de transición por estados o edades (MPM). La librería `Rage` ofrece herramientas analíticas que permiten estimar parámetros demográficos clave, tales como la esperanza de vida, la edad de inicio de la reproducción, la entropía poblacional y la tasa de crecimiento, entre otros. A lo largo del capítulo, se ilustran algunas de estas funciones y se demuestra su aplicación en el estudio de la dinámica poblacional de especies de orquídeas.
+El presente capítulo examina una selección de funciones contenidas en el paquete `Rage`, diseñado para facilitar el análisis de datos provenientes de las bases de datos **COMPADRE** y **COMADRE**. Estos repositorios públicos reúnen información sobre la dinámica poblacional de plantas (**COMPADRE**) y animales (**COMADRE**), estructurada en matrices de transición por estados o edades (MPM). La librería `Rage` ofrece herramientas analíticas que permiten estimar parámetros demográficos clave, tales como la esperanza de vida, la edad de inicio de la reproducción, la entropía poblacional y la tasa de crecimiento, entre otros. A lo largo del capítulo, se ilustran algunas de estas funciones y se demuestra su aplicación en el estudio de la dinámica poblacional de especies de orquídeas.
 
 ```{r Rage2, echo=FALSE}
 #| error: true
@@ -68,42 +68,25 @@ rlt_style_colour <- function() {
 
 ------------------------------------------------------------------------
 
-### Acceso a los datos de COMPADRE.
+## Cargar la base de COMPADRE
 
-Vea el capítulo anterior
-
-------------------------------------------------------------------------
-
-#### Rastreando los datos con el enlace de web
-
-La obtención de datos directamente desde el sitio web de **COMPADRE** puede realizarse mediante la función `cdb_fetch()`, la cual forma parte del paquete **Rcompadre**. Esta herramienta permite acceder de manera eficiente y automatizada a los datos de dinámica poblacional disponibles en dicho repositorio, facilitando su integración en flujos de trabajo reproducibles dentro del entorno de R.
+Para los detalles de cómo obtener la base de datos, ver el [capítulo anterior](#Compadre). Aquí simplemente cargamos el *snapshot* incluido con el libro:
 
 ```{r Rage4, message=FALSE}
 #| error: true
 
-compadre <- readRDS("data/COMPADRE_2026.rds") # Usar este código para bajar los datos del repositorio de COMPADRE.
-
+compadre <- readRDS("data/COMPADRE_2026.rds")
 ```
 
-#### Renombrar la base datos a algo sencillo
-
-En este segmento del script, se realiza una simplificación del nombre de la base de datos COMPADRE, asignándole el identificador TodasSp. Aunque el paquete \`Rage recomienda convertir el objeto original de clase list en un objeto de clase CompadreDB mediante la función as_cdb(), en este caso se conserva la estructura original para facilitar el acceso directo a sus componentes. A continuación, se utiliza la función names() para visualizar los nombres de las variables contenidas en la base de datos. Esta operación revela que el conjunto de datos incluye un total de 59 variables, las cuales describen diversos atributos ecológicos y demográficos de las especies registradas.
-
-```{r Rage5}
-#| error: true
-
-#TodasSp=as_cdb(compadre)  # Un paso critico: Convertir la base de datos anterior COM(P)ADRE (de clase 'list') en la base en un objeto CompadreDB (COMPADRE Database)
-
-TodasSp=compadre
-names(TodasSp) # La lista de los nombres de las variables en el archivo COMPADRE, Nota que 59 variables en la base de datos de COMPADRE.
-
-```
+::: callout-tip
+**Rage versus Rcompadre.** El paquete `Rcompadre` (capítulo anterior) se enfoca en **acceder y filtrar** la base; el paquete `Rage` se enfoca en **calcular métricas demográficas** a partir de las matrices ya filtradas. La división de tareas es intencional: cargar y validar es un paso, calcular esperanza de vida o entropía es otro. Ambos paquetes pertenecen a la misma familia y comparten convenciones de nombres (e.g., `matU()`, `matF()`).
+:::
 
 ------------------------------------------------------------------------
 
-### Filtrar para la familia de Orquidaceae
+### Filtrar para la familia *Orchidaceae*
 
-Para filtrar únicamente las especies pertenecientes a la familia Orchidaceae en la base de datos COMPADRE (ahora renombrada como TodasSp), puedes utilizar la función filter() del paquete dplyr. Aquí tienes el código en R con estilo claro y académico:
+Para filtrar únicamente las especies pertenecientes a la familia *Orchidaceae* en la base de datos COMPADRE, usamos la función `filter()` del paquete `dplyr`:
 
 ```{=latex}
 \begin{landscape}
@@ -112,10 +95,10 @@ Para filtrar únicamente las especies pertenecientes a la familia Orchidaceae en
 ```{r Rage7}
 #| error: true
 
-Orquideas = TodasSp %>%
+Orquideas = compadre %>%
   filter(Family %in% c("Orchidaceae")) # Extraer las orquídeas de la base de datos.
 
-# Assuming Orquideas is a CompadreDB object
+# Orquideas es un objeto CompadreDB
 head(cdb_metadata(Orquideas), n = 3) |>
   flextable() |> ft_wide()
 ```
@@ -126,7 +109,7 @@ head(cdb_metadata(Orquideas), n = 3) |>
 
 ------------------------------------------------------------------------
 
-## Cuantos estudios únicos?
+## ¿Cuántos estudios únicos?
 
 En este bloque de código se construye un nuevo conjunto de datos, SPECIES_O, que resume información clave sobre los estudios incluidos en la base de datos de orquídeas. Se seleccionan variables relevantes como el año de inicio y finalización del estudio (`StudyStart`, `StudyEnd`), el nombre científico aceptado de la especie (`SpeciesAccepted`), el año de publicación (`YearPublication`), los autores (`Authors`), el identificador del artículo (`DOI_ISBN`), el tipo de organismo (`OrganismType`), y el identificador de población (`MatrixPopulation`), junto con la matriz de proyección (`mat`).
 
@@ -175,9 +158,9 @@ flextable(head(SPECIES_O))
 
 ------------------------------------------------------------------------
 
-### Determinar cuantas poblaciones fueron muestreadas por especies
+### Determinar cuántas poblaciones fueron muestreadas por especie
 
-Cúal es la frecuencia de cantidad de poblaciones por especies en la base de datos.
+¿Cuál es la frecuencia de poblaciones por especie en la base de datos?
 
 -   La mayoría de las especies fueron estudiadas en una sola población.
 
@@ -206,7 +189,7 @@ La cantidad de poblaciones muestreadas por especie en la base de datos de COMPAD
 
 ------------------------------------------------------------------------
 
-### ¿Cuan largo fueron los estudios?
+### ¿Cuán largos fueron los estudios?
 
 La duración de los estudios en la base de datos de orquídeas de COMPADRE varía considerablemente. Aunque muchos estudios abarcan solo unos pocos años —el mínimo requerido para calcular una matriz de transición poblacional es de dos periodos—, también existen investigaciones que se extienden por lapsos más prolongados. Algunos estudios, como los realizados por Tremblay con *Lepanthes rupestris*, incluyen muestreos mensuales, mientras que otros se basan en observaciones anuales. Esta diversidad en la temporalidad refleja tanto los objetivos específicos de cada investigación como las estrategias metodológicas empleadas.
 
@@ -310,7 +293,7 @@ ggsave("images/Duración_Epi_Ter.png")
 
 ------------------------------------------------------------------------
 
-### Cálculo del Valor Propio Dominante (λ) en Matrices Ergodicas e Irreductibles
+### Cálculo del Valor Propio Dominante (λ) en Matrices Ergódicas e Irreducibles
 
 A partir del conjunto de matrices previamente filtradas por cumplir con las condiciones de ergodicidad e irreducibilidad, se procede al cálculo del valor propio dominante ($\lambda$), el cual representa la tasa de crecimiento poblacional asintótica en modelos matriciales.
 
@@ -380,9 +363,80 @@ lambdaVals2 <- map_dbl(matA(Mat_erg_irred), ~ popbio::lambda(.x))
 
 ------------------------------------------------------------------------
 
+## Demografía con `Rage`
+
+Hasta este punto hemos usado `Rcompadre` para acceder y filtrar matrices, y `popbio`/`popdemo` para calcular $\lambda$. El paquete `Rage` complementa este flujo con funciones que derivan estadísticos demográficos directamente de las matrices U, F y C. A continuación mostramos tres ejemplos sobre el subconjunto filtrado en `Mat_erg_irred`.
+
+::: {.callout-tip}
+## Recordatorio sobre las submatrices
+Las funciones de `Rage` requieren que las matrices estén descompuestas en sus partes (U = supervivencia/crecimiento, F = fecundidad sexual, C = crecimiento clonal). Por eso se extraen con `matU()`, `matF()` y `matC()` en lugar de usar la matriz completa A.
+:::
+
+### Esperanza de vida
+
+`life_expect_mean()` calcula la esperanza de vida promedio (en pasos de tiempo) a partir de la matriz U, asumiendo que el individuo entra en la primera clase activa.
+
+```{r Rage_lifeexpect}
+#| error: true
+
+esperanza_vida <- map_dbl(
+  matU(Mat_erg_irred),
+  ~ tryCatch(Rage::life_expect_mean(.x, start = 1L),
+             error = function(e) NA_real_)
+)
+
+summary(esperanza_vida)
+```
+
+### Tiempo generacional
+
+`gen_time()` estima el tiempo generacional combinando la matriz U y la matriz F.
+
+```{r Rage_gentime}
+#| error: true
+
+tiempo_gen <- map2_dbl(
+  matU(Mat_erg_irred),
+  matF(Mat_erg_irred),
+  ~ tryCatch(Rage::gen_time(.x, .y),
+             error = function(e) NA_real_)
+)
+
+summary(tiempo_gen)
+```
+
+### Edad de primera reproducción
+
+`mature_age()` devuelve la edad media a la que un individuo alcanza por primera vez una clase reproductiva.
+
+```{r Rage_matureage}
+#| error: true
+
+edad_madurez <- map2_dbl(
+  matU(Mat_erg_irred),
+  matF(Mat_erg_irred),
+  ~ tryCatch(Rage::mature_age(.x, .y, start = 1L),
+             error = function(e) NA_real_)
+)
+
+summary(edad_madurez)
+```
+
+::: {.callout-note}
+## Interpretación cuidadosa
+Estos estadísticos son sensibles a la elección de la clase inicial (`start`) y a la calidad de las matrices U y F. Cuando la matriz F es nula o C contiene la reproducción dominante, conviene revisar la documentación de cada función (`?Rage::life_expect_mean`, `?Rage::gen_time`, `?Rage::mature_age`) para elegir el argumento adecuado.
+:::
+
+------------------------------------------------------------------------
+
 ## Variación en el crecimiento poblacional entre especies epífitas y terrestres
 
 En esta sección se seleccionan las especies clasificadas como epífitas y terrestres, agrupándolas en objetos distintos que contienen todas las poblaciones muestreadas correspondientes. Esta separación permite evaluar comparativamente la variación en las tasas de crecimiento poblacional entre ambos grupos funcionales, facilitando el análisis de patrones ecológicos y demográficos asociados a sus respectivos hábitos de vida.
+
+::: {.callout-warning}
+## Cuidado con la pseudoreplicación
+Cada matriz de COMPADRE corresponde a una combinación específica de población, año y especie. Una sola especie puede aportar muchas matrices, de modo que comparar directamente los $\lambda$ entre grupos (epífitas vs. terrestres) sin tener en cuenta esta estructura jerárquica subestima la varianza real y puede inflar las diferencias aparentes. Para inferencias formales conviene usar modelos mixtos con la especie (y, idealmente, la población) como efecto aleatorio.
+:::
 
 ```{r, Rage25}
 #| error: true
@@ -433,7 +487,7 @@ Mediante el uso de la función summary, se analizaron las medidas de tendencia c
 
 library(flextable)
 
-# Clacular resúmenes
+# Calcular resúmenes
 epif_summary <- summary(lambda_epif)
 terr_summary <- summary(lambda_terr)
 
@@ -455,7 +509,7 @@ flextable(combined_df)
 
 ```
 
-Para visualizar los datos en una figura de **ggplot2**, hay que convertir estas filas en un data.frame y añadir una columna con el tipo de habitad, renombrar la columna lambda y unir los dos data.frames en uno solo.
+Para visualizar los datos en una figura de `ggplot2`, hay que convertir estas filas en un *data frame* y añadir una columna con el tipo de hábitat, renombrar la columna lambda y unir los dos *data frames* en uno solo.
 
 ```{r Rage28}
 #| error: true
@@ -508,6 +562,11 @@ ggplot(ALL_Lambdas, aes(lambda, fill = Habit_Type)) +
 ## Estimación del crecimiento promedio y evaluación de diferencias significativas
 
 Para evaluar si existen diferencias significativas en los valores propios de lambda entre especies epífitas y terrestres, se emplea un modelo lineal utilizando la función `lm`. En este análisis, la variable **Habit_Type** se utiliza como predictor del valor propio dominante ($\lambda$), lo que permite estimar el efecto del tipo de hábitat sobre la tasa de crecimiento poblacional. Los resultados del modelo indican que las especies epífitas tienden a presentar valores de lambda más bajos en comparación con las especies terrestres. Para obtener los coeficientes específicos de cada grupo, se ajusta un segundo modelo excluyendo el intercepto mediante la inclusión de `-1` en la fórmula. Esta parametrización permite calcular directamente el promedio de lambda para cada grupo funcional, facilitando la comparación entre ellos.
+
+::: {.callout-note}
+## ¿Modelar $\lambda$ o $\log(\lambda)$?
+Los valores de $\lambda$ son estrictamente positivos y su escala es multiplicativa: $\lambda = 1$ separa crecimiento de declive y los desvíos por arriba (1.2) y por abajo (0.8) no son simétricos. Por eso muchos demógrafos prefieren modelar $\log(\lambda)$ (o $r = \log(\lambda)$), que sí es simétrico alrededor de cero, suele cumplir mejor los supuestos de normalidad, y conecta directamente con la teoría de crecimiento estocástico (ver el capítulo de simulaciones). Para el ajuste mostrado aquí podrías usar `lm(log(lambda) ~ Habit_Type, data = ALL_Lambdas)`.
+:::
 
 ```{r Rage30}
 #| error: true
@@ -609,7 +668,7 @@ Lat_Long = Orchid_data_DOI_Diana_3a %>%
 
 ------------------------------------------------------------------------
 
-### Visualización de distribución geospatial
+### Visualización de distribución geoespacial
 
 Para representar la distribución geográfica de las orquídeas registradas en la base de datos `COMPADRE`, se utilizó el paquete **ggplot2**. En esta visualización, se emplea la función **borders**, que incorpora los contornos de los países al mapa. Esta función se basa en el paquete maps, el cual proporciona los datos geográficos necesarios para delinear los límites nacionales, permitiendo contextualizar espacialmente los puntos de muestreo.
 
@@ -617,7 +676,7 @@ Para representar la distribución geográfica de las orquídeas registradas en l
 #| error: true
 
 ggplot2::ggplot(Lat_Long, aes(Lon, Lat, colour = OrganismType)) +
-  annotation_borders(database = "world", fill = "grey80", col = NA) +
+  borders(database = "world", fill = "grey80", colour = NA) +
   geom_point(size = 1.0, alpha = 0.5)+
   theme(legend.position = c(0.15,0.2))+
   rlt_style_colour()
@@ -632,6 +691,11 @@ ggplot2::ggplot(Lat_Long, aes(Lon, Lat, colour = OrganismType)) +
 Se utilizó el paquete Leaflet para crear un mapa interactivo que muestra los sitios de muestreo de las especies de orquídeas estudiadas en campo. Este enfoque permite explorar visualmente la distribución geográfica de las poblaciones incluidas en los estudios.
 
 El mapa revela una marcada disparidad en los sitios de muestreo entre los dos tipos de orquídeas. Las poblaciones marcadas en rojo corresponden a especies epífitas, mientras que las azules representan especies terrestres. Se observa que las especies terrestres están principalmente distribuidas en Europa y América del Norte, con escasa representación en Asia y ninguna en África. Por otro lado, las especies epífitas se concentran en el Caribe y América Central (especialmente México), sin presencia en África, Asia ni Australia.
+
+::: {.callout-important}
+## Sesgo geográfico de COMPADRE
+La distribución que se ve en el mapa **no refleja la diversidad real de las orquídeas en el mundo**, sino la distribución geográfica del esfuerzo de investigación demográfica. Regiones con altísima diversidad de orquídeas (Borneo, Nueva Guinea, los Andes, el África tropical) están casi ausentes de la base de datos. Cualquier conclusión global sobre patrones demográficos debe interpretarse con esta limitación en mente: estamos describiendo *dónde se ha estudiado*, no *dónde habitan* las orquídeas.
+:::
 
 Además, el mapa es interactivo y permite hacer zoom para examinar áreas específicas con mayor detalle. Presiona sobre los puntos para obtener información adicional sobre el nombre científico de la especie muestreada en este sitio.
 
