@@ -384,9 +384,14 @@ def main():
         by_letter[first].append((term_label, appearances))
 
     out = []
+    desc = 'Índice analítico de temas del libro con enlaces a los capítulos y secciones donde se desarrolla cada concepto. 174 términos indexados.'
     out.append('---\n')
-    out.append('description: "Índice analítico de temas del libro con enlaces a los capítulos y secciones donde se desarrolla cada concepto. 174 términos indexados."\n')
+    out.append(f'description: "{desc}"\n')
     out.append('image: "images/Lepanthes_eltoroensis_Tremblay.jpeg"\n')
+    out.append('open-graph:\n')
+    out.append(f'  description: "{desc}"\n')
+    out.append('twitter-card:\n')
+    out.append(f'  description: "{desc}"\n')
     out.append('---\n\n')
     out.append("# Índice de temas {#IndiceTemas .unnumbered}\n\n")
     out.append("Índice analítico del libro. Cada término aparece con los "

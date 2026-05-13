@@ -14,11 +14,16 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+# Force every JavaScript action in this workflow onto Node 24.
+# This silences the Node 20 deprecation warnings (GitHub is migrating runners
+# off Node 20 between June and September 2026). Applied at workflow level so
+# both the `build` and `deploy` jobs inherit it.
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

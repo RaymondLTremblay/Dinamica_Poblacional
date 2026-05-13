@@ -1,6 +1,10 @@
 ---
 description: "Guía práctica del paquete Rcompadre para usar la base COMPADRE en estudios de orquídeas: descarga, filtrado, validación y análisis comparativo de matrices."
 image: "images/COMPADRE_MADRE.png"
+open-graph:
+  description: "Guía práctica del paquete Rcompadre para usar la base COMPADRE en estudios de orquídeas: descarga, filtrado, validación y análisis comparativo de matrices."
+twitter-card:
+  description: "Guía práctica del paquete Rcompadre para usar la base COMPADRE en estudios de orquídeas: descarga, filtrado, validación y análisis comparativo de matrices."
 ---
 
 # COMPADRE y Orquídeas {#Compadre}
@@ -9,6 +13,7 @@ image: "images/COMPADRE_MADRE.png"
 
 ::: callout-note
 ## Qué es este capítulo
+
 Este capítulo es una **guía práctica de uso del paquete `Rcompadre`**. No introduce conceptos nuevos sobre dinámica poblacional —para eso están los capítulos del 4 al 16—, sino que enseña a manejar la base COMPADRE con confianza: cómo descargarla, filtrarla, validar las matrices, extraer las submatrices U/F/C, y conectar los datos con los análisis del resto del libro. El paquete `Rcompadre` no es trivial: tiene su propia clase de objetos (`CompadreDB`), funciones con nombres similares pero comportamientos distintos, y trampas que cuestan tiempo si uno las descubre por prueba y error. Este capítulo busca acortar esa curva de aprendizaje.
 :::
 
@@ -16,53 +21,21 @@ Los datos demográficos comparables son la base para analizar la dinámica de po
 
 ## Alcance y organización de los datos demográficos de orquídeas
 
-El conjunto de datos de orquídeas reúne matrices de proyección poblacional y
-metadatos asociados (especie, ubicación, periodo de muestreo, tipo de
-hábitat y notas metodológicas) que permiten comparar la dinámica demográfica
-entre poblaciones y especies. La estructura de los datos facilita la
-construcción de matrices **U**, **F** y **C**, el cálculo de la tasa de
-crecimiento poblacional (λ) y la implementación de análisis de sensibilidad,
-elasticidad y LTRE, así como simulaciones bajo distintos escenarios.
+El conjunto de datos de orquídeas reúne matrices de proyección poblacional y metadatos asociados (especie, ubicación, periodo de muestreo, tipo de hábitat y notas metodológicas) que permiten comparar la dinámica demográfica entre poblaciones y especies. La estructura de los datos facilita la construcción de matrices **U**, **F** y **C**, el cálculo de la tasa de crecimiento poblacional (λ) y la implementación de análisis de sensibilidad, elasticidad y LTRE, así como simulaciones bajo distintos escenarios.
 
-En esta sección se describe cómo están organizadas las tablas principales —una
-tabla de **matrices** y una tabla de **metadatos**—, las claves que las conectan
-(especies/poblaciones/estudios) y las precauciones habituales al trabajar con
-información heterogénea (año de referencia, definición de estadios,
-unidades de medida y supuestos de reclutamiento). También se presenta una
-vista general de la cobertura taxonómica y geográfica del conjunto, con el
-fin de contextualizar cualquier patrón observado.
+En esta sección se describe cómo están organizadas las tablas principales —una tabla de **matrices** y una tabla de **metadatos**—, las claves que las conectan (especies/poblaciones/estudios) y las precauciones habituales al trabajar con información heterogénea (año de referencia, definición de estadios, unidades de medida y supuestos de reclutamiento). También se presenta una vista general de la cobertura taxonómica y geográfica del conjunto, con el fin de contextualizar cualquier patrón observado.
 
-A diferencia de los capítulos analíticos, este capítulo no introduce nuevos
-métodos; su objetivo es proporcionar un recurso de datos **listo para
-analizar** que permita replicar ejemplos, comparar patrones demográficos entre
-orquídeas y vincular resultados con decisiones de manejo y conservación. La
-documentación clara de la estructura y las variables garantiza que los
-análisis posteriores sean reproducibles e interpretables en el marco del
-libro.
+A diferencia de los capítulos analíticos, este capítulo no introduce nuevos métodos; su objetivo es proporcionar un recurso de datos **listo para analizar** que permita replicar ejemplos, comparar patrones demográficos entre orquídeas y vincular resultados con decisiones de manejo y conservación. La documentación clara de la estructura y las variables garantiza que los análisis posteriores sean reproducibles e interpretables en el marco del libro.
 
 ## Estructura del conjunto de datos y carga en el entorno
 
-A continuación se describen las tablas principales y se muestra cómo cargar y
-verificar el conjunto de datos en el entorno de trabajo. 
+A continuación se describen las tablas principales y se muestra cómo cargar y verificar el conjunto de datos en el entorno de trabajo.
 
-Los datos aquí descritos se integran directamente en la descomposición en
-matrices U, F y C y en el cálculo de
-crecimiento poblacional.
-La comparación de la importancia relativa de transiciones puede realizarse
-mediante elasticidad poblacional y la explicación de
-diferencias observadas entre poblaciones mediante LTRE.
-Para explorar escenarios alternativos, puede utilizarse el capítulo de
-métodos de simulaciones.
+Los datos aquí descritos se integran directamente en la descomposición en matrices U, F y C y en el cálculo de crecimiento poblacional. La comparación de la importancia relativa de transiciones puede realizarse mediante elasticidad poblacional y la explicación de diferencias observadas entre poblaciones mediante LTRE. Para explorar escenarios alternativos, puede utilizarse el capítulo de métodos de simulaciones.
 
 ### Cobertura y limitaciones
 
-La cobertura taxonómica y espacial es heterogénea entre especies y
-poblaciones. Algunas series temporales son cortas o presentan años sin
-muestreo; en estos casos se debe documentar cualquier decisión de
-imputación o agregación. Las definiciones de estadios y los supuestos de
-reclutamiento pueden variar entre estudios; por ello, al comparar poblaciones
-conviene revisar la documentación asociada y mantener criterios consistentes
-de armonización.
+La cobertura taxonómica y espacial es heterogénea entre especies y poblaciones. Algunas series temporales son cortas o presentan años sin muestreo; en estos casos se debe documentar cualquier decisión de imputación o agregación. Las definiciones de estadios y los supuestos de reclutamiento pueden variar entre estudios; por ello, al comparar poblaciones conviene revisar la documentación asociada y mantener criterios consistentes de armonización.
 
 ::: callout-warning
 **COMPADRE agrega estudios diversos — la armonización es responsabilidad del usuario.** Las matrices de la base provienen de estudios con definiciones de estadios distintas, periodos de muestreo variables (mensual a multianual) y supuestos de reclutamiento diferentes. La columna `MatrixComposite` indica si una matriz es individual, promedio o *pooled*. Antes de comparar matrices entre estudios, conviene revisar:
@@ -102,11 +75,11 @@ En este capítulo se aprenderá a utilizar COMPADRE para evaluar la dinámica de
 ::: callout-tip
 **Flujo de trabajo recomendado con COMPADRE.**
 
-1. **Cargar** la base completa una sola vez (`compadre`).
-2. **Filtrar** a la familia, género o especie de interés (`filter()`).
-3. **Validar** con `cdb_flag()` para detectar problemas (NAs, no ergodicidad, etc.).
-4. **Extraer** las matrices (`matU()`, `matF()`, `matC()`, `matA()`).
-5. **Analizar** con `popbio`/`popdemo`/`Rage` según la pregunta.
+1.  **Cargar** la base completa una sola vez (`compadre`).
+2.  **Filtrar** a la familia, género o especie de interés (`filter()`).
+3.  **Validar** con `cdb_flag()` para detectar problemas (NAs, no ergodicidad, etc.).
+4.  **Extraer** las matrices (`matU()`, `matF()`, `matC()`, `matA()`).
+5.  **Analizar** con `popbio`/`popdemo`/`Rage` según la pregunta.
 
 Este capítulo cubre los pasos 1–4. El paso 5 se desarrolla en los capítulos analíticos (elasticidad, LTRE, simulaciones, funciones de transferencia).
 :::
@@ -114,18 +87,18 @@ Este capítulo cubre los pasos 1–4. El paso 5 se desarrolla en los capítulos 
 ::: callout-tip
 ## ¿Qué función de `Rcompadre` necesito? — Árbol de decisión
 
-| Si quiero…                                                         | Use                                                                |
-|--------------------------------------------------------------------|--------------------------------------------------------------------|
-| Bajar la base completa por primera vez                             | `cdb_fetch("compadre")`                                            |
-| Ver los metadatos (especie, año, ubicación, etc.)                  | `cdb_metadata(x)`                                                  |
-| Filtrar a una familia                                              | `subset(x, Family == "Orchidaceae")` *o* `x %>% filter(Family == "Orchidaceae")` |
-| Filtrar a una especie                                              | `subset(x, SpeciesAccepted == "Lepanthes caritensis")`             |
-| Marcar matrices con problemas (NAs, no-ergódicas, no-irreducibles) | `cdb_flag(x)` — añade columnas `check_*`, no filtra                |
-| Quedarme sólo con matrices "limpias"                               | `subset(cdb_flag(x), check_NA_A == FALSE & check_ergodic == TRUE)` |
-| Extraer la matriz de transición completa A                         | `matA(x)` → lista de matrices                                      |
-| Extraer las submatrices                                            | `matU(x)`, `matF(x)`, `matC(x)`                                    |
-| Una matriz individual                                              | `matA(x)[[i]]` (la i-ésima)                                        |
-| Aplicar una función a todas las matrices                           | `purrr::map_dbl(matA(x), ~ popbio::lambda(.x))`                    |
+| Si quiero… | Use |
+|----|----|
+| Bajar la base completa por primera vez | `cdb_fetch("compadre")` |
+| Ver los metadatos (especie, año, ubicación, etc.) | `cdb_metadata(x)` |
+| Filtrar a una familia | `subset(x, Family == "Orchidaceae")` *o* `x %>% filter(Family == "Orchidaceae")` |
+| Filtrar a una especie | `subset(x, SpeciesAccepted == "Lepanthes caritensis")` |
+| Marcar matrices con problemas (NAs, no-ergódicas, no-irreducibles) | `cdb_flag(x)` — añade columnas `check_*`, no filtra |
+| Quedarme sólo con matrices "limpias" | `subset(cdb_flag(x), check_NA_A == FALSE & check_ergodic == TRUE)` |
+| Extraer la matriz de transición completa A | `matA(x)` → lista de matrices |
+| Extraer las submatrices | `matU(x)`, `matF(x)`, `matC(x)` |
+| Una matriz individual | `matA(x)[[i]]` (la i-ésima) |
+| Aplicar una función a todas las matrices | `purrr::map_dbl(matA(x), ~ popbio::lambda(.x))` |
 
 **Regla práctica.** Si no está seguro de qué función usar, casi siempre necesita: `cdb_fetch()` → `subset()` o `filter()` → `cdb_flag()` → `subset(check_* )` → `matU()` / `matF()` / `matA()`.
 :::
@@ -133,12 +106,12 @@ Este capítulo cubre los pasos 1–4. El paso 5 se desarrolla en los capítulos 
 ::: callout-warning
 ## Trampas comunes con `Rcompadre`
 
--   **`subset()` no es base-R.** `Rcompadre` exporta su propio método `subset()` para objetos `CompadreDB`; la sintaxis se parece a base-R pero respeta la estructura interna del objeto. **No** uses `[]` para subconjuntos directos.
--   **`mat` ≠ `matA()`**. `mat` es una columna del data-frame interno; `matA()` es la función que extrae la matriz A de cada fila. Use siempre la función.
--   **`cdb_flag()` añade columnas, no filtra**. Después de `cdb_flag()` hay que filtrar manualmente con las columnas `check_*` (`check_NA_A`, `check_ergodic`, `check_irreducible`).
--   **`Lat` y `Lon` a veces son `character`, no `numeric`**. Verifíquelo con `class()` antes de mapear o calcular distancias; convierta con `as.numeric()` si es necesario.
--   **`MatrixComposite`** indica si una matriz fue promediada o agrupada (*pooled*). Para análisis comparativo conviene quedarse con `MatrixComposite == "Individual"` para evitar pseudoreplicación.
--   **`MatrixCriteriaSize` / `MatrixCriteriaAge` / `MatrixCriteriaOntogeny`** describen cómo se definieron los estadios. Antes de comparar matrices entre estudios, conviene verificar que estos criterios sean compatibles.
+- **`subset()` no es base-R.** `Rcompadre` exporta su propio método `subset()` para objetos `CompadreDB`; la sintaxis se parece a base-R pero respeta la estructura interna del objeto. **No** uses `[]` para subconjuntos directos.
+- **`mat` ≠ `matA()`**. `mat` es una columna del data-frame interno; `matA()` es la función que extrae la matriz A de cada fila. Use siempre la función.
+- **`cdb_flag()` añade columnas, no filtra**. Después de `cdb_flag()` hay que filtrar manualmente con las columnas `check_*` (`check_NA_A`, `check_ergodic`, `check_irreducible`).
+- **`Lat` y `Lon` a veces son `character`, no `numeric`**. Verifíquelo con `class()` antes de mapear o calcular distancias; convierta con `as.numeric()` si es necesario.
+- **`MatrixComposite`** indica si una matriz fue promediada o agrupada (*pooled*). Para análisis comparativo conviene quedarse con `MatrixComposite == "Individual"` para evitar pseudoreplicación.
+- **`MatrixCriteriaSize` / `MatrixCriteriaAge` / `MatrixCriteriaOntogeny`** describen cómo se definieron los estadios. Antes de comparar matrices entre estudios, conviene verificar que estos criterios sean compatibles.
 :::
 
 ::: callout-note
@@ -146,17 +119,17 @@ Este capítulo cubre los pasos 1–4. El paso 5 se desarrolla en los capítulos 
 
 De los más de 50 campos en COMPADRE, estos 9 son los que usará el 95% del tiempo:
 
-| Campo                  | Qué contiene                                                            |
-|------------------------|-------------------------------------------------------------------------|
-| `Family`               | Familia taxonómica (ej. `"Orchidaceae"`)                                |
-| `SpeciesAccepted`      | Nombre científico aceptado                                              |
-| `MatrixPopulation`     | Identificador de la población (varias por especie en muchos estudios)   |
-| `StudyStart`/`StudyEnd`| Años de inicio y fin del muestreo                                       |
-| `MatrixDimension`      | Número de estadios en la matriz                                         |
-| `OrganismType`         | "Epiphyte", "Herbaceous perennial", etc.                                |
-| `Lat`, `Lon`           | Coordenadas de la población (a menudo como texto, ver Trampas)          |
-| `MatrixComposite`      | "Individual" / "Mean" / "Pooled" — clave para análisis comparativos     |
-| `DOI_ISBN`             | Identificador del estudio original                                      |
+| Campo | Qué contiene |
+|----|----|
+| `Family` | Familia taxonómica (ej. `"Orchidaceae"`) |
+| `SpeciesAccepted` | Nombre científico aceptado |
+| `MatrixPopulation` | Identificador de la población (varias por especie en muchos estudios) |
+| `StudyStart`/`StudyEnd` | Años de inicio y fin del muestreo |
+| `MatrixDimension` | Número de estadios en la matriz |
+| `OrganismType` | "Epiphyte", "Herbaceous perennial", etc. |
+| `Lat`, `Lon` | Coordenadas de la población (a menudo como texto, ver Trampas) |
+| `MatrixComposite` | "Individual" / "Mean" / "Pooled" — clave para análisis comparativos |
+| `DOI_ISBN` | Identificador del estudio original |
 
 Para la lista completa: `?Rcompadre::CompadreDB` y la documentación oficial.
 :::
@@ -323,9 +296,9 @@ Laeliasp$mat[[2]]
 
 #### Evaluar si un género o especie está en la base de datos de COMPADRE
 
--   Para filtrar un género específico se puede usar el siguiente código.
-    -   Aquí seleccionamos todas las matrices del género *Epipactis*.
-    -   Nota que hay 59 filas, que corresponden típicamente a 59 matrices de diferentes poblaciones, tiempos o análisis teóricos.
+- Para filtrar un género específico se puede usar el siguiente código.
+  - Aquí seleccionamos todas las matrices del género *Epipactis*.
+  - Nota que hay 59 filas, que corresponden típicamente a 59 matrices de diferentes poblaciones, tiempos o análisis teóricos.
 
 ```{=latex}
 \begin{landscape}
@@ -406,31 +379,31 @@ Epi_flat$matA[1] # miramos solamente la primera matriz
 
 Es sumamente importante el cumplimiento de los supuestos de los análisis. Si no evaluamos críticamente las condiciones de las matrices, los resultados podrían no ser biológicamente relevantes. Para los análisis de MPP es necesario que las matrices cumplan ciertas condiciones, y dependiendo de la pregunta científica se evalúan las condiciones específicas. La función `cdb_flag()` corre todos los chequeos de calidad disponibles y agrega una columna por cada uno; los principales son:
 
--   **check_NA_A**: Determinar si hay valores faltantes en 'matA' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices.
+- **check_NA_A**: Determinar si hay valores faltantes en 'matA' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices.
 
--   **check_NA_U**: Determinar si hay valores faltantes en 'matU' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices. La matriz de supervivencia es la matriz más importante para evaluar el cálculo del largo de vida de una especie.
+- **check_NA_U**: Determinar si hay valores faltantes en 'matU' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices. La matriz de supervivencia es la matriz más importante para evaluar el cálculo del largo de vida de una especie.
 
--   **check_NA_F**: Determinar si hay valores faltantes en 'matF' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices. La matriz de fecundidad es la matriz más importante para evaluar el crecimiento de la población, cualquier especie sin fecundidad tenderá a disminuir a través del tiempo.
+- **check_NA_F**: Determinar si hay valores faltantes en 'matF' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices. La matriz de fecundidad es la matriz más importante para evaluar el crecimiento de la población, cualquier especie sin fecundidad tenderá a disminuir a través del tiempo.
 
--   **check_NA_C**: Determinar si hay valores faltantes en 'matC'. Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices.
+- **check_NA_C**: Determinar si hay valores faltantes en 'matC'. Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices.
 
--   **check_zero_U**: Determinar si la 'matU' tiene todos ceros (incluido 'NA'). Las submatrices compuestas enteramente de valores cero pueden resultar problemáticas. Puede haber buenas razones biológicas para este fenómeno. Por ejemplo, en la población focal particular en el año focal particular, realmente no se registró una supervivencia. Sin embargo, las submatrices de valor cero pueden provocar que algunos cálculos fallen y puede ser necesario excluirlas.
+- **check_zero_U**: Determinar si la 'matU' tiene todos ceros (incluido 'NA'). Las submatrices compuestas enteramente de valores cero pueden resultar problemáticas. Puede haber buenas razones biológicas para este fenómeno. Por ejemplo, en la población focal particular en el año focal particular, realmente no se registró una supervivencia. Sin embargo, las submatrices de valor cero pueden provocar que algunos cálculos fallen y puede ser necesario excluirlas.
 
--   **check_zero_F**: Determinar si la 'matF' tiene todos ceros (incluido 'NA'). Las submatrices compuestas enteramente de valores cero pueden resultar problemáticas. Puede haber buenas razones biológicas para este fenómeno o que se asocien con preguntas científicas específicas. Por ejemplo, en la población particular en el año particular, realmente no se registró reproducción. Sin embargo, las submatrices con valores de cero pueden provocar que algunos cálculos fallen y puede ser necesario excluirlas. En otros estudios no se evaluó la fecundidad ya que estos parámetros no eran necesarios para contestar las preguntas científicas.
+- **check_zero_F**: Determinar si la 'matF' tiene todos ceros (incluido 'NA'). Las submatrices compuestas enteramente de valores cero pueden resultar problemáticas. Puede haber buenas razones biológicas para este fenómeno o que se asocien con preguntas científicas específicas. Por ejemplo, en la población particular en el año particular, realmente no se registró reproducción. Sin embargo, las submatrices con valores de cero pueden provocar que algunos cálculos fallen y puede ser necesario excluirlas. En otros estudios no se evaluó la fecundidad ya que estos parámetros no eran necesarios para contestar las preguntas científicas.
 
--   **check_zero_U_colsum**: Determinar si las columnas de 'matU' suman a cero, esto implica que no hay supervivencia de esa etapa en particular. Esta puede ser una parametrización perfectamente válida para un año/lugar en particular, pero es biológicamente irracional a largo plazo y los usuarios pueden desear excluir matrices problemáticas de su análisis.
+- **check_zero_U_colsum**: Determinar si las columnas de 'matU' suman a cero, esto implica que no hay supervivencia de esa etapa en particular. Esta puede ser una parametrización perfectamente válida para un año/lugar en particular, pero es biológicamente irracional a largo plazo y los usuarios pueden desear excluir matrices problemáticas de su análisis.
 
--   **check_singular_U**: Determinar si 'matU' es singular. Se dice que las matrices son singulares si no se pueden invertir. Se requiere inversión para muchos cálculos matriciales y, por lo tanto, la singularidad puede hacer que algunos cálculos fallen.
+- **check_singular_U**: Determinar si 'matU' es singular. Se dice que las matrices son singulares si no se pueden invertir. Se requiere inversión para muchos cálculos matriciales y, por lo tanto, la singularidad puede hacer que algunos cálculos fallen.
 
--   **check_component_sum**: Determinar si las submatrices 'matU'/'matF'/'matC' suman a 'matA'. Un MPP completo ("matA") se puede dividir en las submatrices que lo componen (es decir, "matU", "matF" y "matC"). La suma de estas submatrices debe ser igual al MPP completo (es decir, 'matA' = 'matU' + 'matF' + 'matC'). A veces, sin embargo, se producen errores de modo que las submatrices NO suman 'matA'. Normalmente, esto se debe a errores de redondeo, pero es posible que se produzcan errores más importantes.
+- **check_component_sum**: Determinar si las submatrices 'matU'/'matF'/'matC' suman a 'matA'. Un MPP completo ("matA") se puede dividir en las submatrices que lo componen (es decir, "matU", "matF" y "matC"). La suma de estas submatrices debe ser igual al MPP completo (es decir, 'matA' = 'matU' + 'matF' + 'matC'). A veces, sin embargo, se producen errores de modo que las submatrices NO suman 'matA'. Normalmente, esto se debe a errores de redondeo, pero es posible que se produzcan errores más importantes.
 
--   **check_ergodic**: Determinar si 'matA' es ergódico (ver isErgodic). Algunos cálculos matriciales requieren que el MPP ("matA") sea ergódico. Los MPP ergódicos son aquellos en los que existe un único estado estable asintótico que no depende de la estructura de la etapa inicial. Por el contrario, los MPP no ergódicos son aquellos en los que existen múltiples estados estables asintóticos, que dependen de la estructura de la etapa inicial. Los MPP que no son ergódicos suelen ser biológicamente irracionales, tanto en términos de la descripción de su ciclo de vida como de su dinámica proyectada. Por tanto, hacen que algunos cálculos fallen.
+- **check_ergodic**: Determinar si 'matA' es ergódico (ver isErgodic). Algunos cálculos matriciales requieren que el MPP ("matA") sea ergódico. Los MPP ergódicos son aquellos en los que existe un único estado estable asintótico que no depende de la estructura de la etapa inicial. Por el contrario, los MPP no ergódicos son aquellos en los que existen múltiples estados estables asintóticos, que dependen de la estructura de la etapa inicial. Los MPP que no son ergódicos suelen ser biológicamente irracionales, tanto en términos de la descripción de su ciclo de vida como de su dinámica proyectada. Por tanto, hacen que algunos cálculos fallen.
 
--   **check_irreducible**: Determinar si 'matA' es irreducible (ver isIrreducible). Algunos cálculos matriciales requieren que el MPP ("matA") sea irreducible. Los MPP irreductibles son aquellos en los que las tasas de transición parametrizadas facilitan el paso de todas las etapas a todas las demás etapas. Por el contrario, los MPP reducibles representan ciclos de vida incompletos donde no son posibles caminos desde todas las etapas a todas las demás etapas. Los MPP que son reducibles suelen ser biológicamente irracionales (pero no siempre), tanto en términos de la descripción de su ciclo de vida como de su dinámica proyectada. Por ello, hacen que algunos cálculos fallen. La irreductibilidad es necesaria pero no suficiente para la ergodicidad.
+- **check_irreducible**: Determinar si 'matA' es irreducible (ver isIrreducible). Algunos cálculos matriciales requieren que el MPP ("matA") sea irreducible. Los MPP irreductibles son aquellos en los que las tasas de transición parametrizadas facilitan el paso de todas las etapas a todas las demás etapas. Por el contrario, los MPP reducibles representan ciclos de vida incompletos donde no son posibles caminos desde todas las etapas a todas las demás etapas. Los MPP que son reducibles suelen ser biológicamente irracionales (pero no siempre), tanto en términos de la descripción de su ciclo de vida como de su dinámica proyectada. Por ello, hacen que algunos cálculos fallen. La irreductibilidad es necesaria pero no suficiente para la ergodicidad.
 
--   **check_primitive**: Determinar si 'matA' es primitivo (ver isPrimitive). Una matriz primitiva es una matriz no negativa que es irreducible y tiene un solo valor propio de módulo máximo. Por lo tanto, esta verificación es redundante debido a la superposición con 'check_irreducible' y 'checkErdogic'.
+- **check_primitive**: Determinar si 'matA' es primitivo (ver isPrimitive). Una matriz primitiva es una matriz no negativa que es irreducible y tiene un solo valor propio de módulo máximo. Por lo tanto, esta verificación es redundante debido a la superposición con 'check_irreducible' y 'checkErdogic'.
 
--   **check_surv_gte_1**: Determinar si 'matU' contiene valores iguales o mayores que 1. La supervivencia está limitada entre 0 y 1. Los valores superiores a 1 no son biológicamente razonables (ver el capítulo de [Impacto de datos sin sentido](122-Impacto_de_Datos_sin_Sentido.qmd)).
+- **check_surv_gte_1**: Determinar si 'matU' contiene valores iguales o mayores que 1. La supervivencia está limitada entre 0 y 1. Los valores superiores a 1 no son biológicamente razonables (ver el capítulo de [Impacto de datos sin sentido](122-Impacto_de_Datos_sin_Sentido.qmd)).
 
 Usando la función cdb_flag se puede evaluar todas las opciones en la base de datos de COMPADRE.
 
