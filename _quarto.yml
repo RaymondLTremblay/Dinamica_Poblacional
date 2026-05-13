@@ -6,6 +6,18 @@ project:
     # Re-apply the orange-book Typst pagebreak patch (Typst 0.13+ compatibility).
     # See typst-patches/README.md for the rationale and removal criteria.
     - bash scripts/patch-orange-book.sh
+    # Regenerar los apéndices automáticos (índice de temas e índice de
+    # figuras/tablas) ANTES de renderizar, para que reflejen el estado
+    # actual de los .qmd. Ambos son idempotentes; sin cambios en los
+    # capítulos producen el mismo output.
+    - python3 scripts/build_topic_index.py
+    - python3 scripts/build_index_fig_tab.py
+  post-render:
+    # Tras renderizar, recolectar todas las figuras (estáticas + las
+    # generadas por chunks en docs/*_files/figure-html/) en una
+    # estructura por capítulo dentro de figuras_editor/, para entrega
+    # al productor del libro.
+    - python3 scripts/collect_figures.py
   resources:
     - google2352045df3d1e270.html
     - theme.scss
@@ -57,6 +69,9 @@ book:
         - Appendix_A_Species_List.qmd
         - Appendix_B_Hoja_de_datos.qmd
         - Appendix_C_Datos.qmd
+        - Apendice_Glosario.qmd
+        - Apendice_Indice_Fig_Tab.qmd
+        - Apendice_Indice_Temas.qmd
         - Agradecimientos.qmd
 filters:
   - auto-functions.lua

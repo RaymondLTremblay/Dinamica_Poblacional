@@ -19,9 +19,12 @@ library(Rage)
 library(knitr)
 library(ggplot2)
 
-# Carpeta de salida para PNGs
-out_dir <- "figs"
-if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE)
+# Carpeta de salida para PNGs. Los png_name pasados a render_dual()
+# ya incluyen el prefijo "images/", así que out_dir se queda en la raíz
+# del proyecto. Esto asegura que las figuras queden disponibles en
+# images/ para el productor del libro.
+out_dir <- "."
+if (!dir.exists("images")) dir.create("images", recursive = TRUE)
 
 PNG_WIDTH  <- 2400
 PNG_HEIGHT <- 1600
@@ -81,15 +84,17 @@ make_nodes_edges <- function(stages, mat, cols, minlen_scale = 3, digits = 3, fo
   list(nodes = nodes, edges = edges)
 }
 
-# Helper: mostrar en HTML el widget; en PDF, PNG estático
+# Helper: SIEMPRE guarda el PNG en images/ (para el productor del libro),
+# además de mostrar el widget interactivo en HTML o el PNG estático en PDF.
 render_dual <- function(dot, png_name) {
+  pngfile <- file.path(out_dir, png_name)
+  dir.create(dirname(pngfile), recursive = TRUE, showWarnings = FALSE)
+  # Generar el PNG siempre, así el editor tiene acceso al archivo
+  # independientemente del formato en que se renderice el libro.
+  grviz_dot_to_png(dot, pngfile)
   if (knitr::is_html_output()) {
     DiagrammeR::grViz(dot)
   } else {
-    pngfile <- file.path(out_dir, png_name)
-    # Asegurar que el directorio de salida exista (p. ej. figs/images/) antes de escribir.
-    dir.create(dirname(pngfile), recursive = TRUE, showWarnings = FALSE)
-    grviz_dot_to_png(dot, pngfile)
     knitr::include_graphics(pngfile)
   }
 }
