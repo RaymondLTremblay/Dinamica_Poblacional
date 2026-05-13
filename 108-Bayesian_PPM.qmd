@@ -25,6 +25,7 @@ library(popbio) # para la función projection.matrix()
 library(raretrans) # disponible en CRAN: install.packages("raretrans")
 library(DiagrammeR)
 library(Rage)
+library(flextable)
 
 ```
 
@@ -687,6 +688,14 @@ flextable(signif(RLT_0.5_summary, digits = 2))
 ------------------------------------------------------------------------
 
 ## ADDENDUM
+
+::: callout-important
+**Nunca uses previas uniformes en análisis poblacionales reales.** Una previa uniforme (e.g., Dirichlet con todos los parámetros iguales) asigna la misma probabilidad a transiciones biológicamente plausibles y a transiciones imposibles (un adulto reproductivo "regresando" a plántula, una ballena bebé pasando directamente a madre, una semilla transformándose en árbol adulto en un periodo). El resultado es una matriz matemáticamente válida pero **biológicamente sin sentido**, que infla la incertidumbre con escenarios irreales y puede ocultar señales legítimas en los datos.
+
+**Siempre construye previas informadas** que reflejen el ciclo de vida de la especie: marca con 0 las transiciones imposibles, asigna probabilidades pequeñas a las raras pero posibles, y concentra masa en las transiciones que la biología espera. La regla práctica es: si no puedes defender la previa frente a un especialista de la especie, no la uses.
+
+La sección que sigue muestra qué pasa con una previa uniforme **únicamente con fines didácticos** — para que se vea de primera mano por qué falla. No la copies en un análisis de tu propia especie.
+:::
 
 ### Uso de previas uniformes
 
