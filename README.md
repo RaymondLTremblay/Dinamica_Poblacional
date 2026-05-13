@@ -37,18 +37,38 @@ This open digital book introduces **Population Dynamics** using R, with orchid c
 
 ```         
 Dinamica_Poblacional/
-├── index.qmd               # Book landing page
-├── 102-123-*.qmd           # Book chapters (numbered)
-├── _quarto.yml             # Quarto project config
-├── images/                 # All figures and photos
-├── data/                   # Datasets used in examples
-├── DESCRIPTION             # R package dependencies
-├── book.bib                # Bibliography
-├── DinamicaPob.Rproj       # RStudio project file
-└── .github/workflows/      # Auto-deploy to GitHub Pages
+├── index.qmd                  # Book landing page + Dedicatoria + Prefacio
+├── 102-123-*.qmd              # Book chapters (numbered)
+├── 117-118_Historia_*.qmd     # Historical chapters (Tamm, etc.)
+├── Appendix_A_*.qmd           # Static appendices (species list, data sheets)
+├── Apendice_Glosario.qmd      # Glossary (~144 terms)
+├── Apendice_Indice_Fig_Tab.qmd  # Auto-generated figure/table index
+├── Apendice_Indice_Temas.qmd  # Auto-generated topic/subject index
+├── Agradecimientos.qmd        # Acknowledgments
+├── _quarto.yml                # Quarto project config
+├── _language.yml              # Spanish callout labels (e.g., callout-tip → "Recomendación")
+├── book.bib                   # Bibliography (471 entries, peerj CSL)
+├── peerj.csl                  # Citation style
+├── images/                    # All figures and photos
+├── data/                      # Datasets used in examples
+├── scripts/                   # Build helpers (see below)
+├── figuras_editor/            # Auto-generated: flat dump of figures for the book producer
+├── DESCRIPTION                # R package dependencies
+├── DinamicaPob.Rproj          # RStudio project file
+└── .github/workflows/         # Auto-deploy to GitHub Pages
 ```
 
 > **Note:** The `docs/` directory is a build artifact excluded from this repository. The book is built and deployed automatically via GitHub Actions.
+
+### Build helpers (`scripts/`)
+
+These run automatically during `quarto render` (configured as `pre-render` / `post-render` hooks in `_quarto.yml`). You don't need to invoke them by hand, but you can:
+
+-   **`scripts/build_topic_index.py`** — regenerates `Apendice_Indice_Temas.qmd` (174 indexed terms drawn from the glossary, mapped to chapter/section appearances).
+-   **`scripts/build_index_fig_tab.py`** — regenerates `Apendice_Indice_Fig_Tab.qmd` (52 figures, 7 captioned tables).
+-   **`scripts/collect_figures.py`** — after render, copies every figure (static + R-chunk PNG + render_dual diagrams) into `figuras_editor/CC-Chapter_Name/NN_filename.png` for delivery to the book producer.
+-   **`scripts/collect-figures.sh`** — shell wrapper around the above.
+-   **`scripts/patch-orange-book.sh`** — Typst pagebreak compatibility patch (orange-book extension, Typst 0.13+).
 
 ------------------------------------------------------------------------
 
@@ -69,11 +89,25 @@ Dinamica_Poblacional/
 # 2. Install R packages (all available on CRAN)
 install.packages(c("knitr", "rmarkdown", "tidyverse", "popbio", "popdemo",
                    "Rage", "Rcompadre", "MCMCpack", "leaflet", "flextable",
-                   "raretrans"))
+                   "raretrans", "DiagrammeR", "DiagrammeRsvg", "rsvg",
+                   "ggplot2", "dplyr", "janitor", "interpretCI", "gt"))
 
-# 3. Render the book (from RStudio Terminal)
-#    quarto render --to html
+# 3. Render the book (from terminal at the project root)
+#    quarto render               # HTML (default)
+#    quarto render --to pdf      # PDF via Typst
 ```
+
+Python 3 is also required (for the pre-render index scripts). No external Python packages needed — only the standard library.
+
+### What happens during render
+
+1.  **Pre-render** clears `_freeze`, patches Typst, regenerates the topic index and the figure/table index from the current state of the chapters.
+2.  **Render** processes every `.qmd` into HTML (or PDF), executing R chunks.
+3.  **Post-render** collects every figure produced by the render — markdown images + R-chunk PNGs + render_dual diagrams — into `figuras_editor/`, organized by chapter, for delivery to the book producer.
+
+### Style and editorial conventions
+
+See [`STYLE_GUIDE.md`](STYLE_GUIDE.md) for the editorial decisions applied throughout the book (Spanish vocabulary, citation style, decimal convention, italics rules, etc.).
 
 ------------------------------------------------------------------------
 

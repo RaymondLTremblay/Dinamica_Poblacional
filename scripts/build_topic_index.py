@@ -53,7 +53,11 @@ CHAPTERS = [
 # La etiqueta es lo que se muestra en el índice.
 TERMS = [
     # A
-    ("Ackerman",                 r"\bAckerman\b",                        "Ackerman, James"),
+    # NOTA: nombres de autores (Ackerman, Caswell, Ebert, Hutchings, Morris/Doak,
+    # Mondragón, Sarukhán, Silvertown, Stott, Tamm, Tremblay, Tuljapurkar,
+    # Pellegrino, Salguero-Gómez, Gascoigne) se han retirado del vocabulario:
+    # son referencias citadas, no temas del libro. Para encontrar a un autor,
+    # use la bibliografía o la búsqueda de texto del navegador.
     ("Adulto",                   r"\badultos?\s+(reproductiv|no reproductiv)",      "Adulto (reproductivo / no reproductivo)"),
     ("Alogamia",                 r"\balogam[íi]a\b",                     "Alogamia"),
     ("Amplificación",            r"\bamplificaci[óo]n\b",                "Amplificación (máxima)"),
@@ -78,7 +82,6 @@ TERMS = [
     # C
     ("Cadena de Markov",         r"\bcadenas? de Markov\b|\bMCMC\b",     "Cadena de Markov / MCMC"),
     ("Cápsula",                  r"\bc[áa]psulas?\b",                    "Cápsula (fruto)"),
-    ("Caswell",                  r"\bCaswell\b",                         "Caswell, Hal"),
     ("Censo",                    r"\bcensos?\b",                         "Censo"),
     ("Censo pre-reproductivo",   r"\bcenso pre[- ]reproductivo\b",       "Censo pre-reproductivo"),
     ("Censo post-reproductivo",  r"\bcenso post[- ]reproductivo\b",      "Censo post-reproductivo"),
@@ -110,7 +113,6 @@ TERMS = [
     ("dplyr",                    r"\bdplyr\b",                           "dplyr (paquete R)"),
     ("Dust-seeds",               r"\b(dust[- ]?seeds?|semillas? polvo)\b","Dust-seeds (semillas polvo)"),
     # E
-    ("Ebert",                    r"\bEbert\b",                           "Ebert, Thomas"),
     ("Edad reproductiva",        r"\bedad reproductiva\b|\bmadurez reproductiva\b", "Edad reproductiva"),
     ("Elasticidad",              r"\belasticidad\b",                     "Elasticidad"),
     ("Elasticidad no lineal",    r"\belasticidad no lineal\b",           "Elasticidad no lineal"),
@@ -142,7 +144,6 @@ TERMS = [
     ("Función de transferencia", r"\bfunci(ó|o)n(es)? de transferencia\b","Función de transferencia"),
     # G
     ("Gamma (distribución)",     r"\bdistribuci[óo]n Gamma\b|\bGamma\(", "Gamma, distribución"),
-    ("Gascoigne",                r"\bGascoigne\b",                       "Gascoigne, Samuel"),
     ("ggplot2",                  r"\bggplot2?\b",                        "ggplot2 (paquete R)"),
     ("Germinación",              r"\bgerminaci[óo]n\b",                  "Germinación"),
     ("GLM",                      r"\bGLM\b|\bgeneralized linear model\b","GLM (modelo lineal generalizado)"),
@@ -181,9 +182,7 @@ TERMS = [
     ("Micorriza",                r"\bmicorriz[ao]s?\b|\bhongos? micorr[íi]z(ico|icos)\b", "Micorriza"),
     ("Migración",                r"\bmigraci[óo]n\b|\binmigraci[óo]n\b|\bemigraci[óo]n\b", "Migración / inmigración"),
     ("Módulo de iteración",      r"\bm[óo]dulos? de iteraci[óo]n\b|\bm[óo]dulos? de crecimiento\b", "Módulo de iteración"),
-    ("Mondragón",                r"\bMondrag[óo]n\b",                    "Mondragón, Demetria"),
     ("Monopodial",               r"\bmonopodial\b",                      "Monopodial (crecimiento)"),
-    ("Morris y Doak",            r"\bMorris (and|y|&) Doak\b",           "Morris & Doak"),
     ("Mortalidad",               r"\bmortalidad\b|\btasa de mortalidad\b","Mortalidad"),
     ("MPP",                      r"\bMPP\b",                             "MPP (Matriz de Proyección Poblacional)"),
     ("Muestreo",                 r"\b(m[ée]todos? de muestreo|tama[ñn]o de muestra)\b", "Muestreo / tamaño de muestra"),
@@ -195,7 +194,6 @@ TERMS = [
     # O
     ("Orchidaceae",              r"\bOrchidaceae\b",                     "Orchidaceae (familia)"),
     # P
-    ("Pellegrino",               r"\bPellegrino\b",                      "Pellegrino, Giuseppe"),
     ("Perron-Frobenius",         r"\bPerron[- ]?Frobenius\b",            "Perron–Frobenius (teorema)"),
     ("Perturbación",             r"\bperturbaci(ó|o)n(es)?\b",           "Perturbación"),
     ("Pleurothalliinae",         r"\bPleurothalliinae\b",                "Pleurothalliinae"),
@@ -241,22 +239,17 @@ TERMS = [
     ("Rostelo",                  r"\brostelos?\b",                       "Rostelo"),
     ("Rupícola",                 r"\brup[íi]colas?\b",                   "Rupícola"),
     # S
-    ("Salguero-Gómez",           r"\bSalguero[- ]G[óo]mez\b",            "Salguero-Gómez, Roberto"),
-    ("Sarukhán",                 r"\bSarukhan\b|\bSarukh[áa]n\b",        "Sarukhán, José"),
     ("Semilla",                  r"\bsemillas?\b",                       "Semilla"),
     ("Senescencia",              r"\bsenescencia\b",                     "Senescencia"),
     ("Sensibilidad",             r"\bsensibilidad\b",                    "Sensibilidad"),
     ("Sesgo",                    r"\bsesgos?\b",                         "Sesgo"),
-    ("Silvertown",               r"\bSilvertown\b",                      "Silvertown, Jonathan"),
     ("Simpodial",                r"\bsimpodial\b",                       "Simpodial (crecimiento)"),
     ("Simulación",               r"\bsimulaci(ó|o)n(es)?\b",             "Simulación"),
-    ("Stott",                    r"\bStott\b",                           "Stott, Iain"),
     ("Supervivencia",            r"\b(probabilidad|tasa) de supervivencia\b|\bsupervivencia perfecta\b", "Supervivencia"),
     # T
     ("Talud",                    r"\btallos?\b",                         "Tallo"),
     ("Tamaño poblacional",       r"\btama[ñn]o poblacional\b",           "Tamaño poblacional (N)"),
     ("Tamaño de muestra",        r"\btama[ñn]o de muestra\b",            "Tamaño de muestra"),
-    ("Tamm",                     r"\bTamm\b",                            "Tamm, Carl Olaf"),
     ("Tasa finita de crecimiento",r"\btasa finita de crecimiento\b",     "Tasa finita de crecimiento (λ)"),
     ("Tasa intrínseca",          r"\btasa intr[íi]nseca\b",              "Tasa intrínseca de crecimiento"),
     ("Tasa vital",               r"\btasas? vitales?\b",                 "Tasa vital"),
@@ -265,9 +258,7 @@ TERMS = [
     ("Tiempo generacional",      r"\btiempo generacional\b",             "Tiempo generacional"),
     ("Translocación",            r"\btranslocaci[óo]n\b",                "Translocación"),
     ("Transición",               r"\btransici(ó|o)n(es)? demogr[áa]fica\b", "Transición demográfica"),
-    ("Tremblay",                 r"\bTremblay\b",                        "Tremblay, Raymond L."),
     ("Tubérculo",                r"\btub[ée]rculos?\b",                  "Tubérculo"),
-    ("Tuljapurkar",              r"\bTuljapurkar\b",                     "Tuljapurkar, Shripad"),
     # U
     ("Umbral",                   r"\bumbrales?\b",                       "Umbral"),
     # V
@@ -393,6 +384,10 @@ def main():
         by_letter[first].append((term_label, appearances))
 
     out = []
+    out.append('---\n')
+    out.append('description: "Índice analítico de temas del libro con enlaces a los capítulos y secciones donde se desarrolla cada concepto. 174 términos indexados."\n')
+    out.append('image: "images/Lepanthes_eltoroensis_Tremblay.jpeg"\n')
+    out.append('---\n\n')
     out.append("# Índice de temas {#IndiceTemas .unnumbered}\n\n")
     out.append("Índice analítico del libro. Cada término aparece con los "
                "capítulos y secciones donde se desarrolla — no con números "

@@ -133,6 +133,10 @@ def main():
 
     # Write the appendix
     out = []
+    out.append('---\n')
+    out.append('description: "Índice de figuras y tablas del libro: 52 figuras y 7 tablas con leyenda, organizadas por capítulo y enlazadas a su lugar de aparición."\n')
+    out.append('image: "images/Lepanthes_eltoroensis_Tremblay.jpeg"\n')
+    out.append('---\n\n')
     out.append("# Índice de figuras y tablas {#IndiceFigTab .unnumbered}\n\n")
     out.append("Listado de todas las figuras y tablas del libro, organizadas "
                "por capítulo y orden de aparición. La numeración es relativa "
