@@ -419,14 +419,29 @@ def main():
         for term_label, appearances in sorted(by_letter[letter], key=lambda x: x[0].lower()):
             out.append(f"**{term_label}**\n\n")
             # Si el término aparece en >= AGGREGATE_THRESHOLD capítulos,
-            # formato compacto: una sola línea con los capítulos enlazados
-            # separados por coma (sin listar sub-secciones).
+            # formato compacto: una sola línea con los NÚMEROS de capítulo
+            # como texto plano (sin hiperenlaces), separados por coma.
+            #
+            # IMPORTANTE: en la salida Typst (PDF), Quarto sustituye el texto
+            # de cualquier hiperenlace que apunte a un capítulo del libro por
+            # el TÍTULO completo del capítulo (con su número y todo) — lo que
+            # rompe nuestro formato compacto y reproduce el problema del
+            # listado vertical con comas huérfanas. Usar texto plano evita
+            # esta sustitución y produce la misma salida en HTML y PDF.
             if len(appearances) >= AGGREGATE_THRESHOLD:
-                chapter_links = ", ".join(
-                    f"[{chapter_label}]({qmd_html})"
-                    for (chapter_label, qmd_html) in sorted(appearances.keys())
+                def _chapter_sort_key(item):
+                    label = item[0]
+                    prefix = label.split('. ', 1)[0]
+                    try:
+                        return (0, int(prefix))
+                    except ValueError:
+                        return (1, prefix)
+                sorted_chapters = sorted(appearances.keys(), key=_chapter_sort_key)
+                chapter_numbers = ", ".join(
+                    chapter_label.split('. ', 1)[0]
+                    for (chapter_label, _qmd_html) in sorted_chapters
                 )
-                out.append(f": *Concepto recurrente; ver* {chapter_links}.\n")
+                out.append(f": *Concepto recurrente; ver caps.* {chapter_numbers}.\n")
             else:
                 # Aplanar: una línea por sección, con la sección como link
                 # principal y el capítulo como contexto entre paréntesis.
