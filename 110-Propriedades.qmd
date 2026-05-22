@@ -102,20 +102,20 @@ El capítulo está dividido en dos partes:
 
 Aquí veremos características básicas que debe cumplir una matriz para que el análisis sea válido:
 
--   **Dimensión cuadrada**: la matriz debe tener el mismo número de filas y columnas.
--   **Ergodicidad**: asegura que, con el tiempo, todas las partes del sistema se conecten.
--   **No negatividad**: los valores de la matriz no pueden ser negativos.
--   **Irreducibilidad**: indica que no se puede dividir la matriz en bloques independientes.
--   **Primitividad**: garantiza que, después de varias iteraciones, la matriz se estabiliza.
+- **Dimensión cuadrada**: la matriz debe tener el mismo número de filas y columnas.
+- **Ergodicidad**: asegura que, con el tiempo, todas las partes del sistema se conecten.
+- **No negatividad**: los valores de la matriz no pueden ser negativos.
+- **Irreducibilidad**: indica que no se puede dividir la matriz en bloques independientes.
+- **Primitividad**: garantiza que, después de varias iteraciones, la matriz se estabiliza.
 
 2.  **Índices sobre el comportamiento a largo plazo**
 
 Estos se basan en modelos de proyección poblacional (MPP) y nos permiten entender cómo cambia la población antes y después de un disturbio:
 
--   **Análisis de convergencia**: mide si la población tiende a una estructura estable.
--   **Análisis de amortiguamiento**: indica qué tan rápido se alcanza esa estabilidad.
--   **Valor reproductivo**: muestra la importancia de cada clase en la reproducción futura.
--   **Estructura estable**: describe la distribución de la población cuando todo se estabiliza.
+- **Análisis de convergencia**: mide si la población tiende a una estructura estable.
+- **Análisis de amortiguamiento**: indica qué tan rápido se alcanza esa estabilidad.
+- **Valor reproductivo**: muestra la importancia de cada clase en la reproducción futura.
+- **Estructura estable**: describe la distribución de la población cuando todo se estabiliza.
 
 Si quieres profundizar en estos índices, te recomiendo consultar [@caswell2001matrix] y [@stott2011framework].
 
@@ -156,7 +156,7 @@ Lr1
 
 ### Dimensión cuadrada
 
-Las matrices poblacionales deben tener dimensiones cuadradas, es decir, deben tener el mismo número de renglones que de columnas. Esta característica es importante porque cada columna y renglón representa una categoría de edad o un estado del ciclo de vida de la especie. Las columnas representan la categoría de los individuos al inicio del estudio, mientras que los renglones representan su tránsito a otra categoría después de un periodo de tiempo. Si la matriz no es cuadrada, no hay correspondencia que permita comparar el número de individuos por categoría al inicio y al final de un periodo de estudio, por lo que será imposible estimar la tasa de crecimiento poblacional. En el caso de *L. rubripetala*, la matriz poblacional tiene 4 renglones y 4 columnas, por lo que cumple con la propiedad de dimensión cuadrada. Esto puede verificarse fácilmente en **R** usando la función `dim`.
+Las matrices poblacionales deben tener dimensiones cuadradas, es decir, deben tener el mismo número de filas que de columnas. Esta característica es importante porque cada columna y fila representa una categoría de edad o un estado del ciclo de vida de la especie. Las columnas representan la categoría de los individuos al inicio del estudio, mientras que las filas representan su tránsito a otra categoría después de un periodo de tiempo. Si la matriz no es cuadrada, no hay correspondencia que permita comparar el número de individuos por categoría al inicio y al final de un periodo de estudio, por lo que será imposible estimar la tasa de crecimiento poblacional. En el caso de *L. rubripetala*, la matriz poblacional tiene 4 filas y 4 columnas, por lo que cumple con la propiedad de dimensión cuadrada. Esto puede verificarse fácilmente en **R** usando la función `dim`.
 
 ```{r Indice3}
 #| error: true
@@ -176,8 +176,8 @@ isErgodic(Lr1, digits=5, return.eigvec=FALSE)
 
 Una matriz no cumple la condición de ergodicidad cuando, por ejemplo, ningún individuo logra pasar del estado de plántula al juvenil ni al adulto. En este caso, la población queda "atascada" en las primeras etapas y no puede alcanzar una estructura estable. Si evaluamos esta matriz con la función `isErgodic` del paquete `popbio` en **R**, el resultado será `FALSE`. Esto indica que:
 
--   El crecimiento poblacional depende de la estructura inicial, y
--   No se puede esperar que la población alcance una estructura estable ni una tasa de crecimiento constante a largo plazo.
+- El crecimiento poblacional depende de la estructura inicial, y
+- No se puede esperar que la población alcance una estructura estable ni una tasa de crecimiento constante a largo plazo.
 
 ```{r Indice5}
 #| error: true
@@ -200,13 +200,13 @@ Una matriz poblacional debe ser no negativa, lo que significa que todas sus entr
 
 Además, si la matriz tuviera elementos negativos:
 
--   No podríamos comparar correctamente las categorías de edad o estado.
--   Sería imposible calcular la tasa de crecimiento poblacional.
+- No podríamos comparar correctamente las categorías de edad o estado.
+- Sería imposible calcular la tasa de crecimiento poblacional.
 
 En el caso de *L. rubripetala*, la matriz cumple esta condición, ya que todos sus valores son mayores o iguales a cero. En **R**, esto se puede verificar con la función `IsPositive`, que devuelve:
 
--   `TRUE` si la matriz es no negativa.
--   `FALSE` si contiene algún valor negativo.
+- `TRUE` si la matriz es no negativa.
+- `FALSE` si contiene algún valor negativo.
 
 ```{r Indice6}
 #| error: true
@@ -227,8 +227,8 @@ A continuación se muestra un ejemplo de una matriz que no cumple la propiedad d
 
 Al evaluar esta matriz con la función `IsPositive` en **R**, el resultado es `FALSE`. Esto significa que:
 
--   La matriz no es válida para el análisis de dinámica poblacional.
--   No se puede esperar que la población alcance una estructura estable ni una tasa de crecimiento constante a largo plazo.
+- La matriz no es válida para el análisis de dinámica poblacional.
+- No se puede esperar que la población alcance una estructura estable ni una tasa de crecimiento constante a largo plazo.
 
 ```{r Indice6b}
 #| error: true
@@ -250,8 +250,8 @@ Una matriz de transición poblacional debe ser irreducible, lo que significa que
 
 En el caso de *L. rubripetala*, la matriz es irreducible: todas las etapas del ciclo de vida están conectadas y existe una ruta entre ellas. Para comprobar esta propiedad en **R**, se utiliza la función `isIrreducible` del paquete `popdemo`, que devuelve:
 
--   `TRUE` si la matriz es irreducible.
--   `FALSE` si no lo es.
+- `TRUE` si la matriz es irreducible.
+- `FALSE` si no lo es.
 
 Es importante destacar que no todas las matrices reducibles son inválidas. En algunos casos, pueden aceptarse, por ejemplo, en especies con etapas que no influyen en el crecimiento poblacional, como las fases postreproductivas en mamíferos (humanos, ballenas, etc.).
 
@@ -268,8 +268,8 @@ A continuación se muestra un ejemplo de matriz en la que el cuarto estadio no p
 
 Esta ausencia de conexión provoca dos problemas:
 
--   Un ciclo de vida incompleto, como se observa en la imagen.
--   Una población que no podrá alcanzar una estructura estable ni una tasa de crecimiento constante a largo plazo.
+- Un ciclo de vida incompleto, como se observa en la imagen.
+- Una población que no podrá alcanzar una estructura estable ni una tasa de crecimiento constante a largo plazo.
 
 ```{r}
 #| error: true
@@ -291,8 +291,13 @@ Una matriz de transición poblacional debe ser primitiva, lo que significa que, 
 
 En el caso de *L. rubripetala*, la matriz es primitiva: al elevarla a potencias altas, aparece un único valor positivo. En **R**, esto se puede comprobar con la función `isPrimitive` del paquete `popdemo`, que devuelve:
 
--   `TRUE` si la matriz es primitiva.
--   `FALSE` si no lo es.
+- `TRUE` si la matriz es primitiva.
+- `FALSE` si no lo es.
+
+```{r Indice8}
+#| error: true
+isPrimitive(Lr1)
+```
 
 Una matriz no primitiva tendría una dinámica inestable a largo plazo, como ocurre en poblaciones con comportamiento cíclico, donde las proporciones entre categorías oscilan sin llegar a estabilizarse.
 
@@ -305,16 +310,11 @@ Una matriz no primitiva tendría una dinámica inestable a largo plazo, como ocu
 Por eso `popdemo` ofrece tanto `isIrreducible()` como `isPrimitive()`: los modelos poblacionales bien comportados deben pasar **ambos** chequeos.
 :::
 
-```{r Indice8}
-#| error: true
-isPrimitive(Lr1)
-```
-
 ::: callout-important
 **Verifica estos cinco supuestos antes de calcular λ, sensibilidades o elasticidades.** Si la matriz falla alguno, los análisis posteriores pueden ser inválidos o difíciles de interpretar:
 
 | Propiedad | Función en R | Por qué importa |
-|---|---|---|
+|----|----|----|
 | Cuadrada | `dim()` | Origen y destino deben ser comparables. |
 | No negativa | `IsPositive()` | No tiene sentido biológico tener entradas negativas. |
 | Irreducible | `popdemo::isIrreducible()` | Asegura que todas las etapas estén conectadas. |
@@ -336,10 +336,10 @@ En esta sección se revisan los índices poblacionales obtenidos a partir del an
 
 La estructura poblacional estable ($W$, también conocida como eigenvector derecho) indica la proporción esperada de individuos en cada categoría de edad o estado cuando la población ha alcanzado el equilibrio a largo plazo. Por ejemplo, en *L. rubripetala* se espera que la estructura estable sea:
 
--   Plántulas: 0.088
--   Juveniles: 0.206
--   Adultos no reproductivos: 0.369
--   Adultos reproductivos: 0.337
+- Plántulas: 0.088
+- Juveniles: 0.206
+- Adultos no reproductivos: 0.369
+- Adultos reproductivos: 0.337
 
 Este índice supone que la tasa de crecimiento poblacional ($\lambda$) se mantiene constante en el tiempo, lo cual solo ocurre bajo condiciones ambientales estables. Sin embargo, en la naturaleza esto es poco común. Además, la estructura estable asume que el periodo de muestreo y las condiciones abióticas y bióticas son típicas y no cambian.
 
@@ -403,18 +403,18 @@ El valor reproductivo ($v$, también llamado eigenvector izquierdo) indica la co
 
 En el caso de *L. rubripetala*, los valores reproductivos esperados son:
 
--   Plántulas: 1.00
--   Juveniles: 1.52
--   Adultos no reproductivos: 2.32
--   Adultos reproductivos: 2.66
+- Plántulas: 1.00
+- Juveniles: 1.52
+- Adultos no reproductivos: 2.32
+- Adultos reproductivos: 2.66
 
 Este índice es muy útil porque muestra qué etapas son más importantes para el crecimiento poblacional a largo plazo. La primera categoría siempre tiene un valor de 1.00, ya que representa el inicio del ciclo de vida y sirve como referencia para calcular los demás valores.
 
 Además, el valor reproductivo ayuda a definir estrategias de manejo. Por ejemplo:
 
--   En *Spathoglottis plicata*, una orquídea terrestre invasora, las acciones de control deberían enfocarse en las categorías con mayor valor reproductivo, porque son las que más contribuyen al crecimiento poblacional.
+- En *Spathoglottis plicata*, una orquídea terrestre invasora, las acciones de control deberían enfocarse en las categorías con mayor valor reproductivo, porque son las que más contribuyen al crecimiento poblacional.
 
--   Por el contrario, si se busca remover individuos con el menor impacto posible, conviene actuar sobre las etapas con valores reproductivos bajos.
+- Por el contrario, si se busca remover individuos con el menor impacto posible, conviene actuar sobre las etapas con valores reproductivos bajos.
 
 ```{r Indice11}
 #| error: true
@@ -437,9 +437,7 @@ donde $\rho$ representa el índice de amortiguamiento, $\lambda_1$ corresponde a
 
 En el caso de *L. rubripetala*, al calcular los valores propios de la matriz con la función `eigen`, se obtiene un valor dominante de $\lambda_1 = 1.00658$ y un valor subdominante de $\lambda_2 = 0.8322$. De esta manera, el índice de amortiguamiento es:
 
-$$
-\rho = \frac{\lambda_1}{|\lambda_2|} = \frac{1.00658}{|0.83220|} \approx 1.21
-$$
+$$\rho = \frac{\lambda_1}{|\lambda_2|} = \frac{1.00658}{|0.83220|} \approx 1.21$$
 
 El valor obtenido indica que la población converge hacia su estructura estable tras un disturbio; aunque, lentamente.
 
@@ -560,37 +558,35 @@ La figura resultante ilustra el efecto de diferentes coeficientes de amortiguami
 
 La respuesta de la población ante cuatro índices de amortiguamiento es la siguiente:
 
--   **Subamortiguado** ($\zeta = 0.3$): Esta es la respuesta oscilante. El sistema sobrepasa el punto de equilibrio y luego oscila; con el tiempo la amplitud de las oscilaciones disminuye gradualmente hasta estabilizarse en el equilibrio.
--   **Amortiguado críticamente** ($\zeta = 1.0$): Esta es la respuesta más rápida, la cual alcanza el equilibrio sin oscilaciones ni sobreamortiguaciones. Se considera la respuesta ideal para sistemas que requieren un retorno rápido y estable al valor objetivo.
--   **Sobreamortiguado** ($\zeta = 2.0$): Esta respuesta es lenta y se aproxima al punto de equilibrio sin oscilaciones. En comparación con el caso críticamente amortiguado, tarda mucho más en estabilizarse, ya que la fuerza de amortiguamiento es muy grande.
--   **Sobreamortiguado** ($\zeta = 3.0$): Similar al caso anterior, pero con un amortiguamiento aún mayor. La respuesta es muy lenta y se acerca al equilibrio de manera gradual sin oscilaciones.
+- **Subamortiguado** ($\zeta = 0.3$): Esta es la respuesta oscilante. El sistema sobrepasa el punto de equilibrio y luego oscila; con el tiempo la amplitud de las oscilaciones disminuye gradualmente hasta estabilizarse en el equilibrio.
+- **Amortiguado críticamente** ($\zeta = 1.0$): Esta es la respuesta más rápida, la cual alcanza el equilibrio sin oscilaciones ni sobreamortiguaciones. Se considera la respuesta ideal para sistemas que requieren un retorno rápido y estable al valor objetivo.
+- **Sobreamortiguado** ($\zeta = 2.0$): Esta respuesta es lenta y se aproxima al punto de equilibrio sin oscilaciones. En comparación con el caso críticamente amortiguado, tarda mucho más en estabilizarse, ya que la fuerza de amortiguamiento es muy grande.
+- **Sobreamortiguado** ($\zeta = 3.0$): Similar al caso anterior, pero con un amortiguamiento aún mayor. La respuesta es muy lenta y se acerca al equilibrio de manera gradual sin oscilaciones.
 
 ::: callout-note
 **Cuatro regímenes de amortiguamiento.**
 
 | ζ | Régimen | Comportamiento |
-|---|---|---|
-| < 1 | **Subamortiguado** | Sobrepasa el equilibrio y oscila; la amplitud decrece con el tiempo. |
-| = 1 | **Críticamente amortiguado** | Retorno más rápido posible sin oscilaciones. |
-| > 1 (moderado) | **Sobreamortiguado** | Retorno lento sin oscilaciones; la fuerza de amortiguamiento es alta. |
-| ≫ 1 | **Muy sobreamortiguado** | Retorno extremadamente lento; el sistema apenas reacciona. |
+|----|----|----|
+| $< 1$ | **Subamortiguado** | Sobrepasa el equilibrio y oscila; la amplitud decrece con el tiempo. |
+| $= 1$ | **Críticamente amortiguado** | Retorno más rápido posible sin oscilaciones. |
+| $> 1$ (moderado) | **Sobreamortiguado** | Retorno lento sin oscilaciones; la fuerza de amortiguamiento es alta. |
+| $\gg 1$ | **Muy sobreamortiguado** | Retorno extremadamente lento; el sistema apenas reacciona. |
 
 En poblaciones reales, la mayoría de las matrices de proyección se encuentran en el régimen sobreamortiguado: regresan al equilibrio sin oscilar, pero pueden tardar muchas generaciones.
 :::
 
 ### Tiempo de convergencia
 
-El tiempo de convergencia es el periodo estimado que tarda la población en alcanzar su estructura estable. Este índice es relevante porque facilita entender el comportamiento poblacional a largo plazo. En **R** este cálculo puede realizarse con dos funciones del paquete `popdemo`: `dr` y `convt`. La función `dr` calcula el amortiguamiento, y a partir de éste puede estimarse el tiempo de convergencia de la siguiente manera:
+El tiempo de convergencia es un indicador de la dinámica poblacional, ya que estima el tiempo que tarda una población en alcanzar su estructura estable. Este índice es relevante porque facilita entender el comportamiento poblacional a largo plazo. En **R** este cálculo puede realizarse con dos funciones del paquete `popdemo`: `dr` y `convt`. La función `dr` calcula el amortiguamiento, y a partir de éste puede estimarse el tiempo de convergencia de la siguiente manera:
 
-$$
-t = \frac{\log(x)}{\log(\rho)}
-$$
+$$t = \frac{\log(x)}{\log(\rho)}$$
 
 donde
 
--   $\rho$ es el índice de amortiguamiento (*damping ratio*, $\rho = \lambda_1 / |\lambda_2|$)
--   $x$ es el factor por el cual la influencia del valor propio dominante debe superar a la del subdominante (por ejemplo, $x = 10$ significa "tiempo hasta que el dominante pese 10 veces más que el subdominante")
--   $t$ representa el tiempo en la misma unidad en que se construyó la matriz (días, meses, años, etc.).
+- $\rho$ es el índice de amortiguamiento (*damping ratio*, $\rho = \lambda_1 / |\lambda_2|$)
+- $x$ es el factor por el cual la influencia del valor propio dominante debe superar a la del subdominante (por ejemplo, $x = 10$ significa "tiempo hasta que el dominante pese 10 veces más que el subdominante")
+- $t$ representa el tiempo en la misma unidad en que se construyó la matriz (días, meses, años, etc.).
 
 Mientras mayor sea $\rho$, más rápida será la convergencia: una matriz con $\rho = 2$ converge mucho más rápido que una con $\rho = 1.05$. El análisis de amortiguamiento estima la rapidez con la que una población converge a su estructura estable después de un disturbio [@jiang2020life]. Cabe señalar que se ha demostrado que existe una relación entre el índice de amortiguamiento y el tiempo generacional de una especie [@jiang2020life].
 
@@ -608,9 +604,9 @@ Por ejemplo, si se comienza con una población inicial de 8, 20, 27 y 34 individ
 ::: callout-tip
 **La estructura inicial determina cuánto tarda la convergencia.** Para la misma matriz de *L. rubripetala*:
 
-- Estructura inicial cercana a la estable (ej. 8, 20, 27, 34): convergencia en ~6 meses.
-- Estructura inicial moderadamente sesgada: ~18 meses.
-- Estructura completamente sesgada (sólo plántulas): ~25 meses.
+- Estructura inicial cercana a la estable (ej. 8, 20, 27, 34): convergencia en \~6 meses.
+- Estructura inicial moderadamente sesgada: \~18 meses.
+- Estructura completamente sesgada (sólo plántulas): \~25 meses.
 
 Esto tiene implicaciones prácticas en conservación: si introduces una nueva población o una población en restauración, la composición inicial determina cuándo el modelo asintótico empieza a aplicar. Para acelerar la convergencia, conviene introducir individuos en proporciones cercanas a la estructura estable cuando sea factible.
 :::
