@@ -23,7 +23,7 @@ Asimismo, se analiza cómo los LTRE permiten identificar qué procesos demográf
 
 #### Librerías de R requeridas para el siguiente módulo
 
-```{r, message=FALSE, warning=FALSE}
+```{r ltre-setup, message=FALSE, warning=FALSE}
 #| error: true
 
 library(tidyverse)
@@ -32,6 +32,7 @@ library(DiagrammeR)
 library(popbio)
 library(popdemo)
 library(latex2exp)
+source("R/figuras_helpers.R")  # plc_save(), grviz_save(), save_plot_png()
 
 ```
 
@@ -214,7 +215,7 @@ edges <- paste0("'", graph$from, "'", " -> ", "'", graph$to, "'", # crear las fl
                 "\"]\n", # fin de la flecha
                 collapse = "" # unir las flechas
 )
-grViz(
+grviz_save(
   paste(
     "
 digraph {
@@ -230,7 +231,8 @@ digraph {
     "labelloc=\"t\";
   label=\"", title, "\"
 }"
-  )
+  ),
+  png = "images/LTRE2_Oncidium_brachyandrum_Quercus_martinezii.png"
 )
 ```
 
@@ -269,7 +271,7 @@ edges <- paste0("'", graph$from, "'", " -> ", "'", graph$to, "'",
                 "\"]\n",
                 collapse = ""
 )
-grViz(
+grviz_save(
   paste(
     "
 digraph {
@@ -285,7 +287,8 @@ digraph {
     "labelloc=\"t\";
   label=\"", title, "\"
 }"
-  )
+  ),
+  png = "images/LTRE3_Oncidium_brachyandrum_Quercus_rugosa.png"
 )
 ```
 
@@ -614,7 +617,7 @@ mat_mart.vector <- as.vector(matmart) # vector para O. martinezii
 
 ```
 
-```{r}
+```{r ltre-mat-rug-vector}
 #| error: true
 mat_rug.vector
 matrug

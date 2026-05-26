@@ -22,7 +22,7 @@ En este capítulo se presenta el marco conceptual de los Bayesian MPP, mostrando
 
 A través de ejemplos aplicados, se ilustra cómo los Bayesian MPP facilitan la evaluación del riesgo poblacional, la comparación entre escenarios de manejo y la integración posterior con análisis de elasticidad, sensibilidad y LTRE. Este capítulo se diferencia de los anteriores porque desplaza el énfasis desde la estimación puntual de parámetros hacia la inferencia probabilística completa de la dinámica poblacional, un enfoque especialmente relevante en biología de la conservación y ecología aplicada.
 
-```{r, message=FALSE, warning=FALSE}
+```{r bayes-setup, message=FALSE, warning=FALSE}
 #| error: true
 
 if (!require("pacman")) install.packages("pacman")
@@ -35,10 +35,11 @@ library(raretrans) # disponible en CRAN: install.packages("raretrans")
 library(DiagrammeR)
 library(Rage)
 library(flextable)
+source("R/figuras_helpers.R")  # plc_save(), grviz_save(), save_plot_png()
 
 ```
 
-```{r}
+```{r bayes-theme}
 #| error: true
 rlt_theme <- theme(
   axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
@@ -167,7 +168,7 @@ Además, la matriz poblacional estimada presenta dos propiedades estructurales p
 ```{r bayes2}
 #| error: true
 
-plot_life_cycle(matA, stages = stages)
+plc_save(matA, stages = stages, png = "images/bayes2.png")
 
 ```
 
@@ -383,7 +384,7 @@ Lo que vimos anteriormente fueron algunos de los problemas reales que encontramo
 
 stages2 <- c("plantulas", "juveniles", "adultos")
 title <- NULL
-plot_life_cycle(Tmat, stages = stages2)
+plc_save(Tmat, stages = stages2, png = "images/bayes11.png")
 ```
 
 ------------------------------------------------------------------------

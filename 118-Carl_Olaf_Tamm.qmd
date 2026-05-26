@@ -27,7 +27,7 @@ A continuación se presentan los principales aspectos de la trayectoria científ
 
 #### Librerías de R requeridas para el siguiente módulo
 
-```{r, OCTamm_1, eval= TRUE, message=FALSE}
+```{r OCTamm_1, eval= TRUE, message=FALSE}
 #| error: true
 
 if (!require("pacman")) install.packages("pacman")
@@ -42,6 +42,7 @@ library(readxl)
 library(Rage)
 library(DiagrammeR)
 library(raretrans) # disponible en CRAN: install.packages("raretrans")
+source("R/figuras_helpers.R")  # plc_save(), grviz_save(), save_plot_png()
 
 # Mi tema de formato de las gráficas de ggplot2 personal
 
@@ -341,7 +342,7 @@ edges <- paste0("'", graph$from, "'", " -> ", "'", graph$to, "'",
   "\"]\n",
   collapse = ""
 )
-grViz(
+grviz_save(
   paste(
     "
 digraph {
@@ -357,8 +358,9 @@ digraph {
     "labelloc=\"t\";
   label=\"", title, "\"
 }"
-  )
-) 
+  ),
+  png = "images/OCTamm_11_Dactylorhiza.png"
+)
 
 ```
 

@@ -51,6 +51,7 @@ library(tidyverse)
 library(popbio)
 library(Rcompadre)
 library(DiagrammeR)
+source("R/figuras_helpers.R")  # plc_save(), grviz_save(), save_plot_png()
 
 ```
 
@@ -273,7 +274,7 @@ Los datos deben estar organizados en formato de tabla, donde:
 
 En nuestro ejemplo, la tabla contiene 19 filas y 4 columnas. La columna “transición” no es necesaria para la función `projection.matrix`.
 
-```{r}
+```{r trans-orchis-ficticia}
 #| error: true
 Orchis_ficticia_por_ind=tribble(~Num_ind, ~anio_1, ~anio_2, ~fertilidad,
                         1,  "plantas_pequeñas", "Muerto",  0,
@@ -479,7 +480,7 @@ edges <- paste0("'", graph$from, "'", " -> ", "'", graph$to, "'",
   "\"]\n",
   collapse = ""
 )
-grViz(
+grviz_save(
   paste(
     "
 digraph {
@@ -495,8 +496,9 @@ digraph {
     "labelloc=\"t\";
   label=\"", title, "\"
 }"
-  )
-) 
+  ),
+  png = "images/Trans14_Cyp_calceolus_clon.png"
+)
 ```
 
 Los estudios sobre orquídeas que incorporan matrices de clonaje son poco frecuentes, pero es fundamental considerar este proceso en los análisis de dinámica poblacional. El clonaje puede tener un impacto significativo tanto en la dinámica de las poblaciones como en la evolución de las especies.

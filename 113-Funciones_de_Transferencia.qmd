@@ -48,7 +48,7 @@ su implementación en modelos de dinámica poblacional.
 
 #### Librerías de R requeridas para el siguiente módulo
 
-```{r, message=FALSE, warning=FALSE}
+```{r tf-setup, message=FALSE, warning=FALSE}
 #| error: true
 
 library(popdemo)
@@ -161,7 +161,7 @@ Lr1 <- matrix(c(0.4324, 0,      0,     0.146,
 
 ### Capturar las categorías de estado
 
-```{r}
+```{r tf-estadios}
 #| error: true
 estadios <- c("PL", "J", "NR", "AR")
 colnames(Lr1) <- rownames(Lr1) <- estadios
@@ -220,7 +220,7 @@ i)  Perturbación máxima:
 
 Para calcular la perturbación máxima en la columna 3, se parte del supuesto de que la probabilidad máxima de estasis o cambio de estado (crecimiento o decrecimiento) desde la categoría 3 es igual a 1. Bajo esta condición, no existiría mortalidad en las transiciones desde dicha categoría. Por lo tanto, la máxima perturbación posible corresponde a la supervivencia del 100% de los individuos en la categoría 3. Así, si restamos a 1 la suma de los valores de permanencia y transición de la columna 3, obtenemos la magnitud máxima de perturbación.
 
-```{r}
+```{r tf-calc-resto}
 #| error: true
 1 - (0.7954 + 0.1841)
 ```
@@ -231,7 +231,7 @@ La perturbación mínima corresponde al valor negativo de la celda de interés. 
 
 Posteriormente, en la gráfica que se genera para analizar la respuesta transitoria de la población, el eje *x* representa la magnitud de la perturbación, variando desde la perturbación mínima hasta la máxima en intervalos de 0.01.
 
-```{r}
+```{r tf-prange-init}
 #| error: true
 #Intervalo de la perturbación:
 prange = seq(-0.7954, 0.0205, 0.01)
@@ -302,7 +302,7 @@ Para comprender cómo la transición del ciclo de vida se ve afectada por la per
 
 Los resultados muestran que la permanencia en el estado no reproductivo ejerce un efecto no lineal sobre $\lambda$, con una respuesta drástica incluso ante perturbaciones pequeñas. La población responde en incrementos proporcionales de 0.01, desde el nivel mínimo hasta el máximo de perturbación. Según la gráfica, una perturbación menor provoca un cambio radical en el crecimiento poblacional. Mientras la sensibilidad lineal sugiere un descenso constante, la función de transferencia indica que, tras un descenso inicial, la población alcanza un punto de estabilización cercano a $\lambda \approx 0.95$.
 
-```{r}
+```{r tf-nLr0-init}
 #| error: true
 # Vector original
 nLr0 <- c(0, 46, 38, 82)
@@ -346,7 +346,7 @@ Cuando la perturbación es menor a 0.2, el comportamiento no difiere significati
 
 En cambio, a medida que la magnitud de la perturbación aumenta, el efecto sobre la tasa de crecimiento se intensifica, reflejando la naturaleza no lineal del sistema.
 
-```{r}
+```{r tf-tf5-calc}
 #| error: true
 
 #Entrada de la matriz a(4,2): juveniles a adultos
@@ -382,7 +382,7 @@ Los resultados indican que el efecto de esta perturbación sobre λ es no lineal
 
 A medida que la magnitud de la perturbación aumenta, se observa un efecto positivo sobre la tasa de crecimiento poblacional, lo que refleja la importancia de esta transición en la dinámica transitoria.
 
-```{r}
+```{r tf-tf9-calc}
 #| error: true
 
 #Entrada de la matriz a(3,4): adultos reproductivos a NR
@@ -419,7 +419,7 @@ En la perturbación correspondiente a la contribución reproductiva de adultos h
 
 Los resultados indican que la perturbación en esta transición produce un efecto lineal sobre λ. Sin embargo, la pendiente asociada a la elasticidad no lineal es menor en comparación con la sensibilidad lineal, lo que sugiere que el impacto de esta transición sobre la tasa de crecimiento poblacional es más limitado de lo que se esperaría bajo un modelo estrictamente lineal.
 
-```{r}
+```{r tf-tf8-calc}
 #| error: true
 #Entrada de la matriz a(1,4): adultos reproductivos a plántulas
 
@@ -540,7 +540,7 @@ Como resultado se genera una gráfica en la que se aprecia el comportamiento de 
 
 La tendencia de la elasticidad no lineal sugiere que cualquier aumento en la estasis en la categoría de adulto no reproductivo provocará una disminución en el valor de la inercia poblacional a corto plazo. Tremblay y colaboradores [@tremblay2015stable] presentan en la figura 4 los resultados de los casos en que las elasticidades fueron mayores.
 
-```{r}
+```{r tf-n0-init}
 #| error: true
 
 n0 <- c(0, 46, 38, 82)
@@ -570,7 +570,7 @@ A continuación se proyecta la persistencia de *L. rubripetala* para los tres es
 
 A excepción del tránsito de adulto no reproductivo a reproductivo, el tránsito a un estado superior tiene un efecto positivo en la inercia poblacional. Lo mismo sucede con la retrogresión de adultos reproductivos a no reproductivos y con la contribución reproductiva de adultos a plántulas.
 
-```{r}
+```{r tf-par-mfrow}
 #| error: true
 
 #Definir márgenes
@@ -598,7 +598,7 @@ plot(tfmatriz,  xlab="p", ylab="Inercia", cex.axis=1.4, cex.lab=1.5)
 
 El código para el cálculo de la inercia poblacional se presenta en el siguiente recuadro. En este se supone que la población está representada por el último estado del ciclo de vida. Los resultados de la gráfica (extremo inferior derecho) sugieren que cuando todos los individuos de *L. rubripetala* se encuentran en la fase de adulto reproductivo, la inercia poblacional a corto plazo será mayor a 1.4, lo que indica que la población puede crecer más del 40% antes de alcanzar la tasa constante de crecimiento poblacional. Asimismo, estos resultados indican que los adultos reproductivos tienen un alto impacto positivo sobre la tasa de crecimiento poblacional, a excepción de la transición de juveniles a adultos no reproductivos.
 
-```{r}
+```{r tf-etype-matrix}
 #| error: true
 etype<-matrix(c("P", "F", "F", "F",
                 "P", "P", "P", "P",
@@ -616,7 +616,7 @@ plot(tfmatU, cex.axis=1.4, cex.lab=1.5) # gráfica de la inercia poblacional
 
 El código del cálculo de la inercia poblacional al suponer que la población está dominada por el primer estado del ciclo de vida se presenta en el siguiente recuadro. Los resultados de la primera gráfica (extremo superior derecho) sugieren que, al suponer que todos los individuos de *L. rubripetala* se concentran en el límite inferior, la inercia poblacional a corto plazo es de 0.7, lo que indica que la población puede reducirse hasta un 30% antes de alcanzar la tasa constante de crecimiento poblacional. En este escenario se reconoce que la dominancia de las plántulas en la población tiene un impacto negativo en el crecimiento de la población a corto plazo, ya que en todos los casos la $\lambda$ poblacional está por debajo de 1.
 
-```{r}
+```{r tf-tfmatL-init}
 #| error: true
 
 tfmatL=tfam_inertia(Lr1, elementtype = etype, bound = "lower") # donde todos los individuos están en el primer estadio
@@ -652,7 +652,7 @@ En esta sección se presenta el código con `ggplot2` para agrupar en una sola g
 
 Finalmente, cabe señalar que con los ajustes necesarios, este código puede ser aplicado a los resultados elemento por elemento de **tfa_inertia**.
 
-```{r echo = FALSE, results = 'hide'}
+```{r tf-hidden-tf1-recompute, echo = FALSE, results = 'hide'}
 #| error: true
 # Vector original
 nLr0 <- c(0, 46, 38, 82)
@@ -679,7 +679,7 @@ sens1 <- tfs_lambda(Lr1, d = c(1, 0, 0, 0), e = c(1, 0, 0, 0))
 
 ```
 
-```{r echo = FALSE, results = 'hide'}
+```{r tf-hidden-tf2-recompute, echo = FALSE, results = 'hide'}
 #| error: true
 #2) Entrada de la matriz a(2,1): plántulas y juveniles
 tf2 <- tfa_lambda(Lr1, d = c(1, 0, 0, 0),
@@ -702,7 +702,7 @@ sens2 <- tfs_lambda(Lr1, d = c(1, 0, 0, 0),
 
 ```
 
-```{r echo = FALSE, results = 'hide'}
+```{r tf-hidden-tf3-recompute, echo = FALSE, results = 'hide'}
 #| error: true
 
 #3) Entrada de la matriz a(2,2): juveniles y juveniles
@@ -726,7 +726,7 @@ sens3 <- tfs_lambda(Lr1, d = c(0, 1, 0, 0),
 
 ```
 
-```{r echo = FALSE, results = 'hide'}
+```{r tf-hidden-tf4-recompute, echo = FALSE, results = 'hide'}
 #| error: true
 
 #4) Entrada de la matriz a(3,2): juveniles y no reproductivos
@@ -749,7 +749,7 @@ sens4 <- tfs_lambda(Lr1, d = c(0, 1, 0, 0),
 #abline(lambda4, sens4, lty = 2, col = "red")
 ```
 
-```{r echo = FALSE, results = 'hide'}
+```{r tf-hidden-tf5-recompute, echo = FALSE, results = 'hide'}
 #| error: true
 
 #5) Entrada de la matriz a(4,2): juveniles a adultos
@@ -773,7 +773,7 @@ sens5 <- tfs_lambda(Lr1, d = c(0, 1, 0, 0),
 
 ```
 
-```{r echo = FALSE, results = 'hide'}
+```{r tf-hidden-tf6-recompute, echo = FALSE, results = 'hide'}
 #| error: true
 
 #6) Entrada de la matriz a(3,3): adultos no reproductivos a adultos no reproductivos
@@ -799,7 +799,7 @@ sens6 <- tfs_lambda(Lr1, d = c(0,0,1,0),
 
 ```
 
-```{r echo = FALSE, results = 'hide'}
+```{r tf-hidden-tf7-recompute, echo = FALSE, results = 'hide'}
 #| error: true
 
 tf7 <- tfa_lambda(Lr1, d = c(0,0,1,0),
@@ -822,7 +822,7 @@ sens7 <- tfs_lambda(Lr1, d = c(0,0,1,0),
 
 ```
 
-```{r echo = FALSE, results = 'hide'}
+```{r tf-hidden-tf8-recompute, echo = FALSE, results = 'hide'}
 #| error: true
 #8) Entrada de la matriz a(1,4): adultos reproductivos a plántulas
 
@@ -846,7 +846,7 @@ sens8 <- tfs_lambda(Lr1, d = c(1,0,0,0),
 
 ```
 
-```{r echo = FALSE, results = 'hide'}
+```{r tf-hidden-tf9-recompute, echo = FALSE, results = 'hide'}
 #| error: true
 
 #9) Entrada de la matriz a(3,4): adultos reproductivos a NR
@@ -871,7 +871,7 @@ sens9 <- tfs_lambda(Lr1, d = c(0, 0, 0, 1),
 
 ```
 
-```{r echo = FALSE, results = 'hide'}
+```{r tf-hidden-tf10-recompute, echo = FALSE, results = 'hide'}
 #| error: true
 #10) Entrada de la matriz a(4,4): adultos reproductivos a adultos reproductivos
 
@@ -895,7 +895,7 @@ sens10 <- tfs_lambda(Lr1, d = c(0,0,0,1),
 
 ```
 
-```{r, mesage=FALSE, warning=FALSE}
+```{r tf-df-combine, mesage=FALSE, warning=FALSE}
 #| error: true
 
 tf1df=as.data.frame(tf1)
@@ -1007,7 +1007,7 @@ tf10tf=ggplot2::ggplot() +
 
 ```
 
-```{r}
+```{r tf-label-substitute}
 #| error: true
 
 label <- substitute(

@@ -37,6 +37,7 @@ Asimismo, se analiza cómo la fecundidad se integra en la matriz de proyección,
 
 library(Rage)
 library(tidyverse)
+source("R/figuras_helpers.R")  # plc_save(), grviz_save(), save_plot_png()
 
 ```
 
@@ -139,7 +140,7 @@ Un caso interesante se observa en *Brassavola cucullata*, una especie rupícola 
 
 En este ejemplo, la primera fila de la matriz representa la fecundidad de la población en la posición (3,1) (columna, fila), correspondiente al número promedio de semillas producidas por un individuo adulto. Sin embargo, la fecundidad en modelos demográficos debe expresarse en términos de plántulas, no de semillas. Por ello, es necesario convertir la cantidad de semillas producidas en plántulas mediante una tasa de germinación o una tasa de supervivencia hasta la etapa de plántula. De lo contrario, el cálculo presentará un sesgo, ya que se estaría estimando fecundidad con base en semillas, sin considerar su capacidad real de generar nuevos individuos.
 
-```{r}
+```{r fec-matA-sem}
 #| error: true
 matA_sem <- rbind(
   c(0.0, 0.0, 1000), #  fecundidad 1000 semillas en promedio por adulto
@@ -151,11 +152,11 @@ matA_sem <- rbind(
 
 Visualizamos el ciclo de vida de la población con la función `plot_life_cycle()` de la librería `Rage`:
 
-```{r}
+```{r fec-life-cycle-1}
 #| error: true
 etapas <- c("plántula", "juvenil", "adulto")
  
- plot_life_cycle(matA_sem, stages=etapas, fontsize = 5)
+ plc_save(matA_sem, stages=etapas, fontsize = 5, png = "images/fec-life-cycle-1.png")
 ```
 
 ------------------------------------------------------------------------
@@ -178,7 +179,7 @@ Esto significa que, en promedio, cada adulto contribuiría con 1.33 plántulas a
 
 Por consecuencia la matriz cambia a:
 
-```{r}
+```{r fec-matA-pl}
 #| error: true
 
 matA_pl <- rbind(
@@ -189,7 +190,7 @@ matA_pl <- rbind(
 
 etapas <- c("plántula", "juvenil", "adulto")
 
-plot_life_cycle(matA_pl, stages = etapas, fontsize = 5)
+plc_save(matA_pl, stages = etapas, fontsize = 5, png = "images/fec-matA-pl.png")
 
 ```
 
@@ -205,7 +206,7 @@ $$\text{Fecundidad} = \frac{50}{100} = 0.5$$
 
 Esto indica que, en promedio, cada adulto contribuyó con 0.5 plántulas a la siguiente generación.
 
-```{r}
+```{r fec-matA-pl2}
 #| error: true
 matA_pl2 <- rbind(
   c(0.0, 0.0, 0.5), #  fecundidad 0.5 plántulas en promedio por adulto
@@ -215,7 +216,7 @@ matA_pl2 <- rbind(
 
 etapas <- c("plántula", "juvenil", "adulto")
 
-plot_life_cycle(matA_pl2, stages = etapas, fontsize = 5)
+plc_save(matA_pl2, stages = etapas, fontsize = 5, png = "images/fec-matA-pl2.png")
 
 ```
 

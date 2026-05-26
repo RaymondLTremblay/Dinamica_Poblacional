@@ -401,7 +401,6 @@ En la graficación del ciclo de vida podemos usar otro paquete de R, `Rage` (ver
 ```{r cv11_rage, echo=FALSE, message=FALSE, warning=FALSE}
 #| error: true
 
-
 ## 0) Packages you may need
 pkgs <- c("Rage", "DiagrammeRsvg", "rsvg", "htmlwidgets", "webshot2", "ggplot2")
 to_install <- setdiff(pkgs, rownames(installed.packages()))
@@ -410,45 +409,8 @@ if (length(to_install)) install.packages(to_install, dependencies = TRUE)
 library(Rage)
 library(ggplot2)
 
-## 1) Helper: save either ggplot or htmlwidget to PNG
-save_plot_png <- function(obj, file, width_px = 2400, height_px = 1600, dpi = 300, zoom = 1.5) {
-  dir.create(dirname(file), showWarnings = FALSE, recursive = TRUE)
-
-  if (inherits(obj, "ggplot")) {
-    # ggplot path
-    ggsave(filename = file, plot = obj, width = width_px / dpi, height = height_px / dpi, dpi = dpi)
-    message("Saved ggplot to: ", file)
-    return(invisible(file))
-  }
-
-  if (inherits(obj, "htmlwidget") || inherits(obj, "grViz")) {
-    # Preferred: export_svg -> rsvg_png (crisp, vector-based)
-    ok <- FALSE
-    if (requireNamespace("DiagrammeRsvg", quietly = TRUE) && requireNamespace("rsvg", quietly = TRUE)) {
-      try({
-        svg_txt <- DiagrammeRsvg::export_svg(obj)
-        rsvg::rsvg_png(charToRaw(svg_txt), file, width = width_px, height = height_px)
-        message("Saved htmlwidget via SVG->PNG to: ", file)
-        ok <- TRUE
-      }, silent = TRUE)
-    }
-    # Fallback: webshot2 (headless browser screenshot)
-    if (!ok) {
-      if (!requireNamespace("htmlwidgets", quietly = TRUE) ||
-          !requireNamespace("webshot2", quietly = TRUE)) {
-        stop("Need packages 'DiagrammeRsvg'+'rsvg' or 'htmlwidgets'+'webshot2' to save htmlwidgets.")
-      }
-      htmlfile <- tempfile(fileext = ".html")
-      htmlwidgets::saveWidget(obj, file = htmlfile, selfcontained = TRUE)
-      webshot2::webshot(htmlfile, file = file, vwidth = width_px, vheight = height_px, zoom = zoom)
-      message("Saved htmlwidget via webshot2 to: ", file)
-    }
-    return(invisible(file))
-  }
-
-  stop("Unsupported object class: ", paste(class(obj), collapse = ", "))
-}
-
+## 1) Cargar helpers globales (save_plot_png, plc_save, grviz_save)
+source("R/figuras_helpers.R")
 ```
 
 ```{r cv11_rage_build, echo=FALSE, message=FALSE, warning=FALSE}
@@ -480,7 +442,7 @@ save_plot_png(p, file = file.path(out_dir, "CV11_Rage_plot.png"), width_px = 240
 
 ![Diagrama de ciclo de vida construido con el paquete `Rage`.](figs/CV11_Rage_plot.png){#fig-cv11}
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r cv-rage-compare-show, echo=FALSE, message=FALSE, warning=FALSE}
 #| error: true
 ## Code for color coding figure
 # http://rich-iannone.github.io/DiagrammeR/

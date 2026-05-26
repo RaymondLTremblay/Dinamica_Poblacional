@@ -1,215 +1,300 @@
 # Manifiesto de figuras — Dinámica Poblacional de Orquídeas
 
-Inventario completo de figuras embebidas en el libro, organizadas por capítulo y orden de aparición. Generado para el productor/editor del libro.
+Inventario completo de TODAS las figuras del libro (estáticas markdown + generadas por código R), organizadas por capítulo y orden de aparición. Cada figura está enlazada con su ubicación esperada en `figuras_editor/<capítulo>/`. Este archivo —junto con la carpeta `figuras_editor/`— es la entrega para el editor/productor del libro.
 
 ## Resumen
 
-- **Total figuras markdown**: 50
-- **Capítulos con figuras**: 16
-- **Archivos únicos en `images/`**: 49
+- **Total figuras**: 131
 
-Las figuras generadas por código R (gráficos ggplot, diagramas de ciclo de vida producidos por `plot_life_cycle()`, etc.) no se inventarían aquí — éstas se regeneran en cada render desde el código.
+- **Capítulos con figuras**: 19
 
-## Estructura de carpetas sugerida para producción
+- **Por tipo**:
 
-Para el armado del libro físico/digital, sugerimos reorganizar las imágenes en subcarpetas por capítulo. El estado actual del repositorio tiene todo en `images/` plano, lo que dificulta para el productor saber qué imagen va en qué capítulo. La estructura propuesta:
+  - PNG generado por chunk R (ggplot, plot, etc.): **52**
 
-```
-figuras/
-├── 01-introduccion/
-│   ├── Tolumnia_variegata_Tremblay.jpeg
-│   └── Demografia_de_una_poblacion.jpg
-├── 02-ciclos-de-vida/
-│   ├── Orchis_purpurea_1_Hans_Jacquemyn.jpg
-│   └── Orchis_purpurea_2_Hans_Jacquemyn.jpg
-├── 03-recopilacion-datos/
-│   ├── Trichocentrum_undulatum_1_Hong_Liu.jpg
-│   ├── Trichocentrum_undulatum_9_Hong_Liu.jpeg
-│   └── ... (21 archivos)
-└── ...
+  - imagen markdown estática: **52**
+
+  - PNG generado por `render_dual()` (DOT → PNG): **25**
+
+  - PNG generado por `ggsave()`: **2**
+
+
+## Cómo regenerar este manifiesto
+
+```bash
+quarto render          # genera docs/*_files/figure-html/
+python3 scripts/collect_figures.py  # recolecta a figuras_editor/
 ```
 
-El renombrado de las rutas en los `.qmd` no se ha hecho — sólo presentamos el inventario. Si quieres que reorganice físicamente las imágenes en subcarpetas y actualice todas las rutas, dilo.
+Para auditar sin copiar: `python3 scripts/collect_figures.py --audit`
+
 
 ## Inventario por capítulo
 
-### 1. Introducción
+### 01-Introduccion
 
-Archivo fuente: `102-Intro.qmd` — 2 figura(s)
+Archivo fuente: `102-Intro.qmd` — 3 figura(s)
 
-| # | Línea | Sección | Imagen | Caption / autor |
-|---|------:|---------|--------|----------------|
-| 1 | 335 | Procesos y patrones evolutivos del ciclo de vida q | `Tolumnia_variegata_Tremblay.jpeg` | *Tolumnia variegata*. Foto: Tremblay |
-| 2 | 355 | Visualización de la dinámica poblacional | `Demografia_de_una_poblacion.jpg` | Factores que influyen en la dinámica de una población |
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 202 | dynamic | `chunk 'Pop-fig_1'` | `figuras_editor/01-Introduccion/01_Pop-fig_1-1.png` |  |
+| 2 | 344 | static | `images/Tolumnia_variegata_Tremblay.jpeg` | `figuras_editor/01-Introduccion/02_Tolumnia_variegata_Tremblay.jpeg` | *Tolumnia variegata*. Foto: Tremblay |
+| 3 | 364 | static | `images/Demografia_de_una_poblacion.jpg` | `figuras_editor/01-Introduccion/03_Demografia_de_una_poblacion.jpg` | Factores que influyen en la dinámica de una población |
 
-### 10. Elasticidad
+### 02-Ciclos_de_Vida
 
-Archivo fuente: `111-Elasticidad.qmd` — 4 figura(s)
+Archivo fuente: `103-Ciclos_de_Vida.qmd` — 11 figura(s)
 
-| # | Línea | Sección | Imagen | Caption / autor |
-|---|------:|---------|--------|----------------|
-| 1 | 232 | Comparación entre especies | `Lepanthes_eltoroensis_Tremblay.jpeg` | *Lepanthes eltoroensis*. Foto: Tremblay |
-| 2 | 268 | Comparación entre especies | `Lepanthes_caritensis_Edwin_Guevara.jpg` | *Lepanthes caritensis*. Foto: Edwin Guevara |
-| 3 | 272 | Comparación entre especies | `Lepanthes_caritensis_Phorophyte.jpg` | *Lepanthes caritensis*. Foto: Edwin Guevara |
-| 4 | 355 | Elasticidad y LTRE: prospectivo versus retrospecti | `Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg` | *Laelia speciosa*. Foto: Eduardo A. Pérez García |
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 150 | render_dual | `images/CV_2.png` | `figuras_editor/02-Ciclos_de_Vida/01_CV_2.png` |  |
+| 2 | 175 | render_dual | `images/CV_3.png` | `figuras_editor/02-Ciclos_de_Vida/02_CV_3.png` |  |
+| 3 | 228 | render_dual | `images/CV_5.png` | `figuras_editor/02-Ciclos_de_Vida/03_CV_5.png` |  |
+| 4 | 257 | render_dual | `images/CV_6Telipogon_helleri.png` | `figuras_editor/02-Ciclos_de_Vida/04_CV_6Telipogon_helleri.png` |  |
+| 5 | 291 | render_dual | `images/CV7Prasophyllum_correctum.png` | `figuras_editor/02-Ciclos_de_Vida/05_CV7Prasophyllum_correctum.png` |  |
+| 6 | 316 | render_dual | `images/CV8_Ophrys.png` | `figuras_editor/02-Ciclos_de_Vida/06_CV8_Ophrys.png` |  |
+| 7 | 323 | static | `images/Orchis_purpurea_1_Hans_Jacquemyn.jpg` | `figuras_editor/02-Ciclos_de_Vida/07_Orchis_purpurea_1_Hans_Jacquemyn.jpg` | *Orchis purpurea*. Foto: Hans Jacquemyn |
+| 8 | 351 | render_dual | `images/CV9_Os.png` | `figuras_editor/02-Ciclos_de_Vida/08_CV9_Os.png` |  |
+| 9 | 355 | static | `images/Orchis_purpurea_2_Hans_Jacquemyn.jpg` | `figuras_editor/02-Ciclos_de_Vida/09_Orchis_purpurea_2_Hans_Jacquemyn.jpg` | *Orchis purpurea*. Foto: Hans Jacquemyn |
+| 10 | 391 | render_dual | `images/CV10.png` | `figuras_editor/02-Ciclos_de_Vida/10_CV10.png` |  |
+| 11 | 443 | static | `figs/CV11_Rage_plot.png` | `figuras_editor/02-Ciclos_de_Vida/11_CV11_Rage_plot.png` | Diagrama de ciclo de vida construido con el paquete `Rage`. |
 
-### 11. Dinámica transitoria
+### 03-Recopilacion_datos_en_el_campo
 
-Archivo fuente: `112-Dinamica_de_Transiciones.qmd` — 1 figura(s)
+Archivo fuente: `104-Recopilacion_datos_en_el_campo.qmd` — 22 figura(s)
 
-| # | Línea | Sección | Imagen | Caption / autor |
-|---|------:|---------|--------|----------------|
-| 1 | 130 | Análisis de la dinámica a largo plazo | `Lepanthes_rupestris_Tremblay.jpeg` | *Lepanthes rupestris*. Foto: Tremblay |
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 57 | static | `images/L_autum_epifita.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/01_L_autum_epifita.jpg` | Crecimiento epífito de *Laelia autumnalis* sobre las ramas y tronco de un encino. Foto: Aucencia Emeterio-Lara |
+| 2 | 108 | static | `images/Trichocentrum_undulatum_9_Hong_Liu.jpeg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/02_Trichocentrum_undulatum_9_Hong_Liu.jpeg` | *Trichocentrum undulatum*. Foto: Hong Liu |
+| 3 | 112 | static | `images/Trichocentrum_undulatum_1_Hong_Liu.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/03_Trichocentrum_undulatum_1_Hong_Liu.jpg` | *Trichocentrum undulatum*. Foto: Hong Liu |
+| 4 | 134 | static | `images/lepanthes_rupestris.jpeg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/04_lepanthes_rupestris.jpeg` | *Lepanthes rupestris* con inflorescencias seca y activa. Foto: Raymond L. Tremblay |
+| 5 | 157 | static | `images/Pk_modulo.jpeg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/05_Pk_modulo.jpeg` | *Prosthechea karwinskii*. Foto: Mariana Hernández-Apolinar |
+| 6 | 170 | static | `images/Ci_modulo.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/06_Ci_modulo.png` | *Cypripedium irapeanum*. Foto: Claudia C. Gutiérrez-Paredes |
+| 7 | 183 | static | `images/V_planifolia_monopo.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/07_V_planifolia_monopo.png` | *Vanilla planifolia*. Foto: Mark Blackman |
+| 8 | 189 | static | `images/Ls_simpodio.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/08_Ls_simpodio.jpg` | *Laelia speciosa*. Foto: Leonel López-Toledo |
+| 9 | 218 | static | `images/Figura_4.10.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/09_Figura_4.10.jpg` | Técnica de rapel usada para el muestreo de orquídeas rupícolas: *Dendrobium*. Foto: Hong Liu, 2020. |
+| 10 | 222 | static | `images/Ascenso_Pk.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/10_Ascenso_Pk.jpg` | Muestreo de orquídeas epífitas con ascenso de una sola cuerda: *Prosthechea karwinskii*. Foto: Alonso Argüero |
+| 11 | 235 | static | `images/Cattling_y_Johannson.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/11_Cattling_y_Johannson.png` | Zonificación de árboles hospedero, basada en los modelos Catling (1986) y Johansson (1974). Dibujo de A. Emeterio-Lara |
+| 12 | 297 | static | `images/Ls_xyz.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/12_Ls_xyz.png` | Distribución tridimensional de *Laelia speciosa* sobre *Quercus deserticola*, basada en @hernandez1992dinamica. Figura d |
+| 13 | 303 | static | `images/tree_dist.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/13_tree_dist.png` | Distribución espacial de los árboles hospedero de *Laelia speciosa*. Los círculos dentro del área de muestreo representa |
+| 14 | 314 | static | `images/Triangulation_Method.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/14_Triangulation_Method.jpg` | Método de triangulación para el muestreo de orquídeas terrestres. Se ilustra la forma de determinar la posición ($P_{x}$ |
+| 15 | 344 | static | `images/C_irap_plantula.jpeg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/15_C_irap_plantula.jpeg` | Plántula de *Cypripedium irapeanum*. Foto: Claudia Gutiérrez-Paredes |
+| 16 | 350 | static | `images/Lepanthes_woodburyana.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/16_Lepanthes_woodburyana.jpg` | *Lepanthes woodburyana*. Foto: Edwin Guevara |
+| 17 | 378 | static | `images/Cypripedium_acaule.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/17_Cypripedium_acaule.jpg` | Uso de etiquetas de aluminio en marcaje de *Cypripedium acaule*. Foto: Tremblay |
+| 18 | 382 | static | `images/Laelia_cincho.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/18_Laelia_cincho.png` | Uso de etiquetas de aluminio en marcaje con cinchos de plástico en *Laelia autumnalis*. Foto por Aucencia Emeterio-Lara |
+| 19 | 416 | static | `images/alambrelaelia.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/19_alambrelaelia.jpg` | Marcaje de *Laelia speciosa* abrazando el tronco con alambre plastificado y etiquetas de *dymo*. Foto: Mariana Hernández |
+| 20 | 422 | static | `images/Lep_eltoroensis.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/20_Lep_eltoroensis.png` | Los individuos de *Lepanthes eltoroensis* fueron identificados con una etiqueta de plástico clavada al tronco del árbol; |
+| 21 | 428 | static | `images/Cirap_marcaje.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/21_Cirap_marcaje.png` | Marcaje de *Cypripedium irapeanum* con cinta de *dymo*. Foto: Hernández-Apolinar |
+| 22 | 432 | static | `images/Cyp_acaule_flag.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/22_Cyp_acaule_flag.jpg` | Marcaje de *Cypripedium acaule* con banderitas. Foto: Tremblay |
 
-### 13. LTRE
+### 05-Fecundidad
 
-Archivo fuente: `114-LTRE.qmd` — 1 figura(s)
+Archivo fuente: `106-calcular_fecundidad.qmd` — 5 figura(s)
 
-| # | Línea | Sección | Imagen | Caption / autor |
-|---|------:|---------|--------|----------------|
-| 1 | 163 | Matrices de proyecciones y ciclo de vida por espec | `Imagen1.jpg` |  |
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 113 | static | `images/Diagrama_fecundidad.png` | `figuras_editor/05-Fecundidad/01_Diagrama_fecundidad.png` | Diagrama del proceso de fecundidad en orquídeas, mostrando la cadena de filtros sucesivos: producción floral, polinizaci |
+| 2 | 134 | static | `images/Cant_Hojas_Prob_Fr_Brassavola.jpg` | `figuras_editor/05-Fecundidad/02_Cant_Hojas_Prob_Fr_Brassavola.jpg` | Relación entre la cantidad de hojas y la probabilidad de floración en *Brassavola cucullata* en las islas Saba y San Eus |
+| 3 | 159 | render_dual | `images/fec-life-cycle-1.png` | `figuras_editor/05-Fecundidad/03_fec-life-cycle-1.png` |  |
+| 4 | 193 | render_dual | `images/fec-matA-pl.png` | `figuras_editor/05-Fecundidad/04_fec-matA-pl.png` |  |
+| 5 | 219 | render_dual | `images/fec-matA-pl2.png` | `figuras_editor/05-Fecundidad/05_fec-matA-pl2.png` |  |
 
-### 14. Métodos de simulaciones
+### 06-matU_matF_matC
 
-Archivo fuente: `115-Metodos_de_simulaciones.qmd` — 3 figura(s)
+Archivo fuente: `107-matU_matF_matC.qmd` — 3 figura(s)
 
-| # | Línea | Sección | Imagen | Caption / autor |
-|---|------:|---------|--------|----------------|
-| 1 | 138 | Entrada de datos | `Serapias_cordigera_5_Giuseppe_Pellegrino.jpeg` | *Serapias cordigera*. Foto: Guiseppe Pelligrino |
-| 2 | 247 | Cual es la distribución de la cantidad de individu | `Serapias_cordigera_7_Giuseppe_Pellegrino.jpg` | *Serapias cordigera*. Foto: Guiseppe Pelligrino |
-| 3 | 454 | Estocasticidad temporal | `Serapias_cordigera_3_Giuseppe_Pellegrino.jpeg` | *Serapias cordigera*. Foto: Guiseppe Pelligrino |
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 63 | static | `images/Matrices_A_U_F_C.jpg` | `figuras_editor/06-matU_matF_matC/01_Matrices_A_U_F_C.jpg` | Relación entre matrices; Diseño: Samuel Gascoigne |
+| 2 | 86 | render_dual | `images/matU_matA1.png` | `figuras_editor/06-matU_matF_matC/02_matU_matA1.png` |  |
+| 3 | 117 | render_dual | `images/matU_matA2.png` | `figuras_editor/06-matU_matF_matC/03_matU_matA2.png` |  |
 
-### 15. Historia breve
+### 07-Bayesian_PPM
+
+Archivo fuente: `108-Bayesian_PPM.qmd` — 6 figura(s)
+
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 171 | render_dual | `images/bayes2.png` | `figuras_editor/07-Bayesian_PPM/01_bayes2.png` |  |
+| 2 | 250 | static | `images/Lepanthes_eltoroensis_Edwin_Guevara.jpg` | `figuras_editor/07-Bayesian_PPM/02_Lepanthes_eltoroensis_Edwin_Guevara.jpg` | *Lepanthes eltoroensis*. Foto: Edwin Guevara |
+| 3 | 252 | static | `images/Lepanthes_eltoroensis_Phorophyte_Edwin_Guevara.jpg` | `figuras_editor/07-Bayesian_PPM/03_Lepanthes_eltoroensis_Phorophyte_Edwin_Guevara.jpg` | *Lepanthes eltoroensis*. Foto: Edwin Guevara |
+| 4 | 387 | render_dual | `images/bayes11.png` | `figuras_editor/07-Bayesian_PPM/04_bayes11.png` |  |
+| 5 | 549 | dynamic | `chunk 'bayes16'` | `figuras_editor/07-Bayesian_PPM/05_bayes16-1.png` |  |
+| 6 | 640 | dynamic | `chunk 'bayes19'` | `figuras_editor/07-Bayesian_PPM/06_bayes19-1.png` |  |
+
+### 08-Crecimiento_poblacional
+
+Archivo fuente: `109-Crecimiento_poblacional.qmd` — 4 figura(s)
+
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 76 | render_dual | `images/cre_pop_1_Laelia_p1.png` | `figuras_editor/08-Crecimiento_poblacional/01_cre_pop_1_Laelia_p1.png` |  |
+| 2 | 93 | render_dual | `images/cre_pop_1b_Laelia_p2.png` | `figuras_editor/08-Crecimiento_poblacional/02_cre_pop_1b_Laelia_p2.png` |  |
+| 3 | 161 | dynamic | `chunk 'cre-pop-projection-2'` | `figuras_editor/08-Crecimiento_poblacional/03_cre-pop-projection-2-1.png` |  |
+| 4 | 180 | dynamic | `chunk 'cre-pop-projection-3'` | `figuras_editor/08-Crecimiento_poblacional/04_cre-pop-projection-3-1.png` |  |
+
+### 09-Propiedades
+
+Archivo fuente: `110-Propriedades.qmd` — 6 figura(s)
+
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 191 | render_dual | `images/Indice5_Lr1_No_erg.png` | `figuras_editor/09-Propiedades/01_Indice5_Lr1_No_erg.png` |  |
+| 2 | 282 | render_dual | `images/Indice_Lr1_Irr.png` | `figuras_editor/09-Propiedades/02_Indice_Lr1_Irr.png` |  |
+| 3 | 362 | dynamic | `chunk 'Indice10'` | `figuras_editor/09-Propiedades/03_Indice10-1.png` |  |
+| 4 | 400 | static | `images/Spathoglottis_plicata_Tremblay.jpeg` | `figuras_editor/09-Propiedades/04_Spathoglottis_plicata_Tremblay.jpeg` | *Spathoglottis plicata*. Foto: Tremblay |
+| 5 | 465 | dynamic | `chunk 'Indice13'` | `figuras_editor/09-Propiedades/05_Indice13-1.png` |  |
+| 6 | 632 | dynamic | `chunk 'indice16'` | `figuras_editor/09-Propiedades/06_indice16-1.png` |  |
+
+### 10-Elasticidad
+
+Archivo fuente: `111-Elasticidad.qmd` — 6 figura(s)
+
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 241 | static | `images/Lepanthes_eltoroensis_Tremblay.jpeg` | `figuras_editor/10-Elasticidad/01_Lepanthes_eltoroensis_Tremblay.jpeg` | *Lepanthes eltoroensis*. Foto: Tremblay |
+| 2 | 277 | static | `images/Lepanthes_caritensis_Edwin_Guevara.jpg` | `figuras_editor/10-Elasticidad/02_Lepanthes_caritensis_Edwin_Guevara.jpg` | *Lepanthes caritensis*. Foto: Edwin Guevara |
+| 3 | 281 | static | `images/Lepanthes_caritensis_Phorophyte.jpg` | `figuras_editor/10-Elasticidad/03_Lepanthes_caritensis_Phorophyte.jpg` | *Lepanthes caritensis*. Foto: Edwin Guevara |
+| 4 | 286 | dynamic | `chunk 'Elas7'` | `figuras_editor/10-Elasticidad/04_Elas7-1.png` |  |
+| 5 | 320 | dynamic | `chunk 'Elas8'` | `figuras_editor/10-Elasticidad/05_Elas8-1.png` |  |
+| 6 | 364 | static | `images/Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg` | `figuras_editor/10-Elasticidad/06_Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg` | *Laelia speciosa*. Foto: Eduardo A. Pérez García |
+
+### 11-Dinamica_transitoria
+
+Archivo fuente: `112-Dinamica_de_Transiciones.qmd` — 9 figura(s)
+
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 139 | static | `images/Lepanthes_rupestris_Tremblay.jpeg` | `figuras_editor/11-Dinamica_transitoria/01_Lepanthes_rupestris_Tremblay.jpeg` | *Lepanthes rupestris*. Foto: Tremblay |
+| 2 | 260 | dynamic | `chunk 'trans4'` | `figuras_editor/11-Dinamica_transitoria/02_trans4-1.png` |  |
+| 3 | 326 | dynamic | `chunk 'trans6'` | `figuras_editor/11-Dinamica_transitoria/03_trans6-1.png` |  |
+| 4 | 383 | dynamic | `chunk 'trans8'` | `figuras_editor/11-Dinamica_transitoria/04_trans8-1.png` |  |
+| 5 | 433 | dynamic | `chunk 'trans10'` | `figuras_editor/11-Dinamica_transitoria/05_trans10-1.png` |  |
+| 6 | 593 | dynamic | `chunk 'trans14'` | `figuras_editor/11-Dinamica_transitoria/06_trans14-1.png` |  |
+| 7 | 626 | dynamic | `chunk 'trans15'` | `figuras_editor/11-Dinamica_transitoria/07_trans15-1.png` |  |
+| 8 | 824 | dynamic | `chunk 'trans22'` | `figuras_editor/11-Dinamica_transitoria/08_trans22-1.png` |  |
+| 9 | 882 | dynamic | `chunk 'trans23'` | `figuras_editor/11-Dinamica_transitoria/09_trans23-1.png` |  |
+
+### 12-Funciones_de_Transferencia
+
+Archivo fuente: `113-Funciones_de_Transferencia.qmd` — 12 figura(s)
+
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 305 | dynamic | `chunk 'tf-nLr0-init'` | `figuras_editor/12-Funciones_de_Transferencia/01_tf-nLr0-init-1.png` |  |
+| 2 | 349 | dynamic | `chunk 'tf-tf5-calc'` | `figuras_editor/12-Funciones_de_Transferencia/02_tf-tf5-calc-1.png` |  |
+| 3 | 385 | dynamic | `chunk 'tf-tf9-calc'` | `figuras_editor/12-Funciones_de_Transferencia/03_tf-tf9-calc-1.png` |  |
+| 4 | 422 | dynamic | `chunk 'tf-tf8-calc'` | `figuras_editor/12-Funciones_de_Transferencia/04_tf-tf8-calc-1.png` |  |
+| 5 | 476 | dynamic | `chunk 'transF3'` | `figuras_editor/12-Funciones_de_Transferencia/05_transF3-1.png` |  |
+| 6 | 543 | dynamic | `chunk 'tf-n0-init'` | `figuras_editor/12-Funciones_de_Transferencia/06_tf-n0-init-1.png` |  |
+| 7 | 573 | dynamic | `chunk 'tf-par-mfrow'` | `figuras_editor/12-Funciones_de_Transferencia/07_tf-par-mfrow-1.png` |  |
+| 8 | 601 | dynamic | `chunk 'tf-etype-matrix'` | `figuras_editor/12-Funciones_de_Transferencia/08_tf-etype-matrix-1.png` |  |
+| 9 | 619 | dynamic | `chunk 'tf-tfmatL-init'` | `figuras_editor/12-Funciones_de_Transferencia/09_tf-tfmatL-init-1.png` |  |
+| 10 | 634 | dynamic | `chunk 'transF5'` | `figuras_editor/12-Funciones_de_Transferencia/10_transF5-1.png` |  |
+| 11 | 898 | dynamic | `chunk 'tf-df-combine'` | `[FALTA — correr quarto render]` |  |
+| 12 | 1010 | dynamic | `chunk 'tf-label-substitute'` | `figuras_editor/12-Funciones_de_Transferencia/12_tf-label-substitute-1.png` |  |
+
+### 13-LTRE
+
+Archivo fuente: `114-LTRE.qmd` — 5 figura(s)
+
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 173 | static | `images/Imagen1.jpg` | `figuras_editor/13-LTRE/01_Imagen1.jpg` | Cuadro 1. Matrices de proyección poblacional de *Oncidium brachyandrum* en dos hospederos (*Quercus martinezii* y *Q. ru |
+| 2 | 533 | dynamic | `chunk 'LTRE15'` | `figuras_editor/13-LTRE/02_LTRE15-1.png` |  |
+| 3 | 568 | dynamic | `chunk 'LTRE16'` | `figuras_editor/13-LTRE/03_LTRE16-1.png` |  |
+| 4 | 726 | dynamic | `chunk 'LRE25'` | `figuras_editor/13-LTRE/04_LRE25-1.png` |  |
+| 5 | 747 | dynamic | `chunk 'LRE26'` | `figuras_editor/13-LTRE/05_LRE26-1.png` |  |
+
+### 14-Metodos_de_simulaciones
+
+Archivo fuente: `115-Metodos_de_simulaciones.qmd` — 9 figura(s)
+
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 147 | static | `images/Serapias_cordigera_5_Giuseppe_Pellegrino.jpeg` | `figuras_editor/14-Metodos_de_simulaciones/01_Serapias_cordigera_5_Giuseppe_Pellegrino.jpeg` | *Serapias cordigera*. Foto: Guiseppe Pelligrino |
+| 2 | 256 | static | `images/Serapias_cordigera_7_Giuseppe_Pellegrino.jpg` | `figuras_editor/14-Metodos_de_simulaciones/02_Serapias_cordigera_7_Giuseppe_Pellegrino.jpg` | *Serapias cordigera*. Foto: Guiseppe Pelligrino |
+| 3 | 259 | dynamic | `chunk 'sim4'` | `figuras_editor/14-Metodos_de_simulaciones/03_sim4-1.png` |  |
+| 4 | 278 | dynamic | `chunk 'sim5'` | `figuras_editor/14-Metodos_de_simulaciones/04_sim5-1.png` |  |
+| 5 | 319 | dynamic | `chunk 'sim7'` | `figuras_editor/14-Metodos_de_simulaciones/05_sim7-1.png` |  |
+| 6 | 445 | dynamic | `chunk 'sim-diverging-colors'` | `figuras_editor/14-Metodos_de_simulaciones/06_sim-diverging-colors-1.png` |  |
+| 7 | 463 | static | `images/Serapias_cordigera_3_Giuseppe_Pellegrino.jpeg` | `figuras_editor/14-Metodos_de_simulaciones/07_Serapias_cordigera_3_Giuseppe_Pellegrino.jpeg` | *Serapias cordigera*. Foto: Guiseppe Pelligrino |
+| 8 | 693 | dynamic | `chunk 'sim18'` | `figuras_editor/14-Metodos_de_simulaciones/08_sim18-1.png` |  |
+| 9 | 890 | ggsave | `mi_gragico.tiff` | `figuras_editor/14-Metodos_de_simulaciones/09_mi_gragico.tiff` |  |
+
+### 15-Historia_breve
 
 Archivo fuente: `117_Historia_breve.qmd` — 1 figura(s)
 
-| # | Línea | Sección | Imagen | Caption / autor |
-|---|------:|---------|--------|----------------|
-| 1 | 94 | Publicaciones sin MPP | `Vanhecke_figure.png` | *Dactylorhiza praetermissa*; de la publicación |
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 103 | static | `images/Vanhecke_figure.png` | `figuras_editor/15-Historia_breve/01_Vanhecke_figure.png` | *Dactylorhiza praetermissa*; de la publicación |
 
-### 16. Carl Olaf Tamm
+### 16-Carl_Olaf_Tamm
 
-Archivo fuente: `118-Carl_Olaf_Tamm.qmd` — 2 figura(s)
+Archivo fuente: `118-Carl_Olaf_Tamm.qmd` — 3 figura(s)
 
-| # | Línea | Sección | Imagen | Caption / autor |
-|---|------:|---------|--------|----------------|
-| 1 | 119 | El padre de la ecología de poblaciones en orquídea | `Dactylorhiza_sambucina_James_D._Ackerman.jpg` | *Dactylorhiza sambucina*. Foto: James D. Ackerman |
-| 2 | 158 | El padre de la ecología de poblaciones en orquídea | `Dactylorhiza_maculata_James_D._Ackerman.jpg` | *Dactylorhiza maculata con hormigas y spittle bugs*. Foto: James D. Ackerman |
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 129 | static | `images/Dactylorhiza_sambucina_James_D._Ackerman.jpg` | `figuras_editor/16-Carl_Olaf_Tamm/01_Dactylorhiza_sambucina_James_D._Ackerman.jpg` | *Dactylorhiza sambucina*. Foto: James D. Ackerman |
+| 2 | 168 | static | `images/Dactylorhiza_maculata_James_D._Ackerman.jpg` | `figuras_editor/16-Carl_Olaf_Tamm/02_Dactylorhiza_maculata_James_D._Ackerman.jpg` | *Dactylorhiza maculata con hormigas y spittle bugs*. Foto: James D. Ackerman |
+| 3 | 458 | dynamic | `chunk 'OCTamm_17'` | `figuras_editor/16-Carl_Olaf_Tamm/03_OCTamm_17-1.png` |  |
 
-### 19. Protocolo
+### 18-Rage
+
+Archivo fuente: `120-Rage_orquideas.qmd` — 9 figura(s)
+
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 213 | dynamic | `chunk 'Rage8'` | `figuras_editor/18-Rage/01_Rage8-1.png` |  |
+| 2 | 240 | dynamic | `chunk 'Rage9'` | `figuras_editor/18-Rage/02_Rage9-1.png` |  |
+| 3 | 331 | ggsave | `images/Duración_Epi_Ter.png` | `figuras_editor/18-Rage/03_Duración_Epi_Ter.png` |  |
+| 4 | 371 | dynamic | `chunk 'Rage13'` | `figuras_editor/18-Rage/04_Rage13-1.png` |  |
+| 5 | 606 | dynamic | `chunk 'Rage29'` | `figuras_editor/18-Rage/05_Rage29-1.png` |  |
+| 6 | 651 | dynamic | `chunk 'Rage31'` | `figuras_editor/18-Rage/06_Rage31-1.png` |  |
+| 7 | 670 | dynamic | `chunk 'Rage32'` | `figuras_editor/18-Rage/07_Rage32-1.png` |  |
+| 8 | 735 | dynamic | `chunk 'Rage35'` | `figuras_editor/18-Rage/08_Rage35-1.png` |  |
+| 9 | 845 | dynamic | `chunk 'Rage_compare_plot'` | `figuras_editor/18-Rage/09_Rage_compare_plot-1.png` |  |
+
+### 19-Protocolo
 
 Archivo fuente: `121-Traduccion_protocolo_informacion.qmd` — 4 figura(s)
 
-| # | Línea | Sección | Imagen | Caption / autor |
-|---|------:|---------|--------|----------------|
-| 1 | 66 | "A standard protocol to report discrete stage-stru | `Survey_paper.png` | FIGURA 1: Resultados de la encuesta a expertos en ecología de poblaciones que participaron (n = 60). Los participantes c |
-| 2 | 76 | "A standard protocol to report discrete stage-stru | `Database_paper.png` | FIGURA2: Tanto los artículos sobre MPP de plantas como de animales muestran patrones similares en cuanto a qué component |
-| 3 | 80 | "A standard protocol to report discrete stage-stru | `COMPADRE_MADRE.png` | FIGURA 3: En los artículos sobre MPP de plantas y animales, la mayoría de las publicaciones no contienen suficiente info |
-| 4 | 342 | hidden code to produce figures | `Matrices_A_U_F_C.jpg` | FIGURA 4: La descomposición de un MPP en sus submatrices permite aislar tasas vitales que de otro modo estarían enmascar |
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 76 | static | `images/Survey_paper.png` | `figuras_editor/19-Protocolo/01_Survey_paper.png` | FIGURA 1: Resultados de la encuesta a expertos en ecología de poblaciones que participaron (n = 60). Los participantes c |
+| 2 | 86 | static | `images/Database_paper.png` | `figuras_editor/19-Protocolo/02_Database_paper.png` | FIGURA2: Tanto los artículos sobre MPP de plantas como de animales muestran patrones similares en cuanto a qué component |
+| 3 | 90 | static | `images/COMPADRE_MADRE.png` | `figuras_editor/19-Protocolo/03_COMPADRE_MADRE.png` | FIGURA 3: En los artículos sobre MPP de plantas y animales, la mayoría de las publicaciones no contienen suficiente info |
+| 4 | 353 | static | `images/Matrices_A_U_F_C.jpg` | `figuras_editor/19-Protocolo/04_Matrices_A_U_F_C.jpg` | FIGURA 4: La descomposición de un MPP en sus submatrices permite aislar tasas vitales que de otro modo estarían enmascar |
 
-### 2. Ciclos de Vida
+### 20-Datos_sin_sentido
 
-Archivo fuente: `103-Ciclos_de_Vida.qmd` — 2 figura(s)
+Archivo fuente: `122-Impacto_de_Datos_sin_Sentido.qmd` — 11 figura(s)
 
-| # | Línea | Sección | Imagen | Caption / autor |
-|---|------:|---------|--------|----------------|
-| 1 | 309 | *Cypripedium parviflorum*, *Epipactis atrorubens*  | `Orchis_purpurea_1_Hans_Jacquemyn.jpg` | *Orchis purpurea*. Foto: Hans Jacquemyn |
-| 2 | 341 | *Cypripedium parviflorum*, *Epipactis atrorubens*  | `Orchis_purpurea_2_Hans_Jacquemyn.jpg` | *Orchis purpurea*. Foto: Hans Jacquemyn |
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 151 | render_dual | `images/sin_sentido_2_Sp1matA.png` | `figuras_editor/20-Datos_sin_sentido/01_sin_sentido_2_Sp1matA.png` |  |
+| 2 | 218 | static | `images/Erycina_crista-galli_Diana_Molina_Ozuma.jpg` | `figuras_editor/20-Datos_sin_sentido/02_Erycina_crista-galli_Diana_Molina_Ozuma.jpg` | *Erycina crista-galli*. Foto: Diana Molina Ozuma |
+| 3 | 300 | render_dual | `images/sin_sentido_6_Sp1matA_NT.png` | `figuras_editor/20-Datos_sin_sentido/03_sin_sentido_6_Sp1matA_NT.png` |  |
+| 4 | 367 | render_dual | `images/sin_sentido_8_Sp1matU_NS.png` | `figuras_editor/20-Datos_sin_sentido/04_sin_sentido_8_Sp1matU_NS.png` |  |
+| 5 | 420 | render_dual | `images/sin_sentido_9_SerapiaA.png` | `figuras_editor/20-Datos_sin_sentido/05_sin_sentido_9_SerapiaA.png` |  |
+| 6 | 459 | dynamic | `chunk 'sin_sentido_10'` | `figuras_editor/20-Datos_sin_sentido/06_sin_sentido_10-1.png` |  |
+| 7 | 528 | render_dual | `images/sin_sentido_11_Sp1matA_Fert2.png` | `figuras_editor/20-Datos_sin_sentido/07_sin_sentido_11_Sp1matA_Fert2.png` |  |
+| 8 | 507 | dynamic | `chunk 'sin_sentido_11'` | `figuras_editor/20-Datos_sin_sentido/08_sin_sentido_11-2.png` |  |
+| 9 | 631 | render_dual | `images/sin_sentido_15_Dirichlet.png` | `figuras_editor/20-Datos_sin_sentido/09_sin_sentido_15_Dirichlet.png` |  |
+| 10 | 672 | dynamic | `chunk 'sin_sentido_17'` | `figuras_editor/20-Datos_sin_sentido/10_sin_sentido_17-1.png` |  |
+| 11 | 732 | dynamic | `chunk 'sin_sentido_19'` | `figuras_editor/20-Datos_sin_sentido/11_sin_sentido_19-1.png` |  |
 
-### 20. Datos sin sentido
-
-Archivo fuente: `122-Impacto_de_Datos_sin_Sentido.qmd` — 1 figura(s)
-
-| # | Línea | Sección | Imagen | Caption / autor |
-|---|------:|---------|--------|----------------|
-| 1 | 211 | Un cambio pequeño en la mortalidad. | `Erycina_crista-galli_Diana_Molina_Ozuma.jpg` | *Erycina crista-galli*. Foto: Diana Molina Ozuma |
-
-### 3. Recopilación de datos en el campo
-
-Archivo fuente: `104-Recopilacion_datos_en_el_campo.qmd` — 21 figura(s)
-
-| # | Línea | Sección | Imagen | Caption / autor |
-|---|------:|---------|--------|----------------|
-| 1 | 102 | Apariencia e identificación visual preliminar | `Trichocentrum_undulatum_9_Hong_Liu.jpeg` | *Trichocentrum undulatum*. Foto: Hong Liu |
-| 2 | 106 | Apariencia e identificación visual preliminar | `Trichocentrum_undulatum_1_Hong_Liu.jpg` | *Trichocentrum undulatum*. Foto: Hong Liu |
-| 3 | 128 | Etapas o estados de desarrollo en orquídeas {#sec- | `lepanthes_rupestris.jpeg` | *Lepanthes rupestris* con inflorescencias seca y activa. Foto: Tremblay |
-| 4 | 149 | Ontogenia y estrategias de crecimiento | `Pk_modulo.jpeg` | *Prosthechea karwinskii*. Foto: Mariana Hernández-Apolinar |
-| 5 | 168 | Ontogenia y estrategias de crecimiento | `Ci_modulo.png` | *Cypripedium irapeanum*. Foto: Claudia C. Gutiérrez-Paredes |
-| 6 | 178 | Ontogenia y estrategias de crecimiento | `V_planifolia_monopo.png` | *Vanilla planifolia*. Foto: Mark Blackman |
-| 7 | 184 | Ontogenia y estrategias de crecimiento | `Ls_simpodio.jpg` | *Laelia speciosa*. Foto: Leonel López-Toledo |
-| 8 | 214 | Métodos y técnicas de muestreo | `Aucencia_ascenso.jpg` | Muestreo de orquídeas epífitas con ascenso de una sola cuerda: a) *Laelia autumnalis*. Foto: Aucencia Emeterio-Lara |
-| 9 | 218 | Métodos y técnicas de muestreo | `Ascenso_Pk.jpg` | Muestreo de orquídeas epífitas con ascenso de una sola cuerda: *Prosthechea karwinskii*. Foto: Alonso Argüero |
-| 10 | 231 | Zona de distribución de orquídeas en árboles | `Cattling_y_Johannson.png` | Zonificación de árboles hospedero, basada en los modelos Catling (1986) y Johansson (1974). Dibujo por A. Emeterio Lara |
-| 11 | 292 | Epifitas_zonas | `Ls_xyz.png` | Distribución tri-dimensional de las orquídeas en los árboles |
-| 12 | 298 | Epifitas_zonas | `tree_dist.png` | Distribución espacial de los forófitos y el tamaño de cubierta foliar en el área de muestreo |
-| 13 | 307 | Orquídeas terrestres | `Triangulation_Method.jpg` | Método de triangulación para muestreo terrestre: los P_x representan la posición de cada planta. Dos distancias son medi |
-| 14 | 339 | Identificación y etiquetado de individuos | `C_irap_plantula.jpeg` | Plántula de *Cypripedium irapeanum*. Foto: Claudia Gutiérrez-Paredes |
-| 15 | 345 | Identificación y etiquetado de individuos | `Lepanthes_woodburyana.jpg` | *Lepanthes woodburyana*. Foto: Edwin Guevara |
-| 16 | 379 | Material recomendado para marcar o etiquetar un in | `Cypripedium_acaule.jpg` | Uso de etiquetas de aluminio en marcaje de *Cypripedium acaule*. Foto: Tremblay |
-| 17 | 383 | Material recomendado para marcar o etiquetar un in | `Laelia_cincho.png` | Uso de etiquetas de aluminio en marcaje con cinchos de plástico en *Laelia autumnalis*. Foto por Aucencia Emeterio-Lara |
-| 18 | 417 | Colocación de la etiqueta | `alambrelaelia.jpg` | Marcaje de *Laelia speciosa* abrazando el tronco con alambre plastificado y etiquetas de *dymo*. Foto: Mariana Hernández |
-| 19 | 423 | Colocación de la etiqueta | `Lep_eltoroensis.png` | Los individuos de *Lepanthes eltoroensis* fueron identificados con una etiqueta de plástico clavada al tronco del árbol; |
-| 20 | 429 | Colocación de la etiqueta | `Cirap_marcaje.png` | Marcaje de *Cypripedium irapeanum* con cinta de *dymo*. Foto: Hernández-Apolinar |
-| 21 | 433 | Colocación de la etiqueta | `Cyp_acaule_flag.jpg` | Marcaje de *Cypripedium acaule* con banderitas. Foto: Tremblay |
-
-### 5. Fecundidad
-
-Archivo fuente: `106-calcular_fecundidad.qmd` — 2 figura(s)
-
-| # | Línea | Sección | Imagen | Caption / autor |
-|---|------:|---------|--------|----------------|
-| 1 | 103 | Reclutamiento | `Diagrama_fecundidad.png` |  |
-| 2 | 124 | Tiempo de inversión para alcanzar la fase reproduc | `Cant_Hojas_Prob_Fr_Brassavola.jpg` |  |
-
-### 6. matU, matF y matC
-
-Archivo fuente: `107-matU_matF_matC.qmd` — 1 figura(s)
-
-| # | Línea | Sección | Imagen | Caption / autor |
-|---|------:|---------|--------|----------------|
-| 1 | 53 | Tres tipos de matrices | `Matrices_A_U_F_C.jpg` | Relación entre matrices; Diseño: Samuel Gascoigne |
-
-### 7. Acercamiento bayesiano
-
-Archivo fuente: `108-Bayesian_PPM.qmd` — 2 figura(s)
-
-| # | Línea | Sección | Imagen | Caption / autor |
-|---|------:|---------|--------|----------------|
-| 1 | 240 | Obtención de la matriz de proyección | `Lepanthes_eltoroensis_Edwin_Guevara.jpg` | *Lepanthes eltoroensis*. Foto: Edwin Guevara |
-| 2 | 242 | Obtención de la matriz de proyección | `Lepanthes_eltoroensis_Phorophyte_Edwin_Guevara.jpg` | *Lepanthes eltoroensis*. Foto: Edwin Guevara |
-
-### 9. Propiedades
-
-Archivo fuente: `110-Propriedades.qmd` — 1 figura(s)
-
-| # | Línea | Sección | Imagen | Caption / autor |
-|---|------:|---------|--------|----------------|
-| 1 | 390 | Valor reproductivo | `Spathoglottis_plicata_Tremblay.jpeg` | *Spathoglottis plicata*. Foto: Tremblay |
-
-### A. Lista de especies
+### ApA-Lista_especies
 
 Archivo fuente: `Appendix_A_Species_List.qmd` — 2 figura(s)
 
-| # | Línea | Sección | Imagen | Caption / autor |
-|---|------:|---------|--------|----------------|
-| 1 | 153 | Lista completa de MPP en orquídeas {.unnumbered} | `Trichocentrum_undulatum_8_Hong_Liu.jpg` | *Trichocentrum undulatum*. Foto: Hong Liu |
-| 2 | 177 | Especies de orquídeas estudiadas sin MPP {.unnumbe | `Spiranthes_delitescens_Mitchel_Mcclaran.jpg` | *Spiranthes delitescens*. Foto: Mitchel McClaran |
+| # | Línea | Tipo | Origen en .qmd | Ruta en figuras_editor/ | Caption |
+|---|------:|------|----------------|-------------------------|---------|
+| 1 | 159 | static | `images/Trichocentrum_undulatum_8_Hong_Liu.jpg` | `figuras_editor/ApA-Lista_especies/01_Trichocentrum_undulatum_8_Hong_Liu.jpg` | *Trichocentrum undulatum*. Foto: Hong Liu |
+| 2 | 183 | static | `images/Spiranthes_delitescens_Mitchel_Mcclaran.jpg` | `figuras_editor/ApA-Lista_especies/02_Spiranthes_delitescens_Mitchel_Mcclaran.jpg` | *Spiranthes delitescens*. Foto: Mitchel McClaran |
 
-## Nota sobre alt-text
+## Archivos faltantes (corrige antes de la entrega)
 
-El alt-text (texto alternativo para accesibilidad y SEO) actualmente coincide con el caption en la mayoría de las figuras —es decir, el alt-text es el nombre de la especie y autor. Para mejorar accesibilidad para lectores con dispositivos asistivos, se recomienda añadir descripciones del contenido visual usando `fig-alt`. Ej.:
-
-```markdown
-![*Lepanthes caritensis*. Foto: Edwin Guevara](images/Lepanthes_caritensis.jpg){
-  fig-alt="Orquídea miniatura con flores rojas creciendo sobre la corteza de un tronco musgoso"
-}
-```
-
-Las captions actuales sirven como etiqueta visual pero no describen lo que se ve en la imagen, lo cual es lo que necesita un lector que use un lector de pantalla.
-
-## Archivos faltantes o problemáticos
-
-Los siguientes archivos son referenciados desde código R (`render_dual()`, `ggsave()`) y se generan dinámicamente al renderizar el libro. **No es necesario añadirlos manualmente al folder** porque el código los crea:
-
-- `CV10.png`, `CV7Prasophyllum_correctum.png`, `CV8_Ophrys.png`, `CV9_Os.png`, `CV_2.png`, `CV_3.png`, `CV_5.png`, `CV_6Telipogon_helleri.png` (Cap. 2 — diagramas de ciclo de vida)
-- `Lenght_survey.png`, `Terr_Epi_lambda.png` (Cap. 18 — comentados con `#ggsave()`, no se generan)
+- `12-Funciones_de_Transferencia` línea 898: chunk `tf-df-combine` declarado pero sin PNG en `docs/`.

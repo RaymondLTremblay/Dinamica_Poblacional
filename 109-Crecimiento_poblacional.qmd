@@ -23,7 +23,7 @@ A través de ejemplos prácticos, se explora cómo cambios en las tasas vitales 
 
 #### Librerías de R requeridas para el siguiente módulo
 
-```{r, message=FALSE, warning=FALSE}
+```{r cre-pop-setup, message=FALSE, warning=FALSE}
 #| error: true
 
 library(popbio)
@@ -31,6 +31,7 @@ library(readr)
 library(Rage)
 library(tidyverse)
 library(flextable)
+source("R/figuras_helpers.R")  # plc_save(), grviz_save(), save_plot_png()
 
 ```
 
@@ -56,7 +57,7 @@ Comenzamos por ingresar dos matrices de transición, una para cada año de monit
 
 Ingresa la matriz de transición o genérala desde el archivo que incorpora la transición de los individuos de un año (o un periodo de tiempo) a otro ("stage-fate dataframe"; vea el capítulo "Calcular transiciones para la matriz de Lefkovitch" y "Método bayesiano de calcular las transiciones y fecundidades"). En nuestras matrices de transición, las clases de estado se basan en el peso total de los pseudobulbos que conforman la planta. Los "adultos" corresponden a individuos que pueden reproducirse sexualmente.
 
-```{r, cre_pop_1, warning=FALSE, message=FALSE}
+```{r cre_pop_1, warning=FALSE, message=FALSE}
 #| error: true
 
 #Ingresa la matriz de transición o generala desde el archivo que incorpora la transición de los individuos de un año (o un periodo de tiempo) a otro ("stage-fate dataframe"; ver el capítulo "Cálculo de transiciones de la matriz de Lefkovitch" y "Método bayesiano para el cálculo de transiciones y fecundidades"). En nuestras matrices de transición, las clases de estado se basan en el peso total de los pseudobulbos que conforman la planta. Los “adultos” corresponden a individuos que pueden reproducirse sexualmente.
@@ -72,13 +73,13 @@ mat1.1 <- matrix (c(0.43, 0.00, 1.03,  0.96,
           nrow = 4, ncol=4, byrow = TRUE, 
           dimnames = list(estadios, estadios))
 
-plot_life_cycle(mat1.1, stages = estadios, fontsize = 10)
+plc_save(mat1.1, stages = estadios, fontsize = 10, png = "images/cre_pop_1_Laelia_p1.png")
 
 ```
 
 Segunda matriz
 
-```{r, cre_pop_1b, warning=FALSE, message=FALSE}
+```{r cre_pop_1b, warning=FALSE, message=FALSE}
 #| error: true
 
 #Matriz de la poblacion 1, año 2
@@ -89,7 +90,7 @@ mat1.2 <- matrix (c(0.43, 0.00,  0.85,  3.38,
           nrow = 4, ncol=4, byrow = TRUE, 
           dimnames = list(estadios, estadios))
 
-plot_life_cycle(mat1.2, stages = estadios, fontsize = 10)
+plc_save(mat1.2, stages = estadios, fontsize = 10, png = "images/cre_pop_1b_Laelia_p2.png")
 
 ```
 
@@ -101,7 +102,7 @@ Calcular el $\lambda$ de la población para los años 1 y 2, respectivamente usa
 
 En el primer año se observa que la población tiene un valor de $\lambda = 1.108$, lo que indica que la población crecería a largo plazo aproximadamente un 11%. En el segundo año, la población también crece (8%) al tener $\lambda$ un valor de 1.084; aunque al ser menor al del primer año, se indica que la tasa de crecimiento poblacional disminuyó de un año a otro.
 
-```{r, cre_pop_2}
+```{r cre_pop_2}
 #| error: true
 
 options(digits = 5) # Ajusta el número de decimales a mostrar
@@ -145,7 +146,7 @@ A partir de una población inicial de 10 individuos en cada estadio (25% del tot
 
 ## Proyección de la población 1, año 1
 
-```{r}
+```{r cre-pop-projection-1}
 #| error: true
 
 pop_1 <- pop.projection(mat1.1, n = c(10, 10, 10, 10), iterations = 7)
@@ -157,7 +158,7 @@ pop_1
 
 El crecimiento poblacional proyectado por año se puede visualizar, usando la función **plot** en el paquete `popbio`. En este caso, se observa que la población crece de forma exponencial, lo que es consistente con el valor de $\lambda$ calculado anteriormente. Este mismo código puede ser usado para responder las siguientes preguntas: ¿Qué pasa si cambian el número de individuos en cada estadio inicial? ¿Qué pasa si cambian la cantidad de iteraciones/time a un número grande? Para esto, se tiene que modificar **n** y el número 7, que representa las iteraciones.
 
-```{r}
+```{r cre-pop-projection-2}
 #| error: true
 n = c(10, 10, 10, 10) # Definir el número de individuos en cada estadio inicial
 cambio = pop.projection(mat1.1, n, 7)
@@ -176,7 +177,7 @@ plot(
 
 La proporción esperada de individuos en cada estadio por año proyectado se puede gráficar usando la función `stage.vector.plot()` en el paquete `popbio`. En este caso, se ve el cambio proporcional de cada estadio a lo largo de 6 años que la población proyectada es dominada por plántulas y juveniles, lo que es consistente con los valores de **cambio\$pop.size** calculados anteriormente.
 
-```{r}
+```{r cre-pop-projection-3}
 #| error: true
 
 n = c(10, 10, 10, 10) # Definir el número de individuos en cada estadio inicial
@@ -191,7 +192,7 @@ Nuestra segunda población de *Laelia speciosa* se establece en un hábitat simi
 
 ## Proyección de la población 2, año 1
 
-```{r, cre_pop_3}
+```{r cre_pop_3}
 #| error: true
 
 #Matriz de la población 2, año 1
@@ -240,7 +241,7 @@ Usando la función `boot.transitions()` del paquete `popbio`, se pueden calcular
 
 - sort: un vector con los nombres de los estadios en el orden en que se encuentran en la matriz de transición.
 
-```{r, cre_pop_4}
+```{r cre_pop_4}
 #| error: true
 
 #Intervalos de confianza (IC) de λ para la población 1, año 1
@@ -265,7 +266,7 @@ ic1
 
 ### Simulación de las transiciones de la población 1, año 2
 
-```{r, cre_pop_4b}
+```{r cre_pop_4b}
 #| error: true
 
 laelia2 <- read.table("data/laelia2.txt", header = TRUE)
@@ -289,7 +290,7 @@ ic2
 
 Note que para la población en el primer año el intervalo de confianza de $\lambda$ es de 1.00 a 1.21, lo que indica que el mejor estimado de la tasa de crecimiento poblacional esperada está entre 0% y 21%. En el segundo año, el intervalo de confianza es de 0.97 a 1.19, lo que indica que la tasa de crecimiento poblacional pudiese ser entre una reducción de ±3% a aumento de 19%.
 
-```{r}
+```{r cre-pop-confidence-table}
 #| error: true
 bind_rows(ic1, ic2) %>%
   mutate(year = c("año 1", "año 2")) %>%
@@ -331,7 +332,7 @@ El componente $\frac{\tau^2}{\bar\lambda_1^2}$ es un aproximado de la variación
 
 En lo anterior, una vez más, se asume que las condiciones bajo las cuales se construyeron las matrices de transición son constantes en el tiempo. Por lo tanto, $λ_e$ no debe ser interpretado literalmente, ni tampoco como una herramienta predictiva. En adición los valores de IC se restan y se suma al valor de $\lambda$ promedio obtenido para tener el rango de 95% de su valor.
 
-```{r, cre_pop_5}
+```{r cre_pop_5}
 #| error: true
 
 matrices <- list(mat1.1, mat1.2) # Crear una lista de matrices de las poblaciones 1 de los 2 periodos de estudio
@@ -342,7 +343,7 @@ estocástico <- stoch.growth.rate(matrices, maxt = 50000, verbose = FALSE) # Sel
 
 Se transforma tasa de base log y se obtiene $λ_e$ por dos métodos (Tuljapukar y simulación) y los IC por simulación
 
-```{r, cre_pop_5b}
+```{r cre_pop_5b}
 #| error: true
 
 tuljapukar <- exp(estocástico$approx)
@@ -358,7 +359,7 @@ ic.2 <- exp(estocástico$sim.CI[2])
 #ic.2 # El intervalo de confianza de λs por simulación superior
 ```
 
-```{r}
+```{r cre-pop-tul-na}
 #| error: true
 
 Tul_NA=NA
@@ -380,7 +381,7 @@ También se puede explorar el efecto de distintos factores que afectan la dinám
 
 En nuestro caso, sabemos que es poco frecuente el reclutamiento episódico observado en el segundo muestreo de la población 1, pero también la mortalidad y regresión de adultos observado en ese muestreo es poco frecuente. Por lo tanto, establecimos que la probabilidad de ocurrencia de la matriz 1 (del año 1-año 2) fuera de 0.8, mientras que la probabilidad de ocurrencia de la matriz 2 (del año 2 a año 3) fuera 0.2. De esta forma uno puede simular el efecto de buenos y malos años en la dinámica poblacional, basado en el conocimiento de patrones de variación ambiental que afecten la dinámica de poblaciones. Vemos que $λ_e$ no cambia mucho en el ejercicio anterior.
 
-```{r, cre_pop_6}
+```{r cre_pop_6}
 #| error: true
 
 estocástico.desigual.9 <- stoch.growth.rate(
@@ -416,7 +417,7 @@ tribble(~Método, ~λ, ~IC_2.5, ~IC_97.5,
 
 A continuación, evaluamos cómo se ve afectada $λ_e$ al disminuir o aumentar la probabilidad de que ocurran las diferentes matrices. En nuestro ejemplo aumentamos a 0.8 la probabilidad de ocurrencia de la matriz 2 (la que represente reclutamiento episódico y mortalidad/regresión de adultos), y observamos que $λ_e$ decrece. Este método es útil porque permite explorar cómo la variabilidad en las condiciones afecta la dinámica poblacional dentro de un escenario representativo de la estructura de la diversidad de poblaciones. Por ejemplo considera que originalmente la especie se encontraba en un hábitat continuo, pero que debido a la deforestación, la población se ha fragmentado y ahora se encuentra en hábitats con condiciones subóptimas, y que dominan ahora estas poblaciones fragmentadas versus pocas poblaciones en un hábitat de mejor calidad.
 
-```{r, cre_pop_7}
+```{r cre_pop_7}
 #| error: true
 
 estocástico.desigual.2 <- stoch.growth.rate(

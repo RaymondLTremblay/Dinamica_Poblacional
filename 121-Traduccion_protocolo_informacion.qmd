@@ -11,11 +11,12 @@ twitter-card:
 
 #### Librerías de R requeridas para el siguiente módulo
 
-```{r}
+```{r proto-setup}
 #| error: true
 library(Rage)
 library(DiagrammeR)
 library(tibble)
+source("R/figuras_helpers.R")  # plc_save(), grviz_save(), save_plot_png()
 ```
 
 ## "A standard protocol to report discrete stage-structured demographic information"
@@ -164,7 +165,7 @@ edges <- paste0("'", graph$from, "'", " -> ", "'", graph$to, "'",
   "\"]\n",
   collapse = ""
 )
-grViz(
+grviz_save(
   paste(
     "
 digraph {
@@ -180,8 +181,9 @@ digraph {
     "labelloc=\"t\";
   label=\"", title, "\"
 }"
-  )
-) 
+  ),
+  png = "images/Proto1_diagrama_ciclo.png"
+)
 
 ```
 
@@ -290,7 +292,7 @@ knitr::kable(Matriz, escape = FALSE)
 
 (H) Vector de la población (Mayo 2021)
 
-```{r, eval=TRUE, echo=FALSE}
+```{r proto-vector-tabla, eval=TRUE, echo=FALSE}
 #| error: true
 Vector=tribble(~"Etapa", ~"Cantidad", ~"Intervalo de Confianza de 95%*",
                "1", "1350", "1150-1550",

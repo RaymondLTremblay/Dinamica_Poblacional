@@ -35,9 +35,10 @@ library(ggplot2)
 library(dplyr)
 library(scales)
 library(Rage)
+source("R/figuras_helpers.R")  # plc_save(), grviz_save(), save_plot_png()
 ```
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r prop-theme, echo=FALSE, message=FALSE, warning=FALSE}
 #| error: true
 rlt_theme <- theme(
   axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
@@ -77,7 +78,7 @@ rlt_style_colour <- function() {
 }
 ```
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r prop-pdf-fallback, echo=FALSE, message=FALSE, warning=FALSE}
 #| error: true
 # Usar un dispositivo UTF-8 al construir el PDF (sin efecto en HTML)
 if (!knitr::is_html_output()) {
@@ -187,7 +188,7 @@ Lr1_No_erg <- matrix(c(0.4324, 0.,      0.,     0.146,
                0.,      0.0034, 0.7954,0.2300,
                0.,      0.0890, 0.1841,0.7510), byrow=TRUE,ncol=4)
 
-plot_life_cycle(Lr1_No_erg, stages = estadios, fontsize = 8)
+plc_save(Lr1_No_erg, stages = estadios, fontsize = 8, png = "images/Indice5_Lr1_No_erg.png")
 
 isErgodic(Lr1_No_erg, digits = 4, return.eigvec = FALSE)
 ```
@@ -271,14 +272,14 @@ Esta ausencia de conexión provoca dos problemas:
 - Un ciclo de vida incompleto, como se observa en la imagen.
 - Una población que no podrá alcanzar una estructura estable ni una tasa de crecimiento constante a largo plazo.
 
-```{r}
+```{r prop-matriz-Lr1-Irr}
 #| error: true
 Lr1_Irr <- matrix(c(0.4324,  0.,       0.0,     0,
                     0.3784,  0.8459,   0,       0,
                     0.,      0.0034,   0.7954,  0.2300,
                     0,       0.0890,   0.1841,  0.7510), byrow=TRUE,ncol=4)
 
-plot_life_cycle(Lr1_Irr, stages = estadios, fontsize = 8)
+plc_save(Lr1_Irr, stages = estadios, fontsize = 8, png = "images/Indice_Lr1_Irr.png")
 
 isIrreducible(Lr1_Irr)
 ```
@@ -314,7 +315,7 @@ Por eso `popdemo` ofrece tanto `isIrreducible()` como `isPrimitive()`: los model
 **Verifica estos cinco supuestos antes de calcular λ, sensibilidades o elasticidades.** Si la matriz falla alguno, los análisis posteriores pueden ser inválidos o difíciles de interpretar:
 
 | Propiedad | Función en R | Por qué importa |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | Cuadrada | `dim()` | Origen y destino deben ser comparables. |
 | No negativa | `IsPositive()` | No tiene sentido biológico tener entradas negativas. |
 | Irreducible | `popdemo::isIrreducible()` | Asegura que todas las etapas estén conectadas. |
@@ -567,7 +568,7 @@ La respuesta de la población ante cuatro índices de amortiguamiento es la sigu
 **Cuatro regímenes de amortiguamiento.**
 
 | ζ | Régimen | Comportamiento |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | $< 1$ | **Subamortiguado** | Sobrepasa el equilibrio y oscila; la amplitud decrece con el tiempo. |
 | $= 1$ | **Críticamente amortiguado** | Retorno más rápido posible sin oscilaciones. |
 | $> 1$ (moderado) | **Sobreamortiguado** | Retorno lento sin oscilaciones; la fuerza de amortiguamiento es alta. |
@@ -611,7 +612,7 @@ Por ejemplo, si se comienza con una población inicial de 8, 20, 27 y 34 individ
 Esto tiene implicaciones prácticas en conservación: si introduces una nueva población o una población en restauración, la composición inicial determina cuándo el modelo asintótico empieza a aplicar. Para acelerar la convergencia, conviene introducir individuos en proporciones cercanas a la estructura estable cuando sea factible.
 :::
 
-```{r, Inice15}
+```{r Inice15}
 #| error: true
 n0 <- c(8, 20, 27, 34) # la estructura de la población inicial
 
