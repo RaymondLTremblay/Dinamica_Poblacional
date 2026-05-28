@@ -26,7 +26,6 @@ Las simulaciones se construyen a partir de las transiciones demográficas introd
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r sim1, message=FALSE, warning=FALSE}
-#| error: true
 
 library(tidyverse)
 library(ggtext)
@@ -34,10 +33,10 @@ library(janitor)
 library(popbio)
 library(raretrans)
 library(ggpubr)
+library(flextable)
 ```
 
 ```{r sim-theme}
-#| error: true
 
 rlt_theme <- theme(
   axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
@@ -58,7 +57,7 @@ rlt_theme <- theme(
     axis.line.y = element_line(colour = "black", linewidth = 1)
   )
 
-diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
+diverging <- c("#009392", "#CF597E", "#E9E29C", "#39B185", "#EEB479", "#9CCB86")
 
 # --- 2. Combinarlos en un objeto de tipo lista ---
 # Esta lista se puede añadir al gráfico con un solo '+'
@@ -75,7 +74,6 @@ rlt_style_colour <- function() {
     scale_colour_manual(values = diverging)
   )
 }
-
 ```
 
 ## Implementación de simulaciones poblacionales
@@ -144,85 +142,95 @@ En este caso vemos el efecto de la variación espacial en la probabilidad en los
 El primer paso es definir la diferentes matriz, una por cada periodo de tiempo. En el siguiente script se enseña como entrar los datos para múltiples matrices en un solo objeto. Nota que es una lista de matriz.
 
 ::: img-float
-![*Serapias cordigera*. Foto: Guiseppe Pelligrino](images/Serapias_cordigera_5_Giuseppe_Pellegrino.jpeg){style="float: right; margin: 10px;width: 50% ; "}
+![*Serapias cordigera*. Foto: Guiseppe Pelligrino](images/Serapias_cordigera_5_Giuseppe_Pellegrino.jpeg){#fig-serapias-cordigera-5-giuseppe-pellegrino style="float: right; margin: 10px;width: 50% ; "}
 :::
 
 Los datos provienen de un estudio de la dinámica de una población de *Serapias cordigera* de 1999 al 2012 evaluando el impacto antropogénico sobre la dinámica de la población [@pellegrino2014effects]. En este caso se emplea solamente 6 matrices de transición de la población de *Serapias cordigera* en 1999, tres de estas son poblaciones que tienen impacto antropogénico (A1, A2 y A3) y tres poblaciones naturales, sin impacto antropogénico (N1, N2, N3). Nota que se construye una lista (list()) de matriz de transición, una por cada periodo de tiempo.
 
 ```{r sim2}
-#| error: true
 
-Serapia<-list(
-  A1_1999=matrix(c(
-0.745,	0.152,	0.452,	0.564,
-0.125,	0.000,	0.000,	0.000,
-0.000,	0.321,	0.205,	0.342,
-0.200,	0.365,	0.205,	0.185
+Serapia <- list(
+  A1_1999 = matrix(
+    c(
+      0.745,  0.152,  0.452,  0.564,
+      0.125,  0.000,  0.000,  0.000,
+      0.000,  0.321,  0.205,  0.342,
+      0.200,  0.365,  0.205,  0.185
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-  nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
+  A2_1999 = matrix(
+    c(
+      0.648,  0.203,  0.414,  0.604,
+      0.188,  0.000,  0.000,  0.000,
+      0.000,  0.342,  0.198,  0.377,
+      0.242,  0.264,  0.225,  0.191
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-A2_1999=matrix(c(
-0.648,	0.203,	0.414,	0.604,
-0.188,	0.000,	0.000,	0.000,
-0.000,	0.342,	0.198,	0.377,
-0.242,	0.264,	0.225,	0.191
-),
- nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
+  A3_1999 = matrix(
+    c(
+      0.544,  0.223,  0.364,  0.498,
+      0.148,  0.000,  0.000,  0.000,
+      0.000,  0.249,  0.243,  0.287,
+      0.242,  0.303,  0.210,  0.101
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-A3_1999=matrix(c(
-0.544,	0.223,	0.364,	0.498,
-0.148,	0.000,	0.000,	0.000,
-0.000,	0.249,	0.243,	0.287,
-0.242,	0.303,	0.210,	0.101
-),
-nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
+  N1_1999 = matrix(
+    c(
+      0.287,  0.271,  0.054,  0.107,
+      0.318,  0.000,  0.000,  0.000,
+      0.000,  0.438,  0.228,  0.273,
+      0.111,  0.512,  0.585,  0.542
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-N1_1999=matrix(c(
-0.287,	0.271,	0.054,	0.107,
-0.318,	0.000,	0.000,	0.000,
-0.000,	0.438,	0.228,	0.273,
-0.111,	0.512,	0.585,	0.542
-),
-nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
+  N2_1999 = matrix(
+    c(
+      0.299,  0.253,  0.066,  0.182,
+      0.324,  0.000,  0.000,  0.000,
+      0.000,  0.461,  0.222,  0.264,
+      0.339,  0.568,  0.554,  0.547
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-N2_1999=matrix(c(
-0.299,	0.253,	0.066,	0.182,
-0.324,	0.000,	0.000,	0.000,
-0.000,	0.461,	0.222,	0.264,
-0.339,	0.568,	0.554,	0.547
-),
-nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
-  ),
-N3_1999=matrix(c(
-  0.245,	0.156,	0.052,	0.147,
-0.325,	0.000,	0.000,	0.000,
-0.000,	0.422,	0.305,	0.252,
-0.210,	0.465,	0.498,	0.485
-),
-nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
+  N3_1999 = matrix(
+    c(
+      0.245, 0.156, 0.052, 0.147,
+      0.325, 0.000, 0.000, 0.000,
+      0.000, 0.422, 0.305, 0.252,
+      0.210, 0.465, 0.498, 0.485
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   )
 )
 
 Serapia
-
 ```
 
 ------------------------------------------------------------------------
@@ -236,14 +244,12 @@ La función `stoch.projection` del paquete `popbio` permite hacer simulaciones d
 La función necesita tres argumentos, la lista de matrices de transición, el tamaño de la población inicial por etapa de la vida y el número de repeticiones. En este caso se usa 1000 repeticiones para tener una buena estimación de la variación en el tamaño de la población esperado por etapa de la vida. La función devuelve una lista con las simulaciones del tamaño de la población esperado por etapa de la vida.
 
 ```{r sim3}
-#| error: true
 
 n <- c(2, 0, 4, 99) # corresponde a la cantidad de individuos por etapa en la publicación del año 2000 del artículo Pellegrino et al. 2014
 names(n) <- c("latente", "plantula", "rosetta", "con flor")
-Serapia.eq   <- stoch.projection(Serapia, n, nreps=1000) # simulación con igual probabilidad de selección
+Serapia.eq <- stoch.projection(Serapia, n, nreps = 1000) # simulación con igual probabilidad de selección
 
 as.data.frame(head(Serapia.eq)) |> flextable() # vemos las primeras 6 simulaciones de los tamaños de muestra esperada por etapa
-
 ```
 
 ------------------------------------------------------------------------
@@ -253,42 +259,48 @@ as.data.frame(head(Serapia.eq)) |> flextable() # vemos las primeras 6 simulacion
 Para observar cuantos individuos hubiese en el futuro de la población de *Serapias cordigera* si la especie se comporta como las matrices de transición. Se observa que en la poblaciones tendrían pocos individuos típicamente menor de 2-3 individuo todas las etapas irrelevante si fuesen latente, plántula, rosetta o con flores.
 
 ::: img-float
-![*Serapias cordigera*. Foto: Guiseppe Pelligrino](images/Serapias_cordigera_7_Giuseppe_Pellegrino.jpg){style="float: left; margin: 10px;width: 40% ; "}
+![*Serapias cordigera*. Foto: Guiseppe Pelligrino](images/Serapias_cordigera_7_Giuseppe_Pellegrino.jpg){#fig-serapias-cordigera-7-giuseppe-pellegrino style="float: left; margin: 10px;width: 40% ; "}
 :::
 
-```{r sim4}
-#| error: true
+```{r}
+#| label: fig-sim4
+#| fig-cap: "Histogramas (30 bins) del número de individuos simulados de *Serapias cordigera*, facetados por etapa (plántula, latente, rosetta, con flor) con escalas libres."
 
-Serapia.eq=clean_names(as.data.frame(Serapia.eq)) # convertir la lista de matrices en un data frame y limpiar los nombres de las columnas
+Serapia.eq <- clean_names(as.data.frame(Serapia.eq)) # convertir la lista de matrices en un data frame y limpiar los nombres de las columnas
 
-Serapia.eq %>% 
-  gather(key="etapa", value="individuos") %>%  # convertir el data frame de formato ancho a largo
-  mutate(etapa=factor(etapa, levels=c("plantula", "latente", "rosetta", "con_flor"))) %>% # ordenar las etapas de la vida
-  ggplot(aes(x=individuos))+
-  geom_histogram(bins=30, aes(fill="blue"), color="white")+
-  facet_wrap(~etapa, scales="free")+
-  rlt_style_fill()+
-  labs(title="Distribución de número de individuos esperado de *Serapias cordigera*",
-       x="Número de individuos", y="Frecuencia")+
+Serapia.eq %>%
+  gather(key = "etapa", value = "individuos") %>% # convertir el data frame de formato ancho a largo
+  mutate(etapa = factor(etapa, levels = c("plantula", "latente", "rosetta", "con_flor"))) %>% # ordenar las etapas de la vida
+  ggplot(aes(x = individuos)) +
+  geom_histogram(bins = 30, aes(fill = "blue"), color = "white") +
+  facet_wrap(~etapa, scales = "free") +
+  rlt_style_fill() +
+  labs(
+    title = "Distribución de número de individuos esperado de *Serapias cordigera*",
+    x = "Número de individuos", y = "Frecuencia"
+  ) +
   theme(title = element_markdown())
 ```
 
 En la siguiente figura se suma el total de individuos por simulación es una medida de la cantidad de individuos esperado en el futuro. En el siguiente gráfico se muestra la distribución de la cantidad de individuos esperado en el futuro de la población de *Serapias cordigera* si la especie se comporta como las matrices de transiciones arriba y seleccionado al azar por la misma probabilidades. Se observa que la mayoría de las simulaciones tienen menos de 10 individuos en el futuro.
 
-```{r sim5}
-#| error: true
+```{r}
+#| label: fig-sim5
+#| fig-cap: "Histograma (30 bins) del total de individuos por simulación de *Serapias cordigera*, sumado a través de todas las etapas."
 
-Serapia_eq_T=Serapia.eq %>% 
-  mutate(total=rowSums(across(where(is.numeric)))) # sumar la cantidad de individuos en una columna
+Serapia_eq_T <- Serapia.eq %>%
+  mutate(total = rowSums(across(where(is.numeric)))) # sumar la cantidad de individuos en una columna
 
-  
-  ggplot(Serapia_eq_T,aes(x=total))+
-  geom_histogram(bins=30, aes(fill="blue"), color="white")+
-  rlt_style_fill()+
-  labs(title="Distribución de total de individuos esperado de *Serapias cordigera*",
-       x="Número total de individuos por simulación", y="Frecuencia")+
-  theme(title = element_markdown())+
-    theme(legend.position = "none")
+
+ggplot(Serapia_eq_T, aes(x = total)) +
+  geom_histogram(bins = 30, aes(fill = "blue"), color = "white") +
+  rlt_style_fill() +
+  labs(
+    title = "Distribución de total de individuos esperado de *Serapias cordigera*",
+    x = "Número total de individuos por simulación", y = "Frecuencia"
+  ) +
+  theme(title = element_markdown()) +
+  theme(legend.position = "none")
 ```
 
 ------------------------------------------------------------------------
@@ -302,37 +314,37 @@ Serapia_eq_T=Serapia.eq %>%
 La probabilidad de selección de las matrices de transición no tiene que ser igual. En el siguiente script se muestra cómo hacer simulaciones con diferente probabilidad de selección de las matrices de transición. En este caso se asume que las 3 poblaciones afectadas antropogénicamente son más comunes que las poblaciones naturales. Las 3 poblaciones naturales son raras y poco comunes. En el script vemos que ahora las poblaciones afectadas antropogénicamente se seleccionan con una probabilidad de 0.85 (0.30 + 0.30 + 0.25) y las poblaciones naturales con una probabilidad de 0.15. En otras palabras, las poblaciones naturales son muy raras y la especie está dominada por sitios donde se ve afectada antropogénicamente. **Importante: este es una simulación y no refleja la realidad de la especie ni de la publicación.**
 
 ```{r sim6}
-#| error: true
 
 n <- c(2, 0, 4, 99) # población inicial por etapa
 names(n) <- c("latente", "plantula", "rosetta", "con flor")
-Serapia.uneq   <- stoch.projection(Serapia, n, nreps=1000, prob=c(.3, .3, .25, .05, .05, .05)) # simulación con igual probabilidad de selección
+Serapia.uneq <- stoch.projection(Serapia, n, nreps = 1000, prob = c(.3, .3, .25, .05, .05, .05)) # simulación con igual probabilidad de selección
 
 as.data.frame(head(Serapia.uneq)) |> flextable() # vemos las primeras 6 simulaciones de tamaño de muestra
-
 ```
 
 ### Comparar la distribución de cantidad de individuos esperado por simulaciones
 
 Ahora vamos a solapar las dos distribuciones (la de selección por igual y por poblaciones mayormente impactado por humanos) para ver si hay una diferencia en la distribución de tamaño de muestra entre las dos simulaciones. Los resultados de la simulaciones sugieren que las poblaciones dominadas por impacto antropogénico (rojo) tienen una mayor cantidad de individuos en el futuro que las poblaciones bajo igualdad de probabilidades (aquamarine).
 
-```{r sim7}
-#| error: true
+```{r}
+#| label: fig-sim7
+#| fig-cap: "Histogramas superpuestos (30 bins) del total de individuos por simulación de *Serapias cordigera* bajo escenarios uneq y eq."
 
-Serapia.uneq=clean_names(as.data.frame(Serapia.uneq))
+Serapia.uneq <- clean_names(as.data.frame(Serapia.uneq))
 
-Serapia.uneq_T=Serapia.uneq %>% 
-  mutate(total=rowSums(across(where(is.numeric)))) 
+Serapia.uneq_T <- Serapia.uneq %>%
+  mutate(total = rowSums(across(where(is.numeric))))
 
-ggplot(Serapia.uneq_T, aes(total))+
-  geom_histogram(bins=30, aes(fill="blue"), color="white")+
-  geom_histogram(data=Serapia_eq_T, aes(x=total), bins=30, fill="aquamarine", color="black", alpha=.5)+
-  rlt_style_fill()+
-  labs(title="Distribución del total de individuos esperado de *Serapias cordigera*",
-       x="Número total de individuos por simulación", y="Frecuencia")+
-  theme(title = element_markdown())+
+ggplot(Serapia.uneq_T, aes(total)) +
+  geom_histogram(bins = 30, aes(fill = "blue"), color = "white") +
+  geom_histogram(data = Serapia_eq_T, aes(x = total), bins = 30, fill = "aquamarine", color = "black", alpha = .5) +
+  rlt_style_fill() +
+  labs(
+    title = "Distribución del total de individuos esperado de *Serapias cordigera*",
+    x = "Número total de individuos por simulación", y = "Frecuencia"
+  ) +
+  theme(title = element_markdown()) +
   theme(legend.position = "none")
-
 ```
 
 ------------------------------------------------------------------------
@@ -345,20 +357,19 @@ Nota: aquí se calcula el log del crecimiento poblacional estocástico de *Serap
 
 Cuando se usa el log de crecimiento poblacional estocástico se calcula $r$, donde $r = \ln(\lambda)$. La interpretación de $r$ es distinta a la de $\lambda$:
 
--   $r$ = log(crecimiento poblacional estocástico) \> 0 la población crece
--   $r$ = log(crecimiento poblacional estocástico) \< 0 la población decrece
--   $r$ = log(crecimiento poblacional estocástico) = 0 la población es estable
+- $r$ = log(crecimiento poblacional estocástico) \> 0 la población crece
+- $r$ = log(crecimiento poblacional estocástico) \< 0 la población decrece
+- $r$ = log(crecimiento poblacional estocástico) = 0 la población es estable
 
 El crecimiento estocástico de las poblaciones de *Serapias cordigera* en 1999 es negativo, lo que sugiere que la especie está en declive. Pero también se puede ver que hay variación en el crecimiento poblacional de la especie. Se usa la función `stoch.growth.rate()`.
 
 Simulaciones por selección de matriz con igual probabilidad
 
--   el crecimiento es negativo y los intervalos de confianza también, dando confianza de que la especie está en declive.
+- el crecimiento es negativo y los intervalos de confianza también, dando confianza de que la especie está en declive.
 
 ```{r sim8}
-#| error: true
 
-SGR_eq=stoch.growth.rate(Serapia, maxt=50, verbose=TRUE) # matrices seleccionado con igual probabilidad
+SGR_eq <- stoch.growth.rate(Serapia, maxt = 50, verbose = TRUE) # matrices seleccionado con igual probabilidad
 SGR_eq
 ```
 
@@ -366,21 +377,19 @@ SGR_eq
 
 ### Simulaciones por selección de matriz con diferente probabilidad
 
--   el crecimiento es negativo y los intervalos de confianza solapan el cero, lo que sugiere que hay variación en el crecimiento poblacional de la especie y que no hay evidencia de que la especie esté en declive ni aumentando (es estable). La interpretación aquí es que, si la especie está dominada por poblaciones con impacto antropogénico, tiene un crecimiento poblacional no negativo.
+- el crecimiento es negativo y los intervalos de confianza solapan el cero, lo que sugiere que hay variación en el crecimiento poblacional de la especie y que no hay evidencia de que la especie esté en declive ni aumentando (es estable). La interpretación aquí es que, si la especie está dominada por poblaciones con impacto antropogénico, tiene un crecimiento poblacional no negativo.
 
 ```{r sim9}
-#| error: true
 
-SGR_uneq=stoch.growth.rate(Serapia, maxt=50, prob=c(.3, .3, .25, .05, .05, .05), verbose=FALSE) # matrices seleccionado con diferente probabilidades
+SGR_uneq <- stoch.growth.rate(Serapia, maxt = 50, prob = c(.3, .3, .25, .05, .05, .05), verbose = FALSE) # matrices seleccionado con diferente probabilidades
 
 SGR_uneq
-
 ```
 
 Para convertir el log(crecimiento poblacional estocástico) a lambda se usa la siguiente formula $e^r$ donde $r$ es el log(crecimiento poblacional estocástico). Como ejemplo se muestra la metodología con las simulaciones con probabilidad desigual de selección de las matrices de transición.
 
 ::: callout-note
-**Por qué `stoch.growth.rate()` reporta $\log \lambda_s$ y no $\lambda_s$ directamente.** Cuando una población crece estocásticamente, la **media geométrica** del crecimiento (no la aritmética) es el predictor correcto del tamaño futuro. La media geométrica de $\lambda$ se calcula como $\exp(\overline{\log \lambda})$. Por eso conviene trabajar en escala logarítmica internamente y convertir a λ con `exp()` solo al reportar. Si los intervalos de confianza incluyen 0 en la escala log, son equivalentes a incluir 1 en la escala λ — es decir, no hay evidencia de crecimiento ni declive.
+**Por qué `stoch.growth.rate()` reporta** $\log \lambda_s$ y no $\lambda_s$ directamente. Cuando una población crece estocásticamente, la **media geométrica** del crecimiento (no la aritmética) es el predictor correcto del tamaño futuro. La media geométrica de $\lambda$ se calcula como $\exp(\overline{\log \lambda})$. Por eso conviene trabajar en escala logarítmica internamente y convertir a λ con `exp()` solo al reportar. Si los intervalos de confianza incluyen 0 en la escala log, son equivalentes a incluir 1 en la escala λ — es decir, no hay evidencia de crecimiento ni declive.
 :::
 
 #### Conversión de $r$ a $\lambda$
@@ -388,11 +397,10 @@ Para convertir el log(crecimiento poblacional estocástico) a lambda se usa la s
 Lambda Igual de probabilidades
 
 ```{r sim10}
-#| error: true
 
 exp(SGR_uneq$sim) # matrices seleccionado con igual probabilidad
-exp(SGR_uneq$sim.CI[1]) #El intervalo de confianza inferior
-exp(SGR_uneq$sim.CI[2]) #El intervalo de confianza superior
+exp(SGR_uneq$sim.CI[1]) # El intervalo de confianza inferior
+exp(SGR_uneq$sim.CI[2]) # El intervalo de confianza superior
 ```
 
 ------------------------------------------------------------------------
@@ -401,57 +409,56 @@ exp(SGR_uneq$sim.CI[2]) #El intervalo de confianza superior
 
 Los análisis anteriores no separan las matrices de transición por el impacto antropogénico versus las poblaciones naturales. En el siguiente script se muestra como hacer simulaciones y estimar el crecimiento poblacional de las poblaciones afectada de forma separada.
 
--   Separamos las matrices de transición en dos grupos, uno para las poblaciones afectada de forma antropogénicas y otro para las poblaciones naturales.
+- Separamos las matrices de transición en dos grupos, uno para las poblaciones afectada de forma antropogénicas y otro para las poblaciones naturales.
 
 ```{r sim11}
-#| error: true
 
-Serapia_A = Serapia[1:3] # poblaciones afectada de forma antropogénicas
+Serapia_A <- Serapia[1:3] # poblaciones afectada de forma antropogénicas
 
-Serapia_N=  Serapia[4:6] # poblaciones naturales
-
+Serapia_N <- Serapia[4:6] # poblaciones naturales
 ```
 
 Asumimos una probabilidad igual de selección por cada simulaciones en ambos escenarios
 
 ```{r sim12}
-#| error: true
 
 n <- c(2, 0, 4, 99) # corresponde a los datos de la especie en la publicación del año 2000
 names(n) <- c("latente", "plantula", "rosetta", "con flor")
-Serapia.eq_A   <- stoch.projection(Serapia_A, n, nreps=1000)
-Serapia.eq_N   <- stoch.projection(Serapia_N, n, nreps=1000)
-
+Serapia.eq_A <- stoch.projection(Serapia_A, n, nreps = 1000)
+Serapia.eq_N <- stoch.projection(Serapia_N, n, nreps = 1000)
 ```
 
 Convertir las simulaciones de las matrices de transición en un data frame y limpiar los nombres de las columnas. Luego sumar el total de individuos por simulación para cada etapa de la vida. Esto es necesario para poder visualizar el tamaño poblacional esperado por etapa de la vida. El resultado del análisis es que las poblaciones afectada de forma antropogénicas tienen un estimado de tamaño de poblacional más grande que las poblaciones naturales.
 
 ```{r sim13}
-#| error: true
 
-Serapia.eq_A=clean_names(as.data.frame(Serapia.eq_A)) # limpiar los nombres de las columnas y convertir en un data frame
-Serapia.eq_N=clean_names(as.data.frame(Serapia.eq_N)) 
+Serapia.eq_A <- clean_names(as.data.frame(Serapia.eq_A)) # limpiar los nombres de las columnas y convertir en un data frame
+Serapia.eq_N <- clean_names(as.data.frame(Serapia.eq_N))
 
-Serapia_eq_A=Serapia.eq_A %>% 
-  mutate(total=rowSums(across(where(is.numeric)))) # sumar la cantidad de individuos en una columna
+Serapia_eq_A <- Serapia.eq_A %>%
+  mutate(total = rowSums(across(where(is.numeric)))) # sumar la cantidad de individuos en una columna
 
-Serapia_eq_N=Serapia.eq_N %>% 
-  mutate(total=rowSums(across(where(is.numeric))))
-
+Serapia_eq_N <- Serapia.eq_N %>%
+  mutate(total = rowSums(across(where(is.numeric))))
 ```
 
 Visualizar el tamaño de poblacional esperado por etapa de la vida para las poblaciones afectada de forma antropogénicas y naturales. Se observa que las poblaciones afectada de forma antropogénicas tienen un tamaño de poblacional más grande que las poblaciones naturales. la poblaciones con efecto antropogénico tienen a ser de mayor cantidad.
 
-```{r sim-diverging-colors}
-#| error: true
-diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
-ggplot(Serapia_eq_N, aes(total))+
-  geom_histogram(fill= "#009392", color="white",bins=30,  alpha=.5)+
-  geom_histogram(data=Serapia_eq_A, aes(x=total), 
-                fill="#CF597E", color="white", bins=30,  alpha=.5)+
-  theme_minimal()+
-  labs(title="Distribución de total de individuos esperado de *Serapias cordigera*",
-       x="Número total de individuos por simulación", y="Frecuencia")+
+```{r}
+#| label: fig-sim-diverging-colors
+#| fig-cap: "Histogramas superpuestos (30 bins) del total de individuos por simulación de *Serapias cordigera* para los conjuntos Serapia_eq_N y Serapia_eq_A con tema minimal."
+diverging <- c("#009392", "#CF597E", "#E9E29C", "#39B185", "#EEB479", "#9CCB86")
+ggplot(Serapia_eq_N, aes(total)) +
+  geom_histogram(fill = "#009392", color = "white", bins = 30, alpha = .5) +
+  geom_histogram(
+    data = Serapia_eq_A, aes(x = total),
+    fill = "#CF597E", color = "white", bins = 30, alpha = .5
+  ) +
+  theme_minimal() +
+  labs(
+    title = "Distribución de total de individuos esperado de *Serapias cordigera*",
+    x = "Número total de individuos por simulación", y = "Frecuencia"
+  ) +
   theme(title = element_markdown())
 ```
 
@@ -460,7 +467,7 @@ ggplot(Serapia_eq_N, aes(total))+
 ## Estocasticidad temporal
 
 ::: img-float
-![*Serapias cordigera*. Foto: Guiseppe Pelligrino](images/Serapias_cordigera_3_Giuseppe_Pellegrino.jpeg){style="float: left; margin: 10px;width: 50% ; "}
+![*Serapias cordigera*. Foto: Guiseppe Pelligrino](images/Serapias_cordigera_3_Giuseppe_Pellegrino.jpeg){#fig-serapias-cordigera-3-giuseppe-pellegrino style="float: left; margin: 10px;width: 50% ; "}
 
 El objetivo de evaluar la variación en tiempo es para determinar si los efectos temporales son importante en predecir los cambios en el crecimiento o estabilidad poblacional. Seguimos con los datos *Serapias cordigera*, pero ahora evaluamos cual es el efecto de la variación en los parámetros de la matriz usando múltiple censos. Vemos el efecto de una esas población, por impacto antropogénico solamente de la población **A1** en los 13 años de muestreo comenzando en el 1999 al 2011, inclusivo.
 :::
@@ -468,163 +475,180 @@ El objetivo de evaluar la variación en tiempo es para determinar si los efectos
 El primer paso en entrar los datos en una lista de matrices de transición.
 
 ```{r sim14}
-#| error: true
 
-Serapia_tiempo<-list(
-  A1_1999=matrix(c(
-0.745,	0.152,	0.452,	0.564,
-0.125,	0.000,	0.000,	0.000,
-0.000,	0.321,	0.205,	0.342,
-0.200,	0.365,	0.205,	0.185
+Serapia_tiempo <- list(
+  A1_1999 = matrix(
+    c(
+      0.745,  0.152,  0.452,  0.564,
+      0.125,  0.000,  0.000,  0.000,
+      0.000,  0.321,  0.205,  0.342,
+      0.200,  0.365,  0.205,  0.185
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-  nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
+  A1_2000 = matrix(
+    c(
+      0.578, 0.222, 0.394, 0.394,
+      0.188, 0.000, 0.000, 0.000,
+      0.000, 0.322, 0.254, 0.357,
+      0.244, 0.314, 0.125, 0.302
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-A1_2000=matrix(c(
-0.578,	0.222,	0.394,	0.394,
-0.188	,0.000,	0.000,	0.000,
-0.000	,0.322,	0.254,	0.357,
-0.244	,0.314,	0.125,	0.302
+  A1_2001 = matrix(
+    c(
+      0.668, 0.122, 0.294, 0.401,
+      0.128, 0.000, 0.000, 0.000,
+      0.000, 0.302, 0.453, 0.366,
+      0.214, 0.364, 0.185, 0.207
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-  nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
+  A1_2002 = matrix(
+    c(
+      0.645,  0.222,  0.682,  0.504,
+      0.177,  0.000,  0.000,  0.000,
+      0.000,  0.421,  0.305,  0.382,
+      0.102,  0.355,  0.208,  0.208
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-A1_2001=matrix(c(
-  0.668,	0.122,	0.294,	0.401,
-0.128,	0.000	,0.000,	0.000,
-0.000,	0.302	,0.453,	0.366,
-0.214,	0.364,	0.185,	0.207
+  A1_2003 = matrix(
+    c(
+      0.545, 0.113, 0.424, 0.424,
+      0.247, 0.000, 0.000, 0.000,
+      0.000, 0.166, 0.233, 0.277,
+      0.192, 0.253, 0.209, 0.212
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-  nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
+  A1_2004 = matrix(
+    c(
+      0.548, 0.191, 0.402, 0.527,
+      0.327, 0.000, 0.000, 0.000,
+      0.000, 0.338, 0.127, 0.394,
+      0.211, 0.262, 0.296, 0.142
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-A1_2002=matrix(c(
-0.645,	0.222,	0.682,	0.504,
-0.177,	0.000,	0.000,	0.000,
-0.000,	0.421,	0.305,	0.382,
-0.102,	0.355,	0.208,	0.208
+  A1_2005 = matrix(
+    c(
+      0.602, 0.153, 0.486, 0.562,
+      0.224, 0.000, 0.000, 0.000,
+      0.000, 0.491, 0.324, 0.304,
+      0.139, 0.268, 0.294, 0.277
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-  nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
+  A1_2006 = matrix(
+    c(
+      0.487, 0.471, 0.425, 0.607,
+      0.318, 0.000, 0.000, 0.000,
+      0.000, 0.438, 0.328, 0.373,
+      0.211, 0.212, 0.285, 0.142
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-A1_2003=matrix(c(
-  0.545,	0.113,	0.424,	0.424,
-0.247,	0.000,	0.000,	0.000,
-0.000,	0.166,	0.233,	0.277,
-0.192,	0.253,	0.209,	0.212
-
+  A1_2007 = matrix(
+    c(
+      0.544, 0.423, 0.374, 0.578,
+      0.348, 0.000, 0.000, 0.000,
+      0.000, 0.441, 0.248, 0.288,
+      0.145, 0.203, 0.311, 0.201
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-  nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
+  A1_2008 = matrix(
+    c(
+      0.568, 0.325, 0.294, 0.607,
+      0.227, 0.000, 0.000, 0.000,
+      0.000, 0.402, 0.553, 0.256,
+      0.194, 0.364, 0.275, 0.217
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-A1_2004=matrix(c(
-  0.548,	0.191,	0.402,	0.527,
-0.327,	0.000,	0.000,	0.000,
-0.000,	0.338,	0.127,	0.394,
-0.211,	0.262,	0.296,	0.142
+  A1_2009 = matrix(
+    c(
+      0.545, 0.356, 0.472, 0.398,
+      0.225, 0.000, 0.000, 0.000,
+      0.000, 0.322, 0.304, 0.452,
+      0.110, 0.225, 0.298, 0.185
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-  nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
+  A1_2010 = matrix(
+    c(
+      0.399, 0.352, 0.486, 0.580,
+      0.424, 0.000, 0.000, 0.000,
+      0.000, 0.561, 0.312, 0.264,
+      0.239, 0.168, 0.354, 0.247
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   ),
-A1_2005=matrix(c(
-  0.602,	0.153,	0.486,	0.562,
-0.224,	0.000,	0.000,	0.000,
-0.000,	0.491,	0.324,	0.304,
-0.139,	0.268,	0.294,	0.277
-
-  ),
-  nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
-  ),
-A1_2006=matrix(c(
-  0.487,	0.471,	0.425,	0.607,
-0.318,	0.000,	0.000,	0.000,
-0.000,	0.438,	0.328,	0.373,
-0.211,	0.212,	0.285,	0.142
-  ),
-  nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
-  ),
-A1_2007=matrix(c(
-  0.544,	0.423,	0.374,	0.578,
-0.348,	0.000,	0.000,	0.000,
-0.000,	0.441,	0.248,	0.288,
-0.145,	0.203,	0.311,	0.201
-
-  ),
-  nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
-  ),
-A1_2008=matrix(c(
- 0.568,	0.325,	0.294,	0.607,
-0.227,	0.000,	0.000,	0.000,
-0.000,	0.402,	0.553,	0.256,
-0.194,	0.364,	0.275,	0.217
-
-  ),
-  nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
-  ),
-A1_2009=matrix(c(
-  0.545,	0.356,	0.472,	0.398,
-0.225,	0.000,	0.000,	0.000,
-0.000,	0.322,	0.304,	0.452,
-0.110,	0.225,	0.298,	0.185
-
-  ),
-  nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
-  ),
-A1_2010=matrix(c(
-  0.399,	0.352,	0.486,	0.580,
-0.424,	0.000,	0.000,	0.000,
-0.000,	0.561,	0.312,	0.264,
-0.239,	0.168,	0.354,	0.247
-
-  ),
-  nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
-  ),
-A1_2011=matrix(c(
-  0.497,	0.352,	0.465,	0.622,
-0.324,	0.000,	0.000,	0.000,
-0.000,	0.361,	0.321,	0.264,
-0.139,	0.368,	0.367,	0.177
-
-  ),
-  nrow=4, byrow=TRUE,
-  dimnames=list(c("latente", "plantula", "rosetta", "con flor"),
-                c("latente", "plantula", "rosetta", "con flor")
-  )
+  A1_2011 = matrix(
+    c(
+      0.497, 0.352, 0.465, 0.622,
+      0.324, 0.000, 0.000, 0.000,
+      0.000, 0.361, 0.321, 0.264,
+      0.139, 0.368, 0.367, 0.177
+    ),
+    nrow = 4, byrow = TRUE,
+    dimnames = list(
+      c("latente", "plantula", "rosetta", "con flor"),
+      c("latente", "plantula", "rosetta", "con flor")
+    )
   )
 )
 
- #Serapia_tiempo
-  
+# Serapia_tiempo
 ```
 
 ------------------------------------------------------------------------
@@ -634,14 +658,12 @@ A1_2011=matrix(c(
 El análisis evalúa la variación temporal en el crecimiento poblacional de la especie de *Serapias cordigera* en 1999 a 2012. Usando la función `stoch.projection()` se observa la variación en cantidad de individuos por etapa.
 
 ```{r sim15}
-#| error: true
 
 n <- c(2, 0, 4, 99) # población inicial por etapa
 names(n) <- c("latente", "plantula", "rosetta", "con flor")
-Serapia_tiempo_eq   <- stoch.projection(Serapia_tiempo, n, nreps=5000) # simulación con igual probabilidad de selección
+Serapia_tiempo_eq <- stoch.projection(Serapia_tiempo, n, nreps = 5000) # simulación con igual probabilidad de selección
 
 as.data.frame(head(Serapia_tiempo_eq)) |> flextable() # vemos las primeras 6 simulaciones de tamaño de muestra
-
 ```
 
 Para evaluar el cambio de crecimiento poblacional en la especie de *Serapias cordigera* en 1999 a 2011 se usa la función `stoch.growth.rate()`.
@@ -651,15 +673,14 @@ Se observa que el crecimiento poblacional es cerca de cero en la mayoría de las
 Nota que se puede cambiar la probabilidades de selección de las matrices de transición, en este caso se asume que hay igual cantidad de poblaciones afectada de forma antropogénicas y naturales. Pero considera por ejemplo que hay eventos abióticos como temperatura o lluvia fuera de lo común en un año, entonces se puede cambiar la probabilidad de selección de las matrices de transición para evaluar el efecto de estos eventos de cambio climatológico en el crecimiento poblacional de la especie. Si por ejemplo en el área donde este estas especies hay predicción que un factor abiótico, por ejemplo reducción en lluvia (aumento en sequía) en las próximas décadas se pudiese cambiar la probabilidad de selección para de las matrices que son en periodos de sequía y que sean seleccionado más frecuentemente en la simulaciones. El objetivo es de simular los efectos de cambio en tiempo sobre el crecimiento poblacional de la especie basado en un patrón esperado de factores abióticos o bióticos.
 
 ```{r sim16}
-#| error: true
 
-SGR_Temp_eq=stoch.growth.rate(Serapia_tiempo, maxt=50) # matrices seleccionado con igual probabilidad por 50 años
+SGR_Temp_eq <- stoch.growth.rate(Serapia_tiempo, maxt = 50) # matrices seleccionado con igual probabilidad por 50 años
 SGR_Temp_eq
 
 # Conversión a valores de Lambda
 
 exp(SGR_Temp_eq$sim) # Lambda de matrices seleccionado con igual probabilidad
-exp(SGR_Temp_eq$sim.CI[1]) #Lambda del intervalo de confianza inferior
+exp(SGR_Temp_eq$sim.CI[1]) # Lambda del intervalo de confianza inferior
 exp(SGR_Temp_eq$sim.CI[2]) # Lambda del intervalo de confianza superior
 ```
 
@@ -672,13 +693,12 @@ Comparar la variación temporal en el crecimiento poblacional de la especie de *
 Lo que se observa es que la variación temporal y la variación espacial es más o menos igual (el rango de variación, diff), pero que hay menos variación temporal que espacial. Por lo menos para los datos seleccionado de [@pellegrino2014effects] la variación temporal no es tan grande como la variación espacial y solapa el lambda de 1, al contrario la variación espacial no solapa el lambda de 1 (ambos CI son menores de 1, sugiriendo una reducción posible de las poblaciones). Note que no usamos todos los datos de Pellegrino [@pellegrino2014effects] pero un sub-grupo y por consecuencia el análisis es sesgado.
 
 ```{r sim17}
-#| error: true
 
-Tabla_resultado=tribble(
-  ~tipo, ~lambda, ~CI_inf, ~CI_sup,~diff_ci,
-  "Espacial", exp(SGR_eq$sim), exp(SGR_eq$sim.CI[1]), exp(SGR_eq$sim.CI[2]), exp(SGR_eq$sim.CI[2])-exp(SGR_eq$sim.CI[1]),
-  "Temporal", exp(SGR_Temp_eq$sim), exp(SGR_Temp_eq$sim.CI[1]), exp(SGR_Temp_eq$sim.CI[2]), exp(SGR_Temp_eq$sim.CI[2])-exp(SGR_Temp_eq$sim.CI[1])
-) 
+Tabla_resultado <- tribble(
+  ~tipo, ~lambda, ~CI_inf, ~CI_sup, ~diff_ci,
+  "Espacial", exp(SGR_eq$sim), exp(SGR_eq$sim.CI[1]), exp(SGR_eq$sim.CI[2]), exp(SGR_eq$sim.CI[2]) - exp(SGR_eq$sim.CI[1]),
+  "Temporal", exp(SGR_Temp_eq$sim), exp(SGR_Temp_eq$sim.CI[1]), exp(SGR_Temp_eq$sim.CI[2]), exp(SGR_Temp_eq$sim.CI[2]) - exp(SGR_Temp_eq$sim.CI[1])
+)
 flextable(Tabla_resultado)
 ```
 
@@ -690,19 +710,19 @@ Observación de la variación temporal y espacial en el crecimiento poblacional 
 
 Se nota que el crecimiento poblacional intrínseco de *Serapias cordigera* es negativo en la mayoría de las simulaciones cuando se evalúan múltiples poblaciones, pero la población **A1**, en general, tiene un crecimiento positivo o es estable cuando se evalúa tomando en cuenta la variación temporal. La línea horizontal representa un crecimiento poblacional de 1; si el crecimiento poblacional es mayor de 1, la población crece; si es menor de 1, la población decrece. En el análisis temporal vemos que el intervalo de confianza solapa el 1, lo que sugiere que no hay evidencia de que el crecimiento poblacional sea diferente del de una población estable.
 
-```{r sim18}
-#| error: true
- 
-  ggplot(Tabla_resultado, aes(x=tipo, y=lambda, color=tipo))+
-  geom_point(stat="identity", colour="black")+
-  geom_errorbar(aes(ymin=CI_inf, ymax=CI_sup), width=.2)+
-  rlt_style_colour()+
-  geom_hline(yintercept=1, linetype="dashed", color = "red")+
-  labs(title="Comparación de simulaciones de crecimiento poblacional de *Serapias cordigera*")+
-  labs(x="Tipo de variación", y="Crecimiento poblacional")+
-  theme(title = element_markdown())+
-  scale_y_continuous(limits = c(0.90, 1.1))
+```{r}
+#| label: fig-sim18
+#| fig-cap: "Puntos con barras de error (IC inferior y superior) de λ en función del tipo de variación para *Serapias cordigera*, con línea horizontal punteada en 1."
 
+ggplot(Tabla_resultado, aes(x = tipo, y = lambda, color = tipo)) +
+  geom_point(stat = "identity", colour = "black") +
+  geom_errorbar(aes(ymin = CI_inf, ymax = CI_sup), width = .2) +
+  rlt_style_colour() +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "red") +
+  labs(title = "Comparación de simulaciones de crecimiento poblacional de *Serapias cordigera*") +
+  labs(x = "Tipo de variación", y = "Crecimiento poblacional") +
+  theme(title = element_markdown()) +
+  scale_y_continuous(limits = c(0.90, 1.1))
 ```
 
 ------------------------------------------------------------------------
@@ -726,12 +746,10 @@ La otra ventaja de usar la función Dirichlet es que se basa en la distribución
 Se seleciona la población A3 de *Serapias cordigera* para hacer el análisis. Esta población es una de las poblaciones afectada de forma antropogénicas, y tiene un tamaño de muestra pequeño, lo que hace que sea interesante para ver el efecto del tamaño de muestra en los parámetros de la matriz de transición.
 
 ```{r sim19}
-#| error: true
 
 n <- c(2, 0, 4, 99) # población inicial por etapa
 names(n) <- c("latente", "plantula", "rosetta", "con flor")
-Serapia_A3   <- splitA(Serapia$A3_1999) # separar la matriz A3 en sus componentes (transición y fecundidad)
-
+Serapia_A3 <- splitA(Serapia$A3_1999) # separar la matriz A3 en sus componentes (transición y fecundidad)
 ```
 
 ------------------------------------------------------------------------
@@ -741,15 +759,17 @@ Serapia_A3   <- splitA(Serapia$A3_1999) # separar la matriz A3 en sus componente
 En el siguiente paso vamos a asignar una previa a los datos. Estas previas proviene de Tremblay, no representa la visión de los autores del artículo. Se añade una previa también para la proporción de plantas que fallece en cada etapa (la quita fila). Nota que es importante que la suma de cada columna sea igual a 1. Típicamente uno debería obtener la previa de la literatura o de un especialista en la biología de la especie antes de la recoleccción de datos, pero en este caso no se tiene información previa.
 
 ```{r sim20}
-#| error: true
 
-RLT_Serapia_previa <- matrix(c(0.5, 0.1,   0.4,   0.4,
-                               0.2,  0.,    0.0,   0.0,
-                               0.0,  0.025, 0.25,  0.3,
-                               0.15,  0.05,  0.25,  0.2,
-                               0.05,  0.025, 0.1,   0.1), 
-                       byrow = TRUE, nrow = 5, ncol = 4)
-
+RLT_Serapia_previa <- matrix(
+  c(
+    0.5, 0.1, 0.4, 0.4,
+    0.2, 0., 0.0, 0.0,
+    0.0, 0.025, 0.25, 0.3,
+    0.15, 0.05, 0.25, 0.2,
+    0.05, 0.025, 0.1, 0.1
+  ),
+  byrow = TRUE, nrow = 5, ncol = 4
+)
 ```
 
 ------------------------------------------------------------------------
@@ -760,47 +780,44 @@ La distribución posterior marginal de un elemento en un multinómio es una dist
 
 Nota que:
 
--   TF tiene que ser una matriz divido entre la transición y de fecundidad (matT + matF),
--   N es el tamaño de muestra de cada etapa de la vida,
--   P es la previa de la matriz de transición,
--   priorweight es el peso de la previo (en este caso estamos dando muy poca importancia a la previa, como si fuese una décima de un individuo), lo que resulta en que los datos del campo domina el análisis.
--   Regresa el posterior de la matriz de transición. Eso quiere decir que calcula los parámetros de la distribución beta para cada elemento de la matriz de transición tomando en cuenta tanto los valores de la matriz **TF** y la previa **P**.
+- TF tiene que ser una matriz divido entre la transición y de fecundidad (matT + matF),
+- N es el tamaño de muestra de cada etapa de la vida,
+- P es la previa de la matriz de transición,
+- priorweight es el peso de la previo (en este caso estamos dando muy poca importancia a la previa, como si fuese una décima de un individuo), lo que resulta en que los datos del campo domina el análisis.
+- Regresa el posterior de la matriz de transición. Eso quiere decir que calcula los parámetros de la distribución beta para cada elemento de la matriz de transición tomando en cuenta tanto los valores de la matriz **TF** y la previa **P**.
 
 En el script vemos los intervalos de confianza de la matriz de transición de *Serapias cordigera* en 1999 para la población A3.
 
 Lo más dramático de ese primer análisis que que los intervalos de credibilidad son bien grandes, casi todos los intervalos de credibilidad **lcl** y **ucl** de muy cerca de cero a valores muy grande. Esto sugiere que hay mucha incertidumbre en los datos. Este resultado es esperado, porque la muestra es muy pequeña, solamente 2 individuos fueron muestreado en el campo de esta etapa.
 
 ```{r sim22}
-#| error: true
 
-TN <- fill_transitions(Serapia_A3, N=n, P = RLT_Serapia_previa, priorweight = .01, returnType = "TN")
-a <- TN[,1] # cambie 1 a 2, 3 etc para obtener la distribución beta marginal de cada columna, el valor representa la columna. 
-b <- sum(TN[,1]) - TN[,1]# cambie 1 a 2, 3 etc para obtener la distribución beta marginal de cada columna. 
+TN <- fill_transitions(Serapia_A3, N = n, P = RLT_Serapia_previa, priorweight = .01, returnType = "TN")
+a <- TN[, 1] # cambie 1 a 2, 3 etc para obtener la distribución beta marginal de cada columna, el valor representa la columna.
+b <- sum(TN[, 1]) - TN[, 1] # cambie 1 a 2, 3 etc para obtener la distribución beta marginal de cada columna.
 p <- a / (a + b)
 lcl <- qbeta(0.025, a, b)
 ucl <- qbeta(0.975, a, b)
-A3=knitr::kable(sprintf("%.3f, %.3f, %.3f", p, lcl, ucl))
+A3 <- knitr::kable(sprintf("%.3f, %.3f, %.3f", p, lcl, ucl))
 
-A3df_lat=round(data.frame(p, lcl, ucl), digits=3)
+A3df_lat <- round(data.frame(p, lcl, ucl), digits = 3)
 A3df_lat$etapa_futura <- c("latente", "plantula", "rosetta", "con flor", "fallece")
 A3df_lat
-
 ```
 
 Ahora vemos que pasa con la etapa que tenemos más datos, los adultos con flores. En este caso vemos que los intervalos de credibilidad son más pequeños, pero todavía son grandes, ya que el tamaño de muestra es de 99 para esta etapa.
 
 ```{r sim23}
-#| error: true
 
-TN <- fill_transitions(Serapia_A3, N=n, P = RLT_Serapia_previa, priorweight = 0.01, returnType = "TN")
-a <- TN[,4] # cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. 
-b <- sum(TN[,4]) - TN[,4]# cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna. 
+TN <- fill_transitions(Serapia_A3, N = n, P = RLT_Serapia_previa, priorweight = 0.01, returnType = "TN")
+a <- TN[, 4] # cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna.
+b <- sum(TN[, 4]) - TN[, 4] # cambie 1 a 2, 3 etc para obter la distribución beta marginal de cada columna.
 p <- a / (a + b)
 lcl <- qbeta(0.025, a, b)
 ucl <- qbeta(0.975, a, b)
- A3=knitr::kable(sprintf("%.3f, %.3f, %.3f", p, lcl, ucl))
+A3 <- knitr::kable(sprintf("%.3f, %.3f, %.3f", p, lcl, ucl))
 
-A3df=round(data.frame(p, lcl, ucl), digits=3)
+A3df <- round(data.frame(p, lcl, ucl), digits = 3)
 A3df$etapa_futura <- c("latente", "plantula", "rosetta", "con flor", "fallece")
 A3df
 ```
@@ -814,18 +831,17 @@ A3df
 Como ejercicio, vemos que tipo de intervalos si tuviésemos tamaño de muestra de 500 individuos en la etapa de adulto. Nota que aun que los intervalos de credibilidad son más pequeños, no se debería asumir que no hay variación demográfica en la etapa de adulto, por procesos estocásticos.
 
 ```{r sim24}
-#| error: true
 
 n500 <- c(2, 0, 4, 500) # población inicial por etapa
-TN <- fill_transitions(Serapia_A3, N=n500, P = RLT_Serapia_previa, priorweight = 0.01, returnType = "TN")
-a500 <- TN[,4] # cambie 1 a 2, 3 o 4 etc. para obtener la distribución beta marginal de cada columna (etapas).
-b500 <- sum(TN[,4]) - TN[,4]# cambie 1 a 2, 3 etc. para obtener la distribución beta marginal de cada columna.
+TN <- fill_transitions(Serapia_A3, N = n500, P = RLT_Serapia_previa, priorweight = 0.01, returnType = "TN")
+a500 <- TN[, 4] # cambie 1 a 2, 3 o 4 etc. para obtener la distribución beta marginal de cada columna (etapas).
+b500 <- sum(TN[, 4]) - TN[, 4] # cambie 1 a 2, 3 etc. para obtener la distribución beta marginal de cada columna.
 p500 <- a500 / (a500 + b500)
 lcl <- qbeta(0.025, a500, b500)
 ucl <- qbeta(0.975, a500, b500)
- A3=knitr::kable(sprintf("%.3f, %.3f, %.3f", p, lcl, ucl))
+A3 <- knitr::kable(sprintf("%.3f, %.3f, %.3f", p, lcl, ucl))
 
-A3df=round(data.frame(p, lcl, ucl), digits=3)
+A3df <- round(data.frame(p, lcl, ucl), digits = 3)
 A3df$etapa_futura <- c("latente", "plantula", "rosetta", "con flor", "fallece")
 A3df
 ```
@@ -834,10 +850,11 @@ A3df
 
 Ahora vemos cómo se distribuye una distribución beta. Usamos los datos de la etapa de adulto con flores con 99 individuos. Se observa que ninguna de las transiciones o estasis tiene una distribución normal. La distribución que demuestra bien este patrón es la de los adultos con flores que pasan a latente. La línea roja vertical representa el promedio, es decir, el valor en la matriz de transición.
 
-```{r sim25, warning=FALSE}
-#| error: true
+```{r, warning=FALSE}
+#| label: fig-sim25
+#| fig-cap: "Cinco distribuciones beta (densidad en función de la probabilidad) para latentes, plántulas, rosettas, adultos y fallecidos, con líneas verticales punteadas, dispuestas en una cuadrícula 3x2."
 
-a # los valores del shape alpha 
+a # los valores del shape alpha
 b # los valores del shape beta
 
 # Función para visualizar la distribution beta
@@ -850,45 +867,54 @@ plot_beta <- function(alpha, beta) {
 }
 
 # Distirbuciones beta
-Latentes=plot_beta(0.396, 99.594)+
-  xlim(0, .1)+
-    labs(title = paste("Distribución de latentes \n (alpha =", 0.396, ", beta =", 99.594, ")"),
-         x = "Probabilidad", y = "Densidad")+
-    theme(text = element_text(size = 6))+
+Latentes <- plot_beta(0.396, 99.594) +
+  xlim(0, .1) +
+  labs(
+    title = paste("Distribución de latentes \n (alpha =", 0.396, ", beta =", 99.594, ")"),
+    x = "Probabilidad", y = "Densidad"
+  ) +
+  theme(text = element_text(size = 6)) +
   geom_vline(xintercept = 0.004, linetype = "dashed", color = "#009392")
 
-Plantulas=plot_beta(0.000, 99.990)+
-  xlim(0, .025)+ylim(0, .05)+
-    labs(title = paste("Distribución de plántulas \n (alpha =", 0.000, ", beta =", 99.90, ")"),
-         x = "probabilidad", y = "Densidad")+
-    theme(text = element_text(size = 6))+
+Plantulas <- plot_beta(0.000, 99.990) +
+  xlim(0, .025) + ylim(0, .05) +
+  labs(
+    title = paste("Distribución de plántulas \n (alpha =", 0.000, ", beta =", 99.90, ")"),
+    x = "probabilidad", y = "Densidad"
+  ) +
+  theme(text = element_text(size = 6)) +
   geom_vline(xintercept = 0.000, linetype = "dashed", color = "#009392")
 
-Rosetta=plot_beta(28.710, 71.280)+
-  xlim(0, .5)+
-    labs(title = paste("Distribución de rosettas \n (alpha =", 28.710, ", beta =", 71.280, ")"),
-         x = "probabilidad", y = "Densidad")+
-    theme(text = element_text(size = 6))+
+Rosetta <- plot_beta(28.710, 71.280) +
+  xlim(0, .5) +
+  labs(
+    title = paste("Distribución de rosettas \n (alpha =", 28.710, ", beta =", 71.280, ")"),
+    x = "probabilidad", y = "Densidad"
+  ) +
+  theme(text = element_text(size = 6)) +
   geom_vline(xintercept = 0.287, linetype = "dashed", color = "#009392")
 
-Adultos=plot_beta(10.197, 89.793)+
-  xlim(0, .27)+
-    labs(title = paste("Distribución de Ind. con flores \n (alpha =", 10.197, ", beta =", 89.793, ")"),
-         x = "probabilidad", y = "Densidad")+
-    theme(text = element_text(size = 6))+
+Adultos <- plot_beta(10.197, 89.793) +
+  xlim(0, .27) +
+  labs(
+    title = paste("Distribución de Ind. con flores \n (alpha =", 10.197, ", beta =", 89.793, ")"),
+    x = "probabilidad", y = "Densidad"
+  ) +
+  theme(text = element_text(size = 6)) +
   geom_vline(xintercept = 0.102, linetype = "dashed", color = "#009392")
 
-Fallecidos=plot_beta(60.687, 39.303)+
-  xlim(.40, .8)+
-    labs(title = paste("Distribución de fallecidos \n (alpha =", 60.687, ", beta =", 39.303, ")"),
-         x = "probabilidad", y = "Densidad")+
-    theme(text = element_text(size = 6))+
+Fallecidos <- plot_beta(60.687, 39.303) +
+  xlim(.40, .8) +
+  labs(
+    title = paste("Distribución de fallecidos \n (alpha =", 60.687, ", beta =", 39.303, ")"),
+    x = "probabilidad", y = "Densidad"
+  ) +
+  theme(text = element_text(size = 6)) +
   geom_vline(xintercept = 0.607, linetype = "dashed", color = "#009392")
 
-ggarrange(Latentes, Plantulas, Rosetta, Adultos, Fallecidos, ncol=3, nrow=2)
+ggarrange(Latentes, Plantulas, Rosetta, Adultos, Fallecidos, ncol = 3, nrow = 2)
 
 ggsave("mi_gragico.tiff")
-
 ```
 
 ------------------------------------------------------------------------

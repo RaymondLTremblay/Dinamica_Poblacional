@@ -20,7 +20,6 @@ La elasticidad describe cuánto cambia la tasa de crecimiento poblacional (λ) a
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r Elas1, message=FALSE, warning=FALSE, comment=FALSE}
-#| error: true
 library(popdemo)
 library(popbio)
 library(ggplot2)
@@ -32,7 +31,6 @@ library(flextable)
 ```
 
 ```{r elas-theme}
-#| error: true
 rlt_theme <- theme(
   axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
   axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
@@ -52,7 +50,7 @@ rlt_theme <- theme(
     axis.line.y = element_line(colour = "black", linewidth = 1)
   )
 
-diverging= c("#009392","#CF597E","#E9E29C", "#39B185","#EEB479" , "#9CCB86" )
+diverging <- c("#009392", "#CF597E", "#E9E29C", "#39B185", "#EEB479", "#9CCB86")
 
 # --- 2. Combinarlos en un objeto de tipo lista ---
 # Esta lista se puede añadir al gráfico con un solo '+'
@@ -63,7 +61,7 @@ rlt_style_fill <- function() {
   )
 }
 
-rlt_style_colour <- function() { #este es mi codigo personal de color
+rlt_style_colour <- function() { # este es mi codigo personal de color
   list(
     rlt_theme,
     scale_colour_manual(values = diverging)
@@ -110,46 +108,44 @@ La diferencia entre sensibilidad y elasticidad es que la sensibilidad mide el im
 Tomando como ejemplo la matriz de elasticidad de *Erycina crista-galli* una orquídea de ramilla [@mondragon2007life], podremos recapitular todo lo previamente dicho (Tabla 1), así, lo **primero** que hay que recalcar es que el valor más alto de elasticidad para esta orquídea corresponde a la permanencia de los individuos adultos 2, es decir que cualquier pequeño cambio en el valor de dicha entrada (en la matriz de transición), tendrá el mayor impacto en el valor de lambda al comparar el valor de cambio en dicho parámetro cuando se modifiquen otras entradas de la matriz; **segundo**, es importante observar que al sumar todas las entradas de la matriz se obtiene un valor de uno. Lo mismo se mantiene cuando se suman todos los valores de elasticidad por estadio o por proceso. Es decir, si sumamos todos los valores de cada columna, tendremos el valor de elasticidad de cada estadio, para este caso el valor más alto lo ostenta el de adultos 2 (0.818), lo que implica que el destino de la población de *E. crista-galli* depende mayormente de lo que les pase a los individuos adultos.
 
 ```{r Elas2, message=FALSE, warning=FALSE}
-#| error: true
 
-etapas <- c ("plántula", "juvenil", "adulto1", "adulto2")
+etapas <- c("plántula", "juvenil", "adulto1", "adulto2")
 
-ec <- matrix (c(0, 0, 0.004, 0.062,
-                0.195, 0, 0, 0, 
-                0.171, 0.120, 0.053, 0.04,
-                0.073, 0.10, 0.435, 0.447), 
-      nrow = 4, ncol=4, byrow = TRUE, 
-      dimnames = list(etapas, etapas))
+ec <- matrix(
+  c(
+    0, 0, 0.004, 0.062,
+    0.195, 0, 0, 0,
+    0.171, 0.120, 0.053, 0.04,
+    0.073, 0.10, 0.435, 0.447
+  ),
+  nrow = 4, ncol = 4, byrow = TRUE,
+  dimnames = list(etapas, etapas)
+)
 
 # ec
-
 ```
 
-```{r Elas3, echo=FALSE}
-#| error: true
-#elas(ec)
+```{r Elas3}
+# elas(ec)
 
 # Convertir la matriz de elasticidad en un data frame
 
-ec_df = as.data.frame(elas(ec)) |> round(3)
+ec_df <- as.data.frame(elas(ec)) |> round(3)
 
 # Sumar las elasticidades por etapas y añadir una fila con las sumas
 
-ec_df = ec_df %>%
+ec_df <- ec_df %>%
   bind_rows(summarise_all(., ~ if (is.numeric(.)) sum(.) else "Total"))
-
 ```
 
-```{r Elas3b, echo=FALSE, warning = FALSE, message= FALSE}
-#| error: true
+```{r Elas3b, warning = FALSE, message= FALSE}
 
 ec_df <- ec_df %>%
-  mutate(stages = c("plántula", "juvenil", "adulto1", "adulto2", "suma")) %>%  # Add the new column
+  mutate(stages = c("plántula", "juvenil", "adulto1", "adulto2", "suma")) %>% # Add the new column
   relocate(stages, .before = everything())
 
 ec_df %>%
   flextable()
-
 ```
 
 Tabla 1. Matriz de elasticidad de *Erycina crista-galli*. En las casillas del renglón "suma" se encuentra el resultado de la sumatoria de los valores de elasticidad de cada entrada de la matriz por estadio (es decir todos los valores de la columna).
@@ -165,15 +161,14 @@ $$s_{ij} = \frac{v_i\, w_j}{\langle v, w \rangle}$$
 donde $w$ es el autovector derecho dominante (estructura estable de estadios), $v$ el autovector izquierdo dominante (valor reproductivo) y $\langle v, w \rangle = \sum_k v_k w_k$. La matriz de elasticidad se obtiene como $\mathbf{E} = (1/\lambda)\,\mathbf{S} \circ \mathbf{A}$ [@caswell2001matrix].
 
 ```{r ElasManual, message=FALSE, warning=FALSE}
-#| error: true
 
 # Paso 1: autovalor dominante y autovectores
 ev <- eigen(ec)
-lambda <- Re(ev$values[1])              # tasa finita de crecimiento (lambda)
-w <- Re(ev$vectors[, 1])                # autovector derecho: estructura estable
+lambda <- Re(ev$values[1]) # tasa finita de crecimiento (lambda)
+w <- Re(ev$vectors[, 1]) # autovector derecho: estructura estable
 
 ev_t <- eigen(t(ec))
-v <- Re(ev_t$vectors[, 1])              # autovector izquierdo: valor reproductivo
+v <- Re(ev_t$vectors[, 1]) # autovector izquierdo: valor reproductivo
 
 # Paso 2: matriz de sensibilidad S
 S <- outer(v, w) / sum(v * w)
@@ -202,19 +197,17 @@ La suma de cada grupo:
 - Fecundidad: 0.058
 
 ```{r Elas4}
-#| error: true
 
-#elas(ec)
+# elas(ec)
 
 # Convertir la matriz de elasticidad en un data frame
-ec_df = as.data.frame(elas(ec)) |> round(3)
+ec_df <- as.data.frame(elas(ec)) |> round(3)
 
 # Sumar las elasticidades por procesos (crecimiento, permanencia y fecundidad)
 ec_df
 
 ec_df %>%
   flextable()
-
 ```
 
 Tabla 2. Matriz de elasticidad de *Erycina crista-galli*. Los colores de las entradas de la matriz representan los procesos o tasas vitales: rojo es la permanencia, azul el crecimiento, el amarillo el decrecimiento o retrogresión y el verde la fecundidad. Así para obtener el valor de elasticidad por proceso, se tendrían que sumar las entradas de color que lo representen.
@@ -238,7 +231,7 @@ Las elasticidades también han sido utilizadas para establecer el comportamiento
 En la Figura 1 se observa los valores de elasticidad añadidos por proceso de historia de vida para cinco especies de orquídeas epífitas:
 
 ::: img-float
-![*Lepanthes eltoroensis*. Foto: Tremblay](images/Lepanthes_eltoroensis_Tremblay.jpeg){style="float: left; margin: 20px;width: 40% ; "}
+![*Lepanthes eltoroensis*. Foto: Tremblay](images/Lepanthes_eltoroensis_Tremblay.jpeg){style="float: left; margin: 20px;width: 40% ; " #fig-lepanthes-eltoroensis-tremblay}
 :::
 
 - *Artorima erubescens* [@garcia2003demografia]
@@ -253,19 +246,19 @@ Tabla 3. Valores elasticidad por proceso y por estadios no reproductivos y repro
 
 <br>
 
-```{r Elas5, echo=FALSE}
-#| error: true
+```{r Elas5}
 
-Elasticidad_s =tribble(~Especie, ~Fecundidad, ~Estasis, ~Crecimiento, ~Plántulas, ~No_reproductivos, ~Reproductivos,
-                              "*Erycina crista-galli*",  0.035, 0.718, 0.247, 0.0345, 0.0456, 0.9197,
-                              "*Artorima erubescens*",   0.000, 0.646, 0.354, 0.0023, 0.7207, 0.277,
-                              "*Laelia speciosa*",       0.116, 0.651, 0.328, 0.120, 0.669, 0.216,
-                              "*Lepanthes eltoroensis*", 0.005, 0.880, 0.115, 0.1133, 0.0784, 0.8083,
-                              "*Lepanthes caritensis*",  0.002, 0.885, 0.114, 0.018, 0.648, 0.335)
+Elasticidad_s <- tribble(
+  ~Especie, ~Fecundidad, ~Estasis, ~Crecimiento, ~Plántulas, ~No_reproductivos, ~Reproductivos,
+  "*Erycina crista-galli*", 0.035, 0.718, 0.247, 0.0345, 0.0456, 0.9197,
+  "*Artorima erubescens*", 0.000, 0.646, 0.354, 0.0023, 0.7207, 0.277,
+  "*Laelia speciosa*", 0.116, 0.651, 0.328, 0.120, 0.669, 0.216,
+  "*Lepanthes eltoroensis*", 0.005, 0.880, 0.115, 0.1133, 0.0784, 0.8083,
+  "*Lepanthes caritensis*", 0.002, 0.885, 0.114, 0.018, 0.648, 0.335
+)
 ```
 
-```{r Elas6, echo=FALSE}
-#| error: true
+```{r Elas6}
 
 Elasticidad_s %>%
   flextable()
@@ -274,18 +267,19 @@ Elasticidad_s %>%
 <br>
 
 ::: img-float
-![*Lepanthes caritensis*. Foto: Edwin Guevara](images/Lepanthes_caritensis_Edwin_Guevara.jpg){style="float: left; margin: 10px;width: 50%; "}
+![*Lepanthes caritensis*. Foto: Edwin Guevara](images/Lepanthes_caritensis_Edwin_Guevara.jpg){style="float: left; margin: 10px;width: 50%; " #fig-lepanthes-caritensis-edwin-guevara}
 :::
 
 ::: img-float
-![*Lepanthes caritensis*. Foto: Edwin Guevara](images/Lepanthes_caritensis_Phorophyte.jpg){style="float: right; margin: 10px;width: 50%;"}
+![*Lepanthes caritensis*. Foto: Edwin Guevara](images/Lepanthes_caritensis_Phorophyte.jpg){style="float: right; margin: 10px;width: 50%;" #fig-lepanthes-caritensis-phorophyte}
 :::
 
 <br>
 
-```{r Elas7, message=FALSE, echo=TRUE}
-#| error: true
-EE = Elasticidad_s %>%
+```{r, message=FALSE, echo=TRUE}
+#| label: fig-Elas7
+#| fig-cap: "Diagrama de barras agrupadas de la elasticidad por proceso demográfico (fecundidad, estasis, crecimiento), con barras coloreadas por especie."
+EE <- Elasticidad_s %>%
   select(Especie, Fecundidad, Estasis, Crecimiento) %>%
   pivot_longer(
     cols = -Especie,
@@ -293,7 +287,7 @@ EE = Elasticidad_s %>%
     values_to = "Elasticidad"
   )
 
-EE$s = factor(
+EE$s <- factor(
   EE$s,
   levels = c("Fecundidad", "Estasis", "Crecimiento")
 )
@@ -308,19 +302,19 @@ ggplot(EE, aes(x = s, y = Elasticidad, fill = Especie)) +
   ) +
   scale_fill_discrete(
     guide = guide_legend(label.theme = element_text(angle = 0, face = "italic"))
-  )+
+  ) +
   rlt_style_fill()
-
 ```
 
 Figura 1. Valores de elasticidad por proceso demográfico de cinco especies de orquídeas epífitas.
 
 En la figura 2 se observan los valores de elasticidad agrupados por estadios (plántulas, individuos no reproductivos y reproductivos). Los valores de elasticidad son más altos en los estadios no reproductivo en tres especies y reproductivos (adultos activos) en dos especies. Las plántulas tienen las elasticidad más pequeñas en todas las especies.
 
-```{r Elas8, message=FALSE}
-#| error: true
+```{r, message=FALSE}
+#| label: fig-Elas8
+#| fig-cap: "Diagrama de barras agrupadas de la elasticidad por etapa de vida (plántulas, no reproductivos, reproductivos), con barras coloreadas por especie."
 
-EE1 = Elasticidad_s %>%
+EE1 <- Elasticidad_s %>%
   select(Especie, Plántulas, No_reproductivos, Reproductivos) %>%
   pivot_longer(
     cols = -Especie,
@@ -328,7 +322,7 @@ EE1 = Elasticidad_s %>%
     values_to = "Elasticidad"
   )
 
-EE1$s2 = factor(
+EE1$s2 <- factor(
   EE1$s,
   levels = c("Plántulas", "No_reproductivos", "Reproductivos")
 )
@@ -343,9 +337,8 @@ ggplot(EE1, aes(x = s2, y = Elasticidad, fill = Especie)) +
   ) +
   scale_fill_discrete(
     guide = guide_legend(label.theme = element_text(angle = 0, face = "italic"))
-  )+
+  ) +
   rlt_style_fill()
-
 ```
 
 Figura 2. Valores de elasticidad por estadio de cinco especies de orquídeas epífitas.
@@ -361,7 +354,7 @@ Las dos herramientas son complementarias: la elasticidad identifica las transici
 ------------------------------------------------------------------------
 
 ::: img-float
-![*Laelia speciosa*. Foto: Eduardo A. Pérez García](images/Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg){style="float: right; margin: 10px;width: 40% ; "}
+![*Laelia speciosa*. Foto: Eduardo A. Pérez García](images/Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg){style="float: right; margin: 10px;width: 40% ; " #fig-laelia-speciosa-eduardo-a-perez-garcia}
 
 ## Limitaciones {#limitaciones}
 
@@ -378,9 +371,8 @@ Por último, las elasticidades calculadas mediante `eigen.analysis()` o `popbio:
 ### Introducir los nombres de los estadios o categorías de tamaño según sea su caso
 
 ```{r elas-life-cycle-stages}
-#| error: true
 
-etapas <- c ("plántula", "juvenil", "adulto1", "adulto2")
+etapas <- c("plántula", "juvenil", "adulto1", "adulto2")
 ```
 
 ### Capturar una matriz
@@ -388,14 +380,17 @@ etapas <- c ("plántula", "juvenil", "adulto1", "adulto2")
 Capturar los datos de la matriz para *Erycina crita-galli* [@mondragon2007life] (tabla 4 dentro de dicho artículo)
 
 ```{r Elas9, message=FALSE, warning=FALSE}
-#| error: true
 
-ec <- matrix (c(0, 0, 0.004, 0.062,
-                0.195, 0, 0, 0, 
-                0.171, 0.120, 0.053, 0.04,
-                0.073, 0.10, 0.435, 0.447), 
-      nrow = 4, ncol=4, byrow = TRUE, 
-      dimnames = list(etapas, etapas))
+ec <- matrix(
+  c(
+    0, 0, 0.004, 0.062,
+    0.195, 0, 0, 0,
+    0.171, 0.120, 0.053, 0.04,
+    0.073, 0.10, 0.435, 0.447
+  ),
+  nrow = 4, ncol = 4, byrow = TRUE,
+  dimnames = list(etapas, etapas)
+)
 
 ec
 ```
@@ -405,12 +400,10 @@ ec
 Introducir los valores iniciales por estadio (vector N): Cuantos individuos hay en cada estadio al inicio del análisis.
 
 ```{r Elas9b, message=FALSE, warning=FALSE}
-#| error: true
 
 N0_ec <- matrix(c(41, 50, 246, 226), ncol = 1)
 
 N0_ec
-
 ```
 
 ## La función `eigen.analysis`
@@ -418,7 +411,6 @@ N0_ec
 Para calcular los autovalores y autovectores de la matriz se usa la función `eigen.analysis` del paquete `popbio`. Se obtiene el crecimiento intrínseco **Lambda**, la sensibilidad, elasticidad, valor reproductivo y *damping ratio*. En el capítulo de propiedades se presenta la interpretación de los valores reproductivos y el *damping ratio*.
 
 ```{r Elas10}
-#| error: true
 
 eigen.analysis(ec, zero = FALSE) # la función es del paquete popbio
 ```

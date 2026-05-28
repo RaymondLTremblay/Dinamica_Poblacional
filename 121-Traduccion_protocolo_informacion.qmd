@@ -11,12 +11,14 @@ twitter-card:
 
 #### Librerías de R requeridas para el siguiente módulo
 
-```{r proto-setup}
-#| error: true
+```{r}
+#| label: fig-proto-setup
+#| fig-cap: "Bloque de configuración que carga los paquetes Rage, DiagrammeR y tibble junto con las funciones auxiliares plc_save(), grviz_save() y save_plot_png()."
 library(Rage)
 library(DiagrammeR)
 library(tibble)
-source("R/figuras_helpers.R")  # plc_save(), grviz_save(), save_plot_png()
+library(flextable)
+source("R/figuras_helpers.R") # plc_save(), grviz_save(), save_plot_png()
 ```
 
 ## "A standard protocol to report discrete stage-structured demographic information"
@@ -73,7 +75,7 @@ Para presentar las prácticas actuales en la comunicación de datos y metadatos 
 
 Entrevistamos especialistas de ecología de poblaciones, a quienes identificamos por haber publicado artículos revisados por pares que incluyen MPP, con respecto a nuestra capacidad actual para comunicar datos y metadatos de los MPP con fines de reproducibilidad. Específicamente, preguntamos qué tan bien las publicaciones revisadas por pares transmiten los atributos de los MPP necesarios para asegurar la reproducibilidad. Además, preguntamos si los investigadores pensaban que un método estandarizado de comunicación matricial es "necesario para la comunicación coherente de los MPP en la literatura" (la lista completa de 11 preguntas se puede encontrar en Información de apoyo). La encuesta se distribuyó mediante Google Forms. Identificamos 1390 participantes potenciales bajo el criterio de ser el autor principal y/o de correspondencia de una publicación que contiene al menos un MPP. Más del 50% de las direcciones de correo electrónico correspondientes estaban desactualizadas y no hubo seguimiento. De los aproximadamente 650 investigadores restantes que fueron contactados, 60 participantes completaron la encuesta. Como era de esperar, los investigadores comentaron de una gran heterogeneidad en los componentes incluidos en la comunicación de los MPP (Figura 1). Los atributos mejor comunicados según estos participantes de la encuesta son los nombres de los rasgos (es decir, el fenotipo mediante el cual se estructuró el MPP: etapa/edad/tamaño clases), la duración del censo e intervalo de proyección, mientras que los atributos peor comunicados son los gráficos del ciclo de vida, fórmulas que definen las tasas vitales y los vectores de población (es decir, número/frecuencia de individuos en cada etapa/edad). Es importante destacar que el 83% de los participantes de la encuesta acordaron que la disciplina si necesita un método estandarizado para la comunicación de los MPP.
 
-![FIGURA 1: Resultados de la encuesta a expertos en ecología de poblaciones que participaron (n = 60). Los participantes calificaron su confianza en la comunicación adecuada de los componentes de los modelos matriciales de población (MPP) en sistemas revisados por pares. Cada componente de MPP comunicación en el eje y representa una declaración que se muestra en la encuesta (consulte SOM para ver la encuesta completa). Para todas las declaraciones por encima del línea discontinua, se preguntó a los participantes si ese atributo (por ejemplo, intervalo de proyección) estaba suficientemente bien informado en la publicación revisado por pares revisión. La afirmación "método estandarizado" indica la respuesta de los participantes sobre si el campo de la ecología de poblaciones se beneficiaría de un método estandarizado de informes MPP. El tamaño de los puntos indica el número de encuestados con esa respuesta y están coloreados (es decir, naranja = desacuerdo; gris = neutro; azul = acuerdo). Para facilitar, el porcentaje de acuerdo (es decir, el porcentaje de participantes que estuvieron de acuerdo o muy de acuerdo con la afirmación) se muestra en el lado derecho de la trama.](images/Survey_paper.png)
+![FIGURA 1: Resultados de la encuesta a expertos en ecología de poblaciones que participaron (n = 60). Los participantes calificaron su confianza en la comunicación adecuada de los componentes de los modelos matriciales de población (MPP) en sistemas revisados por pares. Cada componente de MPP comunicación en el eje y representa una declaración que se muestra en la encuesta (consulte SOM para ver la encuesta completa). Para todas las declaraciones por encima del línea discontinua, se preguntó a los participantes si ese atributo (por ejemplo, intervalo de proyección) estaba suficientemente bien informado en la publicación revisado por pares revisión. La afirmación "método estandarizado" indica la respuesta de los participantes sobre si el campo de la ecología de poblaciones se beneficiaría de un método estandarizado de informes MPP. El tamaño de los puntos indica el número de encuestados con esa respuesta y están coloreados (es decir, naranja = desacuerdo; gris = neutro; azul = acuerdo). Para facilitar, el porcentaje de acuerdo (es decir, el porcentaje de participantes que estuvieron de acuerdo o muy de acuerdo con la afirmación) se muestra en el lado derecho de la trama.](images/Survey_paper.png){#fig-survey-paper}
 
 <br>
 
@@ -83,11 +85,11 @@ Para cuantificar qué tan bien se comunican los datos y metadatos de los MPP en 
 
 <br>
 
-![FIGURA2: Tanto los artículos sobre MPP de plantas como de animales muestran patrones similares en cuanto a qué componentes presentados de MPP se comunican. El eje y indica el porcentaje de revisión por pares publicaciones en COMPADRE y COMADRE que contienen un determinado atributo necesario para la comunicación clara de la información de MPP y su reproducibilidad de un subconjunto aleatorio de 150 artículos del total de 643 artículos de COMPADRE y 150 de los 395 artículos totales de COMADRE (300 artículos en total). Los atributos son: Ubicación: provincia/ciudad/punto de referencia; MPP: fue el MPP incluido en el manuscrito; Duración del censo: fechas de inicio y finalización de la recopilación de datos; Fórmulas de tasa vital: descomposición de los elementos de la matriz en sus componentes subyacentes (es decir, contribuciones de la supervivencia, el crecimiento y la reproducción); Intervalo de proyección: el período de tiempo entre observaciones; Latitud longitud: coordenadas espaciales; Gráfico del ciclo de vida: la representación visual de la demografía. transiciones y a/sexual per cápita contribuciones; Vector de población: distribución st/edad de los individuos en el tiempo t asociada con la información reportada MPP.](images/Database_paper.png)
+![FIGURA2: Tanto los artículos sobre MPP de plantas como de animales muestran patrones similares en cuanto a qué componentes presentados de MPP se comunican. El eje y indica el porcentaje de revisión por pares publicaciones en COMPADRE y COMADRE que contienen un determinado atributo necesario para la comunicación clara de la información de MPP y su reproducibilidad de un subconjunto aleatorio de 150 artículos del total de 643 artículos de COMPADRE y 150 de los 395 artículos totales de COMADRE (300 artículos en total). Los atributos son: Ubicación: provincia/ciudad/punto de referencia; MPP: fue el MPP incluido en el manuscrito; Duración del censo: fechas de inicio y finalización de la recopilación de datos; Fórmulas de tasa vital: descomposición de los elementos de la matriz en sus componentes subyacentes (es decir, contribuciones de la supervivencia, el crecimiento y la reproducción); Intervalo de proyección: el período de tiempo entre observaciones; Latitud longitud: coordenadas espaciales; Gráfico del ciclo de vida: la representación visual de la demografía. transiciones y a/sexual per cápita contribuciones; Vector de población: distribución st/edad de los individuos en el tiempo t asociada con la información reportada MPP.](images/Database_paper.png){#fig-database-paper}
 
 <br>
 
-![FIGURA 3: En los artículos sobre MPP de plantas y animales, la mayoría de las publicaciones no contienen suficiente información para la reproducibilidad. Proporción de artículos en COMPADRE y COMADRE agrupados por su acceso abierto información en publicaciones revisado por pares publicaciones sobre población matricial datos (MPP) y metadatos del modelo. Siguiendo el mismo esquema que en la Figura 2, los artículos se clasificaron en seis grupos, desde "inadecuados" hasta ‘MPP + VR + POP+ECO’ (es decir, totalmente reproducible). "Inadecuado" se refiere a artículos a los que les falta el MPP y/o el intervalo de proyección (es decir, un MPP intervalo de tiempo específico necesario para la proyección), sin el cual la mayoría de los resultados demográficos no pueden calcularse. 'MPP': el papel contiene el MPP e intervalo de proyección, pero no hay fórmulas de tasa vital que describan los elementos de la matriz. 'MPP + VR': contiene toda la información de 'MPP' junto con fórmulas de tasa vital para los elementos de la matriz. 'MPP + VR + POP': contiene toda la información de 'MPP + VR' junto con el vector de población. 'MPP + VR + ECO': contiene toda la información para 'MPP + VR' junto con la latitud y longitud coordenadas y censo duración de la población examinada. ‘MPP + VR + POP + ECO’: contiene toda la información para ‘MPP + VR’ junto con el vector de población/ distribución, latitud-longitud coordenadas y duración del censo.](images/COMPADRE_MADRE.png)
+![FIGURA 3: En los artículos sobre MPP de plantas y animales, la mayoría de las publicaciones no contienen suficiente información para la reproducibilidad. Proporción de artículos en COMPADRE y COMADRE agrupados por su acceso abierto información en publicaciones revisado por pares publicaciones sobre población matricial datos (MPP) y metadatos del modelo. Siguiendo el mismo esquema que en la Figura 2, los artículos se clasificaron en seis grupos, desde "inadecuados" hasta ‘MPP + VR + POP+ECO’ (es decir, totalmente reproducible). "Inadecuado" se refiere a artículos a los que les falta el MPP y/o el intervalo de proyección (es decir, un MPP intervalo de tiempo específico necesario para la proyección), sin el cual la mayoría de los resultados demográficos no pueden calcularse. 'MPP': el papel contiene el MPP e intervalo de proyección, pero no hay fórmulas de tasa vital que describan los elementos de la matriz. 'MPP + VR': contiene toda la información de 'MPP' junto con fórmulas de tasa vital para los elementos de la matriz. 'MPP + VR + POP': contiene toda la información de 'MPP + VR' junto con el vector de población. 'MPP + VR + ECO': contiene toda la información para 'MPP + VR' junto con la latitud y longitud coordenadas y censo duración de la población examinada. ‘MPP + VR + POP + ECO’: contiene toda la información para ‘MPP + VR’ junto con el vector de población/ distribución, latitud-longitud coordenadas y duración del censo.](images/COMPADRE_MADRE.png){#fig-compadre-madre}
 
 <br>
 
@@ -134,8 +136,9 @@ Una matriz simple determinista y independiente de la densidad.\*
 
 (B) Diagrama de ciclo de vida
 
-```{r Proto1, eval=TRUE, echo=FALSE}
-#| error: true
+```{r, eval=TRUE}
+#| label: fig-Proto1
+#| fig-cap: "Diagrama de ciclo de vida de tres estadios construido manualmente con DiagrammeR/grviz_save a partir de la matriz matA con transiciones y fecundidad de 3.2."
 
 
 # hidden code to produce figures
@@ -184,23 +187,22 @@ digraph {
   ),
   png = "images/Proto1_diagrama_ciclo.png"
 )
-
 ```
 
 ------------------------------------------------------------------------
 
 (c) Descripción del Censo
 
-```{r Proto2, eval=TRUE, echo=FALSE}
-#| error: true
+```{r Proto2, eval=TRUE}
 
-Descripcion_censo=tribble(~"Atributo del censo", ~"Ejemplo",
-                          "Duración del Censo", "May 2021 to May 2022",
-                          "Localidad", "Sheffield, UK (53°24′41.5 N 1°30′02.3 W)",
-                          "Intervalo de proyección", "1 año",
-                          "Modo de reproducción", "Pico de reproducción* (En Junio y Julio)",
-                          "Tipo de Censo", "Pre-reproductivo")
-
+Descripcion_censo <- tribble(
+  ~"Atributo del censo", ~"Ejemplo",
+  "Duración del Censo", "May 2021 to May 2022",
+  "Localidad", "Sheffield, UK (53°24′41.5 N 1°30′02.3 W)",
+  "Intervalo de proyección", "1 año",
+  "Modo de reproducción", "Pico de reproducción* (En Junio y Julio)",
+  "Tipo de Censo", "Pre-reproductivo"
+)
 
 
 flextable(Descripcion_censo) |>
@@ -208,24 +210,19 @@ flextable(Descripcion_censo) |>
   add_footer_lines(values = "Pico de reproducción = Birth-Pulse") |>
   fontsize(size = 8, part = "footer") |>
   italic(part = "footer")
-
-
 ```
 
 ------------------------------------------------------------------------
 
 (D) Nombres de las etapas y clasificación
 
-```{r Proto3, eval=TRUE, echo=FALSE}
-#| error: true
+```{r Proto3, eval=TRUE}
 
-Etapas=tribble(~"Número de las Etapas", ~"Nombre de la Etapa", ~"Criterio de Clasificación",
-               1, "Plántulas", "Un individuo recientemente germinado que tiene menos de cuatro hojas y no ha desarrollado la estructura de roseta radial. Las hojas miden menos de tres centímetros de largo",
-               2, "Roseta", "Un individuo con una morfología radial pronunciada en la estructura de la hoja. Las hojas miden entre tres y seis centímetros en longitud",
-               3, "Plantas adultas", "Un individuo con una morfología radial pronunciada en la estructura de la hoja. Las hojas miden más de seis centímetros en longitud"
-               
-               
-               
+Etapas <- tribble(
+  ~"Número de las Etapas", ~"Nombre de la Etapa", ~"Criterio de Clasificación",
+  1, "Plántulas", "Un individuo recientemente germinado que tiene menos de cuatro hojas y no ha desarrollado la estructura de roseta radial. Las hojas miden menos de tres centímetros de largo",
+  2, "Roseta", "Un individuo con una morfología radial pronunciada en la estructura de la hoja. Las hojas miden entre tres y seis centímetros en longitud",
+  3, "Plantas adultas", "Un individuo con una morfología radial pronunciada en la estructura de la hoja. Las hojas miden más de seis centímetros en longitud"
 )
 
 flextable(Etapas) |>
@@ -236,21 +233,18 @@ flextable(Etapas) |>
 
 (E) Definiciones de las Tasas vitales
 
-```{r Proto4, eval=TRUE, echo=FALSE}
-#| error: true
-Vital=tribble(~"Tasa Vital", ~"Definición", ~"Procedencia de los valores",
-               "$S_{ij}$", "Supervivencia de la etapa *j* a la etapa *i*", "Datos de campo",
-               "$N_{s}$", "Número de semillas por fruto", "Datos de campo",
-               "$N_{fx}$", "Número de frutos producido por un individuo en el tamaño de categoría *x*", "Datos de campo",
-               "$P_{rx}$", "La probabilidad de reproducción de un adulto en la categoría *x*", "Datos de campo",
-               "$P_{s}$", "Probabilidad de germinación de semillas y supervivencia de plántulas en el intervalo de proyección", "Datos de Invernadero"
+```{r Proto4, eval=TRUE}
+Vital <- tribble(
+  ~"Tasa Vital", ~"Definición", ~"Procedencia de los valores",
+  "$S_{ij}$", "Supervivencia de la etapa *j* a la etapa *i*", "Datos de campo",
+  "$N_{s}$", "Número de semillas por fruto", "Datos de campo",
+  "$N_{fx}$", "Número de frutos producido por un individuo en el tamaño de categoría *x*", "Datos de campo",
+  "$P_{rx}$", "La probabilidad de reproducción de un adulto en la categoría *x*", "Datos de campo",
+  "$P_{s}$", "Probabilidad de germinación de semillas y supervivencia de plántulas en el intervalo de proyección", "Datos de Invernadero"
 )
 knitr::kable(Vital, escape = FALSE)
 
-#Vital
-
-
-
+# Vital
 ```
 :::
 
@@ -260,14 +254,14 @@ knitr::kable(Vital, escape = FALSE)
 (F) Valores de las razones de transición vitales
 
 | Etapas Vitales | Estimados\* | Error Estándar\*\* | Tamaño de muestra (N)\*\*\* |
-|:---------------|---------------:|----------------:|-----------------------:|
-| $S_{21}$       |       0.400 |               0.100 |                          80 |
-| $S_{32}$       |       0.850 |               0.050 |                         160 |
-| $S_{33}$       |       0.900 |               0.020 |                         160 |
-| $N_{s}$        |        1000 |                 150 |                          80 |
-| $N_{f3}$       |       2.000 |                 300 |                          80 |
-| $P_{r3}$       |       0.300 |               0.040 |                         200 |
-| $P_{s}$        |       0.005 |               0.001 |                         500 |
+|:---------------|------------:|-------------------:|----------------------------:|
+| $S_{21}$       |       0.400 |              0.100 |                          80 |
+| $S_{32}$       |       0.850 |              0.050 |                         160 |
+| $S_{33}$       |       0.900 |              0.020 |                         160 |
+| $N_{s}$        |        1000 |                150 |                          80 |
+| $N_{f3}$       |       2.000 |                300 |                          80 |
+| $P_{r3}$       |       0.300 |              0.040 |                         200 |
+| $P_{s}$        |       0.005 |              0.001 |                         500 |
 
 \*Si estas estimaciones dependen del tamaño de la población (es decir, dependencia de la densidad) o en respuesta a una variable ambiental (es decir, ambiental, estocasticidad), la estimación debe comunicarse como una función (por ejemplo, $S_{33}\sim\ 0,9\ +\ \beta_{precipitacion}\ \cdot\ 0,01$ donde la precipitación ∼ N(5, 1)). Además, si se trata de una estimación puntual, los investigadores deben indicar si los valores representan valores medios o medianos.
 
@@ -279,30 +273,26 @@ knitr::kable(Vital, escape = FALSE)
 
 (G) Fórmula MPP (Mayo 2021 a Mayo 2022)
 
-```{r Proto5, eval=TRUE, echo=FALSE}
-#| error: true
-Matriz=tribble(~"Plántulas", ~"Rosetas", ~"Adultos",
-               "0", "0", "$N_{s}*N_{f3}*P_{r3}*P{s}$",
-               "$S_{21}$", "0", "0",
-                "0", "$S_{32}$", "$S_{33}$",
-
+```{r Proto5, eval=TRUE}
+Matriz <- tribble(
+  ~"Plántulas", ~"Rosetas", ~"Adultos",
+  "0", "0", "$N_{s}*N_{f3}*P_{r3}*P{s}$",
+  "$S_{21}$", "0", "0",
+  "0", "$S_{32}$", "$S_{33}$",
 )
 knitr::kable(Matriz, escape = FALSE)
 ```
 
 (H) Vector de la población (Mayo 2021)
 
-```{r proto-vector-tabla, eval=TRUE, echo=FALSE}
-#| error: true
-Vector=tribble(~"Etapa", ~"Cantidad", ~"Intervalo de Confianza de 95%*",
-               "1", "1350", "1150-1550",
-               "2", "550", "530-570",
-                "3", "300", "290-310"
-
+```{r proto-vector-tabla, eval=TRUE}
+Vector <- tribble(
+  ~"Etapa", ~"Cantidad", ~"Intervalo de Confianza de 95%*",
+  "1", "1350", "1150-1550",
+  "2", "550", "530-570",
+  "3", "300", "290-310"
 )
 flextable(Vector)
-
-
 ```
 
 \*Esta medida de incertidumbre también puede ser la desviación estándar de la estimación, la varianza o un intervalo de confianza/creíble a discreción. del investigador.
@@ -350,7 +340,7 @@ Las fuentes de datos secundarias son críticas para la reproducibilidad. Las fue
 
 <br>
 
-![FIGURA 4: La descomposición de un MPP en sus submatrices permite aislar tasas vitales que de otro modo estarían enmascaradas. La matriz A representa la MPP. Dado que las transiciones individuales pueden representarse por múltiples tasas demográficas (por ejemplo, regresión, reproducción sexual y clonalidad), reproducción), descomponer A en sus submatrices U, F y C permite realizar inferencias demográficas específicas sobre qué transiciones demográficas están impulsando la dinámica de la población.](images/Matrices_A_U_F_C.jpg) <br>
+![FIGURA 4: La descomposición de un MPP en sus submatrices permite aislar tasas vitales que de otro modo estarían enmascaradas. La matriz A representa la MPP. Dado que las transiciones individuales pueden representarse por múltiples tasas demográficas (por ejemplo, regresión, reproducción sexual y clonalidad), reproducción), descomponer A en sus submatrices U, F y C permite realizar inferencias demográficas específicas sobre qué transiciones demográficas están impulsando la dinámica de la población.](images/Matrices_A_U_F_C.jpg){#fig-matrices-a-u-f-c-1} <br>
 
 4.3 \| Archivando los datos en COMPADRE y COMADRE
 

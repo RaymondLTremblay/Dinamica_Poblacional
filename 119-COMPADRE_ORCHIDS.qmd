@@ -50,7 +50,6 @@ Sin esta armonización, las "comparaciones entre especies" pueden ser artefactos
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r Compr1, message=FALSE}
-#| error: true
 
 library(Rcompadre) # Paquete para trabajar con la base de datos de COMPADRE y COMADRE
 library(tidyverse) # Paquete para activar múltiples paquetes
@@ -63,7 +62,7 @@ library(leaflet)
 library(Rage) # función para calcular el largo de vida esperada entre otras
 library(car)
 library(popdemo)
-
+source("R/figuras_helpers.R") # mat_to_ft(), compmat_to_ft(), pretty()
 ```
 
 Uno de los esfuerzos más grandes para compilar el conocimiento actual sobre la ecología de poblaciones es la creación y mantenimiento de las bases de datos de COMPADRE y COMADRE. COMPADRE es una base de datos de matrices de proyección poblacional de **plantas**; COMADRE es la base correspondiente para **animales**. En este capítulo se presenta una introducción a COMPADRE y algunas de las funciones del paquete `Rcompadre`. En el próximo capítulo se presentan funciones del paquete `Rage`. La información aquí no sustituye la documentación oficial en la [página web de COMPADRE](https://compadre-db.org/) ni los tutoriales en la [sección Education](https://compadre-db.org/Education).
@@ -88,7 +87,7 @@ Este capítulo cubre los pasos 1–4. El paso 5 se desarrolla en los capítulos 
 ## ¿Qué función de `Rcompadre` necesito? — Árbol de decisión
 
 | Si quiero… | Use |
-|----|----|
+|------------------------------------|------------------------------------|
 | Bajar la base completa por primera vez | `cdb_fetch("compadre")` |
 | Ver los metadatos (especie, año, ubicación, etc.) | `cdb_metadata(x)` |
 | Filtrar a una familia | `subset(x, Family == "Orchidaceae")` *o* `x %>% filter(Family == "Orchidaceae")` |
@@ -120,7 +119,7 @@ Este capítulo cubre los pasos 1–4. El paso 5 se desarrolla en los capítulos 
 De los más de 50 campos en COMPADRE, estos 9 son los que usará el 95% del tiempo:
 
 | Campo | Qué contiene |
-|----|----|
+|------------------------------------|------------------------------------|
 | `Family` | Familia taxonómica (ej. `"Orchidaceae"`) |
 | `SpeciesAccepted` | Nombre científico aceptado |
 | `MatrixPopulation` | Identificador de la población (varias por especie en muchos estudios) |
@@ -165,7 +164,6 @@ compadre <- cdb_fetch("compadre")
 Para garantizar reproducibilidad, este libro distribuye una copia local del *snapshot* de COMPADRE usado en los ejemplos. Esta es la opción que se usa en el resto del capítulo:
 
 ```{r Compr4, message=FALSE}
-#| error: true
 
 compadre <- readRDS("data/COMPADRE_2026.rds")
 ```
@@ -177,7 +175,6 @@ compadre <- readRDS("data/COMPADRE_2026.rds")
 Una vez cargada, conviene verificar el tamaño y la estructura. Al momento de edición la base tiene 9149 filas (matrices) y 59 columnas (variables/metadatos).
 
 ```{r Compr6}
-#| error: true
 
 dim(compadre)
 ```
@@ -197,10 +194,13 @@ Como podrán notar, solamente existen datos para una de las tres que probamos en
 ```
 
 ```{r compr7}
-#| error: true
 
-especies<- c("Epidendrum xanthinum", "Epipactis gigantea", "Caladenia latifolia")
-cdb_check_species(compadre, especies) |> flextable() |> ft_wide()
+especies <- c("Epidendrum xanthinum", "Epipactis gigantea", "Caladenia latifolia")
+# as.data.frame evita errores de duplicated.default(col_keys) cuando el
+# resultado viene con subclases de Rcompadre o columnas-lista.
+as.data.frame(cdb_check_species(compadre, especies)) |>
+  flextable() |>
+  ft_wide()
 ```
 
 ```{=latex}
@@ -216,8 +216,7 @@ Antes de seguir vamos a extraer de la base de datos de COMPADRE las especies de 
 Seleccionaremos todas las matrices que pertenecen a la familia *Orchidaceae*. Se observa que la base contiene 788 filas, es decir 788 matrices de transición de estados de poblaciones de orquídeas.
 
 ```{r compr8}
-#| error: true
-index_O = compadre %>%
+index_O <- compadre %>%
   filter(Family %in% c("Orchidaceae")) # Extraer la orquídeas de la base de datos.
 ```
 
@@ -232,8 +231,29 @@ Con la función **cdb_metadata()** se puede evaluar la metadata de la base de da
 ```
 
 ```{r Compr9}
-#| error: true
-cdb_metadata(index_O) %>% head() |> flextable() |> ft_wide() # Evaluar la metadata de la base de datos de COMPADRE
+# Evaluar la metadata de la base de datos de COMPADRE.
+# La metadata tiene muchas columnas; mostramos solo las primeras 4 como
+# tabla y enumeramos el resto como texto debajo (mejor legibilidad en
+# HTML/PDF/Word que una tabla extra-ancha).
+# Convertir a data.frame antes de indexar para evitar problemas con
+# columnas-lista o subclases de tibble que rompen flextable.
+meta_O <- as.data.frame(cdb_metadata(index_O) |> head())
+meta_O |>
+  dplyr::select(1:7) |>
+  flextable() |>
+  ft_wide()
+```
+
+**Otras columnas disponibles en la metadata** (no mostradas arriba):
+
+```{r Compr9b}
+#| table: tbl-NA
+#| echo: false
+#| results: asis
+
+cols <- names(meta_O)[-(1:4)]
+mat <- matrix(c(cols, rep("", (3 - length(cols) %% 3) %% 3)), ncol = 3, byrow = TRUE)
+knitr::kable(mat, col.names = NULL, format = "markdown")
 ```
 
 ```{=latex}
@@ -255,12 +275,18 @@ Observamos que hay 4 matriz en la lista. La matriz de transición de estados de 
 ```
 
 ```{r Compr10}
-#| error: true
 index_O %>% filter(SpeciesAccepted %in% c("Laelia speciosa")) -> Laeliasp # Extraer la información de la especie
 
-head(cdb_metadata(Laeliasp), n = 3) |>
-  flextable() |> ft_wide()  # Visualizar la información de la especie Laelia speciosa
+# Patrón seguro: as.data.frame + dplyr::select para evitar el error
+# duplicated.default(col_keys) que dispara Rcompadre con flextable.
+meta_lae <- as.data.frame(cdb_metadata(Laeliasp) |> head(n = 3))
+meta_lae |>
+  dplyr::select(1:4) |>
+  flextable() |>
+  ft_wide()
 ```
+
+**Otras columnas en la metadata de *Laelia speciosa*:** `r paste(names(meta_lae)[-(1:4)], collapse = ", ")`.
 
 ```{=latex}
 \end{landscape}
@@ -273,8 +299,7 @@ head(cdb_metadata(Laeliasp), n = 3) |>
 En el siguiente script se muestra cómo extraer la matriz de transición de estados de poblaciones (matA) de *Laelia speciosa* y las etapas de estas matrices. Nota que el objeto **mat** es una lista de matrices que incluye la matriz de transición (matU) de estados de una población, la matriz de fecundidad (matF), la matriz de clonaje (matC) y la suma de las tres matrices (matA = matU + matF + matC); vea el [capítulo de Matrices de transición, fecundidad y clonaje](#MatricesTFC).
 
 ```{r Compr11}
-#| error: true
-Laeliaspmat = matA(Laeliasp) # Extraer la matriz de transiciones de estados de la población (matA) de las cuatro filas
+Laeliaspmat <- matA(Laeliasp) # Extraer la matriz de transiciones de estados de la población (matA) de las cuatro filas
 Laeliaspmat
 ```
 
@@ -287,9 +312,7 @@ Note que esta función es muy práctica porque extrae la matriz de transición d
 Se selecciona la segunda fila del objeto **Laeliasp** que corresponde a la especie **Laelia speciosa** y la segunda matriz en la fila\[\[2\]\].
 
 ```{r Compr12}
-#| error: true
 Laeliasp$mat[[2]]
-
 ```
 
 ------------------------------------------------------------------------
@@ -305,16 +328,23 @@ Laeliasp$mat[[2]]
 ```
 
 ```{r Compr13}
-#| error: true
 
-Epipactis = compadre %>%
+Epipactis <- compadre %>%
   filter(Genus %in% c("Epipactis")) # Filtrar la información de *Epipactis* en la base de datos.
 
-head(cdb_metadata(Epipactis), n = 3) |>
-  flextable() |> ft_wide()
+meta_epi <- as.data.frame(cdb_metadata(Epipactis) |> head(n = 3))
+
+
+meta_epi |>
+  dplyr::select(1:3) |>
+  flextable() |>
+  ft_wide()
+
 
 # Nota que en el género *Epipactis* tenemos 51 filas, pero todas son de la misma especie de dos estudios distintos.
 ```
+
+
 
 ```{=latex}
 \end{landscape}
@@ -335,15 +365,18 @@ Seleccionamos la búsqueda anterior y seleccionamos solamente el estudio de Hens
 El primer paso es convertir cada una de las matrices de transición de estados de poblaciones en una lista de matrices y luego usar la función mpm_mean para calcular la matriz promedio de todas las matrices de transición de estados de poblaciones. De igual manera se puede calcular la mediana de los elementos de la matriz con la función mpm_median.
 
 ```{r Compr14}
-#| error: true
+#| results: asis
 
-Epi_Hens = index_O %>%
-  filter(SpeciesAuthor %in% c("Epipactis_atrorubens_3"))   # Filtrar la información de *Epipactis* en la base de datos.
+Epi_Hens <- index_O %>%
+  filter(SpeciesAuthor %in% c("Epipactis_atrorubens_3")) # Filtrar la información de *Epipactis* en la base de datos.
 
 mpms <- Epi_Hens$mat[Epi_Hens$SpeciesAuthor == "Epipactis_atrorubens_3"] # convertir en lista de matrices
 
-mpm_mean(mpms) # calcular la matriz promedio de todas las matrices de transición de estados de poblaciones. Se consigue una matriz para matA, matU, matF y matC.
-
+# Matriz promedio: produce un CompadreMat con matA, matU, matF, matC y la
+# clasificación de estadios. `compmat_to_ft` lo renderiza como flextables
+# legibles en HTML/PDF/Word (vs. el print() crudo que produce ASCII feo).
+mpm_promedio <- mpm_mean(mpms)
+compmat_to_ft(mpm_promedio)
 ```
 
 ------------------------------------------------------------------------
@@ -353,8 +386,9 @@ mpm_mean(mpms) # calcular la matriz promedio de todas las matrices de transició
 De igual manera se puede calcular la desviación estándar de los elementos de la matriz de transición de estados de poblaciones con la función mpm_sd.
 
 ```{r Compr15}
-#| error: true
-mpm_sd(mpms) # calcular la desviación estándar de los elementos de la matriz de transición de estados de poblaciones. Se consigue una matriz para matA, matU, matF y matC.
+#| results: asis
+# Desviación estándar de los elementos de la matriz; mismo helper.
+compmat_to_ft(mpm_sd(mpms))
 ```
 
 Muchas veces es tedioso evaluar la base de datos completa de COMPADRE. Una manera facilitar el acceso a los datos es extraer las matrices con la función cdb_flatten. Nota lo que hace esta función es extraer todas las matrices de transición de estados de poblaciones (matA, matU, matF, matC) y las etapas de cada matriz y crear una lista con esa información.
@@ -362,11 +396,12 @@ Muchas veces es tedioso evaluar la base de datos completa de COMPADRE. Una maner
 Aquí hay 49 filas que corresponden a las 49 matrices de transición de estados de poblaciones de orquídeas del estudio de Hens et al. 2017.
 
 ```{r Compr16}
-#| error: true
-Epi_flat = cdb_flatten(Epi_Hens) # Extraer las matrices de transición de estados de la población
+Epi_flat <- cdb_flatten(Epi_Hens) # Extraer las matrices de transición de estados de la población
 
-Epi_flat$matA[1] # miramos solamente la primera matriz
-
+# Primera matA de la lista; `Epi_flat$matA[1]` devuelve una list de longitud 1,
+# por eso usamos [[1]] para sacar la matriz misma. `mat_to_ft` la convierte
+# en flextable con etiquetas de fila/columna preservadas.
+mat_to_ft(Epi_flat$matA[[1]])
 ```
 
 ------------------------------------------------------------------------
@@ -416,17 +451,25 @@ Para facilitar el análisis usamos solamente las especies de *Caladenia* y ense�
 ```
 
 ```{r Compr17, warnings=FALSE, message=FALSE}
-#| error: true
 
-Caladenia = index_O %>%
+Caladenia <- index_O %>%
   filter(Genus %in% c("Caladenia")) # Filtrar la información de *Caladenia* en la base de datos.
 
 Compadre_flagged <- cdb_flag(Caladenia) # Evaluación de todas las opciones en la base de datos de COMPADRE
 
-flagged=Compadre_flagged %>% select(mat, SpeciesAccepted, starts_with("check"))
+flagged <- Compadre_flagged %>% select(mat, SpeciesAccepted, starts_with("check"))
 
-head(cdb_metadata(flagged), n = 3) |>
-  flextable() |> ft_wide()
+meta_fla <- as.data.frame(cdb_metadata(flagged) |> head(n = 3))
+meta_fla |>
+  dplyr::select(1:7) |>
+  flextable() |>
+  ft_wide()
+```
+
+**Otras columnas en la metadata de las matrices marcadas:** 
+
+```{r}
+paste(names(meta_fla)[-(1:4)], collapse = ", ")
 ```
 
 ```{=latex}
@@ -446,15 +489,26 @@ En los siguientes procedimientos se aplican filtros específicos a matrices de t
 ```
 
 ```{r Rage12}
-#| error: true
 
 Mat_ergodic <- subset(
   Compadre_flagged,
   check_NA_A == FALSE & check_ergodic == TRUE
 ) # para evaluar si las matrices son ergódicas solamente
-head(cdb_metadata(Mat_ergodic), n=2) |>
-  flextable() |> ft_wide()
+
+
+meta_erg <- as.data.frame(cdb_metadata(Mat_ergodic) |> head(n = 3))
+meta_erg |>
+  dplyr::select(1:4) |>
+  flextable() |>
+  ft_wide()
 ```
+
+**Otras columnas en la metadata de las matrices ergódicas:**
+
+```{r}
+paste(names(meta_erg)[-(1:4)], collapse = ", ")
+```
+
 
 ```{=latex}
 \end{landscape}
@@ -467,16 +521,26 @@ head(cdb_metadata(Mat_ergodic), n=2) |>
 ```
 
 ```{r Rage12b}
-#| error: true
 
 Mat_irred <- subset(
   Compadre_flagged,
   check_NA_A == FALSE & check_irreducible == TRUE
 ) # para evaluar si las matrices son irreducibles solamente
 
-head(cdb_metadata(Mat_irred), n=2) |>
-  flextable() |> ft_wide()
+
+meta_irr <- as.data.frame(cdb_metadata(Mat_irred) |> head(n = 3))
+meta_irr |>
+  dplyr::select(2, check_NA_A, 70) |>
+  flextable() |>
+  ft_wide() # nota que select(64, 70) se refiere a las posiciones de las columnas
 ```
+
+**Otras columnas en la metadata de las matrices irreducibles:** 
+
+```{r}
+paste(names(meta_irr)[-(1:4)], collapse = ", ")
+```
+
 
 ```{=latex}
 \end{landscape}
@@ -489,16 +553,24 @@ head(cdb_metadata(Mat_irred), n=2) |>
 ```
 
 ```{r Rage12c}
-#| error: true
 Mat_erg_irred <- subset(
   Compadre_flagged,
   check_NA_A == FALSE & check_irreducible == TRUE & check_ergodic == TRUE
 ) # para evaluar si las matrices son ergódicas e irreducibles al mismo tiempo
 
-head(cdb_metadata(Mat_erg_irred), n=2) |>
-  flextable() |> ft_wide()
-
+meta_ei <- as.data.frame(cdb_metadata(Mat_erg_irred) |> head(n = 3))
+meta_ei |>
+  dplyr::select(2, check_NA_A, 70, 69) |>
+  flextable() |>
+  ft_wide()
 ```
+
+**Otras columnas en la metadata de las matrices ergódicas e irreducibles:**.
+
+```{r}
+paste(names(meta_ei)[-(1:4)], collapse = ", ")
+```
+
 
 ```{=latex}
 \end{landscape}

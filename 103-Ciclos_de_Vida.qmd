@@ -14,7 +14,6 @@ Raymond L. Tremblay
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r CV1-setup-diagrams, include=FALSE, tidy=FALSE}
-#| error: true
 
 # Instalar (si es necesario) y cargar
 pkgs <- c("DiagrammeR", "DiagrammeRsvg", "rsvg", "Rage", "knitr", "ggplot2")
@@ -38,11 +37,15 @@ if (!dir.exists("images")) dir.create("images", recursive = TRUE)
 PNG_WIDTH  <- 2400
 PNG_HEIGHT <- 1600
 
-# Helper: DOT -> PNG
+# Helper: DOT -> PNG (+ sibling PDF vectorial para el editor)
 grviz_dot_to_png <- function(dot, outfile, width = PNG_WIDTH, height = PNG_HEIGHT) {
   g   <- DiagrammeR::grViz(dot)             # crea el widget (no se imprime aquí)
   svg <- DiagrammeRsvg::export_svg(g)       # SVG en texto
   rsvg::rsvg_png(charToRaw(svg), outfile, width = width, height = height)
+  # PDF vectorial sibling (mismo nombre, extensión .pdf). Permite que
+  # `figuras_editor/` reciba el diagrama en formato vectorial.
+  pdf_out <- sub("\\.[^./\\\\]+$", ".pdf", outfile)
+  try(rsvg::rsvg_pdf(charToRaw(svg), pdf_out), silent = TRUE)
   outfile
 }
 
@@ -132,8 +135,9 @@ En este primer ejemplo se presenta un ciclo de vida simple con tres estados: sem
 
 La matriz de transición para este ciclo es la siguiente: el 50 % de las semillas germinan y se convierten en plántulas, el 40 % de las plántulas alcanzan la etapa adulta y cada adulto produce en promedio 3.2 semillas. En el diagrama, las líneas verdes representan crecimiento y las líneas amarillas representan reproducción.
 
-```{r CV_2}
-#| error: true
+```{r}
+#| label: fig-CV_2
+#| fig-cap: "Diagrama del ciclo de vida con matriz de proyección de tres estadios (semillas, plántulas, adultos) para una especie hipotética."
 # 1) Build data/state as you already do
 
 matA <- rbind(
@@ -142,13 +146,12 @@ matA <- rbind(
   c(0.0, 0.4, 0.0)
 )
 etapas <- c("semillas", "plantulas", "adultos")
-cols   <- c("PaleGreen4", "PaleGreen4", "Goldenrod1")
+cols <- c("PaleGreen4", "PaleGreen4", "Goldenrod1")
 
-ne  <- make_nodes_edges(etapas, matA, cols, minlen_scale = 3, digits = 3, fontsize = 10)
+ne <- make_nodes_edges(etapas, matA, cols, minlen_scale = 3, digits = 3, fontsize = 10)
 dot <- build_dot(ne$nodes, ne$edges, title = "Especie hipotética")
 
 render_dual(dot, "images/CV_2.png")
-
 ```
 
 ------------------------------------------------------------------------
@@ -157,8 +160,9 @@ render_dual(dot, "images/CV_2.png")
 
 El ciclo de vida hipotético de una orquídea epífita se representa en el gráfico mediante líneas verdes para indicar transición entre etapas, líneas rojas para señalar permanencia y líneas amarillas para la reproducción. El ciclo comienza con la germinación de la semilla sobre la corteza de un árbol, seguida por las fases de plántula, juvenil y adulto, etapa en la cual ocurre la floración y producción de semillas. Exceptuando la fase de semilla, cada etapa puede prolongarse de un año a otro, lo que evidencia un ciclo plurianual; esta característica se refleja en la diagonal principal de la matriz de transición, cuyos valores son mayores a cero cuando existe permanencia. Solo los individuos adultos son capaces de reproducirse. Si el diagrama correspondiera a datos empíricos, sería necesario contar con información para todas las etapas (semilla, plántula, juvenil y adulto); sin embargo, la revisión bibliográfica realizada no identificó estudios que incluyan datos completos, debido principalmente a la dificultad de localizar semillas y plántulas en condiciones naturales, dado su tamaño extremadamente reducido (milimétrico) y la complejidad de seguir su desarrollo a lo largo del tiempo.
 
-```{r CV_3}
-#| error: true
+```{r}
+#| label: fig-CV_3
+#| fig-cap: "Diagrama del ciclo de vida con matriz de proyección de cuatro estadios (semillas, plántulas, juvenil, adultos) para una especie hipotética."
 
 matA_ho <- rbind(
   c(0.0, 0.0, 0.0, 3.2),
@@ -167,13 +171,12 @@ matA_ho <- rbind(
   c(0.0, 0.0, 0.40, 0.80)
 )
 etapas_ho <- c("semillas", "plantulas", "juvenil", "adultos")
-cols      <- c("PaleGreen4", "red", "PaleGreen4", "red", "PaleGreen4", "Goldenrod1", "red")
+cols <- c("PaleGreen4", "red", "PaleGreen4", "red", "PaleGreen4", "Goldenrod1", "red")
 
-ne  <- make_nodes_edges(etapas_ho, matA_ho, cols, minlen_scale = 3, digits = 3, fontsize = 10)
+ne <- make_nodes_edges(etapas_ho, matA_ho, cols, minlen_scale = 3, digits = 3, fontsize = 10)
 dot <- build_dot(ne$nodes, ne$edges, title = NULL)
 
 render_dual(dot, "images/CV_3.png")
-
 ```
 
 ------------------------------------------------------------------------
@@ -208,8 +211,9 @@ El ciclo de vida propuesto se compone de cinco etapas, según lo ilustrado en la
 
 Es importante señalar que se realizó una estimación tanto de la cantidad de semillas producidas como de la proporción que germina y se convierte en plántula en el ciclo siguiente. Este enfoque permitió incorporar procesos de transición y reproducción en el modelo, a pesar de las limitaciones inherentes a la observación directa de semillas y plántulas en condiciones naturales.
 
-```{r CV_5}
-#| error: true
+```{r}
+#| label: fig-CV_5
+#| fig-cap: "Diagrama del ciclo de vida con matriz de proyección de cinco estadios (semillas, plántulas y tres clases de adultos) para una especie hipotética."
 
 matA_Ls <- rbind(
   c(0.0, 0.0, 0.00, 52686, 127324),
@@ -219,14 +223,15 @@ matA_Ls <- rbind(
   c(0.0, 0.0, 0.00, 0.24, 0.75)
 )
 etapas_Ls <- c("semillas", "plántulas", "adulto 1", "adulto 2", "adulto 3")
-cols      <- c("PaleGreen4","PaleGreen4","red","PaleGreen4","Goldenrod1","red","PaleGreen4",
-               "Goldenrod1","red")
+cols <- c(
+  "PaleGreen4", "PaleGreen4", "red", "PaleGreen4", "Goldenrod1", "red", "PaleGreen4",
+  "Goldenrod1", "red"
+)
 
-ne  <- make_nodes_edges(etapas_Ls, matA_Ls, cols, minlen_scale = 3, digits = 5, fontsize = 10)
+ne <- make_nodes_edges(etapas_Ls, matA_Ls, cols, minlen_scale = 3, digits = 5, fontsize = 10)
 dot <- build_dot(ne$nodes, ne$edges, title = NULL)
 
 render_dual(dot, "images/CV_5.png")
-
 ```
 
 #### *Telipogon helleri*
@@ -240,22 +245,28 @@ El estudio de [@raventos2018comparison] analizó la dinámica poblacional de *Te
 
 Cabe destacar que los individuos adultos grandes presentan una mayor contribución a la producción de semillas (0.5359) en comparación con los adultos pequeños (0.1573), lo que subraya la importancia de la estructura de tamaños en la dinámica poblacional.
 
-```{r CV_6Telipogon_helleri}
-#| error: true
+```{r}
+#| label: fig-CV_6Telipogon_helleri
+#| fig-cap: "Diagrama del ciclo de vida con matriz de proyección de tres estadios (inmaduros, reproductivos pequeños y grandes) para *Telipogon helleri*."
 
-matA_Th <- matrix(c(0.1548, 0.1573, 0.5309,
-                    0.2738, 0.4425, 0.1606,
-                    0.0238, 0.4060, 0.7368),
-                  byrow = TRUE, ncol = 3)
+matA_Th <- matrix(
+  c(
+    0.1548, 0.1573, 0.5309,
+    0.2738, 0.4425, 0.1606,
+    0.0238, 0.4060, 0.7368
+  ),
+  byrow = TRUE, ncol = 3
+)
 etapas_Th <- c("inmaduros", "reproductivo_pequeños", "reproductivo_grandes")
-cols      <- c("red","PaleGreen4","PaleGreen4","Goldenrod1","red","PaleGreen4",
-               "Goldenrod1","MediumOrchid4","red")
+cols <- c(
+  "red", "PaleGreen4", "PaleGreen4", "Goldenrod1", "red", "PaleGreen4",
+  "Goldenrod1", "MediumOrchid4", "red"
+)
 
-ne  <- make_nodes_edges(etapas_Th, matA_Th, cols, minlen_scale = 3, digits = 3, fontsize = 10)
+ne <- make_nodes_edges(etapas_Th, matA_Th, cols, minlen_scale = 3, digits = 3, fontsize = 10)
 dot <- build_dot(ne$nodes, ne$edges, title = NULL)
 
 render_dual(dot, "images/CV_6Telipogon_helleri.png")
-
 ```
 
 ### Especies terrestres
@@ -272,8 +283,9 @@ El tránsito a la fase de latencia vegetativa se indica en azul, en verde el cre
 **Ausencia no es muerte.** En orquídeas terrestres con latencia vegetativa, la ausencia de una planta marcada en un censo **no** implica que haya muerto: el tubérculo subterráneo puede estar vivo y reaparecer años después. Asumir mortalidad cuando hay latencia subestima la supervivencia y sesga las matrices de transición. Cuando se sospecha latencia, conviene usar métodos bayesianos para estimar la probabilidad de que un individuo "ausente" siga vivo [@tremblay2009dormancy].
 :::
 
-```{r CV7Prasophyllum_correctum}
-#| error: true
+```{r}
+#| label: fig-CV7Prasophyllum_correctum
+#| fig-cap: "Diagrama del ciclo de vida con matriz de proyección de cuatro estadios incluyendo latencia para *Prasophyllum correctum*."
 
 matA_lat <- rbind(
   c(0.0, 0.0, 0.0125, 0.0000),
@@ -282,14 +294,15 @@ matA_lat <- rbind(
   c(1.0, 0.6897, 0.4750, 0.7475)
 )
 etapas_lat <- c("plántulas", "adultos vegetativos", "adultos reproductivos", "latencia")
-cols       <- c("black","red","palegreen4","black","goldenrod1","blue","red","black",
-                "blue","blue","red")
+cols <- c(
+  "black", "red", "palegreen4", "black", "goldenrod1", "blue", "red", "black",
+  "blue", "blue", "red"
+)
 
-ne  <- make_nodes_edges(etapas_lat, matA_lat, cols, minlen_scale = 2, digits = 4, fontsize = 10)
+ne <- make_nodes_edges(etapas_lat, matA_lat, cols, minlen_scale = 2, digits = 4, fontsize = 10)
 dot <- build_dot(ne$nodes, ne$edges, title = NULL)
 
 render_dual(dot, "images/CV7Prasophyllum_correctum.png")
-
 ```
 
 #### *Ophrys sphegodes*
@@ -298,29 +311,35 @@ En el trabajo de Waite y Hutchings 1991 con *Ophrys sphegodes* se recolectaron d
 
 Dado que el análisis se enfoca en la sobrevivencia, en el estudio no se incluye la reproducción (no hay línea amarilla). Las etapas que pasen a latente el siguiente año se señalan en azul, las que se quedan en la misma etapa están en rojo, mientras que en verde el tránsito a una etapa no latente.
 
-```{r CV8_Ophrys}
-#| error: true
+```{r}
+#| label: fig-CV8_Ophrys
+#| fig-cap: "Diagrama del ciclo de vida con matriz de proyección de cuatro estadios incluyendo latencia de dos años para *Ophrys sphegodes*."
 
-G1 <- matrix(c(0.0080, 0.0184, 0.0149, 0.0148,
-               0.0180, 0.4249, 0.1214, 0.1214,
-               0.1853, 0.2770, 0,      0,
-               0,      0,      0.3050, 0),
-             byrow = TRUE, ncol = 4)
+G1 <- matrix(
+  c(
+    0.0080, 0.0184, 0.0149, 0.0148,
+    0.0180, 0.4249, 0.1214, 0.1214,
+    0.1853, 0.2770, 0, 0,
+    0, 0, 0.3050, 0
+  ),
+  byrow = TRUE, ncol = 4
+)
 etapas_Op <- c("Vegetativa", "Ind. con Flores", "Latencia año 1", "Latencia año 2")
-cols      <- c("red","PaleGreen4","blue","PaleGreen4","red","blue",
-               "PaleGreen4","PaleGreen4","blue","PaleGreen4","PaleGreen4")
+cols <- c(
+  "red", "PaleGreen4", "blue", "PaleGreen4", "red", "blue",
+  "PaleGreen4", "PaleGreen4", "blue", "PaleGreen4", "PaleGreen4"
+)
 
-ne  <- make_nodes_edges(etapas_Op, G1, cols, minlen_scale = 2, digits = 4, fontsize = 10)
+ne <- make_nodes_edges(etapas_Op, G1, cols, minlen_scale = 2, digits = 4, fontsize = 10)
 dot <- build_dot(ne$nodes, ne$edges, title = NULL)
 
 render_dual(dot, "images/CV8_Ophrys.png")
-
 ```
 
 #### *Cypripedium parviflorum*, *Epipactis atrorubens* y *Orchis purpurea*
 
 ::: img-float
-![*Orchis purpurea*. Foto: Hans Jacquemyn](images/Orchis_purpurea_1_Hans_Jacquemyn.jpg){style="float: left; margin: 10px;width: 50% ; "}
+![*Orchis purpurea*. Foto: Hans Jacquemyn](images/Orchis_purpurea_1_Hans_Jacquemyn.jpg){#fig-orchis-purpurea-1-hans-jacquemyn style="float: left; margin: 10px;width: 50% ; "}
 :::
 
 La dimensiones de la matriz y la cantidad de etapas o años incluidos en un análisis depende de múltiples factores. Cuando se trabaja con datos de campo, el acceso a individuos de cada etapa del ciclo de vida es, sin duda, un factor determinante. En la revisión de la publicaciones sobre orquídeas se encuentran análisis matriciales que varían entre 3 y 29 etapas de desarrollo, en promedio 5.6 etapas (desv. estándar de 3.2). El trabajo con mayor número de etapas es el de [@shefferson2014life], que utilizó 29 en *Cypripedium parviflorum* var. *parviflorum*.
@@ -329,30 +348,35 @@ El costo de pasar a una fase latente después de diferentes etapas se evaluó en
 
 ------------------------------------------------------------------------
 
-```{r CV9_Os, echo=FALSE}
-#| error: true
+```{r}
+#| label: fig-CV9_Op
+#| fig-cap: "Diagrama del ciclo de vida con matriz de proyección de seis estadios (protocormos, tubérculos, plántulas, juveniles, adultos sin y con flores) para *Orchis purpurea*."
 
-matA_Os <- matrix(c(
-  0.000, 0.000, 0, 0.00, 0.000, 84.88725,
-  0.012, 0.000, 0, 0.00, 0.000,  0.00000,
-  0.000, 0.041, 0, 0.00, 0.000,  0.00000,
-  0.000, 0.000, 1, 0.75, 0.000,  0.00000,
-  0.000, 0.000, 0, 0.25, 0.615,  0.62500,
-  0.000, 0.000, 0, 0.00, 0.385,  0.37500),
-  byrow=TRUE, ncol=6)
+matA_Os <- matrix(
+  c(
+    0.000, 0.000, 0, 0.00, 0.000, 84.88725,
+    0.012, 0.000, 0, 0.00, 0.000,  0.00000,
+    0.000, 0.041, 0, 0.00, 0.000,  0.00000,
+    0.000, 0.000, 1, 0.75, 0.000,  0.00000,
+    0.000, 0.000, 0, 0.25, 0.615,  0.62500,
+    0.000, 0.000, 0, 0.00, 0.385,  0.37500
+  ),
+  byrow = TRUE, ncol = 6
+)
 
 etapas_Os <- c("Protocormos", "tuberculos", "Plantulas", "Juveniles", "Sin Flores", "Con Flores")
-cols      <- c("PaleGreen4","PaleGreen4","PaleGreen4","red","PaleGreen4",
-               "red","PaleGreen4","Goldenrod1","MediumOrchid4","red")
+cols <- c(
+  "PaleGreen4", "PaleGreen4", "PaleGreen4", "red", "PaleGreen4",
+  "red", "PaleGreen4", "Goldenrod1", "MediumOrchid4", "red"
+)
 
-ne  <- make_nodes_edges(etapas_Os, matA_Os, cols, minlen_scale = 2, digits = 3, fontsize = 10)
+ne <- make_nodes_edges(etapas_Os, matA_Os, cols, minlen_scale = 2, digits = 3, fontsize = 10)
 dot <- build_dot(ne$nodes, ne$edges, title = NULL)
 
-render_dual(dot, "images/CV9_Os.png")
-
+render_dual(dot, "images/CV9_Op.png")
 ```
 
-![*Orchis purpurea*. Foto: Hans Jacquemyn](images/Orchis_purpurea_2_Hans_Jacquemyn.jpg){fig-align="center" width="60%"}
+![*Orchis purpurea*. Foto: Hans Jacquemyn](images/Orchis_purpurea_2_Hans_Jacquemyn.jpg){#fig-orchis-purpurea-2-hans-jacquemyn fig-align="center" width="60%"}
 
 ------------------------------------------------------------------------
 
@@ -373,7 +397,6 @@ La importancia de este capítulo radica en reconocer la diferencia entre la hist
 Además de los anteriores, existen otros problemas. La recolección de datos en campo puede ser irreal en el contexto de la historia de vida y la base matemática del modelo representado. Para más detalles ver el capítulo [Impacto de datos sin sentido](122-Impacto_de_Datos_sin_Sentido.qmd). Por ejemplo, en la @fig-cv10 aparecen tres errores comunes durante la recolección de datos de la historia de vida de una especie. El primero es que no hay mortalidad de los individuos en una de las etapas (juveniles), el segundo es que todos los individuos se mueren (plántulas) y el tercero es que los individuos se mantienen en la misma etapa de desarrollo (adultos) y no hay muerte. Dada la muerte de las plántulas, no hay flecha que una a este estado con otros estados. La falta de continuidad o conexión entre las etapas del ciclo de vida son errores que ocurren típicamente cuando el tamaño de muestra es pequeño o la probabilidad de transición es rara o poco frecuente; por ejemplo, los árboles grandes no fallecen. Estos son los tres errores típicos a los que nos enfrentamos cuando se lleva a cabo un análisis de dinámica poblacional en especies con transiciones poco comunes.
 
 ```{r}
-#| error: true
 #| label: fig-cv10
 #| fig-cap: "Ejemplo de un ciclo de vida incompleto con tres errores típicos durante la recolección de datos: ausencia de mortalidad en juveniles, mortalidad total de plántulas y permanencia perpetua en adultos sin muerte."
 
@@ -383,13 +406,12 @@ matA_incom <- rbind(
   c(0.0, 0.0, 0.9)
 )
 etapas_incom <- c("plántula", "juvenil", "adulto")
-cols         <- c("red","Goldenrod1","MediumOrchid4","red")
+cols <- c("red", "Goldenrod1", "MediumOrchid4", "red")
 
-ne  <- make_nodes_edges(etapas_incom, matA_incom, cols, minlen_scale = 3, digits = 3, fontsize = 10)
+ne <- make_nodes_edges(etapas_incom, matA_incom, cols, minlen_scale = 3, digits = 3, fontsize = 10)
 dot <- build_dot(ne$nodes, ne$edges, title = NULL)
 
 render_dual(dot, "images/CV10.png")
-
 ```
 
 ------------------------------------------------------------------------
@@ -399,7 +421,6 @@ render_dual(dot, "images/CV10.png")
 En la graficación del ciclo de vida podemos usar otro paquete de R, `Rage` (ver @fig-cv11). La diferencia es que no se pueden cambiar los colores de las líneas y los nodos (círculos que representan los estados de desarrollo). Esta es una opción más sencilla para crear diagramas de ciclo de vida, además de ser práctica para publicaciones donde no se necesita cambiar los colores de las líneas y nodos.
 
 ```{r cv11_rage, echo=FALSE, message=FALSE, warning=FALSE}
-#| error: true
 
 ## 0) Packages you may need
 pkgs <- c("Rage", "DiagrammeRsvg", "rsvg", "htmlwidgets", "webshot2", "ggplot2")
@@ -413,8 +434,9 @@ library(ggplot2)
 source("R/figuras_helpers.R")
 ```
 
-```{r cv11_rage_build, echo=FALSE, message=FALSE, warning=FALSE}
-#| error: true
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| label: fig-cv11_rage_build
+#| fig-cap: "Ciclo de vida generado con `Rage::plot_life_cycle` a partir de la matriz `matA` con los estadios semillas, plántulas y adultos."
 
 ## 2) Generar el diagrama y guardarlo como PNG estático.
 ## La referencia cruzada se hace con la imagen ![](...){#fig-cv11} más abajo,
@@ -437,14 +459,11 @@ p <- Rage::plot_life_cycle(
 
 # Guardar como PNG sea ggplot o htmlwidget
 save_plot_png(p, file = file.path(out_dir, "CV11_Rage_plot.png"), width_px = 2400, height_px = 1600)
-
 ```
 
 ![Diagrama de ciclo de vida construido con el paquete `Rage`.](figs/CV11_Rage_plot.png){#fig-cv11}
 
 ```{r cv-rage-compare-show, echo=FALSE, message=FALSE, warning=FALSE}
-#| error: true
 ## Code for color coding figure
 # http://rich-iannone.github.io/DiagrammeR/
-
 ```

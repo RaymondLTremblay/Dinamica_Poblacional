@@ -32,13 +32,13 @@ Asimismo, se analiza cómo la fecundidad se integra en la matriz de proyección,
 
 #### Librerías de R requeridas para el siguiente módulo
 
-```{r Trans1, message=FALSE}
-#| error: true
+```{r, message=FALSE}
+#| label: fig-fec-Trans1
+#| fig-cap: "Carga de paquetes y funciones auxiliares para la generación de figuras del capítulo."
 
 library(Rage)
 library(tidyverse)
-source("R/figuras_helpers.R")  # plc_save(), grviz_save(), save_plot_png()
-
+source("R/figuras_helpers.R") # plc_save(), grviz_save(), save_plot_png()
 ```
 
 ## Introducción
@@ -110,7 +110,7 @@ A pesar de estas limitaciones, existen estudios que han registrado plántulas so
 :::
 
 ::: {style="float: none; margin: 10px; width: 100%;"}
-![Diagrama del proceso de fecundidad en orquídeas, mostrando la cadena de filtros sucesivos: producción floral, polinización exitosa, cuajado de fruto, producción de semillas con embrión, germinación y establecimiento de plántulas](images/Diagrama_fecundidad.png){fig-alt="Diagrama esquemático del proceso de fecundidad en orquídeas, con la cadena de eventos desde la flor hasta el establecimiento de la plántula"}
+![Diagrama del proceso de fecundidad en orquídeas, mostrando la cadena de filtros sucesivos: producción floral, polinización exitosa, cuajado de fruto, producción de semillas con embrión, germinación y establecimiento de plántulas](images/Diagrama_fecundidad.png){#fig-diagrama-fecundidad fig-alt="Diagrama esquemático del proceso de fecundidad en orquídeas, con la cadena de eventos desde la flor hasta el establecimiento de la plántula"}
 :::
 
 ------------------------------------------------------------------------
@@ -118,7 +118,7 @@ A pesar de estas limitaciones, existen estudios que han registrado plántulas so
 Tabla de algunos ejemplos de fecundidad en orquídeas, donde se muestra la especie, el índice de fecundidad y la referencia del estudio.
 
 | Especie | Indice de Fecundidad | Referencia |
-|:---|:---|:---|
+|:-----------------------|:-----------------------|:-----------------------|
 | *Lepanthes eltoroensis* | Cantidad de Plántulas / Adultos reproductivos | @tremblay2003population |
 | *Erycina crista-galli* | 0.033 plántulas/año | @maldonado2005patron |
 | *Encyclia tampensis* | 0.1 plántulas/fruto | @larson1992population |
@@ -131,7 +131,7 @@ Los estudios disponibles indican que las orquídeas presentan un crecimiento len
 Para estimar el crecimiento y la edad reproductiva en *Lycaste aromatica*, se ha utilizado la producción regular de pseudobulbos, los cuales permanecen varios años en la planta. Con base en este patrón, se predice que *Encyclia tampensis* alcanza la floración aproximadamente a los 15 años. No obstante, bajo condiciones controladas de cultivo, la fase de pre-bulbo puede durar entre 0.5 y 2 años, y la primera floración ocurrir en tan solo 5 a 6 años (H. Lutero, comunicación personal).
 
 ::: {style="float: right; margin: 10px; width: 60%;"}
-![Relación entre la cantidad de hojas y la probabilidad de floración en *Brassavola cucullata* en las islas Saba y San Eustaquio](images/Cant_Hojas_Prob_Fr_Brassavola.jpg){fig-alt="Gráfica de la probabilidad de floración como función del número de hojas en Brassavola cucullata, con curvas separadas para las poblaciones de Saba y San Eustaquio"}
+![Relación entre la cantidad de hojas y la probabilidad de floración en *Brassavola cucullata* en las islas Saba y San Eustaquio](images/Cant_Hojas_Prob_Fr_Brassavola.jpg){#fig-cant-hojas-prob-fr-brassavola fig-alt="Gráfica de la probabilidad de floración como función del número de hojas en Brassavola cucullata, con curvas separadas para las poblaciones de Saba y San Eustaquio"}
 :::
 
 Un caso interesante se observa en *Brassavola cucullata*, una especie rupícola y epífita de las Antillas Menores. En esta orquídea, los pseudobulbos presentan hojas lanceoladas, y la probabilidad de floración no depende de la longitud de las hojas, sino de la cantidad de hojas por individuo. De hecho, el número estimado de hojas constituye un buen predictor de la capacidad de una planta para producir flores, aunque se han registrado diferencias en esta relación entre las poblaciones de las islas Saba y San Eustaquio.
@@ -141,22 +141,21 @@ Un caso interesante se observa en *Brassavola cucullata*, una especie rupícola 
 En este ejemplo, la primera fila de la matriz representa la fecundidad de la población en la posición (3,1) (columna, fila), correspondiente al número promedio de semillas producidas por un individuo adulto. Sin embargo, la fecundidad en modelos demográficos debe expresarse en términos de plántulas, no de semillas. Por ello, es necesario convertir la cantidad de semillas producidas en plántulas mediante una tasa de germinación o una tasa de supervivencia hasta la etapa de plántula. De lo contrario, el cálculo presentará un sesgo, ya que se estaría estimando fecundidad con base en semillas, sin considerar su capacidad real de generar nuevos individuos.
 
 ```{r fec-matA-sem}
-#| error: true
 matA_sem <- rbind(
   c(0.0, 0.0, 1000), #  fecundidad 1000 semillas en promedio por adulto
   c(0.5, 0.0, 0.0),
   c(0.0, 0.4, 0.0)
 )
-
 ```
 
 Visualizamos el ciclo de vida de la población con la función `plot_life_cycle()` de la librería `Rage`:
 
-```{r fec-life-cycle-1}
-#| error: true
+```{r}
+#| label: fig-fec-life-cycle-1
+#| fig-cap: "Ciclo de vida generado a partir de la matriz `matA_sem` con los estadios plántula, juvenil y adulto."
 etapas <- c("plántula", "juvenil", "adulto")
- 
- plc_save(matA_sem, stages=etapas, fontsize = 5, png = "images/fec-life-cycle-1.png")
+
+plc_save(matA_sem, stages = etapas, fontsize = 5, png = "images/fec-life-cycle-1.png")
 ```
 
 ------------------------------------------------------------------------
@@ -179,11 +178,12 @@ Esto significa que, en promedio, cada adulto contribuiría con 1.33 plántulas a
 
 Por consecuencia la matriz cambia a:
 
-```{r fec-matA-pl}
-#| error: true
+```{r}
+#| label: fig-fec-matA-pl
+#| fig-cap: "Ciclo de vida generado a partir de la matriz `matA_pl` con fecundidad de 1.333 plántulas por adulto."
 
 matA_pl <- rbind(
-  c(0.0, 0.0, 1.333), 
+  c(0.0, 0.0, 1.333),
   c(0.5, 0.0, 0.0),
   c(0.0, 0.4, 0.0)
 )
@@ -191,7 +191,6 @@ matA_pl <- rbind(
 etapas <- c("plántula", "juvenil", "adulto")
 
 plc_save(matA_pl, stages = etapas, fontsize = 5, png = "images/fec-matA-pl.png")
-
 ```
 
 ------------------------------------------------------------------------
@@ -206,8 +205,9 @@ $$\text{Fecundidad} = \frac{50}{100} = 0.5$$
 
 Esto indica que, en promedio, cada adulto contribuyó con 0.5 plántulas a la siguiente generación.
 
-```{r fec-matA-pl2}
-#| error: true
+```{r}
+#| label: fig-fec-matA-pl2
+#| fig-cap: "Ciclo de vida generado a partir de la matriz `matA_pl2` con fecundidad de 0.5 plántulas por adulto."
 matA_pl2 <- rbind(
   c(0.0, 0.0, 0.5), #  fecundidad 0.5 plántulas en promedio por adulto
   c(0.5, 0.0, 0.0),
@@ -217,7 +217,6 @@ matA_pl2 <- rbind(
 etapas <- c("plántula", "juvenil", "adulto")
 
 plc_save(matA_pl2, stages = etapas, fontsize = 5, png = "images/fec-matA-pl2.png")
-
 ```
 
 ::: callout-tip

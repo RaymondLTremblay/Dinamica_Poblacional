@@ -11,48 +11,27 @@ twitter-card:
 
 Por: Aucencia Emeterio-Lara, Ernesto Mujica, Elaine González y Raymond L. Tremblay
 
-Las transiciones describen los cambios individuales entre estados
-demográficos —como supervivencia, crecimiento y regresión— que conectan
-el ciclo de vida con la dinámica poblacional. Este capítulo introduce el
-concepto de transiciones como los procesos fundamentales que determinan
-la estructura y evolución de una población a lo largo del tiempo.
+Las transiciones describen los cambios individuales entre estados demográficos —como supervivencia, crecimiento y regresión— que conectan el ciclo de vida con la dinámica poblacional. Este capítulo introduce el concepto de transiciones como los procesos fundamentales que determinan la estructura y evolución de una población a lo largo del tiempo.
 
 ## Transiciones demográficas y construcción del ciclo de vida poblacional
 
-Las transiciones representan los procesos mediante los cuales los individuos
-cambian de estado entre intervalos de tiempo, ya sea permaneciendo en el
-mismo estadio, creciendo a uno nuevo, retrocediendo o contribuyendo a la
-población a través de la reproducción. En los modelos de proyección
-poblacional, estas transiciones constituyen los elementos básicos de la
-matriz, conectando las tasas vitales individuales con la dinámica
-poblacional a nivel agregado.
+Las transiciones representan los procesos mediante los cuales los individuos cambian de estado entre intervalos de tiempo, ya sea permaneciendo en el mismo estadio, creciendo a uno nuevo, retrocediendo o contribuyendo a la población a través de la reproducción. En los modelos de proyección poblacional, estas transiciones constituyen los elementos básicos de la matriz, conectando las tasas vitales individuales con la dinámica poblacional a nivel agregado.
 
-En este capítulo se analizan las transiciones como componentes explícitos
-del ciclo de vida, mostrando cómo su definición y parametrización influyen
-directamente en la estructura de la matriz de proyección y en la dinámica
-resultante. Se discute cómo diferentes formulaciones de las transiciones
-reflejan supuestos biológicos distintos, tales como crecimiento continuo
-versus discreto, estasis, o la incorporación de retrocesos ontogenéticos.
+En este capítulo se analizan las transiciones como componentes explícitos del ciclo de vida, mostrando cómo su definición y parametrización influyen directamente en la estructura de la matriz de proyección y en la dinámica resultante. Se discute cómo diferentes formulaciones de las transiciones reflejan supuestos biológicos distintos, tales como crecimiento continuo versus discreto, estasis, o la incorporación de retrocesos ontogenéticos.
 
-A diferencia de los capítulos sobre crecimiento poblacional o propiedades
-matriciales, este capítulo se centra en el nivel **causal** de la dinámica
-demográfica: los procesos que generan los patrones observados de
-crecimiento, estabilidad o declive. Comprender las transiciones es esencial
-para interpretar análisis posteriores de sensibilidad, elasticidad,
-proyecciones poblacionales y modelos bayesianos, ya que cualquier cambio en
-estas métricas surge directamente de modificaciones en las transiciones
-subyacentes.
+A diferencia de los capítulos sobre crecimiento poblacional o propiedades matriciales, este capítulo se centra en el nivel **causal** de la dinámica demográfica: los procesos que generan los patrones observados de crecimiento, estabilidad o declive. Comprender las transiciones es esencial para interpretar análisis posteriores de sensibilidad, elasticidad, proyecciones poblacionales y modelos bayesianos, ya que cualquier cambio en estas métricas surge directamente de modificaciones en las transiciones subyacentes.
 
 #### Librerías de R requeridas para el siguiente módulo
 
-```{r Trans1, message=FALSE}
-#| error: true
+```{r, message=FALSE}
+#| label: fig-Trans1
+#| fig-cap: "Carga de paquetes y funciones auxiliares para la generación de figuras del capítulo."
 library(tidyverse)
 library(popbio)
 library(Rcompadre)
 library(DiagrammeR)
-source("R/figuras_helpers.R")  # plc_save(), grviz_save(), save_plot_png()
-
+library(flextable)
+source("R/figuras_helpers.R") # plc_save(), grviz_save(), save_plot_png()
 ```
 
 ## Introducción
@@ -65,13 +44,9 @@ En la segunda parte del capítulo se muestra cómo calcular las transiciones uti
 
 ## Definición y parametrización de transiciones
 
-A continuación se describen los distintos tipos de transiciones y su
-implementación en modelos de proyección poblacional.
+A continuación se describen los distintos tipos de transiciones y su implementación en modelos de proyección poblacional.
 
-Las transiciones definen las propiedades estructurales de la matriz,
-discutidas en el capítulo sobre
-propiedades poblacionales. La importancia relativa de cada transición se evalúa más adelante mediante
-el análisis de elasticidad poblacional.
+Las transiciones definen las propiedades estructurales de la matriz, discutidas en el capítulo sobre propiedades poblacionales. La importancia relativa de cada transición se evalúa más adelante mediante el análisis de elasticidad poblacional.
 
 ------------------------------------------------------------------------
 
@@ -79,30 +54,30 @@ el análisis de elasticidad poblacional.
 
 El primer paso consiste en construir una tabla de datos con los individuos muestreados en dos periodos de tiempo (por ejemplo, con un intervalo de un año). Supongamos que tenemos 19 individuos de una orquídea con cuatro estados:
 
--   Plantas pequeñas
--   Juveniles
--   Adultos
--   Muerto
+- Plantas pequeñas
+- Juveniles
+- Adultos
+- Muerto
 
 En el primer periodo:
 
--   7 individuos estaban en plantas pequeñas
--   6 en juveniles
--   6 en adultos
+- 7 individuos estaban en plantas pequeñas
+- 6 en juveniles
+- 6 en adultos
 
 Para calcular las transiciones, debemos obtener la proporción de individuos que pasan de un estado a otro. Por ejemplo, de los 7 individuos que eran plantas pequeñas en el primer periodo:
 
--   1 permaneció como planta pequeña
--   2 pasaron a juveniles
--   3 pasaron a adultos
--   1 murió
+- 1 permaneció como planta pequeña
+- 2 pasaron a juveniles
+- 3 pasaron a adultos
+- 1 murió
 
 Esto se traduce en las siguientes proporciones:
 
--   Plantas pequeñas → Plantas pequeñas: $\frac{1}{7}$ = 0.142857
--   Plantas pequeñas → Juveniles: $\frac{2}{7}$ = 0.285714
--   Plantas pequeñas → Adultos: $\frac{3}{7}$ = 0.428571
--   Plantas pequeñas → Muerto: $\frac{1}{7}$ = 0.142857
+- Plantas pequeñas → Plantas pequeñas: $\frac{1}{7}$ = 0.142857
+- Plantas pequeñas → Juveniles: $\frac{2}{7}$ = 0.285714
+- Plantas pequeñas → Adultos: $\frac{3}{7}$ = 0.428571
+- Plantas pequeñas → Muerto: $\frac{1}{7}$ = 0.142857
 
 La suma de estas proporciones debe ser igual a 1 (o muy cercana, considerando redondeos).
 
@@ -111,61 +86,58 @@ La suma de estas proporciones debe ser igual a 1 (o muy cercana, considerando re
 :::
 
 ```{r Trans2}
-#| error: true
 
-a=1/7
-b=2/7
-c=3/7
-d=1/7
+a <- 1 / 7
+b <- 2 / 7
+c <- 3 / 7
+d <- 1 / 7
 
-sum=a+b+c+d
+sum <- a + b + c + d
 sum
 ```
 
 La suma de las proporciones calculadas
 
 ```{r Trans2b}
-#| error: true
-sum2=0.1428+0.2857+0.4285+0.1428
+sum2 <- 0.1428 + 0.2857 + 0.4285 + 0.1428
 sum2
-
 ```
 
 **Nota**: La suma de todas las transiciones debe ser exactamente 1.000. No puede ser mayor ni menor que 1. Si la suma es distinta de 1, significa que hay un error en el cálculo de las proporciones. Una causa frecuente de este problema es el redondeo excesivo o incorrecto. En este caso, la suma total es 0.9998, lo cual es suficientemente cercano a 1.0.
 
 Ahora calculamos las otras transiciones de juveniles a otras clases
 
--   0/6 = 0.0000, transitaron de "juveniles" a "plantas pequeñas"
--   3/6 = 0.5000, transitaron de "juveniles" a "juveniles"
--   2/6 = 0.3333, transitaron de "juveniles" a "adultos"
--   1/6 = 0.1666, murieron entre el primer y segundo periodo
+- 0/6 = 0.0000, transitaron de "juveniles" a "plantas pequeñas"
+- 3/6 = 0.5000, transitaron de "juveniles" a "juveniles"
+- 2/6 = 0.3333, transitaron de "juveniles" a "adultos"
+- 1/6 = 0.1666, murieron entre el primer y segundo periodo
 
 De adultos a otras clases
 
--   0/6 = 0, transitaron de "adulto" a "plantas pequeñas"
--   0/6 = 0, transitaron de "adulto" a "juveniles"
--   4/6 = 0.6667, transitaron de "adulto" a "adulto"
--   2/6 = 0.3333, murieron antes del segundo periodo
+- 0/6 = 0, transitaron de "adulto" a "plantas pequeñas"
+- 0/6 = 0, transitaron de "adulto" a "juveniles"
+- 4/6 = 0.6667, transitaron de "adulto" a "adulto"
+- 2/6 = 0.3333, murieron antes del segundo periodo
 
 Aquí la lista completa de las transiciones a todas las etapas posibles.
 
-```{r Trans3, message=FALSE, echo=FALSE}
-#| error: true
+```{r Trans3, message=FALSE}
 
-Orchis_ficticia=tribble(~Num_ind, ~anio_1, ~anio_2, ~transición, 
-                        1,  "plantas_pequeñas", "Muerto", 0.1428,
-                        2,  "plantas_pequeñas", "plantas_pequeñas",0.1428,
-                        2,  "plantas_pequeñas", "juvenil", 0.2857,
-                        3,  "plantas_pequeñas", "adulto", 0.4285,
-                        4,  "juvenil", "Muerto", 0.1666,
-                        4,  "juvenil", "plantas_pequeñas", 0.0000,
-                        5,  "juvenil", "juvenil", 0.5000,
-                        6,  "juvenil", "adulto", 0.3333,
-                        7,  "adulto", "Muerto", 0.3333,
-                        7,  "adulto", "plantas_pequeñas", 0.0000,
-                        8,  "adulto", "juvenil", 0.0000,
-                        9,  "adulto", "adulto", 0.6667
-                        )
+Orchis_ficticia <- tribble(
+  ~Num_ind, ~anio_1, ~anio_2, ~transición,
+  1, "plantas_pequeñas", "Muerto", 0.1428,
+  2, "plantas_pequeñas", "plantas_pequeñas", 0.1428,
+  2, "plantas_pequeñas", "juvenil", 0.2857,
+  3, "plantas_pequeñas", "adulto", 0.4285,
+  4, "juvenil", "Muerto", 0.1666,
+  4, "juvenil", "plantas_pequeñas", 0.0000,
+  5, "juvenil", "juvenil", 0.5000,
+  6, "juvenil", "adulto", 0.3333,
+  7, "adulto", "Muerto", 0.3333,
+  7, "adulto", "plantas_pequeñas", 0.0000,
+  8, "adulto", "juvenil", 0.0000,
+  9, "adulto", "adulto", 0.6667
+)
 flextable(Orchis_ficticia)
 ```
 
@@ -177,8 +149,8 @@ Ahora utilizamos los valores calculados anteriormente para construir la matriz d
 
 **Importante**:
 
--   Las columnas representan el estado en el primer periodo.
--   Las filas representan el estado en el segundo periodo.
+- Las columnas representan el estado en el primer periodo.
+- Las filas representan el estado en el segundo periodo.
 
 ::: callout-important
 **Convención: columnas = origen, filas = destino.** Cada **columna** $j$ corresponde al estado del individuo en el periodo inicial; cada **fila** $i$ al estado en el siguiente periodo. La entrada $a_{ij}$ es entonces "la proporción de individuos que estaban en $j$ y terminaron en $i$". Confundir filas con columnas invierte el sentido biológico de cada transición y distorsiona todos los análisis posteriores. Conviene siempre asignar `rownames()` y `colnames()` para detectar el error visualmente.
@@ -192,17 +164,18 @@ donde la suma corre sobre las entradas de la columna $j$ (estado de origen).
 
 Para crear la matriz en `R`, se utiliza la función *matrix()*, que incluye los siguientes argumentos:
 
--   nrow = número de filas (y columnas, porque la matriz siempre será cuadrada).
--   byrow = indica si los datos se llenan por filas (TRUE) o por columnas (FALSE).
+- nrow = número de filas (y columnas, porque la matriz siempre será cuadrada).
+- byrow = indica si los datos se llenan por filas (TRUE) o por columnas (FALSE).
 
 ```{r Trans4}
-#| error: true
 
-ficticia_matrix=matrix(c(0.1428, 0.0000, 0.0000,
-                         0.2857, 0.5000, 0.0000,
-                         0.4285, 0.3333, 0.6667), nrow=3, byrow=TRUE)
+ficticia_matrix <- matrix(c(
+  0.1428, 0.0000, 0.0000,
+  0.2857, 0.5000, 0.0000,
+  0.4285, 0.3333, 0.6667
+), nrow = 3, byrow = TRUE)
 
-ficticia_matrix
+mat_to_ft(ficticia_matrix)
 ```
 
 ------------------------------------------------------------------------
@@ -213,17 +186,15 @@ Es una buena práctica asignar nombres a las filas y columnas de la matriz, ya q
 
 Para ello, se utilizan dos funciones en R:
 
--   rownames(): asigna nombres a las filas.
--   colnames(): asigna nombres a las columnas.
+- rownames(): asigna nombres a las filas.
+- colnames(): asigna nombres a las columnas.
 
 ```{r Trans5}
-#| error: true
 
-rownames(ficticia_matrix)<-c("plantas_pequeñas", "juvenil", "adulto")
-colnames(ficticia_matrix)<-c("plantas_pequeñas", "juvenil", "adulto")
+rownames(ficticia_matrix) <- c("plantas_pequeñas", "juvenil", "adulto")
+colnames(ficticia_matrix) <- c("plantas_pequeñas", "juvenil", "adulto")
 
-ficticia_matrix
-
+mat_to_ft(ficticia_matrix)
 ```
 
 ------------------------------------------------------------------------
@@ -255,61 +226,58 @@ projection.matrix(
 
 El output de la función `projection.matrix` es una lista que contiene dos matrices:
 
--   **T**: incluye únicamente los valores de transición entre etapas.
--   **F**: incluye únicamente los valores de fecundidad, es decir, la cantidad de individuos que se incorporan a cada clase de edad por reproducción no clonal.
+- **T**: incluye únicamente los valores de transición entre etapas.
+- **F**: incluye únicamente los valores de fecundidad, es decir, la cantidad de individuos que se incorporan a cada clase de edad por reproducción no clonal.
 
 ## Preparación de los datos antes del análisis
 
 Antes de comenzar con los análisis, es importante renombrar las columnas para evitar problemas con la función projection.matrix. En este caso:
 
--   Cambiamos anio_1 a stage.
--   Cambiamos anio_2 a fate.
+- Cambiamos anio_1 a stage.
+- Cambiamos anio_2 a fate.
 
 Estos nombres corresponden a las etapas en el primer y segundo periodo de tiempo. El término fate se traduce al español como “destino”.
 
 Los datos deben estar organizados en formato de tabla, donde:
 
--   Cada fila representa un individuo.
--   Cada columna representa una variable.
+- Cada fila representa un individuo.
+- Cada columna representa una variable.
 
 En nuestro ejemplo, la tabla contiene 19 filas y 4 columnas. La columna “transición” no es necesaria para la función `projection.matrix`.
 
 ```{r trans-orchis-ficticia}
-#| error: true
-Orchis_ficticia_por_ind=tribble(~Num_ind, ~anio_1, ~anio_2, ~fertilidad,
-                        1,  "plantas_pequeñas", "Muerto",  0,
-                        2,  "plantas_pequeñas", "plantas_pequeñas",0,
-                        3,  "plantas_pequeñas", "juvenil",0,
-                        4,  "plantas_pequeñas", "juvenil",0,
-                        5,  "plantas_pequeñas", "adulto",0,
-                        6,  "plantas_pequeñas", "adulto",0,
-                        7,  "plantas_pequeñas", "adulto",0,
-                        8,  "juvenil", "Muerto",0,
-                        9,  "juvenil", "juvenil",0,
-                        10, "juvenil", "juvenil",0,
-                        11, "juvenil", "juvenil",0,
-                        12, "juvenil", "adulto",0,
-                        13, "juvenil", "adulto",0,
-                        14, "adulto", "Muerto",0,
-                        15, "adulto", "Muerto",0 ,
-                        16, "adulto", "adulto",0,
-                        17, "adulto", "adulto",1,
-                        18, "adulto", "adulto",0,
-                        19, "adulto", "adulto",0
-                        )
+Orchis_ficticia_por_ind <- tribble(
+  ~Num_ind, ~anio_1, ~anio_2, ~fertilidad,
+  1, "plantas_pequeñas", "Muerto", 0,
+  2, "plantas_pequeñas", "plantas_pequeñas", 0,
+  3, "plantas_pequeñas", "juvenil", 0,
+  4, "plantas_pequeñas", "juvenil", 0,
+  5, "plantas_pequeñas", "adulto", 0,
+  6, "plantas_pequeñas", "adulto", 0,
+  7, "plantas_pequeñas", "adulto", 0,
+  8, "juvenil", "Muerto", 0,
+  9, "juvenil", "juvenil", 0,
+  10, "juvenil", "juvenil", 0,
+  11, "juvenil", "juvenil", 0,
+  12, "juvenil", "adulto", 0,
+  13, "juvenil", "adulto", 0,
+  14, "adulto", "Muerto", 0,
+  15, "adulto", "Muerto", 0,
+  16, "adulto", "adulto", 0,
+  17, "adulto", "adulto", 1,
+  18, "adulto", "adulto", 0,
+  19, "adulto", "adulto", 0
+)
 flextable(Orchis_ficticia_por_ind)
-
 ```
 
 A continuación, mostramos cómo cambiar los nombres de las columnas a **stage** y **fate**, y luego visualizar los primeros seis individuos de la tabla de datos:
 
 ```{r Trans6}
-#| error: true
 
-Orchis_ficticia_por_ind=Orchis_ficticia_por_ind %>% rename(stage=anio_1, fate=anio_2)
+Orchis_ficticia_por_ind <- Orchis_ficticia_por_ind %>% rename(stage = anio_1, fate = anio_2)
 
 head(Orchis_ficticia_por_ind) |> flextable()
-
 ```
 
 Una vez que hemos asignado los nombres a las columnas, podemos utilizar la función `projection.matrix` para calcular las transiciones y la fecundidad.
@@ -327,16 +295,14 @@ Aquí un ejemplo de la función:
 `projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=TRUE)`
 
 ```{r Trans7}
-#| error: true
 
-Orchis_ficticia_df = as.data.frame(Orchis_ficticia_por_ind) # Nota que es importante convertir la tabla de datos a un data frame si es en formato de tibble.
+Orchis_ficticia_df <- as.data.frame(Orchis_ficticia_por_ind) # Nota que es importante convertir la tabla de datos a un data frame si es en formato de tibble.
 
-stages = c("plantas_pequeñas", "juvenil", "adulto") # Las etapas del modelo en el primer muestreo
+stages <- c("plantas_pequeñas", "juvenil", "adulto") # Las etapas del modelo en el primer muestreo
 
-fate = c("plantas_pequeñas", "juvenil", "adulto", "Muerto") # Las etapas del modelo en el segundo periodo de muestreo
+fate <- c("plantas_pequeñas", "juvenil", "adulto", "Muerto") # Las etapas del modelo en el segundo periodo de muestreo
 
-projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=TRUE)
-
+projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF = TRUE)
 ```
 
 ## Unión de matrices
@@ -349,14 +315,12 @@ $$matA = \text{matT} + \text{matF}$$
 
 donde:
 
--   `matT` es la matriz de transiciones.
--   `matF` es la matriz de fecundidad.
+- `matT` es la matriz de transiciones.
+- `matF` es la matriz de fecundidad.
 
 ```{r Trans8}
-#| error: true
 
-projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF=FALSE)
-
+projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF = FALSE)
 ```
 
 ::: callout-note
@@ -384,10 +348,8 @@ Como ejemplo, revisamos el trabajo sobre *Cypripedium calceolus* en Europa [@gar
 El primer paso consiste en descargar los datos desde la base de datos COMPADRE utilizando la función `cdb_fetch` del paquete **Rcompadre**. Esta función obtiene la información y la almacena en un objeto llamado compadre.
 
 ```{r Trans10, message=FALSE}
-#| error: true
 
 compadre <- readRDS("data/COMPADRE_2026.rds") # Usar este código para bajar los datos del repositorio de COMPADRE. Tiene que haber activado la librería de Rcompadre.
-
 ```
 
 ------------------------------------------------------------------------
@@ -398,17 +360,16 @@ El segundo paso es extraer de la base de datos COMPADRE las matrices de transici
 
 Los pasos son los siguientes:
 
--   Filtrar la base de datos para *Cypripedium calceolus*.
--   Filtrar la base de datos para el DOI del artículo.
--   Filtrar la base de datos para la dimensión de la matriz de transiciones (6x6).
--   Filtrar la base de datos para una matriz en particular (242623).
+- Filtrar la base de datos para *Cypripedium calceolus*.
+- Filtrar la base de datos para el DOI del artículo.
+- Filtrar la base de datos para la dimensión de la matriz de transiciones (6x6).
+- Filtrar la base de datos para una matriz en particular (242623).
 
 NOTA: se podría haber filtrado a partir del **MatrixID** solamente, si uno conoce la identificación de esta matriz en la base de datos.
 
 ```{r Trans11}
-#| error: true
 
-Cyp_cal_matC = compadre %>%
+Cyp_cal_matC <- compadre %>%
   select(MatrixID, SpeciesAccepted, mat, Authors, DOI_ISBN, MatrixDimension) %>%
   filter(
     SpeciesAccepted %in% c("Cypripedium calceolus"),
@@ -416,10 +377,9 @@ Cyp_cal_matC = compadre %>%
     MatrixDimension %in% c(6),
     MatrixID %in% c(242623)
   ) # filtrar la base de datos para la matriz de interés
-  
 
-#Cyp_cal_matC$mat # para el año 2000 a 2001
 
+# Cyp_cal_matC$mat # para el año 2000 a 2001
 ```
 
 ### matA de *Cypripedium calceolus*, MatrixID = 242623
@@ -427,12 +387,10 @@ Cyp_cal_matC = compadre %>%
 La matriz de transiciones de *Cypripedium calceolus* tiene una matriz de transiciones, una de fecundidad y una de clonaje: matA = matU + matF + matC.
 
 ```{r Trans12}
-#| error: true
 
 matA <- matA(Cyp_cal_matC) # extraer la matriz a partir de la base de datos de COMPADRE
-matcc=as.matrix(as.data.frame(matA)) # convertir la matriz a un data frame y luego a un objeto en forma de matriz 
-matcc
-
+matcc <- as.matrix(as.data.frame(matA)) # convertir la matriz a un data frame y luego a un objeto en forma de matriz
+mat_to_ft(matcc)
 ```
 
 ## Extracción de la matriz de Clonaje
@@ -442,35 +400,39 @@ NOTE que la matriz de clonaje es la siguiente.
 Lo que se observa es que hay nuevos individuos en el tiempo $\text{t}_{i+1}$ que provienen de los individuos en el tiempo $\text{t}_i$. En este caso, son individuos que provienen de las etapas 4, 5 y 6 los que producen nuevos individuos (por clonaje) en las etapas 3 y 4.
 
 ```{r Trans13}
-#| error: true
 
 matC <- matC(Cyp_cal_matC) # extraer la matriz de clonaje a partir de la base de datos de COMPADRE
-matC
+# matC() devuelve una lista de matrices (una por fila del CompadreDB).
+# Aquí solo hay una fila, así que extraemos el primer elemento.
+matc_mat <- as.matrix(as.data.frame(matC))
+mat_to_ft(matc_mat)
 ```
 
 ### El ciclo de vida de *Cypripedium calceolus* con clonaje
 
 Ahora vemos el ciclo de vida de *Cypripedium calceolus* en este estudio, donde las líneas azules son las transiciones de una etapa a otra por clonaje.
 
-```{r Trans14}
-#| error: true
+```{r}
+#| label: fig-Trans14
+#| fig-cap: "Diagrama del ciclo de vida generado con `grviz_save` a partir de la matriz `matC` con seis estadios para *Cypripedium calceolus*."
 
-#etapas <- c("A1", "A2", "A3", "A4", "A5", "A6")
+# etapas <- c("A1", "A2", "A3", "A4", "A5", "A6")
 etapas <- c("Dormant", "Smallest", "Small", "Intermediate", "Large", "Extra Large") # Etapas del artículo
 
-etapas <- factor(etapas, levels =  c("Dormant", "Smallest", "Small", "Intermediate", "Large", "Extra Large"))
+etapas <- factor(etapas, levels = c("Dormant", "Smallest", "Small", "Intermediate", "Large", "Extra Large"))
 title <- NULL
 graph <- expand.grid(to = etapas, from = etapas)
 graph$trans <- round(c(matcc), 2)
 graph <- graph[graph$trans > 0, ]
 nodes <- paste(paste0("'", etapas, "'"), collapse = "; ")
 graph$min_len <- (as.numeric(graph$to) - as.numeric(graph$from)) * 3
-graph$col <- c("red",   "black", "black", "black","black",
-               "black", "red",   "black", "black",
-               "black", "black", "red",   "black", "black",
-               "black", "black", "blue",  "black", "black",
-               "black", "black", "blue",  "black", "black", 
-               "black", "black", "blue",  "blue",  "black", "black"
+graph$col <- c(
+  "red", "black", "black", "black", "black",
+  "black", "red", "black", "black",
+  "black", "black", "red", "black", "black",
+  "black", "black", "blue", "black", "black",
+  "black", "black", "blue", "black", "black",
+  "black", "black", "blue", "blue", "black", "black"
 )
 edges <- paste0("'", graph$from, "'", " -> ", "'", graph$to, "'",
   "[minlen=", graph$min_len,
@@ -518,4 +480,3 @@ Los autores recomiendan utilizar el **método bayesiano** para el análisis de m
 ::: callout-tip
 **Cambia al método bayesiano cuando los datos son escasos o las transiciones son raras.** El método tradicional (`projection.matrix()`) asume que las proporciones observadas estiman bien las probabilidades de transición. Esta suposición se rompe cuando el tamaño de muestra es pequeño o cuando alguna transición ocurrió con frecuencia 0/n (común en transiciones raras). En esos casos, el método bayesiano incorpora información a priori, evita probabilidades exactamente 0 o 1, y produce intervalos de confianza explícitos. Ver el capítulo [Acercamiento bayesiano para calcular transiciones y fecundidades](108-Bayesian_PPM.qmd).
 :::
-

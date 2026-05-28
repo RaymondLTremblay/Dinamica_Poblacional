@@ -29,7 +29,8 @@ qmd_files <- list.files(
 if (!is.null(this_file)) {
   qmd_files <- qmd_files[!grepl(
     tools::file_path_sans_ext(basename(this_file)),
-    qmd_files, fixed = TRUE
+    qmd_files,
+    fixed = TRUE
   )]
 }
 
@@ -37,16 +38,20 @@ if (length(qmd_files) == 0) stop("No .qmd files found.")
 
 # ---- 2. Extract R code chunks ----
 extract_r_code <- function(file) {
-  lines    <- readLines(file, warn = FALSE)
+  lines <- readLines(file, warn = FALSE)
   in_chunk <- FALSE
-  chunk    <- character()
-  chunks   <- list()
+  chunk <- character()
+  chunks <- list()
   for (ln in lines) {
-    if (grepl("^```\\{r", ln))          { in_chunk <- TRUE;  next }
+    if (grepl("^```\\{r", ln)) {
+      in_chunk <- TRUE
+      next
+    }
     if (in_chunk && grepl("^```\\s*$", ln)) {
       in_chunk <- FALSE
-      if (length(chunk) > 0)
+      if (length(chunk) > 0) {
         chunks[[length(chunks) + 1]] <- paste(chunk, collapse = "\n")
+      }
       chunk <- character()
       next
     }
@@ -60,7 +65,9 @@ all_code <- unlist(lapply(qmd_files, extract_r_code))
 # ---- 3. Extract function calls via parse-tree walk ----
 extract_functions <- function(code_str) {
   expr <- tryCatch(parse(text = code_str), error = function(e) NULL)
-  if (is.null(expr) || length(expr) == 0) return(character(0))
+  if (is.null(expr) || length(expr) == 0) {
+    return(character(0))
+  }
   calls <- character(0)
   walk <- function(node) {
     if (is.call(node)) {
@@ -97,12 +104,12 @@ functions_used <- setdiff(functions_used, exclude_fns)
 build_pkg_lookup <- function(fns) {
   # Obtener todos los paquetes instalados
   all_pkgs <- rownames(installed.packages())
-  
+
   # Construir mapa inverso desde los espacios de nombres cargados e instalados
   # Primera pasada: búsqueda rápida en espacios de nombres ya cargados
   loaded_ns <- loadedNamespaces()
   lookup <- setNames(rep(NA_character_, length(fns)), fns)
-  
+
   for (fn in fns) {
     for (ns in loaded_ns) {
       if (exists(fn, envir = asNamespace(ns), inherits = FALSE)) {
@@ -111,7 +118,7 @@ build_pkg_lookup <- function(fns) {
       }
     }
   }
-  
+
   # Segunda pasada: para funciones aún NA, buscar exportes de NAMESPACE de paquetes instalados
   still_na <- names(lookup)[is.na(lookup)]
   if (length(still_na) > 0) {
@@ -136,31 +143,38 @@ pkg_lookup <- build_pkg_lookup(functions_used)
 
 # ---- 6. Obtener descripción de una línea desde los archivos Rd ----
 get_description <- function(fn, pkg) {
-  if (is.na(pkg)) return(NA_character_)
-  tryCatch({
-    rd_db <- tools::Rd_db(pkg)
-    # Encontrar el tópico Rd que corresponde a la función
-    for (topic in rd_db) {
-      aliases <- tryCatch(
-        as.character(unlist(tools:::.Rd_get_metadata(topic, "alias"))),
-        error = function(e) character(0)
-      )
-      if (fn %in% aliases) {
-        title <- tryCatch(
-          as.character(unlist(tools:::.Rd_get_metadata(topic, "title"))),
-          error = function(e) NA_character_
+  if (is.na(pkg)) {
+    return(NA_character_)
+  }
+  tryCatch(
+    {
+      rd_db <- tools::Rd_db(pkg)
+      # Encontrar el tópico Rd que corresponde a la función
+      for (topic in rd_db) {
+        aliases <- tryCatch(
+          as.character(unlist(tools:::.Rd_get_metadata(topic, "alias"))),
+          error = function(e) character(0)
         )
-        return(trimws(paste(title, collapse = " ")))
+        if (fn %in% aliases) {
+          title <- tryCatch(
+            as.character(unlist(tools:::.Rd_get_metadata(topic, "title"))),
+            error = function(e) NA_character_
+          )
+          return(trimws(paste(title, collapse = " ")))
+        }
       }
-    }
-    NA_character_
-  }, error = function(e) NA_character_)
+      NA_character_
+    },
+    error = function(e) NA_character_
+  )
 }
 
 # ---- 7. Build final data frame ----
 # Paquetes base de R que se excluyen del apéndice
-base_pkgs <- c("base", "stats", "utils", "graphics",
-               "grDevices", "methods", "datasets")
+base_pkgs <- c(
+  "base", "stats", "utils", "graphics",
+  "grDevices", "methods", "datasets"
+)
 
 functions_df <- tibble(
   func_name = functions_used,
@@ -175,7 +189,7 @@ functions_df <- tibble(
 
 # ---- 8. Save outputs ----
 write.csv(functions_df, "function_appendix.csv", row.names = FALSE)
-saveRDS(functions_df,   "function_appendix.rds")
+saveRDS(functions_df, "function_appendix.rds")
 ```
 
 ## Functions Used in This Book

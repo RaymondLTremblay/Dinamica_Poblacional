@@ -16,27 +16,30 @@ ft_theme_modern <- function(ft) {
   ft <- flextable::color(ft, color = "#ffffff", part = "header")
   ft <- flextable::bold(ft, part = "header")
   ft <- flextable::padding(ft, padding.top = 6, padding.bottom = 6, part = "header")
-  # Body: alternating rows
+  # Body: alternating rows. Requiere al menos 2 filas para tener una
+  # fila "par" que sombrear; con 0 o 1 filas, `seq(2, n_rows, by = 2)`
+  # falla con "wrong sign in 'by' argument".
   n_rows <- flextable::nrow_part(ft, part = "body")
-  if (n_rows > 0) {
-    even_rows <- seq(2, n_rows, by = 2)
-    if (length(even_rows) > 0) {
-      ft <- flextable::bg(ft, i = even_rows, bg = "#eef5f4", part = "body")
-    }
+  if (n_rows >= 2L) {
+    even_rows <- seq(2L, n_rows, by = 2L)
+    ft <- flextable::bg(ft, i = even_rows, bg = "#eef5f4", part = "body")
   }
   # Subtle row borders
   ft <- flextable::hline(
-    ft, part = "body",
+    ft,
+    part = "body",
     border = officer::fp_border(color = "#d4e5e3", width = 0.5)
   )
   # Bottom border under header
   ft <- flextable::hline_bottom(
-    ft, part = "header",
+    ft,
+    part = "header",
     border = officer::fp_border(color = "#15665b", width = 1.5)
   )
   # Bottom border under table
   ft <- flextable::hline_bottom(
-    ft, part = "body",
+    ft,
+    part = "body",
     border = officer::fp_border(color = "#1a7a6d", width = 1.5)
   )
   ft <- flextable::padding(ft, padding.top = 4, padding.bottom = 4, part = "body")
@@ -49,6 +52,23 @@ ft_theme_auto <- function(ft) {
     ft <- flextable::theme_booktabs(ft)
   } else {
     ft <- ft_theme_modern(ft)
+  }
+  # En docx el `table.layout` global de flextable no se aplica;
+  # ni siquiera `set_table_properties(layout="autofit")` por sí solo
+  # produce columnas anchas — Word ignora el hint y colapsa cada
+  # columna al ancho mínimo de contenido (letras apiladas verticales).
+  # Combinación que sí funciona:
+  #   1. `autofit()` mide el contenido y FIJA anchos explícitos por
+  #      columna en pulgadas (escribe `width=...` celda por celda).
+  #   2. `set_table_properties(layout="autofit", width=1)` declara que
+  #      la tabla ocupa el 100% del texto y respeta los anchos calculados.
+  # SCOPING: solo a docx/odt. Typst (PDF) tiene su propio pipeline
+  # de tablas que ya funciona y no necesita estas propiedades.
+  out_fmt <- tryCatch(knitr::pandoc_to(), error = function(e) NULL)
+  if (!is.null(out_fmt) && grepl("^(docx|odt)", out_fmt)) {
+    message(sprintf("[ft_theme_auto] aplicando autofit para %s", out_fmt))
+    ft <- flextable::autofit(ft)
+    ft <- flextable::set_table_properties(ft, layout = "autofit", width = 1)
   }
   ft
 }
@@ -74,8 +94,11 @@ ft_wide <- function(ft, max_cols = 10) {
       extra <- length(all_cols) - max_cols
       ft <- flextable::delete_columns(ft, j = all_cols[(max_cols + 1):length(all_cols)])
       ft <- flextable::add_footer_lines(ft,
-        values = paste0("Nota: se muestran ", max_cols, " de ",
-                        length(all_cols), " columnas disponibles."))
+        values = paste0(
+          "Nota: se muestran ", max_cols, " de ",
+          length(all_cols), " columnas disponibles."
+        )
+      )
       ft <- flextable::fontsize(ft, size = 7, part = "footer")
       ft <- flextable::italic(ft, part = "footer")
     }
@@ -89,3 +112,30 @@ ft_wide <- function(ft, max_cols = 10) {
   }
   ft
 }
+
+# ── Universal preload ──
+# Hace disponible flextable() y los helpers `mat_to_ft / compmat_to_ft /
+# pretty` en TODOS los chunks del libro sin que cada capítulo tenga que
+# acordarse de `library(flextable)` o `source("R/figuras_helpers.R")`.
+# Estos imports per-capítulo son idempotentes (no rompen nada si están
+# duplicados) — los dejamos por claridad, pero esta preload garantiza
+# que aunque un capítulo se olvide, las funciones siguen disponibles.
+suppressPackageStartupMessages({
+  if (requireNamespace("flextable", quietly = TRUE)) library(flextable)
+})
+local({
+  # Caminar hacia arriba desde el cwd hasta encontrar _quarto.yml; desde
+  # ahí sourcear R/figuras_helpers.R. No depende de paquetes externos
+  # (rprojroot, here) por si .Rprofile corre antes de install.packages.
+  d <- normalizePath(getwd())
+  while (TRUE) {
+    if (file.exists(file.path(d, "_quarto.yml"))) {
+      helpers <- file.path(d, "R", "figuras_helpers.R")
+      if (file.exists(helpers)) source(helpers)
+      break
+    }
+    parent <- dirname(d)
+    if (parent == d) break
+    d <- parent
+  }
+})

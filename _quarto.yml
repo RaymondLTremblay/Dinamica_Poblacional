@@ -15,9 +15,9 @@ project:
   post-render:
     # Tras renderizar, recolectar todas las figuras (estáticas + las
     # generadas por chunks en docs/*_files/figure-html/) en una
-    # estructura por capítulo dentro de figuras_editor/, para entrega
-    # al productor del libro.
-    - python3 scripts/collect_figures.py
+    # estructura por capítulo dentro de figuras_editor/, con prefijo
+    # `Fig_X.Y_<archivo>` correspondiente al número de figura del libro.
+    - Rscript scripts/collect_figures.R
   resources:
     - google2352045df3d1e270.html
     - theme.scss
@@ -134,6 +134,20 @@ format:
     # Quarto's default title-block uses light-blue panels; we suppress them and
     # rely on Typst's clean default cover layout.
     title-block-style: none
+  docx:
+    # Word copy for the editor. One combined .docx is produced from all chapters,
+    # matching the structure of the HTML and Typst PDF builds. Render selectively
+    # with:  quarto render --to docx
+    output-file: Introduccion-a-la-Dinamica-Poblacional-de-Orquideas.docx
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    # Render HTML widgets (DiagrammeR life-cycle diagrams, leaflet, etc.) as
+    # static PNG screenshots via webshot2, mirroring the Typst behavior.
+    prefer-html: true
+    # No reference-doc: Quarto's default Word styles. Drop in a styled
+    # reference.docx here if the editor later supplies a template.
+    # reference-doc: reference.docx
 
 execute:
   freeze: false
@@ -144,6 +158,13 @@ execute:
 knitr:
   opts_chunk:
     tidy: false
+    # Cada chunk con figura emite PNG (para HTML/Word) *y* PDF (para el
+    # editor — vector cuando es ggplot, embebido en figuras_editor/).
+    # El primer dispositivo es el que Quarto incrusta en HTML/Word/Typst;
+    # el segundo se genera como artefacto adicional en figure-html/.
+    # `cairo_pdf` (en lugar del `pdf` base) soporta UTF-8 — necesario
+    # para caracteres como λ, ρ, α, ø, acentos en etiquetas de ejes, etc.
+    dev: ["png", "cairo_pdf"]
     R.options:
       cli.hyperlink: false
       cli.hyperlink_help: false

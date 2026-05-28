@@ -32,9 +32,10 @@ A continuación se presentan algunos de los eventos, autores y desarrollos clave
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r Hist1, message=FALSE, warning=FALSE}
-#| error: true
 library(Rcompadre) # Paquete para trabajar con la base de datos de COMPADRE y COMADRE
 library(tidyverse) # Paquete para activar múltiples paquetes
+library(flextable) # para renderizar tablas (usado vía mat_to_ft / pretty)
+source("R/figuras_helpers.R") # mat_to_ft(), compmat_to_ft(), pretty()
 ```
 
 ### Estudios realizados
@@ -80,14 +81,14 @@ Tremblay et al. [@tremblay2009dormancy] evaluaron la latencia en nueve especies 
 
 Los primeros trabajos de dinámica poblacional usando MPP, publicados en revistas revisadas por pares, libros o tesis enfocadas en orquídeas, comienzan en los años 1990. La lista de trabajos de orquídeas que usaron MPP incluye:
 
--   *Cleistes divaricata* [@gregg1991variation]
--   *Cypripedium acaule* [@cochran1992simple]
--   *Laelia speciosa* [@hernandez1992dinamica] tesis de pregrado
--   *Tolumnia variegata* [@calvo1993evolutionary]
--   *Platanthera praeclara* [@sieg1995influence]
--   *Lepanthes caritensis* [@tremblay1997lepanthes]
--   *Herminium monorchis* [@wells1998flowering]
--   *Himantoglossum hircinum* [@wells1998flowering; @carey1998modelling]
+- *Cleistes divaricata* [@gregg1991variation]
+- *Cypripedium acaule* [@cochran1992simple]
+- *Laelia speciosa* [@hernandez1992dinamica] tesis de pregrado
+- *Tolumnia variegata* [@calvo1993evolutionary]
+- *Platanthera praeclara* [@sieg1995influence]
+- *Lepanthes caritensis* [@tremblay1997lepanthes]
+- *Herminium monorchis* [@wells1998flowering]
+- *Himantoglossum hircinum* [@wells1998flowering; @carey1998modelling]
 
 Es interesante que en estos primeros años hay 3 trabajos con especies tropicales de los 8 trabajos realizados. Curiosamente, hoy hay más estudios de MPP en orquídeas tropicales (n = 35) que de especies templadas (n = 31).
 
@@ -100,7 +101,7 @@ Las publicaciones de dinámica poblacional sin el uso de MPP son múltiples y de
 Leo E.M. Vanhecke [@vanhecke1991population] demuestra el cambio de densidad en el tiempo y el espacio en la especie *Dactylorhiza praetermissa* entre 1974 y 1985. Aquí vemos dos de estos gráficos para visualizar el cambio en la densidad de la población. En el primer gráfico se observa que la densidad de la población es mayor en el año 1974 y en el segundo gráfico se observa que la densidad de la población es mayor en el año 1978. Es claro que en pocos años la densidad de plantas emergentes en una parcela puede cambiar mucho. En el trabajo, el autor demuestra el cambio en densidad en los siguientes años: 1974 y 1978-1985.
 
 ::: img-float
-![*Dactylorhiza praetermissa*; de la publicación](images/Vanhecke_figure.png){style="float: right; margin: 5px;width: 50% ; "}
+![*Dactylorhiza praetermissa*; de la publicación](images/Vanhecke_figure.png){#fig-vanhecke-figure style="float: right; margin: 5px;width: 50% ; "}
 :::
 
 Willems y Bik [@willems1991population] siguieron una población de *Orchis simia* por 22 años, desde 1968 a 1990, y contabilizan la cantidad de individuos en cada estado de desarrollo, categorizando estos como nuevas plantas, plantas fallecidas, con flores, latentes y la cantidad de plantas totales. Presentan una figura demostrando la cantidad de individuos en cada estado de desarrollo en el tiempo y estimando la cantidad de individuos faltantes y muertos.
@@ -111,7 +112,7 @@ Haciendo una búsqueda en Google Scholar para `"orchid" "population dynamics"`, 
 
 1940-1950
 
--   Carl Olaf Tamm publica el primer artículo sobre dinámica de orquídeas en *Botaniska Notiser* [@tamm1948observations]. Esta publicación tiene datos de *Orchis mascula* y *Orchis sambucina*, entre otras especies de plantas en Suecia. Vea el capítulo de Tamm para más información.
+- Carl Olaf Tamm publica el primer artículo sobre dinámica de orquídeas en *Botaniska Notiser* [@tamm1948observations]. Esta publicación tiene datos de *Orchis mascula* y *Orchis sambucina*, entre otras especies de plantas en Suecia. Vea el capítulo de Tamm para más información.
 
 1950-1960 - ninguno
 
@@ -119,21 +120,21 @@ Haciendo una búsqueda en Google Scholar para `"orchid" "population dynamics"`, 
 
 1970-1980
 
--   Margaret Bradshaw [@bradshaw1978plant] hace un resumen de los valores de estudios de demografía incluyendo orquídeas y menciona los trabajos de Tamm [@tamm1948observations; @tamm1972survival].
+- Margaret Bradshaw [@bradshaw1978plant] hace un resumen de los valores de estudios de demografía incluyendo orquídeas y menciona los trabajos de Tamm [@tamm1948observations; @tamm1972survival].
 
--   Carl Olaf Tamm [@tamm1972survival] revisó sus análisis de dinámica poblacional de *Dactylorhiza sambucina*, *D. incarnata*, *Orchis mascula* y *Listera ovata*. Estos muestreos comenzaron en los años 1940 y se publicaron por primera vez en 1948 [@tamm1948observations].
+- Carl Olaf Tamm [@tamm1972survival] revisó sus análisis de dinámica poblacional de *Dactylorhiza sambucina*, *D. incarnata*, *Orchis mascula* y *Listera ovata*. Estos muestreos comenzaron en los años 1940 y se publicaron por primera vez en 1948 [@tamm1948observations].
 
 1980-1990
 
--   Loyal A. Mehrhoff [@mehrhoff1989dynamics] evaluó la dinámica de *Isotria medeoloides* en cinco poblaciones distribuidas entre Georgia (n=2), North Carolina (n=2) y South Carolina (n=1), siguiéndolas por seis años consecutivos. El autor encontró que la supervivencia de las plantas varía entre poblaciones y que las poblaciones tienden a no persistir: tres de las cinco habían desaparecido o se habían reducido dramáticamente en el periodo de seis años.
+- Loyal A. Mehrhoff [@mehrhoff1989dynamics] evaluó la dinámica de *Isotria medeoloides* en cinco poblaciones distribuidas entre Georgia (n=2), North Carolina (n=2) y South Carolina (n=1), siguiéndolas por seis años consecutivos. El autor encontró que la supervivencia de las plantas varía entre poblaciones y que las poblaciones tienden a no persistir: tres de las cinco habían desaparecido o se habían reducido dramáticamente en el periodo de seis años.
 
--   Clare Alexander [@alexander1984seasonal] comparó el patrón de fenología, número de rosetas y supervivencia en *Goodyera repens* en tres poblaciones en Inglaterra durante dos años. La autora evaluó la longevidad de las rosetas de los individuos y estimó un promedio de 4.3 ± 1.1 años. Además encontró que la supervivencia de las rosetas varía con la densidad: a mayor densidad, menor longevidad. Este trabajo pudiese ser el primero que apoya la idea de que la densidad influye sobre la supervivencia individual en orquídeas.
+- Clare Alexander [@alexander1984seasonal] comparó el patrón de fenología, número de rosetas y supervivencia en *Goodyera repens* en tres poblaciones en Inglaterra durante dos años. La autora evaluó la longevidad de las rosetas de los individuos y estimó un promedio de 4.3 ± 1.1 años. Además encontró que la supervivencia de las rosetas varía con la densidad: a mayor densidad, menor longevidad. Este trabajo pudiese ser el primero que apoya la idea de que la densidad influye sobre la supervivencia individual en orquídeas.
 
--   Michael J. Hutchings [@hutchings1987population] evaluó el efecto del tiempo desde la primera vez que una planta emerge sobre su probabilidad de florecer en *Ophrys sphegodes* en Inglaterra. Demostró que las plantas con mayor edad (tiempo desde el primer avistamiento) florecen más, acercándose al 100% cuando no son latentes. Al contrario, las plantas de mayor edad (8 años o más) muestran una reducción en la altura de la inflorescencia, el número de hojas y la cantidad de flores, apoyando la idea de senescencia. Además, demostró que las plantas más robustas (con mayor promedio de flores por año) están correlacionadas con la longevidad (*lifespan*).
+- Michael J. Hutchings [@hutchings1987population] evaluó el efecto del tiempo desde la primera vez que una planta emerge sobre su probabilidad de florecer en *Ophrys sphegodes* en Inglaterra. Demostró que las plantas con mayor edad (tiempo desde el primer avistamiento) florecen más, acercándose al 100% cuando no son latentes. Al contrario, las plantas de mayor edad (8 años o más) muestran una reducción en la altura de la inflorescencia, el número de hojas y la cantidad de flores, apoyando la idea de senescencia. Además, demostró que las plantas más robustas (con mayor promedio de flores por año) están correlacionadas con la longevidad (*lifespan*).
 
--   Katherine Gregg [@gregg1989reproductive] estudió la dinámica poblacional de *Cleistes divaricata* en tres poblaciones en el este de los Estados Unidos. En este trabajo se presenta una revisión de la literatura sobre la dinámica poblacional de orquídeas y se discuten los métodos usados para estimar la dinámica poblacional. Se presenta un análisis de la dinámica poblacional usando MPP y se discute el impacto de la latencia en la estimación de los parámetros demográficos.
+- Katherine Gregg [@gregg1989reproductive] estudió la dinámica poblacional de *Cleistes divaricata* en tres poblaciones en el este de los Estados Unidos. En este trabajo se presenta una revisión de la literatura sobre la dinámica poblacional de orquídeas y se discuten los métodos usados para estimar la dinámica poblacional. Se presenta un análisis de la dinámica poblacional usando MPP y se discute el impacto de la latencia en la estimación de los parámetros demográficos.
 
--   Ricardo Calvo y Carol C. Horvitz [@calvo1990pollinator] estudian la dinámica poblacional de *Tolumnia variegata* en Puerto Rico. Se presenta un análisis usando MPP y se discute el impacto de la variación en transiciones sobre la adecuación demográfica, específicamente sobre el efecto de las limitaciones de polinizadores sobre la producción de frutos.
+- Ricardo Calvo y Carol C. Horvitz [@calvo1990pollinator] estudian la dinámica poblacional de *Tolumnia variegata* en Puerto Rico. Se presenta un análisis usando MPP y se discute el impacto de la variación en transiciones sobre la adecuación demográfica, específicamente sobre el efecto de las limitaciones de polinizadores sobre la producción de frutos.
 
 ------------------------------------------------------------------------
 
@@ -142,10 +143,8 @@ Haciendo una búsqueda en Google Scholar para `"orchid" "population dynamics"`, 
 La base de datos de COMPADRE contiene múltiples estudios de dinámica poblacional en orquídeas y es una buena fuente de información para estudiar la dinámica poblacional de orquídeas.
 
 ```{r Hist_2, message=FALSE, warning=FALSE, eval=FALSE}
-#| error: true
 
 compadre <- readRDS("data/COMPADRE_2026.rds") # Usar este código para bajar los datos del repositorio de COMPADRE. Tiene que haber activado la librería de Rcompadre.
-
 ```
 
 ------------------------------------------------------------------------
@@ -153,9 +152,8 @@ compadre <- readRDS("data/COMPADRE_2026.rds") # Usar este código para bajar los
 Cantidad de Familias de plantas en la base de datos de COMPADRE
 
 ```{r Hist3, message=FALSE, warning=FALSE, eval=FALSE}
-#| error: true
 
-Familia=(as.data.frame(sort(unique(compadre$Family))))
+Familia <- (as.data.frame(sort(unique(compadre$Family))))
 count(Familia)
 ```
 
@@ -164,9 +162,8 @@ count(Familia)
 La cantidad de géneros en la base de datos de COMPADRE
 
 ```{r Hist2, message=FALSE, warning=FALSE, eval=FALSE}
-#| error: true
 
-Genera=(as.data.frame(sort(unique(compadre$Genus))))
+Genera <- (as.data.frame(sort(unique(compadre$Genus))))
 
 count(Genera)
 ```
@@ -176,8 +173,7 @@ count(Genera)
 La cantidad de especies en la base de datos de COMPADRE
 
 ```{r Hist4, message=FALSE, warning=FALSE, eval=FALSE}
-#| error: true
-Especies=as.data.frame(sort(unique(compadre$SpeciesAccepted)))
+Especies <- as.data.frame(sort(unique(compadre$SpeciesAccepted)))
 
 count(Especies)
 ```
@@ -189,11 +185,10 @@ count(Especies)
 Aquí enseñamos cómo filtrar la base de datos de COMPADRE para obtener solamente las especies de la familia *Orchidaceae*. En este caso se usa el paquete `dplyr` para filtrar y contar las especies únicas de orquídeas.
 
 ```{r Hist5, message=FALSE, warning=FALSE, eval=FALSE}
-#| error: true
 
-Lista_Orquidea=compadre %>% filter(Family %in% c("Orchidaceae")) 
+Lista_Orquidea <- compadre %>% filter(Family %in% c("Orchidaceae"))
 
-Lista_O=as.data.frame(sort(unique(Lista_Orquidea$SpeciesAccepted))) 
+Lista_O <- as.data.frame(sort(unique(Lista_Orquidea$SpeciesAccepted)))
 
 count(Lista_O)
 ```
@@ -201,12 +196,12 @@ count(Lista_O)
 ------------------------------------------------------------------------
 
 ```{r Hist6, message=FALSE, warning=FALSE, eval=FALSE}
-#| error: true
 
-SPECIES_Number=Lista_Orquidea%>% select(Family, StudyStart, StudyEnd, SpeciesAccepted, YearPublication, Authors, DOI_ISBN, OrganismType, MatrixPopulation, mat) %>% 
-  group_by(Family) %>% 
-  summarize(n_species = length(unique(SpeciesAccepted))) %>% 
+SPECIES_Number <- Lista_Orquidea %>%
+  select(Family, StudyStart, StudyEnd, SpeciesAccepted, YearPublication, Authors, DOI_ISBN, OrganismType, MatrixPopulation, mat) %>%
+  group_by(Family) %>%
+  summarize(n_species = length(unique(SpeciesAccepted))) %>%
   arrange(desc(n_species))
 
-summary(SPECIES_Number)
+pretty(summary(SPECIES_Number))
 ```

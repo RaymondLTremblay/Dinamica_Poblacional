@@ -33,14 +33,12 @@ A continuación se describen los métodos y protocolos utilizados para la recopi
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r recop-setup, message=FALSE, warning=FALSE}
-#| error: true
 
 library(knitr)
 library(tidyverse)
 library(dplyr)
 library(flextable)
 library(Rcompadre)
-
 ```
 
 ## Recopilación de datos en campo: consideraciones
@@ -81,7 +79,7 @@ Durante la búsqueda de poblaciones en campo, resulta fundamental contar con una
 La identificación visual, aunque menos precisa, permite reconocer de manera general distintos géneros de orquídeas a partir de rasgos morfológicos característicos y de su tipo de crecimiento. Entre los atributos morfológicos se incluyen la forma y disposición de las hojas, el tipo de pseudobulbo y la estructura floral.
 
 ::: img-float
-![*Laelia autumnalis* en su hábitat rupícola, crédito: \[autor\]](images/L_autum_rupicola.jpg){#fig-laelia-rupi style="float: right; margin: 10px 0 10px 20px; width: 65%;"}
+![*Laelia autumnalis* en su hábitat rupícola, crédito: Foto: Aucencia Emeterio-Lara](images/L_autum_rupicola.jpg){#fig-laelia-rupi style="float: right; margin: 10px 0 10px 20px; width: 65%;"}
 :::
 
 i.  En las epífitas se reconocen al menos tres grupos de plantas:
@@ -238,10 +236,9 @@ La @fig-zonificacion muestra las zonas de vida de epífitas basado en Johansson 
 
 Las zonas se pueden describir de la siguiente manera:
 
-```{r Datos_1, echo=FALSE, message=FALSE, warning=FALSE}
-#| error: true
+```{r Datos_1, message=FALSE, warning=FALSE}
 
-zones=tribble(
+zones <- tribble(
   ~Zona, ~Descripción,
   "I", "Parte basal del tronco, donde se encuentra musgo y líquenes",
   "II", "Tronco hasta el inicio de las primeras ramificaciones",
@@ -256,25 +253,21 @@ zones=tribble(
 #| label: tbl-zonas-arbol
 #| tbl-cap: "Zonificación de árbol hospedero."
 #| echo: false
-#| error: true
 flextable(zones)
 ```
 
 En la @tbl-orquideas-zonas se muestran algunos ejemplos de orquídeas en cada una de las zonas. Nota que no es una lista exhaustiva, ya que hay muchas más especies que pueden encontrarse en cada una de las zonas. Además, la arquitectura de cada árbol va a influenciar la presencia de cada zona, de manera tal que podrían encontrarse en más de un lugar [@tremblay1997lepanthes].
 
 ```{r Datos_3,  message=FALSE, warning=FALSE}
-#| error: true
 
-Epifitas_zonas=dplyr::tribble(
+Epifitas_zonas <- dplyr::tribble(
   ~Zona, ~"Epífita dominante", ~"Orquídea predominante", ~Especie, ~Referencia,
   "I", "Capa de musgo", "raramente", "*Lepanthes caritensis*", "@tremblay1997lepanthes",
   "II", "Plantas trepadoras", "Orquídeas miniatura y grandes", "*Vanilla planifolia*", "Hernández-Apolinar, observación personal, 2015",
-  "III", "Pteridophytas y otras epífitas vasculares", "Orquídeas miniatura y grandes","*Campylocentrum fasciola*" ,"Tremblay observación personal" , 
+  "III", "Pteridophytas y otras epífitas vasculares", "Orquídeas miniatura y grandes", "*Campylocentrum fasciola*", "Tremblay observación personal",
   "IV", "Orquídeas", "Mayor concentración y diversidad de orquídeas grandes y miniatura", "*Laelia autumnalis*", "@emeterio2021does",
-  
   "V", "Líquenes", "Mayor concentración y diversidad de orquídeas grandes y miniatura", "*Hintonella mexicana*", "Emeterio-Lara observación personal",
   "VI", "Líquenes", "Pocas orquídeas, miniatura", "*Tolumnia variegata*", "@ackerman1996seedling"
-  
 )
 
 # Epifitas_zonas
@@ -285,9 +278,8 @@ Epifitas_zonas=dplyr::tribble(
 #| tbl-cap: "Orquídea predominante por zona."
 #| warning: false
 #| message: false
-#| error: true
 
-list_epi = Epifitas_zonas %>%
+list_epi <- Epifitas_zonas %>%
   flextable() %>%
   ftExtra::colformat_md()
 
@@ -442,10 +434,9 @@ No importa las variables que usemos en la clasificación de las plantas, lo que 
 
 Las variables esenciales (@tbl-variables-censo), junto con las características definidas en cada etapa de desarrollo (ver [Ejemplos de categorización](#sec-ejemplos-categorizacion)), permiten conocer, por un lado, cuál o cuáles de las categorías son muy dinámicas o, por el contrario, constantes en el ciclo de vida de la especie de interés; y por otro, el estado de conservación de la población en su conjunto. Esta última se define a partir de la tasa finita de crecimiento poblacional como se establece en el Capítulo *XX*.
 
-```{r DC1, echo=FALSE, message=FALSE}
-#| error: true
+```{r DC1, message=FALSE}
 
-Variable_Censo = tribble(
+Variable_Censo <- tribble(
   ~"Tiempo inicial t_0",
   ~"Muestreo posterior t+1",
   "Etapa del individuo",
@@ -468,13 +459,11 @@ Variable_Censo = tribble(
 #| tbl-cap: "Variables esenciales en un censo demográfico."
 #| echo: false
 #| message: false
-#| error: true
 
 flextable(Variable_Censo) |>
   add_footer_lines(values = "Nota: Especificar si se trata de individuos procedentes de semilla o si su origen es por clonación (e.g. keikis, pseudobulbos separados, activación de yemas de reserva en pseudobulbos y rizomas, etc.).") |>
   fontsize(size = 8, part = "footer") |>
   italic(part = "footer")
-
 ```
 
 ------------------------------------------------------------------------
