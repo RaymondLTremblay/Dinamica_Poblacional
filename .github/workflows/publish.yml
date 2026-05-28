@@ -60,12 +60,18 @@ jobs:
           # automáticamente al escanear los .qmd.
           #   ftExtra: colformat_md() en tablas con markdown.
           #   cowplot: plot_grid / draw_label en chunks de funciones de transferencia.
-          #   magick:  fallback PNG->PDF en scripts/collect_figures.R.
           #   styler:  por si se corre scripts/style_all.R en CI.
+          #
+          # NOTA: `magick` (R) requiere la system library `libmagick++-dev`.
+          # No la instalamos en CI porque el render de GitHub Pages es HTML
+          # only y `magick` sólo se usa como fallback PNG->PDF en
+          # `scripts/collect_figures.R` para el deliverable del editor
+          # (que se genera localmente, no en CI). Si en el futuro quieres
+          # generar PDF en CI, añade `libmagick++-dev` al apt-get install
+          # de arriba y `any::magick` aquí.
           extra-packages: |
             any::ftExtra
             any::cowplot
-            any::magick
             any::styler
         env:
           PKG_SYSREQS: "false"
