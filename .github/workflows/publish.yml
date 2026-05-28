@@ -54,6 +54,19 @@ jobs:
 
       - name: Install R packages
         uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          # Paquetes que se usan SOLO con sintaxis `pkg::fn()` (sin
+          # `library(pkg)`) y que setup-r-dependencies puede no detectar
+          # automáticamente al escanear los .qmd.
+          #   ftExtra: colformat_md() en tablas con markdown.
+          #   cowplot: plot_grid / draw_label en chunks de funciones de transferencia.
+          #   magick:  fallback PNG->PDF en scripts/collect_figures.R.
+          #   styler:  por si se corre scripts/style_all.R en CI.
+          extra-packages: |
+            any::ftExtra
+            any::cowplot
+            any::magick
+            any::styler
         env:
           PKG_SYSREQS: "false"
           CHROMOTE_CHROME: ${{ steps.setup-chrome.outputs.chrome-path }}
