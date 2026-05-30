@@ -8,43 +8,19 @@ options(
 )
 Sys.setenv(NO_COLOR = "1")
 
-# ── Word-deliverable hook: ocultar líneas de "plumbing" del código mostrado ──
-# En el libro en línea (HTML) estas líneas son inofensivas, pero en el .docx
-# para la editora son ruido irrelevante (no aportan al lector impreso). Este
-# hook de knitr las ELIMINA del código que se *muestra* solo cuando el destino
-# es docx; el chunk sigue ejecutándose igual (las figuras se generan), así que
-# el HTML no cambia. Cubre: source(...), ggsave(...), save_plot_png(...),
-# plc_save(...), grviz_save(...). Para añadir más patrones, amplíe `noise`.
-local({
-  base_hook <- knitr::knit_hooks$get("source")
-  knitr::knit_hooks$set(source = function(x, options) {
-    if (isTRUE(tryCatch(knitr::pandoc_to("docx"), error = function(e) FALSE))) {
-      x <- unlist(strsplit(paste(x, collapse = "\n"), "\n", fixed = TRUE))
-      noise <- paste0(
-        "^\\s*(source\\(|ggsave\\(|ggplot2::ggsave\\(|",
-        "save_plot_png\\(|plc_save\\(|grviz_save\\()"
-      )
-      x <- x[!grepl(noise, x)]
-      x <- paste(x, collapse = "\n")
-    }
-    base_hook(x, options)
-  })
-})
-
-# ── Word-deliverable: ocultar el CÓDIGO de chunks que solo CONSTRUYEN tablas
-# informativas (datos escritos a mano con tribble), no análisis. En el libro
-# en línea (HTML) el código se muestra (es didáctico); en el .docx para la
-# editora ese código de captura de datos es ruido — la editora solo necesita
-# ver la tabla resultante. Marque tales chunks con `#| docx_hide_code: true`:
-# el código se OCULTA solo en docx (echo=FALSE) pero el chunk se ejecuta igual,
-# así que la tabla se renderiza. En HTML el código sigue visible/plegable.
-knitr::opts_hooks$set(docx_hide_code = function(options) {
-  if (isTRUE(options$docx_hide_code) &&
-    isTRUE(tryCatch(knitr::pandoc_to("docx"), error = function(e) FALSE))) {
-    options$echo <- FALSE
-  }
-  options
-})
+# ── Word-deliverable: opts_hook de knitr SOLO para docx ──────────────────────
+# Guard requireNamespace: en CI, `setup-r-dependencies` arranca R ANTES de
+# instalar los paquetes y sourcea este .Rprofile; sin el guard, `knitr::...`
+# aborta con "there is no package called 'knitr'" y falla el workflow.
+#
+# NOTA (2026-05-30): se ELIMINÓ el opts_hook `docx_hide_code`. Aunque solo ponía
+# `echo=FALSE` (que en teoría oculta el código y CONSERVA la salida), bajo
+# Quarto hacía DESAPARECER toda la salida del chunk (la tabla incluida) —
+# confirmado por el usuario en el cap. 109 (true=desaparece, false=aparece). Si
+# en el futuro se quiere ocultar código en docx, usar un mecanismo probado
+# (p. ej. `#| echo: false` directo, que afecta todos los formatos). Queda solo
+# `docx_fit` (verificado, funciona: solo cambia out.width, no oculta salida).
+if (requireNamespace("knitr", quietly = TRUE)) {
 
 # ── Word-deliverable: ajustar figuras altas (diagramas de ciclo de vida) para
 # que quepan en la página. En Word la imagen se escala al ancho de texto (6.5")
@@ -59,6 +35,7 @@ knitr::opts_hooks$set(docx_fit = function(options) {
   }
   options
 })
+} # fin del guard: if (requireNamespace("knitr", ...))
 
 # ── Modern theme for HTML: striped rows + teal header ──
 ft_theme_modern <- function(ft) {

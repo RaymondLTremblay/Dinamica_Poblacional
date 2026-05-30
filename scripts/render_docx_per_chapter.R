@@ -51,9 +51,10 @@
 
 # Assets a enlazar dentro del temp dir; solo se enlaza si existe en ROOT.
 .SHARED_ASSETS <- c(
-  ".Rprofile", "R", "images", "figs", "data",
-  "book.bib", "peerj.csl",
+  ".Rprofile", "R", "images", "figs", "data", "fonts",
+  "book.bib", "peerj.csl", "lankesteriana.csl",
   "auto-functions.lua", "spanish-quotes.lua",
+  "reference.docx",
   "theme.scss", "theme-dark.scss",
   "typst-patches", ".quarto", "_freeze"
 )

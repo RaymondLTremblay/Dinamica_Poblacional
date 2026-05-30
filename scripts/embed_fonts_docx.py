@@ -44,12 +44,24 @@ def ensure(text, needle, addition, anchor):
     return text if needle in text else text.replace(anchor, addition + anchor, 1)
 
 def main():
+    import glob
     root = project_root()
-    docx = sys.argv[1] if len(sys.argv) > 1 else os.path.join(
-        root, "docs", "Introduccion-a-la-Dinamica-Poblacional-de-Orquideas.docx")
+    if len(sys.argv) > 1:
+        docx = sys.argv[1]
+    else:
+        # nombre por defecto del libro; si no existe (p. ej. el archivo trae
+        # acentos), tomar el único/ mayor .docx de docs/.
+        docx = os.path.join(root, "docs",
+                            "Introduccion-a-la-Dinamica-Poblacional-de-Orquideas.docx")
+        if not os.path.exists(docx):
+            cands = [f for f in glob.glob(os.path.join(root, "docs", "*.docx"))
+                     if not os.path.basename(f).startswith("~$")]
+            if cands:
+                docx = max(cands, key=os.path.getsize)  # el libro completo es el mayor
     if not os.path.exists(docx):
-        sys.exit(f"No se encontró el .docx: {docx}\n"
+        sys.exit(f"No se encontró ningún .docx en docs/.\n"
                  f"Renderice primero con: quarto render --to docx")
+    print(f"Procesando: {os.path.basename(docx)}")
     reg = open(os.path.join(root, "fonts", "JetBrainsMono-Regular.ttf"), "rb").read()
     bold = open(os.path.join(root, "fonts", "JetBrainsMono-Bold.ttf"), "rb").read()
 

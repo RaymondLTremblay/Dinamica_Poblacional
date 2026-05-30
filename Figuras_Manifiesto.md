@@ -69,17 +69,17 @@ Archivo fuente: `104-Recopilacion_datos_en_el_campo.qmd` — 23 figura(s)
 | 10 | 3.10 | 237 | static | `images/Figura_4.10.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.10_Figura_4.10.jpg` | `` | Técnica de rapel usada para el muestreo de orquídeas rupícolas: *Dendrobium*. Foto: Hong Liu, 2020. |
 | 11 | 3.11 | 243 | static | `images/Ascenso_Pk.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.11_Ascenso_Pk.jpg` | `` | Muestreo de orquídeas epífitas con ascenso de una sola cuerda: *Prosthechea karwinskii*. Foto: Alonso Argüero |
 | 12 | 3.12 | 257 | static | `images/Cattling_y_Johannson.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.12_Cattling_y_Johannson.png` | `` | Zonificación de árboles hospedero, basada en los modelos Catling (1986) y Johansson (1974). Dibujo de A. Emeterio-Lara |
-| 13 | 3.13 | 316 | static | `images/Ls_xyz.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.13_Ls_xyz.png` | `` | Distribución tridimensional de *Laelia speciosa* sobre *Quercus deserticola*, basada en @hernandez1992dinamica. Figura d |
-| 14 | 3.14 | 322 | static | `images/tree_dist.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.14_tree_dist.png` | `` | Distribución espacial de los árboles hospedero de *Laelia speciosa*. Los círculos dentro del área de muestreo representa |
-| 15 | 3.15 | 334 | static | `images/Triangulation_Method.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.15_Triangulation_Method.jpg` | `` | Método de triangulación para el muestreo de orquídeas terrestres. Se ilustra la forma de determinar la posición ($P_{x}$ |
-| 16 | 3.16 | 368 | static | `images/C_irap_plantula.jpeg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.16_C_irap_plantula.jpeg` | `` | Plántula de *Cypripedium irapeanum*. Foto: Claudia Gutiérrez-Paredes |
-| 17 | 3.17 | 376 | static | `images/Lepanthes_woodburyana.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.17_Lepanthes_woodburyana.jpg` | `` | *Lepanthes woodburyana*. Foto: Edwin Guevara |
-| 18 | 3.18 | 408 | static | `images/Cypripedium_acaule.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.18_Cypripedium_acaule.jpg` | `` | Uso de etiquetas de aluminio en marcaje de *Cypripedium acaule*. Foto: Tremblay |
-| 19 | 3.19 | 414 | static | `images/Laelia_cincho.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.19_Laelia_cincho.png` | `` | Uso de etiquetas de aluminio en marcaje con cinchos de plástico en *Laelia autumnalis*. Foto por Aucencia Emeterio-Lara |
-| 20 | 3.20 | 452 | static | `images/alambrelaelia.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.20_alambrelaelia.jpg` | `` | Marcaje de *Laelia speciosa* abrazando el tronco con alambre plastificado y etiquetas de *dymo*. Foto: Mariana Hernández |
-| 21 | 3.21 | 460 | static | `images/Lep_eltoroensis.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.21_Lep_eltoroensis.png` | `` | Los individuos de *Lepanthes eltoroensis* fueron identificados con una etiqueta de plástico clavada al tronco del árbol; |
-| 22 | 3.22 | 468 | static | `images/Cirap_marcaje.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.22_Cirap_marcaje.png` | `` | Marcaje de *Cypripedium irapeanum* con cinta de *dymo*. Foto: Hernández-Apolinar |
-| 23 | 3.23 | 474 | static | `images/Cyp_acaule_flag.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.23_Cyp_acaule_flag.jpg` | `` | Marcaje de *Cypripedium acaule* con banderitas. Foto: Tremblay |
+| 13 | 3.13 | 313 | static | `images/Ls_xyz.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.13_Ls_xyz.png` | `` | Distribución tridimensional de *Laelia speciosa* sobre *Quercus deserticola*, basada en @hernandez1992dinamica. Figura d |
+| 14 | 3.14 | 319 | static | `images/tree_dist.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.14_tree_dist.png` | `` | Distribución espacial de los árboles hospedero de *Laelia speciosa*. Los círculos dentro del área de muestreo representa |
+| 15 | 3.15 | 331 | static | `images/Triangulation_Method.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.15_Triangulation_Method.jpg` | `` | Método de triangulación para el muestreo de orquídeas terrestres. Se ilustra la forma de determinar la posición ($P_{x}$ |
+| 16 | 3.16 | 365 | static | `images/C_irap_plantula.jpeg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.16_C_irap_plantula.jpeg` | `` | Plántula de *Cypripedium irapeanum*. Foto: Claudia Gutiérrez-Paredes |
+| 17 | 3.17 | 373 | static | `images/Lepanthes_woodburyana.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.17_Lepanthes_woodburyana.jpg` | `` | *Lepanthes woodburyana*. Foto: Edwin Guevara |
+| 18 | 3.18 | 405 | static | `images/Cypripedium_acaule.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.18_Cypripedium_acaule.jpg` | `` | Uso de etiquetas de aluminio en marcaje de *Cypripedium acaule*. Foto: Tremblay |
+| 19 | 3.19 | 411 | static | `images/Laelia_cincho.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.19_Laelia_cincho.png` | `` | Uso de etiquetas de aluminio en marcaje con cinchos de plástico en *Laelia autumnalis*. Foto por Aucencia Emeterio-Lara |
+| 20 | 3.20 | 449 | static | `images/alambrelaelia.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.20_alambrelaelia.jpg` | `` | Marcaje de *Laelia speciosa* abrazando el tronco con alambre plastificado y etiquetas de *dymo*. Foto: Mariana Hernández |
+| 21 | 3.21 | 457 | static | `images/Lep_eltoroensis.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.21_Lep_eltoroensis.png` | `` | Los individuos de *Lepanthes eltoroensis* fueron identificados con una etiqueta de plástico clavada al tronco del árbol; |
+| 22 | 3.22 | 465 | static | `images/Cirap_marcaje.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.22_Cirap_marcaje.png` | `` | Marcaje de *Cypripedium irapeanum* con cinta de *dymo*. Foto: Hernández-Apolinar |
+| 23 | 3.23 | 471 | static | `images/Cyp_acaule_flag.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.23_Cyp_acaule_flag.jpg` | `` | Marcaje de *Cypripedium acaule* con banderitas. Foto: Tremblay |
 
 ### 05-Fecundidad
 
@@ -124,8 +124,8 @@ Archivo fuente: `109-Crecimiento_poblacional.qmd` — 4 figura(s)
 |---|---------|------:|------|----------------|-----|-----|---------|
 | 1 | 8.1 | 83 | render_dual | `images/cre_pop_1_Laelia_p1.png` | `figuras_editor/08-Crecimiento_poblacional/Fig_8.1_cre_pop_1_Laelia_p1.png` | `figuras_editor/08-Crecimiento_poblacional/Fig_8.1_cre_pop_1_Laelia_p1.pdf` |  |
 | 2 | 8.2 | 105 | render_dual | `images/cre_pop_1b_Laelia_p2.png` | `figuras_editor/08-Crecimiento_poblacional/Fig_8.2_cre_pop_1b_Laelia_p2.png` | `figuras_editor/08-Crecimiento_poblacional/Fig_8.2_cre_pop_1b_Laelia_p2.pdf` |  |
-| 3 | 8.3 | 169 | dynamic | `chunk 'fig-cre-pop-projection-2'` | `figuras_editor/08-Crecimiento_poblacional/Fig_8.3_fig-cre-pop-projection-2-1.png` | `figuras_editor/08-Crecimiento_poblacional/Fig_8.3_fig-cre-pop-projection-2-1.pdf` |  |
-| 4 | 8.4 | 188 | dynamic | `chunk 'fig-cre-pop-projection-3'` | `figuras_editor/08-Crecimiento_poblacional/Fig_8.4_fig-cre-pop-projection-3-1.png` | `figuras_editor/08-Crecimiento_poblacional/Fig_8.4_fig-cre-pop-projection-3-1.pdf` |  |
+| 3 | 8.3 | 168 | dynamic | `chunk 'fig-cre-pop-projection-2'` | `figuras_editor/08-Crecimiento_poblacional/Fig_8.3_fig-cre-pop-projection-2-1.png` | `figuras_editor/08-Crecimiento_poblacional/Fig_8.3_fig-cre-pop-projection-2-1.pdf` |  |
+| 4 | 8.4 | 187 | dynamic | `chunk 'fig-cre-pop-projection-3'` | `figuras_editor/08-Crecimiento_poblacional/Fig_8.4_fig-cre-pop-projection-3-1.png` | `figuras_editor/08-Crecimiento_poblacional/Fig_8.4_fig-cre-pop-projection-3-1.pdf` |  |
 
 ### 09-Propiedades
 
@@ -146,12 +146,12 @@ Archivo fuente: `111-Elasticidad.qmd` — 6 figura(s)
 
 | # | Fig X.Y | Línea | Tipo | Origen en .qmd | PNG | PDF | Caption |
 |---|---------|------:|------|----------------|-----|-----|---------|
-| 1 | 10.1 | 204 | static | `images/Lepanthes_eltoroensis_Tremblay.jpeg` | `figuras_editor/10-Elasticidad/Fig_10.1_Lepanthes_eltoroensis_Tremblay.jpeg` | `` | *Lepanthes eltoroensis*. Foto: Tremblay |
-| 2 | 10.2 | 245 | static | `images/Lepanthes_caritensis_Edwin_Guevara.jpg` | `figuras_editor/10-Elasticidad/Fig_10.2_Lepanthes_caritensis_Edwin_Guevara.jpg` | `` | *Lepanthes caritensis*. Foto: Edwin Guevara |
-| 3 | 10.3 | 251 | static | `images/Lepanthes_caritensis_Phorophyte.jpg` | `figuras_editor/10-Elasticidad/Fig_10.3_Lepanthes_caritensis_Phorophyte.jpg` | `` | *Lepanthes caritensis*. Foto: Edwin Guevara |
-| 4 | 10.4 | 257 | dynamic | `chunk 'fig-Elas7'` | `figuras_editor/10-Elasticidad/Fig_10.4_fig-Elas7-1.png` | `figuras_editor/10-Elasticidad/Fig_10.4_fig-Elas7-1.pdf` |  |
-| 5 | 10.5 | 289 | dynamic | `chunk 'fig-Elas8'` | `figuras_editor/10-Elasticidad/Fig_10.5_fig-Elas8-1.png` | `figuras_editor/10-Elasticidad/Fig_10.5_fig-Elas8-1.pdf` |  |
-| 6 | 10.6 | 332 | static | `images/Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg` | `figuras_editor/10-Elasticidad/Fig_10.6_Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg` | `` | *Laelia speciosa*. Foto: Eduardo A. Pérez García |
+| 1 | 10.1 | 201 | static | `images/Lepanthes_eltoroensis_Tremblay.jpeg` | `figuras_editor/10-Elasticidad/Fig_10.1_Lepanthes_eltoroensis_Tremblay.jpeg` | `` | *Lepanthes eltoroensis*. Foto: Tremblay |
+| 2 | 10.2 | 240 | static | `images/Lepanthes_caritensis_Edwin_Guevara.jpg` | `figuras_editor/10-Elasticidad/Fig_10.2_Lepanthes_caritensis_Edwin_Guevara.jpg` | `` | *Lepanthes caritensis*. Foto: Edwin Guevara |
+| 3 | 10.3 | 246 | static | `images/Lepanthes_caritensis_Phorophyte.jpg` | `figuras_editor/10-Elasticidad/Fig_10.3_Lepanthes_caritensis_Phorophyte.jpg` | `` | *Lepanthes caritensis*. Foto: Edwin Guevara |
+| 4 | 10.4 | 252 | dynamic | `chunk 'fig-Elas7'` | `figuras_editor/10-Elasticidad/Fig_10.4_fig-Elas7-1.png` | `figuras_editor/10-Elasticidad/Fig_10.4_fig-Elas7-1.pdf` |  |
+| 5 | 10.5 | 284 | dynamic | `chunk 'fig-Elas8'` | `figuras_editor/10-Elasticidad/Fig_10.5_fig-Elas8-1.png` | `figuras_editor/10-Elasticidad/Fig_10.5_fig-Elas8-1.pdf` |  |
+| 6 | 10.6 | 327 | static | `images/Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg` | `figuras_editor/10-Elasticidad/Fig_10.6_Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg` | `` | *Laelia speciosa*. Foto: Eduardo A. Pérez García |
 
 ### 11-Dinamica_transitoria
 
@@ -194,10 +194,10 @@ Archivo fuente: `114-LTRE.qmd` — 5 figura(s)
 | # | Fig X.Y | Línea | Tipo | Origen en .qmd | PNG | PDF | Caption |
 |---|---------|------:|------|----------------|-----|-----|---------|
 | 1 | 13.1 | 172 | static | `images/Imagen1.jpg` | `figuras_editor/13-LTRE/Fig_13.1_Imagen1.jpg` | `` | Cuadro 1. Matrices de proyección poblacional de *Oncidium brachyandrum* en dos hospederos (*Quercus martinezii* y *Q. ru |
-| 2 | 13.2 | 524 | dynamic | `chunk 'fig-LTRE15'` | `figuras_editor/13-LTRE/Fig_13.2_fig-LTRE15-1.png` | `figuras_editor/13-LTRE/Fig_13.2_fig-LTRE15-1.pdf` |  |
-| 3 | 13.3 | 560 | dynamic | `chunk 'fig-LTRE16'` | `figuras_editor/13-LTRE/Fig_13.3_fig-LTRE16-1.png` | `figuras_editor/13-LTRE/Fig_13.3_fig-LTRE16-1.pdf` |  |
-| 4 | 13.4 | 712 | dynamic | `chunk 'fig-LRE25'` | `figuras_editor/13-LTRE/Fig_13.4_fig-LRE25-1.png` | `figuras_editor/13-LTRE/Fig_13.4_fig-LRE25-1.pdf` |  |
-| 5 | 13.5 | 733 | dynamic | `chunk 'fig-LRE26'` | `figuras_editor/13-LTRE/Fig_13.5_fig-LRE26-1.png` | `figuras_editor/13-LTRE/Fig_13.5_fig-LRE26-1.pdf` |  |
+| 2 | 13.2 | 523 | dynamic | `chunk 'fig-LTRE15'` | `figuras_editor/13-LTRE/Fig_13.2_fig-LTRE15-1.png` | `figuras_editor/13-LTRE/Fig_13.2_fig-LTRE15-1.pdf` |  |
+| 3 | 13.3 | 559 | dynamic | `chunk 'fig-LTRE16'` | `figuras_editor/13-LTRE/Fig_13.3_fig-LTRE16-1.png` | `figuras_editor/13-LTRE/Fig_13.3_fig-LTRE16-1.pdf` |  |
+| 4 | 13.4 | 711 | dynamic | `chunk 'fig-LRE25'` | `figuras_editor/13-LTRE/Fig_13.4_fig-LRE25-1.png` | `figuras_editor/13-LTRE/Fig_13.4_fig-LRE25-1.pdf` |  |
+| 5 | 13.5 | 732 | dynamic | `chunk 'fig-LRE26'` | `figuras_editor/13-LTRE/Fig_13.5_fig-LRE26-1.png` | `figuras_editor/13-LTRE/Fig_13.5_fig-LRE26-1.pdf` |  |
 
 ### 14-Metodos_de_simulaciones
 
@@ -212,8 +212,8 @@ Archivo fuente: `115-Metodos_de_simulaciones.qmd` — 9 figura(s)
 | 5 | 14.5 | 330 | dynamic | `chunk 'fig-sim7'` | `figuras_editor/14-Metodos_de_simulaciones/Fig_14.5_fig-sim7-1.png` | `figuras_editor/14-Metodos_de_simulaciones/Fig_14.5_fig-sim7-1.pdf` |  |
 | 6 | 14.6 | 448 | dynamic | `chunk 'fig-sim-diverging-colors'` | `figuras_editor/14-Metodos_de_simulaciones/Fig_14.6_fig-sim-diverging-colors-1.png` | `figuras_editor/14-Metodos_de_simulaciones/Fig_14.6_fig-sim-diverging-colors-1.pdf` |  |
 | 7 | 14.7 | 471 | static | `images/Serapias_cordigera_3_Giuseppe_Pellegrino.jpeg` | `figuras_editor/14-Metodos_de_simulaciones/Fig_14.7_Serapias_cordigera_3_Giuseppe_Pellegrino.jpeg` | `` | *Serapias cordigera*. Foto: Guiseppe Pelligrino |
-| 8 | 14.8 | 715 | dynamic | `chunk 'fig-sim18'` | `figuras_editor/14-Metodos_de_simulaciones/Fig_14.8_fig-sim18-1.png` | `figuras_editor/14-Metodos_de_simulaciones/Fig_14.8_fig-sim18-1.pdf` |  |
-| 9 | 14.9 | 919 | ggsave | `mi_gragico.tiff` | `figuras_editor/14-Metodos_de_simulaciones/Fig_14.9_mi_gragico.tiff` | `figuras_editor/14-Metodos_de_simulaciones/Fig_14.9_mi_gragico.pdf` |  |
+| 8 | 14.8 | 714 | dynamic | `chunk 'fig-sim18'` | `figuras_editor/14-Metodos_de_simulaciones/Fig_14.8_fig-sim18-1.png` | `figuras_editor/14-Metodos_de_simulaciones/Fig_14.8_fig-sim18-1.pdf` |  |
+| 9 | 14.9 | 918 | ggsave | `mi_gragico.tiff` | `figuras_editor/14-Metodos_de_simulaciones/Fig_14.9_mi_gragico.tiff` | `figuras_editor/14-Metodos_de_simulaciones/Fig_14.9_mi_gragico.pdf` |  |
 
 ### 15-Historia_breve
 
@@ -230,8 +230,8 @@ Archivo fuente: `118-Carl_Olaf_Tamm.qmd` — 3 figura(s)
 | # | Fig X.Y | Línea | Tipo | Origen en .qmd | PNG | PDF | Caption |
 |---|---------|------:|------|----------------|-----|-----|---------|
 | 1 | 16.1 | 129 | static | `images/Dactylorhiza_sambucina_James_D._Ackerman.jpg` | `figuras_editor/16-Carl_Olaf_Tamm/Fig_16.1_Dactylorhiza_sambucina_James_D._Ackerman.jpg` | `` | *Dactylorhiza sambucina*. Foto: James D. Ackerman |
-| 2 | 16.2 | 168 | static | `images/Dactylorhiza_maculata_James_D._Ackerman.jpg` | `figuras_editor/16-Carl_Olaf_Tamm/Fig_16.2_Dactylorhiza_maculata_James_D._Ackerman.jpg` | `` | *Dactylorhiza maculata con hormigas y spittle bugs*. Foto: James D. Ackerman |
-| 3 | 16.3 | 458 | dynamic | `chunk 'fig-OCTamm_17'` | `figuras_editor/16-Carl_Olaf_Tamm/Fig_16.3_fig-OCTamm_17-1.png` | `figuras_editor/16-Carl_Olaf_Tamm/Fig_16.3_fig-OCTamm_17-1.pdf` |  |
+| 2 | 16.2 | 167 | static | `images/Dactylorhiza_maculata_James_D._Ackerman.jpg` | `figuras_editor/16-Carl_Olaf_Tamm/Fig_16.2_Dactylorhiza_maculata_James_D._Ackerman.jpg` | `` | *Dactylorhiza maculata con hormigas y spittle bugs*. Foto: James D. Ackerman |
+| 3 | 16.3 | 457 | dynamic | `chunk 'fig-OCTamm_17'` | `figuras_editor/16-Carl_Olaf_Tamm/Fig_16.3_fig-OCTamm_17-1.png` | `figuras_editor/16-Carl_Olaf_Tamm/Fig_16.3_fig-OCTamm_17-1.pdf` |  |
 
 ### 18-Rage
 
@@ -257,7 +257,7 @@ Archivo fuente: `121-Traduccion_protocolo_informacion.qmd` — 4 figura(s)
 | 1 | 19.1 | 79 | static | `images/Survey_paper.png` | `figuras_editor/19-Protocolo/Fig_19.1_Survey_paper.png` | `` | FIGURA 1: Resultados de la encuesta a expertos en ecología de poblaciones que participaron (n = 60). Los participantes c |
 | 2 | 19.2 | 89 | static | `images/Database_paper.png` | `figuras_editor/19-Protocolo/Fig_19.2_Database_paper.png` | `` | FIGURA2: Tanto los artículos sobre MPP de plantas como de animales muestran patrones similares en cuanto a qué component |
 | 3 | 19.3 | 93 | static | `images/COMPADRE_MADRE.png` | `figuras_editor/19-Protocolo/Fig_19.3_COMPADRE_MADRE.png` | `` | FIGURA 3: En los artículos sobre MPP de plantas y animales, la mayoría de las publicaciones no contienen suficiente info |
-| 4 | 19.4 | 350 | static | `images/Matrices_A_U_F_C.jpg` | `figuras_editor/19-Protocolo/Fig_19.4_Matrices_A_U_F_C.jpg` | `` | FIGURA 4: La descomposición de un MPP en sus submatrices permite aislar tasas vitales que de otro modo estarían enmascar |
+| 4 | 19.4 | 345 | static | `images/Matrices_A_U_F_C.jpg` | `figuras_editor/19-Protocolo/Fig_19.4_Matrices_A_U_F_C.jpg` | `` | FIGURA 4: La descomposición de un MPP en sus submatrices permite aislar tasas vitales que de otro modo estarían enmascar |
 
 ### 20-Datos_sin_sentido
 
@@ -267,15 +267,15 @@ Archivo fuente: `122-Impacto_de_Datos_sin_Sentido.qmd` — 11 figura(s)
 |---|---------|------:|------|----------------|-----|-----|---------|
 | 1 | 20.1 | 153 | render_dual | `images/sin_sentido_2_Sp1matA.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.1_sin_sentido_2_Sp1matA.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.1_sin_sentido_2_Sp1matA.pdf` |  |
 | 2 | 20.2 | 217 | static | `images/Erycina_crista-galli_Diana_Molina_Ozuma.jpg` | `figuras_editor/20-Datos_sin_sentido/Fig_20.2_Erycina_crista-galli_Diana_Molina_Ozuma.jpg` | `` | *Erycina crista-galli*. Foto: Diana Molina Ozuma |
-| 3 | 20.3 | 303 | render_dual | `images/sin_sentido_6_Sp1matA_NT.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.3_sin_sentido_6_Sp1matA_NT.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.3_sin_sentido_6_Sp1matA_NT.pdf` |  |
-| 4 | 20.4 | 371 | render_dual | `images/sin_sentido_8_Sp1matU_NS.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.4_sin_sentido_8_Sp1matU_NS.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.4_sin_sentido_8_Sp1matU_NS.pdf` |  |
-| 5 | 20.5 | 426 | render_dual | `images/sin_sentido_9_SerapiaA.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.5_sin_sentido_9_SerapiaA.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.5_sin_sentido_9_SerapiaA.pdf` |  |
-| 6 | 20.6 | 464 | dynamic | `chunk 'fig-sin_sentido_10'` | `figuras_editor/20-Datos_sin_sentido/Fig_20.6_fig-sin_sentido_10-1.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.6_fig-sin_sentido_10-1.pdf` |  |
-| 7 | 20.7 | 536 | render_dual | `images/sin_sentido_11_Sp1matA_Fert2.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.7_sin_sentido_11_Sp1matA_Fert2.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.7_sin_sentido_11_Sp1matA_Fert2.pdf` |  |
-| 8 | 20.8 | 513 | dynamic | `chunk 'fig-sin_sentido_11'` | `figuras_editor/20-Datos_sin_sentido/Fig_20.8_fig-sin_sentido_11-2.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.8_fig-sin_sentido_11-2.pdf` |  |
-| 9 | 20.9 | 638 | render_dual | `images/sin_sentido_15_Dirichlet.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.9_sin_sentido_15_Dirichlet.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.9_sin_sentido_15_Dirichlet.pdf` |  |
-| 10 | 20.10 | 677 | dynamic | `chunk 'fig-sin_sentido_17'` | `figuras_editor/20-Datos_sin_sentido/Fig_20.10_fig-sin_sentido_17-1.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.10_fig-sin_sentido_17-1.pdf` |  |
-| 11 | 20.11 | 735 | dynamic | `chunk 'fig-sin_sentido_19'` | `figuras_editor/20-Datos_sin_sentido/Fig_20.11_fig-sin_sentido_19-1.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.11_fig-sin_sentido_19-1.pdf` |  |
+| 3 | 20.3 | 302 | render_dual | `images/sin_sentido_6_Sp1matA_NT.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.3_sin_sentido_6_Sp1matA_NT.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.3_sin_sentido_6_Sp1matA_NT.pdf` |  |
+| 4 | 20.4 | 370 | render_dual | `images/sin_sentido_8_Sp1matU_NS.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.4_sin_sentido_8_Sp1matU_NS.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.4_sin_sentido_8_Sp1matU_NS.pdf` |  |
+| 5 | 20.5 | 425 | render_dual | `images/sin_sentido_9_SerapiaA.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.5_sin_sentido_9_SerapiaA.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.5_sin_sentido_9_SerapiaA.pdf` |  |
+| 6 | 20.6 | 463 | dynamic | `chunk 'fig-sin_sentido_10'` | `figuras_editor/20-Datos_sin_sentido/Fig_20.6_fig-sin_sentido_10-1.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.6_fig-sin_sentido_10-1.pdf` |  |
+| 7 | 20.7 | 535 | render_dual | `images/sin_sentido_11_Sp1matA_Fert2.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.7_sin_sentido_11_Sp1matA_Fert2.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.7_sin_sentido_11_Sp1matA_Fert2.pdf` |  |
+| 8 | 20.8 | 512 | dynamic | `chunk 'fig-sin_sentido_11'` | `figuras_editor/20-Datos_sin_sentido/Fig_20.8_fig-sin_sentido_11-2.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.8_fig-sin_sentido_11-2.pdf` |  |
+| 9 | 20.9 | 637 | render_dual | `images/sin_sentido_15_Dirichlet.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.9_sin_sentido_15_Dirichlet.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.9_sin_sentido_15_Dirichlet.pdf` |  |
+| 10 | 20.10 | 676 | dynamic | `chunk 'fig-sin_sentido_17'` | `figuras_editor/20-Datos_sin_sentido/Fig_20.10_fig-sin_sentido_17-1.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.10_fig-sin_sentido_17-1.pdf` |  |
+| 11 | 20.11 | 734 | dynamic | `chunk 'fig-sin_sentido_19'` | `figuras_editor/20-Datos_sin_sentido/Fig_20.11_fig-sin_sentido_19-1.png` | `figuras_editor/20-Datos_sin_sentido/Fig_20.11_fig-sin_sentido_19-1.pdf` |  |
 
 ### ApA-Lista_especies
 
@@ -283,5 +283,5 @@ Archivo fuente: `Appendix_A_Species_List.qmd` — 2 figura(s)
 
 | # | Fig X.Y | Línea | Tipo | Origen en .qmd | PNG | PDF | Caption |
 |---|---------|------:|------|----------------|-----|-----|---------|
-| 1 | A.1 | 170 | static | `images/Trichocentrum_undulatum_8_Hong_Liu.jpg` | `figuras_editor/ApA-Lista_especies/Fig_A.1_Trichocentrum_undulatum_8_Hong_Liu.jpg` | `` | *Trichocentrum undulatum*. Foto: Hong Liu |
-| 2 | A.2 | 195 | static | `images/Spiranthes_delitescens_Mitchel_Mcclaran.jpg` | `figuras_editor/ApA-Lista_especies/Fig_A.2_Spiranthes_delitescens_Mitchel_Mcclaran.jpg` | `` | *Spiranthes delitescens*. Foto: Mitchel McClaran |
+| 1 | A.1 | 169 | static | `images/Trichocentrum_undulatum_8_Hong_Liu.jpg` | `figuras_editor/ApA-Lista_especies/Fig_A.1_Trichocentrum_undulatum_8_Hong_Liu.jpg` | `` | *Trichocentrum undulatum*. Foto: Hong Liu |
+| 2 | A.2 | 194 | static | `images/Spiranthes_delitescens_Mitchel_Mcclaran.jpg` | `figuras_editor/ApA-Lista_especies/Fig_A.2_Spiranthes_delitescens_Mitchel_Mcclaran.jpg` | `` | *Spiranthes delitescens*. Foto: Mitchel McClaran |
