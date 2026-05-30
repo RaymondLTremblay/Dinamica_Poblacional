@@ -24,6 +24,7 @@ La descomposición en U, F y C constituye un paso intermedio clave entre la defi
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r, message=FALSE, warning=FALSE}
+#| docx_fit: true
 #| label: fig-matA
 #| fig-cap: "Carga de paquetes y funciones auxiliares para la generación de figuras del capítulo."
 
@@ -76,6 +77,7 @@ Recuerde que los individuos incluidos en un mismo estadio deben tener **probabil
 En cambio, los adultos **sí pueden regresar a la etapa juvenil** (al menos como individuos no reproductivos), posiblemente como consecuencia de **daño por herbivoría**, que reduce su tamaño.
 
 ```{r}
+#| docx_fit: true
 #| label: fig-matA1
 #| fig-cap: "Ciclo de vida generado a partir de la matriz de supervivencia y crecimiento `matU` con los estadios plántulas, juvenil y adulto."
 
@@ -107,6 +109,7 @@ Los resultados mostraron una gran diferencia en la producción de plántulas:
 - r2: 0.121.
 
 ```{r}
+#| docx_fit: true
 #| label: fig-matA2
 #| fig-cap: "Ciclo de vida generado a partir de la matriz de fecundidad `matF` con los estadios plántulas, adultos pequeños y grandes."
 
@@ -261,7 +264,8 @@ compadre$clonality <- sapply(compadre$mat, function(m) sum(m@matC))
 Orchid_clonal_max <- orchid_clonal %>%
   filter(clonality == max(clonality)) # filtrar para la suma de matC máximo
 
-as.data.frame(Orchid_clonal_max) |> flextable() |> ft_wide()
+Orchid_clonal_max[, "SpeciesAccepted"]
+
 ```
 
 ------------------------------------------------------------------------
@@ -275,7 +279,7 @@ Seleccionamos como ejemplo la matriz correspondiente a *Cypripedium calceolus* (
 Cyp_cal_2 <- orchid_clonal %>%
   filter(MatrixID == 242624)
 
-as.data.frame(Cyp_cal_2) |> flextable() |> ft_wide()
+
 ```
 
 ------------------------------------------------------------------------
@@ -296,6 +300,7 @@ Cyp_cal_2$mat[[1]] # [[1]] ver las etapas del ciclo de vida de esta población c
 Podemos visualizar las transiciones de las diferentes etapas por clonación. Usa la función `plot_life_cycle` de la librería **Rage** para visualizar el ciclo de vida. En este caso, las etapas son "Dormant", "Smallest", "Small", "Inter", "Large", "ExtraLarge" y la matriz de clonación es la **matC**. Si se reemplaza la matriz de clonación por la matriz **matA** se puede ver el ciclo de vida con todas las transiciones, fecundidad y clonación.
 
 ```{r}
+#| docx_fit: true
 #| label: fig-mat13
 #| fig-cap: "Ciclo de vida generado a partir de la matriz de clonación `matC` extraída de *Cypripedium calceolus* con seis estadios."
 
@@ -364,17 +369,26 @@ head(Families) |> flextable() # ver las primeras 6 familias
 
 ```{r mat17}
 
-Bromeliaceae <- Clonal_Species %>%
-  filter(Family == "Bromeliaceae") %>% # para la familia de bromelias
-  select(mat, SpeciesAuthor, Family, clonality) %>% # seleccionar las columnas de interés
-  arrange(desc(clonality)) # ordenar por la columna de clonación
 
-as.data.frame(Bromeliaceae) |> flextable() |> ft_wide()
+# Rcompadre no implementa `distinct()` para objetos CompadreDB; convertimos a
+# data.frame primero (patrón seguro, evita además el error duplicated.default
+# que provoca la columna-lista `mat` al pasar por flextable).
+Bromeliaceae <- as.data.frame(Clonal_Species) %>%
+  filter(Family == "Bromeliaceae") %>%
+  select(SpeciesAuthor, Family, clonality) %>%
+  arrange(desc(clonality)) %>%
+  distinct(SpeciesAuthor, .keep_all = TRUE)
+
+Bromeliaceae |>
+  flextable() |>
+  ft_wide()
+
 ```
 
 Seleccionamos una especie de bromelia, *Aechmea nudicaulis* [@sampaio2005ramet], que tiene una matriz de clonación. En este caso, la matriz de clonación es la **matC** y la matriz de transición es la **matU**. La matriz de fecundidad no está incluida en este modelo. Visualizamos la matriz de clonación y la matriz de transición. En este caso, la matriz de clonación es la **matC** y la matriz de transición es la **matU**. La matriz de fecundidad no está incluida en este modelo.
 
 ```{r}
+#| docx_fit: true
 #| label: fig-mat18
 #| fig-cap: "Ciclo de vida generado a partir de la matriz de clonación `matC` extraída de *Aechmea nudicaulis* con tres estadios de rametes."
 

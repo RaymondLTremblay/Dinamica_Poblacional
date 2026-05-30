@@ -47,23 +47,27 @@ Construir una MPP a partir de datos de campo es relativamente directo. La parte 
 Este libro está organizado alrededor de esa idea. No pretende ser un tratado completo de dinámica poblacional, para lo cual existen referencias clásicas como Caswell [-@caswell2001matrix], Ebert [-@ebert1999demography] y Morris y Doak [-@morris2002quantitative]. Es, en cambio, una guía práctica que enseña al lector a **construir, diagnosticar, defender e interpretar** un análisis matricial poblacional para una especie determinada, usando como ejemplo recurrente la familia *Orchidaceae*.
 
 ::: callout-tip
+
 ## Las cuatro tareas de un demógrafo
 
 1.  **Construir** el modelo: capítulos sobre ciclo de vida, recolección de datos, transiciones, fecundidad y descomposición U/F/C.
 2.  **Diagnosticar** los datos y la matriz: capítulo sobre métodos bayesianos para transiciones raras y, sobre todo, el capítulo sobre impactos de datos sin sentido biológico.
 3.  **Analizar** el comportamiento: capítulos sobre crecimiento, propiedades, elasticidad, dinámica transitoria, funciones de transferencia, LTRE y simulaciones.
 4.  **Comunicar y defender** los resultados: capítulo con la traducción del protocolo estándar para reportar MPP de Gascoigne et al. [@gascoigne2023standard].
+
 :::
 
 ¿Por qué orquídeas? Porque su historia de vida es lo bastante extrema —semillas microscópicas, dependencia obligada de hongos micorrízicos para germinación, longevidad alta, eventos reproductivos raros, fenómenos de latencia— para poner a prueba los supuestos clásicos del modelado matricial. Si los métodos del libro funcionan para orquídeas, funcionan para casi cualquier planta o animal cuyo ciclo de vida quiera modelarse.
 
 ::: callout-note
+
 ## Cómo leer este libro
 
 - **Si está empezando** y nunca ha construido una MPP: lea en orden. Los capítulos del 4 al 11 dan los fundamentos.
 - **Si ya tiene una matriz preliminar** y quiere validarla antes de seguir: vaya directamente al capítulo sobre impactos de datos sin sentido biológico —es la lista de verificación más útil del libro.
 - **Si va a publicar resultados de MPP**: lea el capítulo del protocolo estandarizado antes de redactar la sección de métodos.
 - **Si quiere usar COMPADRE** para análisis comparativos: los capítulos sobre `Rcompadre` y `Rage` son guías prácticas.
+
 :::
 
 #### Librerías de R requeridas para el siguiente módulo
@@ -88,7 +92,9 @@ La actividad antropogénica ha generado hábitats completamente nuevos, resultad
 Tradicionalmente, la conservación se ha fundamentado en la premisa de que la protección del hábitat garantiza la persistencia de las especies. No obstante, la mera presencia de individuos en un área protegida, incluso en abundancia, no asegura su supervivencia a largo plazo. Un ejemplo paradigmático es la extinción del Dodo (*Raphus cucullatus*), ave endémica de la isla de Mauricio, y su estrecha relación funcional con *Calvaria major*, una especie arbórea de la familia *Sapotaceae* que estuvo al borde de la extinción. Aunque el último Dodo fue registrado en 1681, *Calvaria major* persiste hasta la actualidad. Stanley Temple (1977) demostró que el reclutamiento de esta especie dependía del Dodo, dado que la germinación de sus semillas requería el paso por el tracto digestivo de un ave para eliminar el endocarpo persistente que inducía latencia (“dormancy”) [@temple1977plant]. Este caso evidencia que la supervivencia futura de una especie no puede asumirse sin considerar sus interacciones bióticas y abióticas. Más de tres siglos después de la extinción del Dodo, *Calvaria major* sobrevive, aunque en un estado de alta vulnerabilidad.
 
 ::: callout-note
+
 **La presencia no garantiza la persistencia.** La protección del hábitat es necesaria pero no suficiente para asegurar la viabilidad de una especie. La interacción ecológica entre el dodo y *Calvaria major* ilustra cómo una especie puede persistir en abundancia y aún así estar en una trayectoria demográfica comprometida. Esta es una motivación central para el análisis de dinámica poblacional.
+
 :::
 
 ## ¿Qué es el estudio de la dinámica poblacional?
@@ -100,7 +106,9 @@ La dinámica de poblaciones es fundamental en todas las áreas de la ecología y
 ## Definición
 
 ::: callout-note
+
 **Definición operativa.** La dinámica poblacional es el estudio de cómo y por qué cambian el tamaño y la estructura de una población a través del tiempo, como resultado de los procesos demográficos fundamentales: supervivencia, crecimiento (en tamaño o estadio) y reproducción. El objetivo central es cuantificar la contribución de cada proceso al cambio poblacional.
+
 :::
 
 La definición más precisa de los estudios de dinámica poblacional se refiere al análisis de los factores que influyen en el crecimiento, la estabilidad y la reducción del tamaño de una población a lo largo del tiempo. Por ejemplo, la dinámica poblacional de especies invasoras suele incluir un periodo inicial de crecimiento muy lento durante la colonización de un nuevo sitio, seguido por una fase de crecimiento exponencial y, posteriormente, una disminución en la tasa de crecimiento poblacional. La figura siguiente ilustra el cambio en el número de individuos a lo largo del tiempo para una especie invasora hipotética. Lo fundamental es que la dinámica poblacional constituye una herramienta clave para evaluar el impacto de diferentes factores sobre el crecimiento poblacional y su viabilidad.
@@ -130,68 +138,7 @@ Estos contenidos permiten aplicar el marco teórico a datos reales y profundizar
 
 ```{r chap1_1, echo=FALSE}
 
-rlt_theme <- theme(
-  axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
-  axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
-  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
-  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
-) +
-  theme(
-    # Remover los bordes
-    panel.border = element_blank(),
-    # Remover las líneas
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    # Remover el fondo del panel
-    panel.background = element_blank(),
-    # añadir lineas más gruesas
-    axis.line.x = element_line(colour = "black", linewidth = 1),
-    axis.line.y = element_line(colour = "black", linewidth = 1)
-  )
-
-# Una paleta de color comenzando el gris:
-cbPalette1 <- c(
-  "lightblue",
-  "#E69F00",
-  "grey",
-  "#009E73",
-  "#F0E442",
-  "#0072B2",
-  "#D55E00",
-  "#CC79A7"
-)
-
-# Una paleta de color comenzando el negro:
-cbPalette2 <- c(
-  "#000000",
-  "#E69F00",
-  "#56B4E9",
-  "#009E73",
-  "#F0E442",
-  "#0072B2",
-  "#D55E00",
-  "#CC79A7"
-)
-
-# rlt_scale <- scale_fill_manual(values = cbPalette1)
-
-diverging <- c("#009392", "#CF597E", "#E9E29C", "#39B185", "#EEB479", "#9CCB86")
-
-# --- 2. Combinarlos en un objeto de tipo lista ---
-# Esta lista se puede añadir al gráfico con un solo '+'
-rlt_style_fill <- function() {
-  list(
-    rlt_theme,
-    scale_fill_manual(values = diverging)
-  )
-}
-
-rlt_style_colour <- function() {
-  list(
-    rlt_theme,
-    scale_colour_manual(values = diverging)
-  )
-}
+source("R/rlt_theme.R") # tema + paleta canónicos (R/rlt_theme.R)
 ```
 
 ```{r}
@@ -290,7 +237,9 @@ La extracción de individuos, seudobulbos o flores desde su ambiente natural res
 Se suele asumir que la colecta de individuos de especies de orquídeas desde sus hábitats naturales, tanto para conservación ex situ como para propagación comercial, tiene un impacto mínimo y no afecta la supervivencia poblacional a largo plazo. Sin embargo, este supuesto requiere una evaluación crítica. La historia del fanatismo por la recolección de orquídeas con fines comerciales está bien documentada [@subedi2013collection]. Aunque se podría pensar que estas prácticas son cosa del pasado, persisten casos de extracción ilegal por personas inescrupulosas que no consideran el impacto sobre la población o la especie [@hinsley2018review].
 
 ::: callout-warning
+
 **Cuidado con la "extracción de bajo impacto".** Es común suponer que la recolección de un número reducido de individuos —para conservación *ex situ*, propagación o uso comercial— tiene un impacto demográfico despreciable. Este supuesto requiere evaluación crítica: el impacto depende del estadio extraído, de la elasticidad de ese estadio sobre $\lambda$, y de la frecuencia con que se repite la extracción. Sin un análisis demográfico explícito, no se puede afirmar que la extracción es sostenible.
+
 :::
 
 Por lo tanto, la pregunta central es: ¿cuántos individuos, y en qué etapas del ciclo de vida, pueden ser extraídos sin afectar negativamente el crecimiento poblacional? [@ticktin2020synthesis]. Responder esta cuestión implica comprender la dinámica poblacional y aplicar modelos que permitan estimar umbrales de extracción sostenible.
@@ -322,6 +271,7 @@ En ecología, una población debería definirse como un grupo de individuos que 
 Otra definición, de carácter evolutivo, considera una población como el conjunto de individuos entre los cuales ocurre flujo génico a lo largo de una generación. El tiempo generacional depende de la longevidad de la especie, que puede variar ampliamente. Por ejemplo, en las orquídeas epífitas de ramitas (twig epiphytes), el ciclo generacional puede ser de 3 a 4 años, mientras que en *Cypripedium calceolus*, una especie terrestre de zonas templadas, los individuos adultos pueden vivir más de 50 años. Cabe destacar que la “longevidad” se define como la mediana de la edad de los individuos en una población, excluyendo casos extremos. El único estudio que ha evaluado la longevidad en orquídeas es [@tremblay2000plant], limitado a especies del género *Lepanthes*.
 
 ::: callout-tip
+
 **¿Qué es una población? Tres maneras de pensarlo.**
 
 - **Operativa:** un grupo de individuos suficientemente cercanos para muestrearlos juntos. Útil en campo, pero sin justificación ecológica explícita.
@@ -329,6 +279,7 @@ Otra definición, de carácter evolutivo, considera una población como el conju
 - **Evolutiva:** un grupo entre el cual ocurre flujo génico durante una generación. La escala depende del tiempo generacional de la especie.
 
 Estas definiciones a menudo no coinciden, y la elección afecta directamente la interpretación de los resultados de un análisis de dinámica poblacional.
+
 :::
 
 ### Procesos y patrones evolutivos del ciclo de vida que impactan el crecimiento poblacional
@@ -336,7 +287,9 @@ Estas definiciones a menudo no coinciden, y la elección afecta directamente la 
 Un trabajo que aprovecha la MPP para evaluar procesos evolutivos es el de Ricardo Calvo [@calvo1993evolutionary], quien analizó la dinámica poblacional de *Tolumnia variegata* para determinar si la limitación de polinizadores afecta su viabilidad. El estudio combinó experimentos de polinización manual con modelos matriciales para estimar la tasa de crecimiento poblacional bajo distintos niveles de polinización. Los resultados mostraron que la fructificación natural es extremadamente baja (\<1 %), pero aumenta significativamente con polinización artificial, aunque con costos reproductivos en crecimiento y floración futura. Las simulaciones sugieren que incluso una baja producción de plántulas por fruto podría compensar estos costos, favoreciendo la selección hacia mayor polinización. Sin embargo, la persistencia de baja fructificación en orquídeas engañosas indica que la estrategia puede ser estable si el reclutamiento de plántulas es limitado, resaltando la importancia de considerar interacciones ecológicas y datos de establecimiento para evaluar la viabilidad poblacional. Este caso nos recuerda que la conservación y la evolución no dependen solo de la presencia de individuos, sino de la compleja red de procesos que sostienen la vida a largo plazo.
 
 ::: img-float
+
 ![*Tolumnia variegata*. Foto: Tremblay](images/Tolumnia_variegata_Tremblay.jpeg){#fig-tolumnia-variegata-tremblay style="float: right; margin: 10px;width: 50% ; "}
+
 :::
 
 ------------------------------------------------------------------------
@@ -344,7 +297,9 @@ Un trabajo que aprovecha la MPP para evaluar procesos evolutivos es el de Ricard
 ## Visualización de la dinámica poblacional
 
 ::: callout-important
+
 **Un modelo es una caricatura útil, no una representación completa.** Todo modelo demográfico es deliberadamente una simplificación. Si se complica en exceso, los patrones no pueden atribuirse a efectos identificables y el modelo pierde generalidad. El criterio práctico es: un modelo debe ser **lo más simple posible, pero no más simple** — suficientemente parsimonioso para interpretarse, pero suficientemente complejo para capturar los procesos esenciales.
+
 :::
 
 Representar el cambio poblacional mediante diagramas y sus posibles causas permite integrar los diferentes componentes bióticos y abióticos que influyen en la dinámica de una especie. Es importante aclarar que un modelo es una simplificación —una “caricatura”— y no incluye todos los factores que afectan la población. El objetivo de un modelo es reducir la complejidad biológica a los procesos más relevantes; si se complica en exceso, los patrones y dinámicas no pueden atribuirse a efectos proporcionalmente importantes. Además, un modelo demasiado específico sería aplicable solo a una especie o población, limitando su utilidad en otros sistemas.
@@ -356,8 +311,26 @@ Los efectos denso-dependientes pueden influir en el número de individuos en el 
 ------------------------------------------------------------------------
 
 ::: {}
+
 ![Factores que influyen en la dinámica de una población](images/Demografia_de_una_poblacion.jpg){#fig-demografia-de-una-poblacion width="50%" style="left; margin: 10px;" fig-align="center"}
+
 :::
+
+------------------------------------------------------------------------
+
+## Convenciones gráficas del libro
+
+A lo largo del libro las gráficas comparten un mismo estilo visual: un tema de `ggplot2` (`rlt_theme`), una paleta divergente común (`diverging`) y dos funciones de conveniencia, `rlt_style_fill()` y `rlt_style_colour()`, que combinan el tema con la escala de color correspondiente. Para evitar repetir esta definición en cada capítulo, vive en un único archivo, `R/rlt_theme.R`, que cada capítulo carga con `source("R/rlt_theme.R")`. Algunos capítulos amplían la paleta `diverging` localmente cuando una figura tiene muchas categorías (por ejemplo, el capítulo de LTRE). El código completo se muestra aquí una sola vez:
+
+```{r}
+#| label: rlt-theme-mostrar
+#| eval: false
+#| file: R/rlt_theme.R
+```
+
+## Convención numérica
+
+En todo el libro, los valores numéricos en las **tablas se muestran con cuatro cifras significativas**. Se eligen cifras significativas —y no un número fijo de decimales— para no perder valores muy pequeños: por ejemplo, un prior de fecundidad del orden de `1e-5` (capítulo bayesiano) se mostraría como `0.000` con tres decimales, pero conserva su información con cuatro cifras significativas. Este formato es **solo de presentación**: los cálculos internos (matrices, valores propios, elasticidades, simulaciones, etc.) se realizan siempre con la **precisión completa** de R. Por lo tanto, si reproduce un cálculo a partir de los valores que aparecen en una tabla, puede obtener pequeñas diferencias respecto al resultado del libro; para replicar exactamente, use los datos sin redondear. El separador decimal es el **punto** (`0.5`), de forma consistente con la salida de R.
 
 ------------------------------------------------------------------------
 

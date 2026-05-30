@@ -14,6 +14,7 @@ Raymond L. Tremblay
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r CV1-setup-diagrams, include=FALSE, tidy=FALSE}
+#| docx_fit: true
 
 # Instalar (si es necesario) y cargar
 pkgs <- c("DiagrammeR", "DiagrammeRsvg", "rsvg", "Rage", "knitr", "ggplot2")
@@ -124,7 +125,9 @@ Antes de iniciar cualquier estudio poblacional, se recomienda elaborar un diagra
 Un diagrama de ciclo de vida es una representación gráfica de los estadios que atraviesa un organismo a lo largo de su existencia. En este capítulo, se mostrará cómo crear diagramas de ciclo de vida en `R` utilizando la librería `Rage`, enfatizando la diferencia entre el modelo hipotético y los datos que pueden recolectarse en campo.
 
 ::: callout-tip
+
 **Dibuja el ciclo de vida antes de salir al campo.** Elaborar un diagrama hipotético del ciclo de vida —con todas las etapas plausibles y las transiciones entre ellas— antes de iniciar el muestreo permite identificar qué datos hacen falta, qué etapas son difíciles de observar y qué transiciones son raras. Sin esa hoja de ruta, es fácil regresar del campo con un conjunto de datos incompleto que no permite construir una matriz biológicamente coherente.
+
 :::
 
 ------------------------------------------------------------------------
@@ -136,6 +139,7 @@ En este primer ejemplo se presenta un ciclo de vida simple con tres estados: sem
 La matriz de transición para este ciclo es la siguiente: el 50 % de las semillas germinan y se convierten en plántulas, el 40 % de las plántulas alcanzan la etapa adulta y cada adulto produce en promedio 3.2 semillas. En el diagrama, las líneas verdes representan crecimiento y las líneas amarillas representan reproducción.
 
 ```{r}
+#| docx_fit: true
 #| label: fig-CV_2
 #| fig-cap: "Diagrama del ciclo de vida con matriz de proyección de tres estadios (semillas, plántulas, adultos) para una especie hipotética."
 # 1) Build data/state as you already do
@@ -161,6 +165,7 @@ render_dual(dot, "images/CV_2.png")
 El ciclo de vida hipotético de una orquídea epífita se representa en el gráfico mediante líneas verdes para indicar transición entre etapas, líneas rojas para señalar permanencia y líneas amarillas para la reproducción. El ciclo comienza con la germinación de la semilla sobre la corteza de un árbol, seguida por las fases de plántula, juvenil y adulto, etapa en la cual ocurre la floración y producción de semillas. Exceptuando la fase de semilla, cada etapa puede prolongarse de un año a otro, lo que evidencia un ciclo plurianual; esta característica se refleja en la diagonal principal de la matriz de transición, cuyos valores son mayores a cero cuando existe permanencia. Solo los individuos adultos son capaces de reproducirse. Si el diagrama correspondiera a datos empíricos, sería necesario contar con información para todas las etapas (semilla, plántula, juvenil y adulto); sin embargo, la revisión bibliográfica realizada no identificó estudios que incluyan datos completos, debido principalmente a la dificultad de localizar semillas y plántulas en condiciones naturales, dado su tamaño extremadamente reducido (milimétrico) y la complejidad de seguir su desarrollo a lo largo del tiempo.
 
 ```{r}
+#| docx_fit: true
 #| label: fig-CV_3
 #| fig-cap: "Diagrama del ciclo de vida con matriz de proyección de cuatro estadios (semillas, plántulas, juvenil, adultos) para una especie hipotética."
 
@@ -184,6 +189,7 @@ render_dual(dot, "images/CV_3.png")
 ## Ciclo de vida de orquídeas en la literatura científica
 
 ::: callout-note
+
 **Convención de colores en los diagramas de este capítulo.**
 
 - **Verde:** crecimiento (transición a una etapa más avanzada)
@@ -191,6 +197,7 @@ render_dual(dot, "images/CV_3.png")
 - **Amarillo:** reproducción (producción de semillas)
 - **Violeta:** regresión (transición a una etapa más temprana)
 - **Azul:** entrada o permanencia en latencia vegetativa
+
 :::
 
 A continuación se presentan diversos esquemas de ciclo de vida utilizados en distintas publicaciones. Estos ejemplos evidencian la ausencia de un modelo estandarizado, ya que cada investigador define un ciclo particular en función de su comprensión del ciclo biológico de la especie estudiada, la factibilidad de seguimiento de individuos a lo largo del tiempo y los objetivos específicos de la investigación.
@@ -212,6 +219,7 @@ El ciclo de vida propuesto se compone de cinco etapas, según lo ilustrado en la
 Es importante señalar que se realizó una estimación tanto de la cantidad de semillas producidas como de la proporción que germina y se convierte en plántula en el ciclo siguiente. Este enfoque permitió incorporar procesos de transición y reproducción en el modelo, a pesar de las limitaciones inherentes a la observación directa de semillas y plántulas en condiciones naturales.
 
 ```{r}
+#| docx_fit: true
 #| label: fig-CV_5
 #| fig-cap: "Diagrama del ciclo de vida con matriz de proyección de cinco estadios (semillas, plántulas y tres clases de adultos) para una especie hipotética."
 
@@ -246,6 +254,7 @@ El estudio de [@raventos2018comparison] analizó la dinámica poblacional de *Te
 Cabe destacar que los individuos adultos grandes presentan una mayor contribución a la producción de semillas (0.5359) en comparación con los adultos pequeños (0.1573), lo que subraya la importancia de la estructura de tamaños en la dinámica poblacional.
 
 ```{r}
+#| docx_fit: true
 #| label: fig-CV_6Telipogon_helleri
 #| fig-cap: "Diagrama del ciclo de vida con matriz de proyección de tres estadios (inmaduros, reproductivos pequeños y grandes) para *Telipogon helleri*."
 
@@ -280,10 +289,13 @@ En *P. correctum*, al igual que en otras especies terrestres, es difícil estima
 El tránsito a la fase de latencia vegetativa se indica en azul, en verde el crecimiento, en amarillo la reproducción y en rojo la permanencia en una misma etapa, incluyendo latente a latente.
 
 ::: callout-warning
+
 **Ausencia no es muerte.** En orquídeas terrestres con latencia vegetativa, la ausencia de una planta marcada en un censo **no** implica que haya muerto: el tubérculo subterráneo puede estar vivo y reaparecer años después. Asumir mortalidad cuando hay latencia subestima la supervivencia y sesga las matrices de transición. Cuando se sospecha latencia, conviene usar métodos bayesianos para estimar la probabilidad de que un individuo "ausente" siga vivo [@tremblay2009dormancy].
+
 :::
 
 ```{r}
+#| docx_fit: true
 #| label: fig-CV7Prasophyllum_correctum
 #| fig-cap: "Diagrama del ciclo de vida con matriz de proyección de cuatro estadios incluyendo latencia para *Prasophyllum correctum*."
 
@@ -312,6 +324,7 @@ En el trabajo de Waite y Hutchings 1991 con *Ophrys sphegodes* se recolectaron d
 Dado que el análisis se enfoca en la sobrevivencia, en el estudio no se incluye la reproducción (no hay línea amarilla). Las etapas que pasen a latente el siguiente año se señalan en azul, las que se quedan en la misma etapa están en rojo, mientras que en verde el tránsito a una etapa no latente.
 
 ```{r}
+#| docx_fit: true
 #| label: fig-CV8_Ophrys
 #| fig-cap: "Diagrama del ciclo de vida con matriz de proyección de cuatro estadios incluyendo latencia de dos años para *Ophrys sphegodes*."
 
@@ -339,7 +352,9 @@ render_dual(dot, "images/CV8_Ophrys.png")
 #### *Cypripedium parviflorum*, *Epipactis atrorubens* y *Orchis purpurea*
 
 ::: img-float
+
 ![*Orchis purpurea*. Foto: Hans Jacquemyn](images/Orchis_purpurea_1_Hans_Jacquemyn.jpg){#fig-orchis-purpurea-1-hans-jacquemyn style="float: left; margin: 10px;width: 50% ; "}
+
 :::
 
 La dimensiones de la matriz y la cantidad de etapas o años incluidos en un análisis depende de múltiples factores. Cuando se trabaja con datos de campo, el acceso a individuos de cada etapa del ciclo de vida es, sin duda, un factor determinante. En la revisión de la publicaciones sobre orquídeas se encuentran análisis matriciales que varían entre 3 y 29 etapas de desarrollo, en promedio 5.6 etapas (desv. estándar de 3.2). El trabajo con mayor número de etapas es el de [@shefferson2014life], que utilizó 29 en *Cypripedium parviflorum* var. *parviflorum*.
@@ -349,6 +364,7 @@ El costo de pasar a una fase latente después de diferentes etapas se evaluó en
 ------------------------------------------------------------------------
 
 ```{r}
+#| docx_fit: true
 #| label: fig-CV9_Op
 #| fig-cap: "Diagrama del ciclo de vida con matriz de proyección de seis estadios (protocormos, tubérculos, plántulas, juveniles, adultos sin y con flores) para *Orchis purpurea*."
 
@@ -383,6 +399,7 @@ render_dual(dot, "images/CV9_Op.png")
 ### Ejemplo de un ciclo de vida incompleto (y biológicamente erróneo)
 
 ::: callout-warning
+
 **Tres errores típicos en datos de campo —y por qué importan.**
 
 - **Etapas sin mortalidad** (suma de columna = 1 sin pérdidas): biológicamente irreal salvo en casos de latencia perfecta.
@@ -390,6 +407,7 @@ render_dual(dot, "images/CV9_Op.png")
 - **Permanencia perpetua** (un estadio nunca contribuye a otros ni muere): elimina toda dinámica del estadio.
 
 Estos errores suelen aparecer cuando el tamaño de muestra es pequeño o las transiciones son raras. Antes de aceptar la matriz, conviene revisar el diagrama del ciclo de vida y preguntarse: ¿es biológicamente plausible que esta entrada sea exactamente cero?
+
 :::
 
 La importancia de este capítulo radica en reconocer la diferencia entre la historia de vida real de un organismo y la información que se puede recolectar en el campo. En los estudios poblacionales de orquídeas, dos desafíos en su investigación y muestreo son la dificultad, por un lado, de rastrear y hacer una seguimiento de las semillas en el campo y, por otro, el determinar los sitios adecuados para su germinación (sitios seguros). Este segundo aspecto implica considerar la presencia de micorrizas, cuya asociación con las semillas es determinante para su germinación. Estas etapas tempranas del ciclo de vida de las orquídeas suelen estar rodeadas de gran incertidumbre, lo que limita los análisis e interpretaciones de su evolución y conservación.
@@ -397,6 +415,7 @@ La importancia de este capítulo radica en reconocer la diferencia entre la hist
 Además de los anteriores, existen otros problemas. La recolección de datos en campo puede ser irreal en el contexto de la historia de vida y la base matemática del modelo representado. Para más detalles ver el capítulo [Impacto de datos sin sentido](122-Impacto_de_Datos_sin_Sentido.qmd). Por ejemplo, en la @fig-cv10 aparecen tres errores comunes durante la recolección de datos de la historia de vida de una especie. El primero es que no hay mortalidad de los individuos en una de las etapas (juveniles), el segundo es que todos los individuos se mueren (plántulas) y el tercero es que los individuos se mantienen en la misma etapa de desarrollo (adultos) y no hay muerte. Dada la muerte de las plántulas, no hay flecha que una a este estado con otros estados. La falta de continuidad o conexión entre las etapas del ciclo de vida son errores que ocurren típicamente cuando el tamaño de muestra es pequeño o la probabilidad de transición es rara o poco frecuente; por ejemplo, los árboles grandes no fallecen. Estos son los tres errores típicos a los que nos enfrentamos cuando se lleva a cabo un análisis de dinámica poblacional en especies con transiciones poco comunes.
 
 ```{r}
+#| docx_fit: true
 #| label: fig-cv10
 #| fig-cap: "Ejemplo de un ciclo de vida incompleto con tres errores típicos durante la recolección de datos: ausencia de mortalidad en juveniles, mortalidad total de plántulas y permanencia perpetua en adultos sin muerte."
 
@@ -435,6 +454,7 @@ source("R/figuras_helpers.R")
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| docx_fit: true
 #| label: fig-cv11_rage_build
 #| fig-cap: "Ciclo de vida generado con `Rage::plot_life_cycle` a partir de la matriz `matA` con los estadios semillas, plántulas y adultos."
 

@@ -16,7 +16,7 @@ Project documentation for Claude (and any human contributor). Keep this file up 
 Configured in `_quarto.yml`:
 
 | Format | Where it lands | Notes |
-|---|---|---|
+|----|----|----|
 | `html` | `docs/index.html` and chapter pages | Cosmo theme, light/dark, MathJax. Default `quarto preview` target. |
 | `typst` (PDF) | `docs/Introduccion-a-la-Dinamica-Poblacional-de-Orquideas.pdf` | Libertinus Serif/Sans + JetBrains Mono. `prefer-html: true` so DiagrammeR widgets render as static PNG via webshot2. |
 | `docx` | `docs/Introduccion-a-la-Dinamica-Poblacional-de-Orquideas.docx` | For the editor's review pass. `prefer-html: true`. No reference template yet — drop `reference.docx` in repo root and uncomment the line in `_quarto.yml` to apply editor styles. |
@@ -25,7 +25,7 @@ Selective render: `quarto render --to docx` (or `--to typst`, `--to html`).
 
 ## Repository layout
 
-```
+```         
 .
 ├── _quarto.yml                       # book config + pre/post-render hooks
 ├── index.qmd                         # preface (chapter 0)
@@ -61,29 +61,25 @@ Selective render: `quarto render --to docx` (or `--to typst`, `--to html`).
 
 `quarto render` triggers, in order:
 
-**Pre-render hooks** (defined in `_quarto.yml > project > pre-render`):
-1. `rm -rf _freeze .quarto/_freeze` — freeze is intentionally disabled (memory: every CI build re-executes every chunk).
-2. `bash scripts/patch-orange-book.sh` — applies a local patch to the orange-book Typst template (Typst 0.13+ compat). Remove when upstream fixes the issue.
-3. `python3 scripts/build_topic_index.py` — regenerates `Apendice_Indice_Temas.qmd`.
-4. `python3 scripts/build_index_fig_tab.py` — regenerates `Apendice_Indice_Fig_Tab.qmd` (figure and table index, with `Figura X.Y` numbers).
+**Pre-render hooks** (defined in `_quarto.yml > project > pre-render`): 1. `rm -rf _freeze .quarto/_freeze` — freeze is intentionally disabled (memory: every CI build re-executes every chunk). 2. `bash scripts/patch-orange-book.sh` — applies a local patch to the orange-book Typst template (Typst 0.13+ compat). Remove when upstream fixes the issue. 3. `python3 scripts/build_topic_index.py` — regenerates `Apendice_Indice_Temas.qmd`. 4. `python3 scripts/build_index_fig_tab.py` — regenerates `Apendice_Indice_Fig_Tab.qmd` (figure and table index, with `Figura X.Y` numbers).
 
 **Chapter rendering**: knitr executes every R chunk. With `knitr.opts_chunk.dev: ["png", "cairo_pdf"]`, each chunk emits both a `.png` (embedded by HTML/Word) and a `.pdf` (vector, picked up for the editor's deliverable). `cairo_pdf` (instead of base `pdf`) supports UTF-8 — needed for λ, ρ, α, ø, accented axis labels, etc.
 
 Per-chunk execution defaults (set in `_quarto.yml > execute`):
-```
+
+```         
 error:   false      # any chunk that errors halts the render — fix the chunk
 warning: false      # warnings hidden
 message: false      # informational messages hidden
 ```
+
 These are global; **do not** add `#| error: true` to chunks "just in case" — if the render fails, the chunk has a bug worth surfacing.
 
 **Post-render hook**: `Rscript scripts/collect_figures.R` — walks every `.qmd`, identifies figures (static markdown images + script-generated), and copies them with the `Fig_X.Y_` prefix into `figuras_editor/<chapter>/`. Also writes `Figuras_Inventario.csv` and `Figuras_Manifiesto.md`.
 
 ## Figure numbering & editor handoff
 
-Quarto numbers a figure as "Figura X.Y" **only** when the source has both:
-- a caption (alt text on markdown images, `#| fig-cap:` on chunks); and
-- a `fig-` prefixed label (`{#fig-name}` on markdown images, `#| label: fig-name` on chunks).
+Quarto numbers a figure as "Figura X.Y" **only** when the source has both: - a caption (alt text on markdown images, `#| fig-cap:` on chunks); and - a `fig-` prefixed label (`{#fig-name}` on markdown images, `#| label: fig-name` on chunks).
 
 Every chunk in the book has been migrated to that form (see "Tooling" — `migrate_chunk_labels.R`). Every static image has been anchored (see `add_fig_anchors.R`). New images you add must also get a `{#fig-<slug>}` anchor — or run `add_fig_anchors.R` after pasting them in.
 
@@ -91,7 +87,7 @@ Every chunk in the book has been migrated to that form (see "Tooling" — `migra
 
 After `quarto render`, this folder contains every figure organized for the editor:
 
-```
+```         
 figuras_editor/
 ├── 00-Prefacio/        # unnumbered chapters fall back to NN_ prefix
 ├── 01-Introduccion/
@@ -118,7 +114,7 @@ figuras_editor/
 All R scripts can be run with `Rscript scripts/<name>.R [args]` from anywhere inside the project — they walk upward to find `_quarto.yml` automatically.
 
 | Script | Type | Purpose |
-|---|---|---|
+|----|----|----|
 | `collect_figures.R` | post-render hook | Copies PNG+PDF into `figuras_editor/<chapter>/Fig_X.Y_<name>`. Writes `Figuras_Inventario.csv` and `Figuras_Manifiesto.md`. Uses `magick` (optional) to wrap PNGs without a PDF sibling. |
 | `audit_fig_captions.R` | manual, re-runnable | Reports chunks that produce a figure but lack `#| fig-cap:` or `#| label: fig-...`. Pass `--md` to also write `Figuras_Captions_Audit.md`. |
 | `add_fig_anchors.R` | one-shot | Adds `{#fig-<slug>}` anchors to static markdown images that don't have one. Pass `--dry` to preview. Slug derived from filename basename; uniqueness enforced across the book. |
@@ -126,6 +122,7 @@ All R scripts can be run with `Rscript scripts/<name>.R [args]` from anywhere in
 | `extract_todo_chunks.R` | one-shot | Walks `.qmd` for `#| fig-cap: "[TODO: caption]"` and dumps `{chapter, label, line, code}` to `captions_todo.json`. Used to drive caption drafting. |
 | `apply_captions.R` | one-shot | Reads a `{label: caption}` JSON and replaces `[TODO: caption]` placeholders in `.qmd` files. `Rscript scripts/apply_captions.R --json captions_drafted.json [--dry]`. |
 | `style_all.R` | manual, periodic | Runs `styler::style_file()` on every `.R`, `.Rprofile`, and `.qmd` (chunks only) under the project. Skips auto-generated appendices. Commit before running so the diff is reviewable. `Rscript scripts/style_all.R [--dry]`. |
+| `render_docx_per_chapter.R` | manual, on-demand | Renders each chapter as a **standalone `.docx`** (one file per chapter) into `docx_chapters/`. Designed for editor review of one chapter at a time without lugging around a 500-page combined Word doc. Source in RStudio, then call `render_chapter("105-Transiciones.qmd")` or `render_all_chapters()`. See "Per-chapter Word output" workflow below. |
 | `build_topic_index.py` | pre-render hook | **Still Python.** Builds `Apendice_Indice_Temas.qmd`. Convert to R if you prefer. |
 | `build_index_fig_tab.py` | pre-render hook | **Still Python.** Builds `Apendice_Indice_Fig_Tab.qmd`. Convert to R if you prefer. |
 | `patch-orange-book.sh` | pre-render hook | Bash, applies local Typst patch. |
@@ -133,15 +130,9 @@ All R scripts can be run with `Rscript scripts/<name>.R [args]` from anywhere in
 
 R helpers in `R/figuras_helpers.R`:
 
-*Plot/figure saving:*
-- `save_plot_png(obj, file, also_pdf = TRUE)` — saves a ggplot or htmlwidget as PNG and, by default, a sibling vector PDF.
-- `plc_save(..., png = "images/foo.png")` — calls `Rage::plot_life_cycle(...)` and saves PNG+PDF.
-- `grviz_save(dot, ..., png = "images/foo.png")` — same for `DiagrammeR::grViz()`.
+*Plot/figure saving:* - `save_plot_png(obj, file, also_pdf = TRUE)` — saves a ggplot or htmlwidget as PNG and, by default, a sibling vector PDF. - `plc_save(..., png = "images/foo.png")` — calls `Rage::plot_life_cycle(...)` and saves PNG+PDF. - `grviz_save(dot, ..., png = "images/foo.png")` — same for `DiagrammeR::grViz()`.
 
-*Pretty rendering of objects as tables* (essential for the editor's Word copy — raw R output looks terrible in docx):
-- `mat_to_ft(m, digits = 3)` — renders any numeric matrix as a flextable with row/column names preserved.
-- `compmat_to_ft(cm, digits = 3)` — renders a `CompadreMat` object (output of `mpm_mean()`, `mpm_sd()`, etc.) as multiple flextables (matA / matU / matF / matC + stage classification). Requires `#| results: asis` on the chunk.
-- `pretty(x, digits = 3)` — generic dispatcher: routes by class to `mat_to_ft` (matrix), `compmat_to_ft` (CompadreMat), `flextable` (data.frame), or builds a 2-column table for named numeric vectors and `summary()` outputs. Falls back to `print()` for unsupported classes.
+*Pretty rendering of objects as tables* (essential for the editor's Word copy — raw R output looks terrible in docx): - `mat_to_ft(m, digits = 3)` — renders any numeric matrix as a flextable with row/column names preserved. - `compmat_to_ft(cm, digits = 3)` — renders a `CompadreMat` object (output of `mpm_mean()`, `mpm_sd()`, etc.) as multiple flextables (matA / matU / matF / matC + stage classification). Requires `#| results: asis` on the chunk. - `pretty(x, digits = 3)` — generic dispatcher: routes by class to `mat_to_ft` (matrix), `compmat_to_ft` (CompadreMat), `flextable` (data.frame), or builds a 2-column table for named numeric vectors and `summary()` outputs. Falls back to `print()` for unsupported classes.
 
 The DOT-based `render_dual(dot, png_name)` helper lives inline in `103-Ciclos_de_Vida.qmd` (chunk `CV1-setup-diagrams`); it also writes a sibling vector PDF.
 
@@ -155,9 +146,11 @@ Auto-loaded by R when launched from the project root. Defines:
 - **CLI ANSI escape suppression**: disables `cli` hyperlinks so they don't leak into LaTeX output as escape codes.
 
 ### Python dependencies (build hooks)
+
 - `python3` (≥ 3.8) for the pre-render hooks.
 
 ### R dependencies (book + scripts)
+
 - `tidyverse` (ggplot2, dplyr, etc.)
 - `DiagrammeR`, `DiagrammeRsvg`, `rsvg` — required by `render_dual()` and the life-cycle helpers.
 - `Rage` — life-cycle diagrams.
@@ -169,10 +162,13 @@ Auto-loaded by R when launched from the project root. Defines:
 ## Editorial conventions
 
 | Topic | Convention |
-|---|---|
+|----|----|
 | Decimal separator | Period (`0.5`), not comma. Consistent with R numeric output. |
-| Scientific names | Italics via markdown `*Lepanthes rupestris*`. |
-| Citation style | `peerj.csl` — list up to **3 authors in full**, use "et al." from **4 authors onwards**. Do not apply reviewer suggestions to abbreviate at 3. |
+| Table numbers | Displayed to **4 significant figures** book-wide (not fixed decimals, so small values like a `1e-5` Bayesian prior survive instead of rounding to `0.000`). Applied via `formatC(format="g", digits=4)` on `double` columns in `.Rprofile`'s `ft_theme_auto`; integer/count columns untouched. Presentation only — calculations keep full precision. Reader note in `102-Intro.qmd` ("Convención numérica"). |
+| R output prefix | Code output is prefixed with `#>` (knitr `comment: "#>"` in `_quarto.yml`) to distinguish results from input, R4DS/tidyverse style. |
+| Figure fonts | ggplot figures use **Libertinus Serif** (matches the book body) via `base_family` in `R/rlt_theme.R`; the same `text = element_text(family=…)` line is set in the inline themes (108, 110, 112, 114, 115, 118, 122). Falls back silently if the font isn't on the render machine. |
+| Scientific names | Italics via markdown `*Lepanthes rupestris*`. In **flextable tables**, italics only render through `ftExtra::colformat_md(j = …)` (flextable doesn't parse markdown). Naming authority stays upright (only the binomial is italic). COMPADRE output tables (`SpeciesAccepted`/`SpeciesAuthor`) are left as the database returns them. |
+| Citation style | `lankesteriana.csl` (APA name-year, *Lankesteriana* journal; migrated from `peerj.csl` 2026-05-29 for the Lankester submission). In-text: "et al." from **3 authors**, connector "**y**" — `(Salazar et al. 2018, Bogarín 2020)`. Bibliography: **all** authors, connector "**&**" — `Apellido, N. N., & … (Año)`. Hybrid connector by design. NB: \~22 `book.bib` entries use `and others` → render "& others"; expand author lists for full journal style. |
 | Figure / table cross-references | Use Quarto's `@fig-name` / `@tbl-name`; never raw `Fig. N`. Quarto resolves the numbering. |
 | `freeze` | Disabled. Every render re-executes every chunk. Don't enable `_freeze` caching. |
 | Editor (IDE) | RStudio (not Positron). IDE-specific suggestions should assume RStudio. |
@@ -186,7 +182,7 @@ The Word deliverable for the editor only looks good if every chunk renders its o
 
 Never end a chunk with a bare matrix or data.frame reference:
 
-```r
+``` r
 # DON'T — prints raw R output, looks terrible in Word
 my_matrix
 my_dataframe
@@ -195,7 +191,7 @@ mpm_mean(mpms)
 
 Use the helpers from `R/figuras_helpers.R`:
 
-```r
+``` r
 # DO
 mat_to_ft(my_matrix)                              # any numeric matrix
 as.data.frame(my_dataframe) |> flextable() |> ft_wide()
@@ -207,49 +203,53 @@ pretty(any_object)                                 # generic dispatcher
 
 These return `CompadreDB`-aware objects with subclasses and list-columns. Base R `[, j]` indexing breaks flextable with `Error in duplicated.default(col_keys)`. Safe pattern:
 
-```r
+``` r
 meta_X <- as.data.frame(cdb_metadata(X) |> head(n = 3))
 meta_X |> dplyr::select(1:4) |> flextable() |> ft_wide()
 ```
 
 Then list the remaining columns inline below the chunk:
 
-```
+```         
 **Otras columnas en la metadata:** `r paste(names(meta_X)[-(1:4)], collapse = ", ")`.
 ```
 
-Reason: `cdb_metadata()` returns ~30+ columns; showing all of them in a Word table is unreadable. Show the first 4, list the rest.
+Reason: `cdb_metadata()` returns \~30+ columns; showing all of them in a Word table is unreadable. Show the first 4, list the rest.
 
 ### Echo-policy (which chunks show their code)
 
 Project default is **code visible, folded by default** (`code-fold: true` at the HTML format level). The "Mostrar todo el código" button at the top of each HTML page expands every foldable chunk at once. Only chunks marked `echo=FALSE` or `include=FALSE` are completely hidden — and the button cannot expand those.
 
-Keep `echo=FALSE` (hidden) only for:
-- Theme definitions (`rlt_theme`, `prop-theme`, etc.).
-- Library imports and helper-function setup blocks.
-- Intentionally hidden recompute chunks named `*-hidden-*` or similar.
-- `include_graphics()` plumbing for figures.
+Keep `echo=FALSE` (hidden) only for: - Theme definitions (`rlt_theme`, `prop-theme`, etc.). - Library imports and helper-function setup blocks. - Intentionally hidden recompute chunks named `*-hidden-*` or similar. - `include_graphics()` plumbing for figures.
 
 For everything else (tribbles defining data, model construction, plotting, flextable rendering), let the chunk show its code so the reader / editor can see and learn from it.
+
+**HTML vs Word — hide informational-table code in the `.docx` only.** Chunks that just *build a descriptive table from hand-authored data* (a `tribble` of facts + `flextable`) are pedagogical in the online book but pure noise in the editor's Word file — the editor only needs the rendered table. Mark such chunks with `#| docx_hide_code: true`: a `knitr::opts_hooks` in `.Rprofile` then sets `echo=FALSE` **only when `pandoc_to() == "docx"`** (the chunk still executes, so the table renders; HTML keeps the code visible/folded). This is distinct from the source-strip hook (which removes `source()`/`ggsave()`-type lines from *all* shown code in docx). Currently tagged: data + render chunks in `104`, `111`, `122`, and `Agradecimientos` (and every `tribble(` chunk book-wide via `scripts`-style tagging). Add the flag to any other hand-authored table chunk; do **not** add it to analysis/output chunks (computed matrices, model results) — those stay visible for the editor's technical review.
+
+**Tall figures running off the page in Word (`docx_fit`).** Life-cycle diagrams are laid out vertically; scaled to the 6.5" text width their aspect makes them \~8.7–9.75" tall, exceeding the 9" page text height (Letter, 1" margins), so the bottom runs off the page in `.docx` (HTML scrolls, so it's only a Word problem). Chunks that render a life-cycle diagram (`plc_save`/`grviz_save`/`render_dual`/`plot_life_cycle`) are tagged `#| docx_fit: true`; an `opts_hooks` in `.Rprofile` then sets `out.width = "65%"` **only for docx** (preserves aspect, so the height drops enough to fit). HTML/PDF unaffected. All 44 such chunks are currently tagged.
 
 ## Common workflows
 
 ### Add a new chapter
-1. Create `NNN-titulo.qmd` at repo root.
-2. Add the filename to the `chapters:` list in `_quarto.yml` (under the appropriate part if any).
-3. Add the matching `("NNN-titulo.qmd", "NN-titulo")` tuple to the `CHAPTERS` list in `scripts/collect_figures.R` so the figure pipeline knows about it.
-4. `quarto render`.
+
+1.  Create `NNN-titulo.qmd` at repo root.
+2.  Add the filename to the `chapters:` list in `_quarto.yml` (under the appropriate part if any).
+3.  Add the matching `("NNN-titulo.qmd", "NN-titulo")` tuple to the `CHAPTERS` list in `scripts/collect_figures.R` so the figure pipeline knows about it.
+4.  `quarto render`.
 
 ### Add a new figure (static image)
-1. Drop the file in `images/` (or `figs/`).
-2. Reference it in the chapter: `![Caption that becomes the figure label](images/foo.jpg){#fig-foo}`.
-   - The `#fig-` anchor is **required** for Quarto to number the figure.
-   - The alt text becomes the visible caption.
-3. If you forgot the anchor: `Rscript scripts/add_fig_anchors.R` will add one based on the filename.
+
+1.  Drop the file in `images/` (or `figs/`).
+2.  Reference it in the chapter: `![Caption that becomes the figure label](images/foo.jpg){#fig-foo}`.
+    - The `#fig-` anchor is **required** for Quarto to number the figure.
+    - The alt text becomes the visible caption.
+3.  If you forgot the anchor: `Rscript scripts/add_fig_anchors.R` will add one based on the filename.
 
 ### Add a new figure (R chunk)
+
 Use the migrated chunk style:
-````markdown
+
+```` markdown
 ```{r, message=FALSE}
 #| label: fig-mychunk
 #| fig-cap: "Caption describing what the code plots."
@@ -257,16 +257,19 @@ Use the migrated chunk style:
 ggplot(data, aes(x, y)) + geom_point()
 ```
 ````
+
 Quarto will auto-number it `Figura X.Y` based on the chapter and document order.
 
 ### Audit caption coverage
-```
+
+```         
 Rscript scripts/audit_fig_captions.R           # console summary
 Rscript scripts/audit_fig_captions.R --md      # also writes Figuras_Captions_Audit.md
 ```
 
 ### Regenerate the figures-editor deliverable
-```
+
+```         
 quarto render                                  # runs collect_figures.R as post-render
 # or, against the existing docs/ output without re-rendering:
 Rscript scripts/collect_figures.R
@@ -275,13 +278,39 @@ Rscript scripts/collect_figures.R --verbose    # list each warning
 ```
 
 ### Render only the Word version for the editor
-```
+
+```         
 quarto render --to docx
+python3 scripts/embed_fonts_docx.py   # embed JetBrains Mono into the .docx (run AFTER)
 ```
-Output: `docs/Introduccion-a-la-Dinamica-Poblacional-de-Orquideas.docx`.
+
+Output: `docs/Introduccion-a-la-Dinamica-Poblacional-de-Orquideas.docx` (one combined file with the entire book).
+
+**Word deliverable styling (Lankesteriana-like, single column):** - `reference-doc: reference.docx` in `_quarto.yml` controls the Word *appearance*: serif body (Cambria), ALL-CAPS centered title, bold headings, italic captions, running header + "Borrador para revisión editorial" footer. Regenerate from `pandoc --print-default-data-file reference.docx` + python-docx style edits if needed. - **Code font = JetBrains Mono** (matches HTML/PDF). `reference.docx` sets the `Verbatim Char` style to it, but **Pandoc copies the reference's `fontTable.xml` and not the font binaries**, so embedding must be applied to the final file by `scripts/embed_fonts_docx.py` (idempotent; obfuscates `fonts/JetBrainsMono-*.ttf` into the docx per ECMA-376 §17.8.1). The editor then needs no fonts installed. NB: this is the one tool kept in **Python** (binary/zip/font-obfuscation surgery), not R. - **Table font = Arial** (sans-serif, lining/tabular figures) at 10 pt with right-aligned numeric columns — set in `.Rprofile`'s `ft_theme_modern`, scoped to HTML/Word only (Typst/PDF keeps Libertinus). Serif body + sans tables + mono code is the intended three-font system. - **Code blocks** are **left-aligned** (the `SourceCode` paragraph style in `reference.docx` sets `jc=left`; without it, code inherits the justified `Normal` and stretches) and carry a **light-grey background** (`#F2F2F2` shading on `SourceCode` for blocks and `Verbatim Char` for inline code) to mimic the HTML code box. Pandoc forces the `SourceCode` style on *all* code blocks in docx, so code **output** can't get a distinct Word style — it's marked instead by the `#>` prefix (knitr `comment`). - Pandoc/Quarto emit a couple of strict-schema warnings in `settings.xml`/`styles.xml` (present with or without font embedding); Word opens the files fine — don't chase them.
+
+### Per-chapter Word output (one `.docx` per chapter)
+
+For editor review one chapter at a time — much easier than navigating one giant combined `.docx`. Run from RStudio (working directory set to project root):
+
+``` r
+source("scripts/render_docx_per_chapter.R")
+render_chapter("105-Transiciones.qmd")     # just one (~1–2 min)
+render_all_chapters()                      # all 27 (~30 min)
+render_all_chapters(dry_run = TRUE)        # list without rendering
+
+source("scripts/render_docx_per_chapter.R")
+render_all_chapters() 
+```
+
+Output: `docx_chapters/<chapter>.docx`, one file per chapter.
+
+**How it works (and why the script is non-trivial)**: Quarto books compile any single-chapter `docx` render into the *whole book* because `.docx` is a single-file format. To get one-per-chapter output, the script renders each chapter in a temp directory with a stripped `_quarto.yml` (no `project: type: book`), symlinks the shared assets (`R/`, `images/`, `figs/`, `data/`, `.Rprofile`, bibliography, filters), then moves the result to `docx_chapters/`. Uses `quarto::quarto_render()` from the `quarto` R package when available (resolves the quarto binary path on macOS without depending on the subprocess `PATH`).
+
+**Caveats**: - Cross-chapter references like `@fig-something-in-another-chapter` render as `?@fig-...` (each chapter is standalone, no knowledge of others). Within-chapter refs still work. - Figure numbers restart at "Figura 1.1" in each chapter (not continuous with book numbering). Captions are correct; only the number prefix differs. - `figuras_editor/` is **not refreshed** by this script — it's only generated by the full-book `quarto render` post-hook. So edit chapters individually for the editor, but run the full book render whenever you want fresh figure deliverables. - Each chapter starts a fresh R session — `.Rprofile` + setup chunks run normally, so all helpers and packages are available the same way as in the book render. - Safe to interrupt: chapters already done stay in `docx_chapters/`; rerun for just the failed/missing ones with `render_chapter("...")`.
 
 ### Style all R code with `styler`
-```
+
+```         
 git add -A && git commit -m "snapshot before styler"
 Rscript scripts/style_all.R --dry      # preview which files will change
 Rscript scripts/style_all.R            # apply
@@ -296,17 +325,19 @@ Reformats every `.R`, `.Rprofile`, and `.qmd` chunk to the tidyverse style guide
 - **`ggsave()` without sibling PDF**: bare `ggsave("foo.png", ...)` calls only produce a PNG. `collect_figures.R` wraps the PNG into a PDF via `magick` so the editor still gets a `.pdf`, but it is **raster, not vector**. Prefer `save_plot_png()` (`R/figuras_helpers.R`) for vector PDFs.
 - **Typst phantom-chapter trap**: a table cell whose content starts with `=` becomes a Typst H1 (looks like a stray chapter). Wrap such cells in inline math, e.g. `$=$ 0.5` instead of `= 0.5`. (See project memory.)
 - **`prefer-html: true`**: required so HTML widgets (`grViz`, `leaflet`, etc.) render to static PNG via webshot2 in PDF/Word builds.
-- **Word table column collapse**: flextable's default Word output collapses every column to minimum content width unless explicit widths are set. The fix lives in `.Rprofile`'s `ft_theme_auto` (calls `autofit() + set_table_properties(layout="autofit", width=1)` for docx). Don't remove that block.
+- **Word table column collapse**: flextable's Word output stacks cell text vertically because `flextable::autofit()` writes a **degenerate `tblGrid` (a single `<w:gridCol>` for a multi-column table)** in the docx pipeline — confirmed by inspecting `word/document.xml` of a rendered book (Tabla 4.3 had 1 grid column for 2 cells/row). The fix in `.Rprofile`'s `ft_theme_auto` (docx branch): **do NOT call `autofit()`**; instead set explicit **equal** column widths summing to the page text width (`width(ft, width = page_in/ncol)`, `page_in = 6.5` matching the Letter + 1" margins pinned in `reference.docx`) then `set_table_properties(layout = "fixed")`. That emits N correct `<w:gridCol>` and Word wraps text inside cells. Equal widths aren't proportional — a specific wide table can be tuned by calling `width()` with a per-column vector downstream. If you change the page geometry in `reference.docx`, update `page_in`. **Critical:** do NOT set `table.layout = "autofit"` in `set_flextable_defaults()` — that global default makes flextable re-autofit at print time and overwrites the per-table fixed widths, regenerating the degenerate single-column grid. (Diagnosed via `save_as_docx()` of a minimal flextable: `width()+layout="fixed"` gives correct columns; adding the autofit default collapses them. flextable's own default layout is already `fixed`.)
 - **`duplicated.default(col_keys)` error**: comes from passing a Rcompadre-subclassed tibble (or one with list-columns) directly to `flextable()`. Always go through `as.data.frame()` first — see "Rcompadre objects" above.
 - **Unicode in PDF figures**: requires `cairo_pdf` device, not base R `pdf`. Set globally in `_quarto.yml` under `knitr.opts_chunk.dev`. The base `pdf` device uses Type 1 fonts that don't contain Greek glyphs like λ, ρ, α.
 - **Strict error mode**: `error: false` at the project level means any chunk that errors halts the render. Don't paper over errors with `#| error: true` — fix the underlying code or, if a chunk is intentionally non-runnable, set `eval: false`.
 
 ## Generated files (do not commit hand-edits)
+
 - `Apendice_Indice_Fig_Tab.qmd`
 - `Apendice_Indice_Temas.qmd`
 - `Figuras_Inventario.csv`
 - `Figuras_Manifiesto.md`
 - `Figuras_Captions_Audit.md` (when generated)
 - `figuras_editor/**`
+- `docx_chapters/**` (per-chapter Word output from `render_docx_per_chapter.R`; consider adding to `.gitignore`)
 - `docs/**`
 - `_freeze/` (intentionally always deleted at the start of a render)

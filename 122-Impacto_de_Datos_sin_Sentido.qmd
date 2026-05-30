@@ -15,6 +15,7 @@ Por: Raymond L. Tremblay
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r, message=FALSE, warning=FALSE}
+#| docx_fit: true
 #| label: fig-sin_sentido_1
 #| fig-cap: "Bloque de configuración que instala y carga los paquetes DiagrammeR, Rage, popdemo, popbio, MCMCpack y otros, junto con las funciones auxiliares de figuras."
 
@@ -50,6 +51,7 @@ source("R/figuras_helpers.R") # plc_save(), grviz_save(), save_plot_png()
 ```{r ssin-theme}
 
 rlt_theme <- theme(
+  text = element_text(family = "Libertinus Serif"),
   axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
   axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
   axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
@@ -126,6 +128,7 @@ Sin duda, el tema principal para el uso de MPP ha sido evaluar la proyección de
 Muestreos en donde no se observa mortalidad, que equivaldrían a una supervivencia perfecta, son problemáticos. Esto se pudiese observar generalmente en especies longevas, en donde la mortalidad de los individuos, en especial de los individuos adultos es rara, pero la probabilidad existe. Considere una especie donde se recopilan datos de la especie **Sp1** y se crea una matriz de transición **Sp1matU** y una matriz de fertilidad **Sp1matF**. Note que ninguno de los individuos adultos muestreados murió, por lo que el valor de la permanencia es de 1 (supervivencia perfecta). En consecuencia, el tamaño de la población nunca disminuye. Sin embargo, esto es completamente irreal. Así, bajo todos los modelos biológicamente realistas, esperaríamos que el tamaño de la población comience a disminuir si una población no tiene reproducción. Sin embargo, en nuestro ejemplo, a pesar de que la fecundidad es cero, nuestra población se mantiene ya que los individuos adultos presentan una supervivencia perfecta, lo cual es biológicamente imposible.
 
 ```{r, message=FALSE}
+#| docx_fit: true
 #| label: fig-sin_sentido_2
 #| fig-cap: "Ciclo de vida correspondiente a la matriz Sp1matA con estadios plántula, juvenil y adulto, sin fecundidad y lambda igual a 1."
 
@@ -231,6 +234,7 @@ En la mayoría de las investigaciones el tamaño de muestra es limitado. Por lo 
 Usando el artículo de Ticktin y colaboradores [@ticktin2020synthesis], vemos algunos de los tamaños de muestra de los estudios de orquídeas usando MPP. Esta tabla representa solamente parte de los datos en la publicación. El objetivo es demostrar el tamaño de muestra en algunos de los estudios de orquídeas. Note que en algunos estudios el tamaño por etapa es muy pequeño, lo que puede resultar en estimaciones sesgadas de los parámetros y, a menudo, resultados sin sentido biológico.
 
 ```{r sin_sentido5, message=FALSE}
+#| docx_hide_code: true
 
 N_PPM <- tribble(
   ~Especie, ~"Población", ~Etapas, ~"Tamaño de Muestra", ~Referencia,
@@ -261,7 +265,8 @@ N_PPM <- tribble(
 )
 
 list_fl <- N_PPM %>%
-  flextable()
+  flextable() %>%
+  ftExtra::colformat_md(j = "Especie") # renderiza *italics* de los nombres de especie
 
 list_fl
 ```
@@ -275,6 +280,7 @@ La *irreducibilidad* es un concepto importante en los análisis de matrices pobl
 Por tal motivo, la matriz sugiere que los juveniles no crecen para convertirse en adultos, y todos los juveniles siguen siendo juveniles o mueren, ya que no hay una flecha que conecte a los juveniles con los adultos. En tanto que en el caso de los adultos no existe una flecha que los conecte con las plántulas, lo que sugiere que no hay producción de nuevas plántulas por parte de los adultos.
 
 ```{r}
+#| docx_fit: true
 #| label: fig-sin_sentido_6
 #| fig-cap: "Ciclo de vida correspondiente a la matriz Sp1matA_NT con estadios plántula, juvenil y adulto, sin fecundidad y con retención del adulto de 0.995."
 
@@ -342,6 +348,7 @@ Como es bien conocido en el campo, la germinación de semillas en las orquídeas
 En el siguiente gráfico del ciclo de vida emergido, se puede observar que ninguna de las plántulas sobrevive o crece a la siguiente etapa. Tenga en cuenta que en la primera columna de la matriz de transición todos los valores son cero. La población puede haber comenzado con muchas (incluso miles o cientos de miles) de plántulas, pero ninguna creció hasta convertirse en un juvenil o permaneció como plántula antes del siguiente muestreo. Esto da como resultado una matriz que es reducible *isIrreducible* = *FALSE* y por consecuencia no cumple con los requisitos necesarios para muchos de los análisis de matrices poblacionales.
 
 ```{r}
+#| docx_fit: true
 #| label: fig-sin_sentido_8
 #| fig-cap: "Ciclo de vida correspondiente a la matriz Sp1matU_NS con estadios plántula, juvenil y adulto, sin transición desde plántulas (primera columna nula)."
 
@@ -392,6 +399,7 @@ which(colSums(matU) == 0)          # ¿columnas enteras de ceros?
 Uno de los errores más comunes en la construcción de los elementos de la matriz es el error de redondeo excesivo u otras estimaciones que dan como resultado valores de supervivencia superiores a 100%. Una estimación de supervivencia mayor a 1.00, genera que de manera artificial (por un milagro matemático) aumente la cantidad de individuos, ya que su origen no es debido a la reproducción (sexual u asexual), si no a un artificio matemático. El estimado de supervivencia de una etapa siempre tiene que ser menor o igual a 1. Tomemos el ejemplo del análisis de *Serapias cordigera* [@pellegrino2014effects] en donde los autores evaluaron las transiciones entre latencia, plántulas, roseta vegetativa y floración, en este ejemplo podemos observar que al sumar los valores de transición de la columna de plántulas de la matriz SerapiaU, obtenemos un valor de 1.01, lo que significa que no solamente las plántulas presentan una sobrevivencia perfecta, que ya vimos que es biológicamente imposible, si no que además están apareciendo plántulas de la nada (ya que las plántulas son incapaces de reproducirse sexual o asexualmente y por tanto su entrada en la matriz de fecundidad-SerapiaF- es cero), que provocan que la población de plántulas aumente en un 1% en cada período. Estos valores de sobrevivencia superiores a 1 son el resultado de errores en la recolección de datos y/o en el cálculo de la supervivencia de la etapa, pero más frecuentemente por el redondeo excesivo de los valores de sobrevivencia calculada al momento de incorporarlos a la matriz, en donde generalmente sólo se utilizan entre dos y tres decimales.
 
 ```{r}
+#| docx_fit: true
 #| label: fig-sin_sentido_9
 #| fig-cap: "Ciclo de vida correspondiente a la matriz SerapiaA con estadios latente, plántulas, vegetativa y adulto, cuya primera columna suma más de 1."
 
@@ -503,6 +511,7 @@ plot(pr) # Nota que después de solamente 5 años ya la población aumentó a 25
 Si deseamos agregar una etapa de semilla a nuestro modelo, debemos incluir la etapa en nuestro modelo y crear una matriz con una nueva etapa *semilla*, para lo cual será necesario tener una estimación del número de semillas que germinan y se convierten en plántulas para poder calcular la transición de semillas a plántulas de nuestro modelo. En el caso de las orquídeas, dicha estimación es bastante difícil de lograr ya que las semillas de las orquídeas, debido a su tamaño minúsculo, son difíciles de seguir en la naturaleza. Aunque existen métodos para seguir las semillas como el de paquetes de malla de fitoplancton donde uno añade las semillas para monitorear esa etapa [@rasmussen1993seed; @batty2006situ; @shao2024improved] o algún método de huella genética para determinar la procedencia de las plántulas, que nos pueden ayudar a tener una estimación de esta transición, esta será incorrecta la mayoría de las veces, ya que en el caso de los paquetes de semillas se estará sobreestimando la transición ya que no se estaría considerando la pérdida de semillas por dispersión, en tanto que en el método de huella genética es muy probable que se subestime la transición ya que es muy difícil encontrar las plántulas en campo, sobre todo en orquídea epifitas. Por lo tanto, la estimación de la fertilidad en las orquídeas es un desafío y requiere un muestreo y análisis cuidadoso.
 
 ```{r}
+#| docx_fit: true
 #| label: fig-sin_sentido_11
 #| fig-cap: "Ciclo de vida correspondiente a la matriz Sp1matA_Fert2 con estadios semillas, plántula, juvenil y adulto, con fecundidad de 1100 y transición semilla-plántula de 0.0001."
 
@@ -614,6 +623,7 @@ La distribución de Dirichlet es una distribución de probabilidad continua mult
 En el siguiente script estimamos los intervalos de credibilidad del 95% de la transición y estasis de plántulas a plántulas (0.5), juveniles (0.2), adultos (0) y muerte (0.30). Tenga en cuenta que en el gráfico del ciclo de vida, como de costumbre, se excluyen las probabilidades de muerte. Esta función es un acercamiento bayesiano por consecuencia es un intervalo de credibilidad (ICr) y no un intervalo de confianza (IC). La diferencia entre ambos es que el intervalo de credibilidad es una estimación bayesiana, mientras que el intervalo de confianza es una estimación frecuentista.
 
 ```{r, message=FALSE}
+#| docx_fit: true
 #| label: fig-sin_sentido_15
 #| fig-cap: "Ciclo de vida correspondiente a la matriz Dirichlet con estadios plántula, juvenil y adulto, sin retención en plántula ni juvenil."
 

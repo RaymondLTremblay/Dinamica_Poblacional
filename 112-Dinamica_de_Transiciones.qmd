@@ -44,6 +44,7 @@ library(flextable)
 # Mi tema de formato de las gráficas de ggplot2 personal
 
 rlt_theme <- theme(
+  text = element_text(family = "Libertinus Serif"),
   axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
   axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
   axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
@@ -342,7 +343,8 @@ ggplot(pr3df, aes(time, pr3)) +
   xlab("Time intervals") +
   ylab("Relative population size/density") +
   theme_minimal() +
-  rlt_style_colour()
+  rlt_style_colour()+
+  theme(legend.position = "none")
 
 ## Código para el plot usando el método tradicional
 
@@ -395,7 +397,8 @@ ggplot(pr5df, aes(time, pr5)) +
   xlab("Time intervals") +
   ylab("Relative population size/density") +
   theme_minimal() +
-  rlt_style_colour()
+  rlt_style_colour()+
+  theme(legend.position = "none")
 
 # plot(pr5, log = "y", ylim = c(0.1, 1.6), ann = FALSE)
 # title(main = "Proyección de la dinámica (Escenario 5)", xlab = "Time intervals", ylab = "Population size/density")
@@ -436,7 +439,14 @@ ggplot(Population_density, aes(time, Pop, color = Escenario)) +
     y = "Relative population size/density"
   ) +
   theme_minimal() +
-  rlt_style_colour()
+  rlt_style_colour()+
+  
+theme(
+    legend.position = c(0.5, 0.25),
+    legend.background = element_rect(fill = "white", color = "black"),
+    legend.key.size = unit(0.35, "cm"),
+    legend.text = element_text(size = 8)
+  )
 ```
 
 ------------------------------------------------------------------------
@@ -645,7 +655,14 @@ trans.plot <- ggplot(data = Population_density) +
   ylim(0.3, 1.3) +
   rlt_style_colour()
 
-trans.plot
+trans.plot+
+  
+theme(
+    legend.position = c(0.5, 0.45),
+    legend.background = element_rect(fill = "white", color = "black"),
+    legend.key.size = unit(0.35, "cm"),
+    legend.text = element_text(size = 8)
+  )
 ```
 
 La gráfica a continuación corresponde a los cinco escenarios planteados para la población 1 de *L. rubripetala*, semejante a la figura 2B del artículo de Tremblay y colaboradores [@tremblay2015stable]; aunque cabe señalar que no se integran los índices transitorios, los cuales abordamos a continuación.
@@ -683,7 +700,14 @@ trans.plot <- ggplot(data = Population_density_complete) +
   ylim(0.3, 1.3) +
   rlt_style_colour()
 
-trans.plot
+trans.plot+
+  
+theme(
+    legend.position = c(0.5, 0.25),
+    legend.background = element_rect(fill = "white", color = "black"),
+    legend.key.size = unit(0.35, "cm"),
+    legend.text = element_text(size = 8)
+  )
 ```
 
 ------------------------------------------------------------------------
@@ -860,7 +884,17 @@ trans.plot +
     parse = TRUE,
     hjust = 1.22,
     vjust = -1
+  ) +
+  
+theme(
+    legend.position = c(0.5, 0.35),
+    legend.background = element_rect(fill = "white", color = "black"),
+    legend.key.size = unit(0.35, "cm"),
+    legend.text = element_text(size = 8)
   )
+
+
+
 ```
 
 ------------------------------------------------------------------------
@@ -940,5 +974,12 @@ trans.plot +
     parse = TRUE,
     hjust = 0.5,
     vjust = -0.8
+  )+
+  
+theme(
+    legend.position = c(0.5, 0.25),
+    legend.background = element_rect(fill = "white", color = "black"),
+    legend.key.size = unit(0.35, "cm"),
+    legend.text = element_text(size = 8)
   )
 ```

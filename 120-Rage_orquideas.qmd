@@ -68,42 +68,7 @@ El presente capítulo examina una selección de funciones contenidas en el paque
 
 ```{r Rage2, echo=FALSE}
 
-rlt_theme <- theme(
-  axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
-  axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
-  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
-  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
-) +
-  theme(
-    # Remover los bordes
-    panel.border = element_blank(),
-    # Remover las líneas
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    # Remover el fondo del panel
-    panel.background = element_blank(),
-    # añadir lineas más gruesas
-    axis.line.x = element_line(colour = "black", linewidth = 1),
-    axis.line.y = element_line(colour = "black", linewidth = 1)
-  )
-
-diverging <- c("#009392", "#CF597E", "#E9E29C", "#39B185", "#EEB479", "#9CCB86")
-
-# --- 2. Combinarlos en un objeto de tipo lista ---
-# Esta lista se puede añadir al gráfico con un solo '+'
-rlt_style_fill <- function() {
-  list(
-    rlt_theme,
-    scale_fill_manual(values = diverging)
-  )
-}
-
-rlt_style_colour <- function() {
-  list(
-    rlt_theme,
-    scale_colour_manual(values = diverging)
-  )
-}
+source("R/rlt_theme.R") # tema + paleta canónicos (R/rlt_theme.R)
 ```
 
 ------------------------------------------------------------------------
@@ -424,15 +389,38 @@ Las funciones de `Rage` requieren que las matrices estén descompuestas en sus p
 
 ```{r Rage_lifeexpect}
 
+# life_expect_mean(), gen_time() y mature_age() modelan la matriz U como una
+# cadena de Markov ABSORBENTE: calculan la matriz fundamental N = (I - U)^-1 y
+# suman sus columnas. Esto solo tiene sentido si toda etapa puede llegar a la
+# muerte, es decir, si cada columna de U suma < 1 (siempre hay algo de
+# mortalidad). Si colSums(U) >= 1, el individuo es "inmortal", (I - U) es
+# (casi) singular y su inversa devuelve valores NEGATIVOS o ENORMES —datos sin
+# sentido biológico (ver el capítulo correspondiente). tryCatch() solo atrapa
+# los casos que fallan por completo (NA); los casi-singulares NO dan error y se
+# colarían como basura. Por eso filtramos con es_valida ANTES de calcular.
+U_valido <- function(U, tol = 1e-8) {
+  all(is.finite(U)) && all(colSums(U) < 1 - tol)
+}
+
+matsU <- matU(Mat_erg_irred)
+matsF <- matF(Mat_erg_irred)
+es_valida <- map_lgl(matsU, U_valido)
+
 esperanza_vida <- map_dbl(
-  matU(Mat_erg_irred),
-  ~ tryCatch(Rage::life_expect_mean(.x, start = 1L),
-    error = function(e) NA_real_
-  )
+  matsU,
+  ~ if (U_valido(.x)) {
+    tryCatch(Rage::life_expect_mean(.x, start = 1L),
+      error = function(e) NA_real_
+    )
+  } else {
+    NA_real_
+  }
 )
 
 pretty(summary(esperanza_vida))
 ```
+
+De las `r length(es_valida)` matrices del subconjunto, `r sum(!es_valida)` tienen al menos una columna de U con supervivencia ≥ 1 (sin sentido biológico) y se excluyen de esta y las dos métricas siguientes; las `r sum(es_valida)` restantes son cadenas de Markov absorbentes válidas.
 
 ::: callout-tip
 ## Interpretación
@@ -446,12 +434,19 @@ Una esperanza de vida alta (\> 30 pasos de tiempo) indica una especie longeva co
 
 ```{r Rage_gentime}
 
-tiempo_gen <- map2_dbl(
-  matU(Mat_erg_irred),
-  matF(Mat_erg_irred),
-  ~ tryCatch(Rage::gen_time(.x, .y),
-    error = function(e) NA_real_
-  )
+# Misma condición que en esperanza de vida: gen_time() integra sobre (I - U)^-1,
+# así que una U con colSums >= 1 produce tiempos generacionales sin sentido.
+# Reutilizamos es_valida (definido en el chunk Rage_lifeexpect) para excluir
+# esas matrices antes de calcular.
+tiempo_gen <- pmap_dbl(
+  list(matsU, matsF, es_valida),
+  function(U, Fmat, ok) {
+    if (ok) {
+      tryCatch(Rage::gen_time(U, Fmat), error = function(e) NA_real_)
+    } else {
+      NA_real_
+    }
+  }
 )
 
 pretty(summary(tiempo_gen))
@@ -469,12 +464,18 @@ Un tiempo generacional alto (\> 10) indica especies "lentas", longevas, con gene
 
 ```{r Rage_matureage}
 
-edad_madurez <- map2_dbl(
-  matU(Mat_erg_irred),
-  matF(Mat_erg_irred),
-  ~ tryCatch(Rage::mature_age(.x, .y, start = 1L),
-    error = function(e) NA_real_
-  )
+# Igual que las dos métricas anteriores: mature_age() integra a través de la
+# matriz U, por lo que una U con colSums >= 1 (supervivencia perfecta) da
+# resultados sin sentido. Reutilizamos es_valida para excluir esas matrices.
+edad_madurez <- pmap_dbl(
+  list(matsU, matsF, es_valida),
+  function(U, Fmat, ok) {
+    if (ok) {
+      tryCatch(Rage::mature_age(U, Fmat, start = 1L), error = function(e) NA_real_)
+    } else {
+      NA_real_
+    }
+  }
 )
 
 pretty(summary(edad_madurez))
@@ -798,7 +799,10 @@ Combinamos las tres métricas con el `OrganismType` correspondiente para compara
 
 ```{r Rage_compare}
 
-# Construir un data frame con las tres métricas + hábito de vida
+# Construir un data frame con las tres métricas + hábito de vida.
+# Los tres vectores están alineados con el orden de Mat_erg_irred (mismo length),
+# y las matrices sin sentido biológico (colSums(U) >= 1) ya quedaron como NA en
+# los chunks anteriores, así que drop_na() las elimina aquí automáticamente.
 metricas <- tibble(
   habito = cdb_metadata(Mat_erg_irred)$OrganismType,
   esperanza_vida = esperanza_vida,

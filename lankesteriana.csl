@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- default-locale es-ES: el conector "and" del texto se rinde como "y" (preferencia
+     del libro en español); la bibliografía usa "&" literal (estilo de la revista). -->
+<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0" demote-non-dropping-particle="sort-only" default-locale="es-ES">
+  <info>
+    <title>Lankesteriana</title>
+    <id>https://www.lankesteriana.org/lankesteriana</id>
+    <link href="https://www.lankesteriana.org/" rel="self"/>
+    <link href="https://revistas.ucr.ac.cr/index.php/lankesteriana" rel="documentation"/>
+    <author>
+      <name>Adaptado de PeerJ para el estilo Lankesteriana (Universidad de Costa Rica)</name>
+    </author>
+    <category citation-format="author-date"/>
+    <category field="biology"/>
+    <summary>Estilo tipo APA-name-year usado por la revista Lankesteriana: citas (Autor et al. Año), bibliografia con todos los autores y "&amp;".</summary>
+    <updated>2026-05-29T00:00:00+00:00</updated>
+    <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
+  </info>
+
+  <!-- Bibliografia: TODOS los autores, "Apellido, N. N.", "&" antes del ultimo -->
+  <macro name="author">
+    <names variable="author" delimiter=", ">
+      <name and="symbol" delimiter=", " delimiter-precedes-last="always"
+            initialize-with=". " name-as-sort-order="all" sort-separator=", "/>
+      <label form="short" prefix=" (" suffix=")"/>
+      <substitute>
+        <names variable="editor"/>
+        <names variable="translator"/>
+        <text macro="title"/>
+      </substitute>
+    </names>
+  </macro>
+
+  <!-- Cita en el texto: solo apellidos, "et al." desde 3 autores -->
+  <macro name="author-short">
+    <names variable="author">
+      <name form="short" and="text" delimiter=", " delimiter-precedes-last="never" initialize-with=". "/>
+      <et-al font-style="normal"/>
+      <substitute>
+        <names variable="editor"/>
+        <names variable="translator"/>
+        <choose>
+          <if type="bill book graphic legal_case legislation motion_picture report song" match="any">
+            <text variable="title" form="short" font-style="italic"/>
+          </if>
+          <else>
+            <text variable="title" form="short" quotes="true"/>
+          </else>
+        </choose>
+      </substitute>
+    </names>
+  </macro>
+
+  <macro name="title">
+    <choose>
+      <if type="bill book graphic legal_case legislation motion_picture report song" match="any">
+        <text variable="title" font-style="italic"/>
+      </if>
+      <else>
+        <text variable="title"/>
+      </else>
+    </choose>
+  </macro>
+
+  <macro name="publisher">
+    <group delimiter=": ">
+      <text variable="publisher-place"/>
+      <text variable="publisher"/>
+    </group>
+  </macro>
+
+  <!-- (Salazar et al. 2018, Bogarin 2020) : sin coma autor-año, separador coma -->
+  <citation et-al-min="3" et-al-use-first="1" disambiguate-add-year-suffix="true"
+            collapse="year-suffix" year-suffix-delimiter=", ">
+    <sort>
+      <key variable="issued"/>
+      <key variable="author"/>
+    </sort>
+    <layout prefix="(" suffix=")" delimiter=", ">
+      <group delimiter=" ">
+        <text macro="author-short"/>
+        <date variable="issued">
+          <date-part name="year"/>
+        </date>
+        <group>
+          <label variable="locator" form="short"/>
+          <text variable="locator" prefix=" "/>
+        </group>
+      </group>
+    </layout>
+  </citation>
+
+  <bibliography sort-separator=", " entry-spacing="0" line-spacing="2" hanging-indent="true">
+    <sort>
+      <key macro="author"/>
+      <key variable="issued"/>
+    </sort>
+    <layout>
+      <text macro="author"/>
+      <date variable="issued" prefix=" (" suffix=").">
+        <date-part name="year"/>
+      </date>
+      <choose>
+        <!-- Libros y monografias -->
+        <if type="bill book graphic legal_case legislation motion_picture report song" match="any">
+          <group suffix=".">
+            <text macro="title" prefix=" "/>
+          </group>
+          <text prefix=" " suffix="." macro="publisher"/>
+        </if>
+        <!-- Tesis -->
+        <else-if type="thesis" match="any">
+          <group suffix=".">
+            <text macro="title" prefix=" " suffix="."/>
+            <text variable="genre" prefix=" " suffix="."/>
+            <text prefix=" " macro="publisher"/>
+          </group>
+        </else-if>
+        <!-- Capitulo de libro / actas -->
+        <else-if type="chapter paper-conference" match="any">
+          <group suffix=".">
+            <text macro="title" prefix=" "/>
+          </group>
+          <group prefix=" In: ">
+            <names variable="editor translator" delimiter=", " suffix=" ">
+              <name delimiter-precedes-last="always" and="symbol" initialize-with=". "
+                    name-as-sort-order="all" sort-separator=", "/>
+              <label form="short" text-case="lowercase" prefix=" (" suffix="), "/>
+            </names>
+            <text variable="container-title" font-style="italic"/>
+            <text variable="page" prefix=" (pp. " suffix=")"/>
+            <text macro="publisher" prefix=". " suffix="."/>
+          </group>
+        </else-if>
+        <!-- Paginas web -->
+        <else-if type="post-weblog webpage" match="any">
+          <group>
+            <text macro="title"/>
+            <group>
+              <text term="available at" text-case="capitalize-first" prefix=". " suffix=" "/>
+              <text variable="URL"/>
+            </group>
+            <group delimiter=" " prefix=" (" suffix=").">
+              <text term="accessed"/>
+              <date form="text" variable="accessed"/>
+            </group>
+          </group>
+        </else-if>
+        <!-- Articulo de revista (por defecto): Revista, volumen, paginas. -->
+        <else>
+          <group suffix=".">
+            <text macro="title" prefix=" "/>
+          </group>
+          <group prefix=" " delimiter=", " suffix=".">
+            <text variable="container-title" font-style="italic"/>
+            <text variable="volume" font-style="italic"/>
+            <text variable="page"/>
+          </group>
+        </else>
+      </choose>
+      <text variable="DOI" prefix=" https://doi.org/"/>
+    </layout>
+  </bibliography>
+</style>

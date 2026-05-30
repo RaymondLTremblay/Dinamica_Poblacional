@@ -31,42 +31,7 @@ library(flextable)
 ```
 
 ```{r elas-theme}
-rlt_theme <- theme(
-  axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
-  axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
-  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
-  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
-) +
-  theme(
-    # Remover los bordes
-    panel.border = element_blank(),
-    # Remover las líneas
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    # Remover el fondo del panel
-    panel.background = element_blank(),
-    # añadir lineas más gruesas
-    axis.line.x = element_line(colour = "black", linewidth = 1),
-    axis.line.y = element_line(colour = "black", linewidth = 1)
-  )
-
-diverging <- c("#009392", "#CF597E", "#E9E29C", "#39B185", "#EEB479", "#9CCB86")
-
-# --- 2. Combinarlos en un objeto de tipo lista ---
-# Esta lista se puede añadir al gráfico con un solo '+'
-rlt_style_fill <- function() {
-  list(
-    rlt_theme,
-    scale_fill_manual(values = diverging)
-  )
-}
-
-rlt_style_colour <- function() { # este es mi codigo personal de color
-  list(
-    rlt_theme,
-    scale_colour_manual(values = diverging)
-  )
-}
+source("R/rlt_theme.R") # tema + paleta canónicos (R/rlt_theme.R)
 ```
 
 ## Qué es la elasticidad
@@ -88,7 +53,9 @@ $$\mathbf{E} = \frac{1}{\lambda}\,\mathbf{S} \circ \mathbf{A}$$
 donde $\mathbf{S}$ es la matriz de sensibilidad (con entradas $s_{ij} = \partial \lambda / \partial a_{ij}$), $\mathbf{A}$ es la matriz de proyección y $\circ$ es el producto de Hadamard (multiplicación elemento por elemento) [@caswell2001matrix]. Aquí $\lambda$ es la **tasa finita de crecimiento** (per-unidad-de-tiempo); su contraparte continua, la tasa intrínseca de incremento, es $r = \log \lambda$.
 
 ::: callout-note
+
 **Entradas de la matriz versus tasas vitales.** Las elasticidades calculadas sobre $a_{ij}$ son elasticidades de **entradas** de la matriz, no de las tasas vitales subyacentes. Una entrada suele ser el producto de varias tasas vitales: una transición $a_{ij}$ típicamente combina supervivencia × probabilidad de progreso de estadio, y una entrada de fecundidad combina supervivencia × producción reproductiva per cápita. Por tanto, la elasticidad de $a_{ij}$ y la elasticidad de cada tasa vital componente pueden diferir notablemente. Cuando una decisión de manejo se basa en una sola tasa vital (p. ej., supervivencia adulta), conviene descomponer la entrada y calcular la elasticidad a nivel de tasa vital [@franco2004comparative]; ver también la sección de [Limitaciones](#limitaciones).
+
 :::
 
 En contextos evolutivos, la elasticidad está estrechamente relacionada con el **gradiente de selección** sobre los componentes de la historia de vida: una entrada con alta elasticidad contribuye más a la aptitud poblacional, y por tanto está sujeta a selección más fuerte [@caswell1989analysis].
@@ -219,7 +186,9 @@ Tabla 2. Matriz de elasticidad de *Erycina crista-galli*. Los colores de las ent
 Por lo que, de manera simplista, pudiéramos decir que, si quisiéramos desarrollar un plan de conservación para esta especie, nuestros esfuerzos debieran enfocarse a asegurar la supervivencia de los individuos adultos, ya la mortandad (por causas naturales o por cosecha) de los individuos adultos tiene el mayor impacto sobre la persistencia de la población. En tanto que si quisiéramos hacer un uso sustentable de esta orquídea lo recomendable sería recolectar individuos juveniles, cuyos valores de elasticidad son menores a la de los adultos. El impacto de remover plántulas o juveniles de la población tendría menos impacto a largo plazo sobre la supervivencia de la población.
 
 ::: callout-warning
+
 **Importante:** estas conclusiones suponen perturbaciones pequeñas. La elasticidad es una aproximación local que no captura efectos no lineales, compensación demográfica ni dependencia de la densidad; por ello no debe usarse para justificar cosechas sustanciales sin análisis adicionales (ver §[Limitaciones](#limitaciones) y el capítulo de [funciones de transferencia](113-Funciones_de_Transferencia.qmd)).
+
 :::
 
 ------------------------------------------------------------------------
@@ -231,7 +200,9 @@ Las elasticidades también han sido utilizadas para establecer el comportamiento
 En la Figura 1 se observa los valores de elasticidad añadidos por proceso de historia de vida para cinco especies de orquídeas epífitas:
 
 ::: img-float
+
 ![*Lepanthes eltoroensis*. Foto: Tremblay](images/Lepanthes_eltoroensis_Tremblay.jpeg){style="float: left; margin: 20px;width: 40% ; " #fig-lepanthes-eltoroensis-tremblay}
+
 :::
 
 - *Artorima erubescens* [@garcia2003demografia]
@@ -247,6 +218,7 @@ Tabla 3. Valores elasticidad por proceso y por estadios no reproductivos y repro
 <br>
 
 ```{r Elas5}
+#| docx_hide_code: true
 
 Elasticidad_s <- tribble(
   ~Especie, ~Fecundidad, ~Estasis, ~Crecimiento, ~Plántulas, ~No_reproductivos, ~Reproductivos,
@@ -259,19 +231,25 @@ Elasticidad_s <- tribble(
 ```
 
 ```{r Elas6}
+#| docx_hide_code: true
 
 Elasticidad_s %>%
-  flextable()
+  flextable() %>%
+  ftExtra::colformat_md(j = "Especie") # renderiza *italics* de los nombres de especie
 ```
 
 <br>
 
 ::: img-float
+
 ![*Lepanthes caritensis*. Foto: Edwin Guevara](images/Lepanthes_caritensis_Edwin_Guevara.jpg){style="float: left; margin: 10px;width: 50%; " #fig-lepanthes-caritensis-edwin-guevara}
+
 :::
 
 ::: img-float
+
 ![*Lepanthes caritensis*. Foto: Edwin Guevara](images/Lepanthes_caritensis_Phorophyte.jpg){style="float: right; margin: 10px;width: 50%;" #fig-lepanthes-caritensis-phorophyte}
+
 :::
 
 <br>
@@ -306,8 +284,6 @@ ggplot(EE, aes(x = s, y = Elasticidad, fill = Especie)) +
   rlt_style_fill()
 ```
 
-Figura 1. Valores de elasticidad por proceso demográfico de cinco especies de orquídeas epífitas.
-
 En la figura 2 se observan los valores de elasticidad agrupados por estadios (plántulas, individuos no reproductivos y reproductivos). Los valores de elasticidad son más altos en los estadios no reproductivo en tres especies y reproductivos (adultos activos) en dos especies. Las plántulas tienen las elasticidad más pequeñas en todas las especies.
 
 ```{r, message=FALSE}
@@ -341,8 +317,6 @@ ggplot(EE1, aes(x = s2, y = Elasticidad, fill = Especie)) +
   rlt_style_fill()
 ```
 
-Figura 2. Valores de elasticidad por estadio de cinco especies de orquídeas epífitas.
-
 ------------------------------------------------------------------------
 
 ### Elasticidad y LTRE: prospectivo versus retrospectivo
@@ -354,6 +328,7 @@ Las dos herramientas son complementarias: la elasticidad identifica las transici
 ------------------------------------------------------------------------
 
 ::: img-float
+
 ![*Laelia speciosa*. Foto: Eduardo A. Pérez García](images/Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg){style="float: right; margin: 10px;width: 40% ; " #fig-laelia-speciosa-eduardo-a-perez-garcia}
 
 ## Limitaciones {#limitaciones}
@@ -422,4 +397,5 @@ Tres direcciones complementarias profundizan los temas de este capítulo:
 - **Análisis retrospectivo:** ver el capítulo [Experimento de Respuesta de Tabla de Vida](#ERTV) para la descomposición de diferencias observadas en $\lambda$ entre poblaciones, tratamientos o años.
 - **Perturbaciones grandes y dinámica transitoria:** ver el capítulo de [funciones de transferencia](113-Funciones_de_Transferencia.qmd), donde se relajan los supuestos de perturbaciones pequeñas y de equilibrio demográfico.
 - **Propagación explícita de la incertidumbre:** ver el capítulo de [Acercamiento bayesiano para calcular transiciones y fecundidades](108-Bayesian_PPM.qmd), donde las elasticidades se obtienen como distribuciones posteriores en lugar de valores puntuales.
+
 :::

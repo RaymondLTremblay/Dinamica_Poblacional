@@ -8,6 +8,58 @@ options(
 )
 Sys.setenv(NO_COLOR = "1")
 
+# ── Word-deliverable hook: ocultar líneas de "plumbing" del código mostrado ──
+# En el libro en línea (HTML) estas líneas son inofensivas, pero en el .docx
+# para la editora son ruido irrelevante (no aportan al lector impreso). Este
+# hook de knitr las ELIMINA del código que se *muestra* solo cuando el destino
+# es docx; el chunk sigue ejecutándose igual (las figuras se generan), así que
+# el HTML no cambia. Cubre: source(...), ggsave(...), save_plot_png(...),
+# plc_save(...), grviz_save(...). Para añadir más patrones, amplíe `noise`.
+local({
+  base_hook <- knitr::knit_hooks$get("source")
+  knitr::knit_hooks$set(source = function(x, options) {
+    if (isTRUE(tryCatch(knitr::pandoc_to("docx"), error = function(e) FALSE))) {
+      x <- unlist(strsplit(paste(x, collapse = "\n"), "\n", fixed = TRUE))
+      noise <- paste0(
+        "^\\s*(source\\(|ggsave\\(|ggplot2::ggsave\\(|",
+        "save_plot_png\\(|plc_save\\(|grviz_save\\()"
+      )
+      x <- x[!grepl(noise, x)]
+      x <- paste(x, collapse = "\n")
+    }
+    base_hook(x, options)
+  })
+})
+
+# ── Word-deliverable: ocultar el CÓDIGO de chunks que solo CONSTRUYEN tablas
+# informativas (datos escritos a mano con tribble), no análisis. En el libro
+# en línea (HTML) el código se muestra (es didáctico); en el .docx para la
+# editora ese código de captura de datos es ruido — la editora solo necesita
+# ver la tabla resultante. Marque tales chunks con `#| docx_hide_code: true`:
+# el código se OCULTA solo en docx (echo=FALSE) pero el chunk se ejecuta igual,
+# así que la tabla se renderiza. En HTML el código sigue visible/plegable.
+knitr::opts_hooks$set(docx_hide_code = function(options) {
+  if (isTRUE(options$docx_hide_code) &&
+    isTRUE(tryCatch(knitr::pandoc_to("docx"), error = function(e) FALSE))) {
+    options$echo <- FALSE
+  }
+  options
+})
+
+# ── Word-deliverable: ajustar figuras altas (diagramas de ciclo de vida) para
+# que quepan en la página. En Word la imagen se escala al ancho de texto (6.5")
+# y, por su relación de aspecto vertical, queda más alta que los 9" de alto útil
+# de la página (carta, márgenes de 1") y se sale por abajo. Marque esos chunks
+# con `#| docx_fit: true`: en docx se reduce el ancho mostrado al 65% (preserva
+# la proporción, así la altura baja lo suficiente para caber). HTML no cambia.
+knitr::opts_hooks$set(docx_fit = function(options) {
+  if (isTRUE(options$docx_fit) &&
+    isTRUE(tryCatch(knitr::pandoc_to("docx"), error = function(e) FALSE))) {
+    options$out.width <- "65%"
+  }
+  options
+})
+
 # ── Modern theme for HTML: striped rows + teal header ──
 ft_theme_modern <- function(ft) {
   ft <- flextable::border_remove(ft)
@@ -43,40 +95,85 @@ ft_theme_modern <- function(ft) {
     border = officer::fp_border(color = "#1a7a6d", width = 1.5)
   )
   ft <- flextable::padding(ft, padding.top = 4, padding.bottom = 4, part = "body")
+  # Tipografía de tablas: SANS-SERIF (contrasta con el cuerpo serif y se lee
+  # mejor en celdas estrechas) + cifras alineadas a la derecha en columnas
+  # numéricas. Arial tiene cifras tabulares (lining) por defecto, así que los
+  # dígitos quedan alineados en columna. Solo para HTML/Word; en Typst (PDF) se
+  # deja la fuente del documento (Libertinus) para no romper ese pipeline.
+  out_fmt <- tryCatch(knitr::pandoc_to(), error = function(e) NULL)
+  if (is.null(out_fmt) || grepl("^(docx|odt|html)", out_fmt)) {
+    ft <- flextable::font(ft, fontname = "Arial", part = "all")
+    ft <- flextable::fontsize(ft, size = 10, part = "all")
+    num_j <- which(vapply(ft$body$dataset, is.numeric, logical(1)))
+    if (length(num_j)) {
+      ft <- flextable::align(ft, j = num_j, align = "right", part = "all")
+    }
+  }
   ft
 }
 
 # ── Conditional theme: modern for HTML, booktabs for PDF ──
 ft_theme_auto <- function(ft) {
+  # Mostrar los valores numéricos con 4 CIFRAS SIGNIFICATIVAS en TODOS los
+  # formatos. A diferencia de un número fijo de decimales, las cifras
+  # significativas preservan los valores pequeños (p. ej. priores ~1e-5 del
+  # capítulo bayesiano, que con 3 decimales aparecerían como 0.000). Solo afecta
+  # la PRESENTACIÓN; los cálculos internos usan la precisión completa. Se aplica
+  # a columnas `double`; las enteras (conteos) y de texto no se tocan.
+  sig4 <- function(z) formatC(z, format = "g", digits = 4)
+  num_j <- tryCatch(
+    names(ft$body$dataset)[vapply(ft$body$dataset, is.double, logical(1))],
+    error = function(e) character(0)
+  )
+  if (length(num_j)) {
+    ft <- tryCatch(
+      do.call(
+        flextable::set_formatter,
+        c(list(ft), stats::setNames(rep(list(sig4), length(num_j)), num_j))
+      ),
+      error = function(e) ft
+    )
+  }
   if (knitr::is_latex_output()) {
     ft <- flextable::theme_booktabs(ft)
   } else {
     ft <- ft_theme_modern(ft)
   }
-  # En docx el `table.layout` global de flextable no se aplica;
-  # ni siquiera `set_table_properties(layout="autofit")` por sí solo
-  # produce columnas anchas — Word ignora el hint y colapsa cada
-  # columna al ancho mínimo de contenido (letras apiladas verticales).
-  # Combinación que sí funciona:
-  #   1. `autofit()` mide el contenido y FIJA anchos explícitos por
-  #      columna en pulgadas (escribe `width=...` celda por celda).
-  #   2. `set_table_properties(layout="autofit", width=1)` declara que
-  #      la tabla ocupa el 100% del texto y respeta los anchos calculados.
-  # SCOPING: solo a docx/odt. Typst (PDF) tiene su propio pipeline
-  # de tablas que ya funciona y no necesita estas propiedades.
+  # En Word, `layout="autofit"` (con o sin width=1) NO basta: el algoritmo de
+  # autoajuste de Word puede encoger las columnas a su ancho mínimo de contenido
+  # y apilar el texto en vertical (letra por letra). La solución ROBUSTA es
+  # LAYOUT FIJO con anchos de columna explícitos que SUMEN el ancho de texto de
+  # la página: así Word respeta esos anchos y ENVUELVE el texto dentro de la
+  # celda en vez de colapsarlo. Usamos anchos IGUALES (page_in/ncol); no
+  # llamamos a autofit() porque produce un tblGrid degenerado en Word.
+  # SCOPING: solo docx/odt. Typst (PDF) tiene su propio pipeline de tablas.
   out_fmt <- tryCatch(knitr::pandoc_to(), error = function(e) NULL)
   if (!is.null(out_fmt) && grepl("^(docx|odt)", out_fmt)) {
-    message(sprintf("[ft_theme_auto] aplicando autofit para %s", out_fmt))
-    ft <- flextable::autofit(ft)
-    ft <- flextable::set_table_properties(ft, layout = "autofit", width = 1)
+    message(sprintf("[ft_theme_auto] anchos fijos para %s", out_fmt))
+    page_in <- 6.5 # ancho de texto: carta (8.5") con márgenes de 1"
+    ncol <- length(ft$col_keys)
+    # NO llamar a flextable::autofit() aquí: en el pipeline de Word genera un
+    # tblGrid degenerado (UNA sola <w:gridCol> para una tabla de varias
+    # columnas), y Word entonces apila el texto en vertical. En su lugar fijamos
+    # anchos explícitos e IGUALES que suman el ancho de página: flextable emite
+    # N columnas correctas y Word envuelve el texto dentro de cada celda.
+    if (ncol > 0) {
+      ft <- flextable::width(ft, width = page_in / ncol)
+    }
+    ft <- flextable::set_table_properties(ft, layout = "fixed")
   }
   ft
 }
 
-# Force flextable tables to fit within page width and use compatible font
+# Defaults de flextable. NB: NO fijar `table.layout = "autofit"` aquí. Ese default
+# global hace que flextable RE-AUTOAJUSTE cada tabla al imprimir, sobrescribiendo
+# los anchos fijos por columna que pone el tema (ft_theme_auto, rama docx) y
+# generando el tblGrid degenerado de UNA columna que apila el texto en Word.
+# El default propio de flextable es "fixed", que es justo lo que queremos; el
+# tema fija los anchos explícitos. (Confirmado: width()+layout="fixed" sin este
+# default produce columnas correctas; con él, colapsan.)
 if (requireNamespace("flextable", quietly = TRUE)) {
   flextable::set_flextable_defaults(
-    table.layout = "autofit",
     fonts_ignore = TRUE,
     theme_fun = ft_theme_auto,
     padding.top = 2,
