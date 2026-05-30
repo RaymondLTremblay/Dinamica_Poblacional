@@ -146,12 +146,12 @@ Archivo fuente: `111-Elasticidad.qmd` — 6 figura(s)
 
 | # | Fig X.Y | Línea | Tipo | Origen en .qmd | PNG | PDF | Caption |
 |---|---------|------:|------|----------------|-----|-----|---------|
-| 1 | 10.1 | 201 | static | `images/Lepanthes_eltoroensis_Tremblay.jpeg` | `figuras_editor/10-Elasticidad/Fig_10.1_Lepanthes_eltoroensis_Tremblay.jpeg` | `` | *Lepanthes eltoroensis*. Foto: Tremblay |
-| 2 | 10.2 | 240 | static | `images/Lepanthes_caritensis_Edwin_Guevara.jpg` | `figuras_editor/10-Elasticidad/Fig_10.2_Lepanthes_caritensis_Edwin_Guevara.jpg` | `` | *Lepanthes caritensis*. Foto: Edwin Guevara |
-| 3 | 10.3 | 246 | static | `images/Lepanthes_caritensis_Phorophyte.jpg` | `figuras_editor/10-Elasticidad/Fig_10.3_Lepanthes_caritensis_Phorophyte.jpg` | `` | *Lepanthes caritensis*. Foto: Edwin Guevara |
-| 4 | 10.4 | 252 | dynamic | `chunk 'fig-Elas7'` | `figuras_editor/10-Elasticidad/Fig_10.4_fig-Elas7-1.png` | `figuras_editor/10-Elasticidad/Fig_10.4_fig-Elas7-1.pdf` |  |
-| 5 | 10.5 | 284 | dynamic | `chunk 'fig-Elas8'` | `figuras_editor/10-Elasticidad/Fig_10.5_fig-Elas8-1.png` | `figuras_editor/10-Elasticidad/Fig_10.5_fig-Elas8-1.pdf` |  |
-| 6 | 10.6 | 327 | static | `images/Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg` | `figuras_editor/10-Elasticidad/Fig_10.6_Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg` | `` | *Laelia speciosa*. Foto: Eduardo A. Pérez García |
+| 1 | 10.1 | 219 | static | `images/Lepanthes_eltoroensis_Tremblay.jpeg` | `figuras_editor/10-Elasticidad/Fig_10.1_Lepanthes_eltoroensis_Tremblay.jpeg` | `` | *Lepanthes eltoroensis*. Foto: Tremblay |
+| 2 | 10.2 | 256 | static | `images/Lepanthes_caritensis_Edwin_Guevara.jpg` | `figuras_editor/10-Elasticidad/Fig_10.2_Lepanthes_caritensis_Edwin_Guevara.jpg` | `` | *Lepanthes caritensis*. Foto: Edwin Guevara |
+| 3 | 10.3 | 260 | static | `images/Lepanthes_caritensis_Phorophyte.jpg` | `figuras_editor/10-Elasticidad/Fig_10.3_Lepanthes_caritensis_Phorophyte.jpg` | `` | *Lepanthes caritensis*. Foto: Edwin Guevara |
+| 4 | 10.4 | 265 | dynamic | `chunk 'fig-Elas7'` | `figuras_editor/10-Elasticidad/Fig_10.4_fig-Elas7-1.png` | `figuras_editor/10-Elasticidad/Fig_10.4_fig-Elas7-1.pdf` |  |
+| 5 | 10.5 | 297 | dynamic | `chunk 'fig-Elas8'` | `figuras_editor/10-Elasticidad/Fig_10.5_fig-Elas8-1.png` | `figuras_editor/10-Elasticidad/Fig_10.5_fig-Elas8-1.pdf` |  |
+| 6 | 10.6 | 339 | static | `images/Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg` | `figuras_editor/10-Elasticidad/Fig_10.6_Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg` | `` | *Laelia speciosa*. Foto: Eduardo A. Pérez García |
 
 ### 11-Dinamica_transitoria
 

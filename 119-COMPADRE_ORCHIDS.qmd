@@ -311,8 +311,11 @@ meta_lae |>
 En el siguiente script se muestra cómo extraer la matriz de transición de estados de poblaciones (matA) de *Laelia speciosa* y las etapas de estas matrices. Nota que el objeto **mat** es una lista de matrices que incluye la matriz de transición (matU) de estados de una población, la matriz de fecundidad (matF), la matriz de clonaje (matC) y la suma de las tres matrices (matA = matU + matF + matC); vea el [capítulo de Matrices de transición, fecundidad y clonaje](#MatricesTFC).
 
 ```{r Compr11}
-Laeliaspmat <- matA(Laeliasp) # Extraer la matriz de transiciones de estados de la población (matA) de las cuatro filas
-Laeliaspmat
+# matA(Laeliasp) devuelve una LISTA con la matA de cada una de las cuatro
+# filas (poblaciones/años). Mostramos la primera como flextable; las demás
+# tienen la misma estructura. El print crudo de la lista se ve mal en Word.
+Laeliaspmat <- matA(Laeliasp)
+mat_to_ft(Laeliaspmat[[1]])
 ```
 
 ------------------------------------------------------------------------
@@ -324,7 +327,11 @@ Note que esta función es muy práctica porque extrae la matriz de transición d
 Se selecciona la segunda fila del objeto **Laeliasp** que corresponde a la especie **Laelia speciosa** y la segunda matriz en la fila\[\[2\]\].
 
 ```{r Compr12}
-Laeliasp$mat[[2]]
+#| results: asis
+# La segunda matriz es un objeto CompadreMat; `compmat_to_ft` lo renderiza
+# como flextables legibles (matA, matU, matF, matC y las etapas) en vez del
+# print crudo (ASCII de "matA:", "matU:", … que se ve mal en HTML/Word).
+compmat_to_ft(Laeliasp$mat[[2]])
 ```
 
 ------------------------------------------------------------------------
@@ -410,11 +417,18 @@ Muchas veces es tedioso evaluar la base de datos completa de COMPADRE. Una maner
 Aquí hay 49 filas que corresponden a las 49 matrices de transición de estados de poblaciones de orquídeas del estudio de Hens et al. 2017.
 
 ```{r Compr16}
-Epi_flat <- cdb_flatten(Epi_Hens) # Extraer las matrices de transición de estados de la población
+Epi_flat <- cdb_flatten(Epi_Hens) # aplana la base: una fila por matriz
 
-# Primera matA de la lista; `Epi_flat$matA[1]` devuelve una list de longitud 1,
-# por eso usamos [[1]] para sacar la matriz misma. `mat_to_ft` la convierte
-# en flextable con etiquetas de fila/columna preservadas.
+# dim() confirma la estructura: 49 filas (una por matriz) y columnas con las
+# matrices (matA, matU, matF, matC) y las etapas de cada una.
+dim(Epi_flat)
+```
+
+Para extraer una matriz individual de ese objeto —por ejemplo, la primera `matA`— se usa `[[1]]` (la indexación `Epi_flat$matA[1]` devuelve una lista de longitud 1, así que `[[1]]` saca la matriz misma):
+
+```{r Compr16b}
+# mat_to_ft convierte la matriz en una flextable con las etiquetas de fila y
+# columna preservadas.
 mat_to_ft(Epi_flat$matA[[1]])
 ```
 

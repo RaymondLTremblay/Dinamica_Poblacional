@@ -11,9 +11,9 @@
 # - Funciones de ggplot2 con prefijo `ggplot2::` para que `source()` no falle
 #   aunque ggplot2 aún no esté adjunto (p. ej. al sourcear desde .Rprofile).
 # - `rlt_style_fill()` / `rlt_style_colour()` resuelven `diverging` en tiempo
-#   de llamada, así que un capítulo puede REDEFINIR `diverging` localmente
-#   DESPUÉS de este `source()` para ampliar la paleta (lo hace el cap. LTRE,
-#   que necesita 12 colores).
+#   de llamada, así que un capítulo podría REDEFINIR `diverging` localmente
+#   DESPUÉS de este `source()` si lo necesitara. Ya ningún capítulo lo hace:
+#   los 8 colores bastan para todas las figuras del libro.
 # ─────────────────────────────────────────────────────────────────────────
 
 # Tipografía base de las figuras: una serif que coincide con el cuerpo del
@@ -43,9 +43,14 @@ rlt_theme <- ggplot2::theme(
     axis.line.y = ggplot2::element_line(colour = "black", linewidth = 1)
   )
 
-# Paleta divergente por defecto (6 colores). Para más categorías, redefina
-# `diverging` localmente tras el source() (ver cap. LTRE).
-diverging <- c("#009392", "#CF597E", "#E9E29C", "#39B185", "#EEB479", "#9CCB86")
+# Paleta cualitativa segura para daltonismo (Okabe-Ito, 8 colores), con el
+# tercer color sustituido por el teal de la marca del libro (#009392) para
+# mantener la identidad visual. El nombre `diverging` se conserva por
+# compatibilidad con las llamadas existentes en los capítulos.
+diverging <- c(
+  "#E69F00", "#56B4E9", "#009392", "#F0E442",
+  "#0072B2", "#D55E00", "#CC79A7", "#000000"
+)
 
 # Combinar tema + escala en una lista que se añade al gráfico con un solo '+'.
 rlt_style_fill <- function() {

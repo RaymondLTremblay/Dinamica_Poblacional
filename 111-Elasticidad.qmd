@@ -53,9 +53,7 @@ $$\mathbf{E} = \frac{1}{\lambda}\,\mathbf{S} \circ \mathbf{A}$$
 donde $\mathbf{S}$ es la matriz de sensibilidad (con entradas $s_{ij} = \partial \lambda / \partial a_{ij}$), $\mathbf{A}$ es la matriz de proyección y $\circ$ es el producto de Hadamard (multiplicación elemento por elemento) [@caswell2001matrix]. Aquí $\lambda$ es la **tasa finita de crecimiento** (per-unidad-de-tiempo); su contraparte continua, la tasa intrínseca de incremento, es $r = \log \lambda$.
 
 ::: callout-note
-
 **Entradas de la matriz versus tasas vitales.** Las elasticidades calculadas sobre $a_{ij}$ son elasticidades de **entradas** de la matriz, no de las tasas vitales subyacentes. Una entrada suele ser el producto de varias tasas vitales: una transición $a_{ij}$ típicamente combina supervivencia × probabilidad de progreso de estadio, y una entrada de fecundidad combina supervivencia × producción reproductiva per cápita. Por tanto, la elasticidad de $a_{ij}$ y la elasticidad de cada tasa vital componente pueden diferir notablemente. Cuando una decisión de manejo se basa en una sola tasa vital (p. ej., supervivencia adulta), conviene descomponer la entrada y calcular la elasticidad a nivel de tasa vital [@franco2004comparative]; ver también la sección de [Limitaciones](#limitaciones).
-
 :::
 
 En contextos evolutivos, la elasticidad está estrechamente relacionada con el **gradiente de selección** sobre los componentes de la historia de vida: una entrada con alta elasticidad contribuye más a la aptitud poblacional, y por tanto está sujeta a selección más fuerte [@caswell1989analysis].
@@ -167,13 +165,36 @@ La suma de cada grupo:
 #| label: tbl-elas2
 #| tbl-cap: "Matriz de elasticidad de *Erycina crista-galli*. Los colores de las entradas de la matriz representan los procesos o tasas vitales: rojo es la permanencia, azul el crecimiento, el amarillo el decrecimiento o retrogresión y el verde la fecundidad. Así, para obtener el valor de elasticidad por proceso, se suman las entradas del color que lo representen."
 
-# elas(ec)
-
-# Convertir la matriz de elasticidad en un data frame
+# Matriz de elasticidad como data frame, con una columna que rotula la etapa
+# de cada fila (la etapa de origen está en el nombre de cada columna).
 ec_df <- as.data.frame(elas(ec)) |> round(3)
+ec_df <- data.frame(Etapa = rownames(ec_df), ec_df, check.names = FALSE)
 
-ec_df %>%
-  flextable()
+# Colores didácticos por tasa vital, siguiendo el texto: rojo = permanencia,
+# azul = crecimiento, amarillo = retrogresión (decrecimiento), verde =
+# fecundidad. Se usan tonos pastel para que las cifras en negro sigan legibles.
+c_perm <- "#FBB4AE" # rojo claro   — permanencia (diagonal)
+c_crec <- "#B3CDE3" # azul claro   — crecimiento (progresión)
+c_retr <- "#FFFFCC" # amarillo     — retrogresión (decrecimiento)
+c_fec  <- "#CCEBC5" # verde claro  — fecundidad (reproducción)
+
+ft <- flextable(ec_df)
+# Permanencia: individuos que se quedan en su etapa (diagonal con valor > 0).
+ft <- bg(ft, i = 3, j = "adulto1", bg = c_perm)
+ft <- bg(ft, i = 4, j = "adulto2", bg = c_perm)
+# Crecimiento: transición a una etapa posterior (debajo de la diagonal).
+ft <- bg(ft, i = 2, j = "plántula", bg = c_crec)
+ft <- bg(ft, i = 3, j = "plántula", bg = c_crec)
+ft <- bg(ft, i = 3, j = "juvenil", bg = c_crec)
+ft <- bg(ft, i = 4, j = "plántula", bg = c_crec)
+ft <- bg(ft, i = 4, j = "juvenil", bg = c_crec)
+ft <- bg(ft, i = 4, j = "adulto1", bg = c_crec)
+# Retrogresión: regreso a una etapa anterior (adulto2 -> adulto1).
+ft <- bg(ft, i = 3, j = "adulto2", bg = c_retr)
+# Fecundidad: reproducción de adultos hacia plántulas (fila plántula).
+ft <- bg(ft, i = 1, j = "adulto1", bg = c_fec)
+ft <- bg(ft, i = 1, j = "adulto2", bg = c_fec)
+ft
 ```
 
 ------------------------------------------------------------------------
@@ -183,9 +204,7 @@ ec_df %>%
 Por lo que, de manera simplista, pudiéramos decir que, si quisiéramos desarrollar un plan de conservación para esta especie, nuestros esfuerzos debieran enfocarse a asegurar la supervivencia de los individuos adultos, ya la mortandad (por causas naturales o por cosecha) de los individuos adultos tiene el mayor impacto sobre la persistencia de la población. En tanto que si quisiéramos hacer un uso sustentable de esta orquídea lo recomendable sería recolectar individuos juveniles, cuyos valores de elasticidad son menores a la de los adultos. El impacto de remover plántulas o juveniles de la población tendría menos impacto a largo plazo sobre la supervivencia de la población.
 
 ::: callout-warning
-
 **Importante:** estas conclusiones suponen perturbaciones pequeñas. La elasticidad es una aproximación local que no captura efectos no lineales, compensación demográfica ni dependencia de la densidad; por ello no debe usarse para justificar cosechas sustanciales sin análisis adicionales (ver §[Limitaciones](#limitaciones) y el capítulo de [funciones de transferencia](113-Funciones_de_Transferencia.qmd)).
-
 :::
 
 ------------------------------------------------------------------------
@@ -197,9 +216,7 @@ Las elasticidades también han sido utilizadas para establecer el comportamiento
 En la @fig-Elas7 se observan los valores de elasticidad añadidos por proceso de historia de vida para cinco especies de orquídeas epífitas:
 
 ::: img-float
-
-![*Lepanthes eltoroensis*. Foto: Tremblay](images/Lepanthes_eltoroensis_Tremblay.jpeg){style="float: left; margin: 20px;width: 40% ; " #fig-lepanthes-eltoroensis-tremblay}
-
+![*Lepanthes eltoroensis*. Foto: Tremblay](images/Lepanthes_eltoroensis_Tremblay.jpeg){#fig-lepanthes-eltoroensis-tremblay style="float: left; margin: 20px;width: 40% ; "}
 :::
 
 - *Artorima erubescens* [@garcia2003demografia]
@@ -236,15 +253,11 @@ Elasticidad_s %>%
 <br>
 
 ::: img-float
-
-![*Lepanthes caritensis*. Foto: Edwin Guevara](images/Lepanthes_caritensis_Edwin_Guevara.jpg){style="float: left; margin: 10px;width: 50%; " #fig-lepanthes-caritensis-edwin-guevara}
-
+![*Lepanthes caritensis*. Foto: Edwin Guevara](images/Lepanthes_caritensis_Edwin_Guevara.jpg){#fig-lepanthes-caritensis-edwin-guevara style="float: left; margin: 10px;width: 50%; "}
 :::
 
 ::: img-float
-
-![*Lepanthes caritensis*. Foto: Edwin Guevara](images/Lepanthes_caritensis_Phorophyte.jpg){style="float: right; margin: 10px;width: 50%;" #fig-lepanthes-caritensis-phorophyte}
-
+![*Lepanthes caritensis*. Foto: Edwin Guevara](images/Lepanthes_caritensis_Phorophyte.jpg){#fig-lepanthes-caritensis-phorophyte style="float: right; margin: 10px;width: 50%;"}
 :::
 
 <br>
@@ -267,14 +280,14 @@ EE$s <- factor(
 
 ggplot(EE, aes(x = s, y = Elasticidad, fill = Especie)) +
   geom_bar(stat = "identity", position = "dodge", color = "white") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.text = element_text(face = "italic")
+  ) +
   labs(
     title = "Elasticidad por proceso demográfico",
     x = "s",
     y = "Elasticidad"
-  ) +
-  scale_fill_discrete(
-    guide = guide_legend(label.theme = element_text(angle = 0, face = "italic"))
   ) +
   rlt_style_fill()
 ```
@@ -300,14 +313,14 @@ EE1$s2 <- factor(
 
 ggplot(EE1, aes(x = s2, y = Elasticidad, fill = Especie)) +
   geom_bar(stat = "identity", position = "dodge", color = "white") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.text = element_text(face = "italic")
+  ) +
   labs(
     title = "Elasticidad por proceso demográfico",
     x = "Etapas",
     y = "Elasticidad"
-  ) +
-  scale_fill_discrete(
-    guide = guide_legend(label.theme = element_text(angle = 0, face = "italic"))
   ) +
   rlt_style_fill()
 ```
@@ -323,8 +336,7 @@ Las dos herramientas son complementarias: la elasticidad identifica las transici
 ------------------------------------------------------------------------
 
 ::: img-float
-
-![*Laelia speciosa*. Foto: Eduardo A. Pérez García](images/Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg){style="float: right; margin: 10px;width: 40% ; " #fig-laelia-speciosa-eduardo-a-perez-garcia}
+![*Laelia speciosa*. Foto: Eduardo A. Pérez García](images/Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg){#fig-laelia-speciosa-eduardo-a-perez-garcia style="float: right; margin: 10px;width: 40% ; "}
 
 ## Limitaciones {#limitaciones}
 
@@ -392,5 +404,4 @@ Tres direcciones complementarias profundizan los temas de este capítulo:
 - **Análisis retrospectivo:** ver el capítulo [Experimento de Respuesta de Tabla de Vida](#ERTV) para la descomposición de diferencias observadas en $\lambda$ entre poblaciones, tratamientos o años.
 - **Perturbaciones grandes y dinámica transitoria:** ver el capítulo de [funciones de transferencia](113-Funciones_de_Transferencia.qmd), donde se relajan los supuestos de perturbaciones pequeñas y de equilibrio demográfico.
 - **Propagación explícita de la incertidumbre:** ver el capítulo de [Acercamiento bayesiano para calcular transiciones y fecundidades](108-Bayesian_PPM.qmd), donde las elasticidades se obtienen como distribuciones posteriores en lugar de valores puntuales.
-
 :::
