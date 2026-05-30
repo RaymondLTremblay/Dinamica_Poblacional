@@ -412,7 +412,7 @@ De igual manera se puede calcular la desviación estándar de los elementos de l
 compmat_to_ft(mpm_sd(mpms))
 ```
 
-Muchas veces es tedioso evaluar la base de datos completa de COMPADRE. Una manera facilitar el acceso a los datos es extraer las matrices con la función cdb_flatten. Nota lo que hace esta función es extraer todas las matrices de transición de estados de poblaciones (matA, matU, matF, matC) y las etapas de cada matriz y crear una lista con esa información.
+Muchas veces es tedioso evaluar la base de datos completa de COMPADRE. Una manera de facilitar el acceso a los datos es aplanar la base con la función `cdb_flatten()`. Esta función toma todas las matrices de transición de estados de poblaciones (matA, matU, matF, matC) y las etapas de cada matriz y arma un `data.frame` (una tabla plana, con las matrices codificadas como texto) cómodo para revisar o exportar a CSV.
 
 Aquí hay 49 filas que corresponden a las 49 matrices de transición de estados de poblaciones de orquídeas del estudio de Hens et al. 2017.
 
@@ -424,12 +424,12 @@ Epi_flat <- cdb_flatten(Epi_Hens) # aplana la base: una fila por matriz
 dim(Epi_flat)
 ```
 
-Para extraer una matriz individual de ese objeto —por ejemplo, la primera `matA`— se usa `[[1]]` (la indexación `Epi_flat$matA[1]` devuelve una lista de longitud 1, así que `[[1]]` saca la matriz misma):
+Ten en cuenta que `cdb_flatten()` codifica cada matriz como **texto** (pensado para exportar a CSV), no como una matriz numérica de R. Para obtener una matriz individual como objeto numérico —por ejemplo, la primera `matA`— conviene usar el accesor `matA()` sobre el objeto original y extraer el primer elemento con `[[1]]`:
 
 ```{r Compr16b}
-# mat_to_ft convierte la matriz en una flextable con las etiquetas de fila y
-# columna preservadas.
-mat_to_ft(Epi_flat$matA[[1]])
+# matA() devuelve la lista de matrices A del CompadreDB; [[1]] toma la primera.
+# mat_to_ft la convierte en flextable con las etiquetas de fila/columna.
+mat_to_ft(matA(Epi_Hens)[[1]])
 ```
 
 ------------------------------------------------------------------------
