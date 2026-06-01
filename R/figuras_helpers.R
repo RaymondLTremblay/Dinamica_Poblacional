@@ -282,12 +282,15 @@ pretty <- function(x, digits = 3, ...) {
 #' etc.) como una serie de flextables: matA, matU, matF, matC y la
 #' clasificación de estadios.
 #'
-#' Imprime directamente vía `knit_print` para que funcione en chunks
-#' normales sin necesidad de `results: asis`.
+#' Emite cada flextable con `flextable::flextable_to_rmd()`, que genera el
+#' contenido apropiado para el formato de salida (HTML/Word/PDF). Por eso el
+#' chunk que llama a esta función **debe** llevar `#| results: asis`; de lo
+#' contrario `print()` mostraría solo la descripción del objeto
+#' ("a flextable object. col_keys: …") en vez de la tabla.
 #'
 #' @param cm     objeto CompadreMat.
 #' @param digits decimales para los valores de las matrices. Default 3.
-#' @return invisible(NULL); imprime los flextables como efecto secundario.
+#' @return invisible(NULL); emite los flextables como efecto secundario.
 compmat_to_ft <- function(cm, digits = 3) {
   slots_show <- intersect(c("matA", "matU", "matF", "matC"),
                           methods::slotNames(cm))
@@ -295,7 +298,8 @@ compmat_to_ft <- function(cm, digits = 3) {
     m <- methods::slot(cm, sn)
     if (!is.matrix(m) || length(m) == 0L) next
     cat(sprintf("\n\n**%s**\n\n", sn))
-    print(mat_to_ft(m, digits = digits))
+    flextable::flextable_to_rmd(mat_to_ft(m, digits = digits))
+    cat("\n\n")
   }
   if ("MatrixClassAuthor" %in% methods::slotNames(cm)) {
     cat("\n\n**Etapas**\n\n")
@@ -304,7 +308,8 @@ compmat_to_ft <- function(cm, digits = 3) {
       Etapa = cm@MatrixClassAuthor,
       stringsAsFactors = FALSE
     )
-    print(flextable::flextable(df))
+    flextable::flextable_to_rmd(flextable::flextable(df))
+    cat("\n\n")
   }
   invisible(NULL)
 }

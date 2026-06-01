@@ -102,8 +102,6 @@ Orquideas <- compadre %>%
   filter(Family %in% c("Orchidaceae")) # Extraer las orquídeas de la base de datos.
 
 # Orquideas es un objeto CompadreDB
-# Patrón seguro: as.data.frame + dplyr::select para evitar el error
-# duplicated.default(col_keys) que dispara Rcompadre con flextable.
 meta_orq <- as.data.frame(cdb_metadata(Orquideas) |> head(n = 3))
 meta_orq |>
   dplyr::select(1:4) |>
@@ -566,7 +564,6 @@ combined_df$Habit <- rownames(combined_df)
 # Reordenar columnas
 combined_df <- combined_df[, c("Habit", names(epif_summary))]
 
-# Crear la tabla con flextable
 flextable(combined_df)
 ```
 
