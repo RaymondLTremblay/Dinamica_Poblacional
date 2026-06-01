@@ -165,6 +165,8 @@ truelambda(Sp1matU) # despues de unos periodos de tiempo vemos que el crecimient
 pop.projection(Sp1matU, n = n)$pop.changes # lista del cambio poblacional en 19 años
 ```
 
+::: {.spacer style="height: 12pt;"}:::
+
 ::: callout-warning
 ## Cómo detectar y resolver — supervivencia perfecta
 
@@ -265,7 +267,7 @@ N_PPM <- tribble(
 
 list_fl <- N_PPM %>%
   flextable() %>%
-  ftExtra::colformat_md(j = "Especie") # renderiza *italics* de los nombres de especie
+  ftExtra::colformat_md(j = c("Especie", "Referencia")) # *italics* de especie + resuelve @citas de la columna Referencia
 
 list_fl
 ```
@@ -304,7 +306,7 @@ plc_save(Sp1matA_NT, stages = stages, fontsize = 0, png = "images/sin_sentido_6_
 
 #### Función para evaluar si una matriz es irreducible
 
-Una manera fácil de determinar si la matriz es irreducible es correr el siguiente *script* `isIrreducible` del paquete **popdemo**. Tenga en cuenta que, en este caso, el resultado es *FALSE* para la matriz anterior. Para comparar, si evaluamos la matriz **Sp1matA_2** el resultado es **TRUE** ya que todas las etapas pueden llegar a todas las demás etapas. En este caso, la matriz es irreducible y por tanto cumple con los requisitos necesarios para muchos de los análisis de matrices poblacionales.
+Una manera fácil de determinar si la matriz es irreducible es correr el siguiente *script* `isIrreducible` del paquete `popdemo`. Tenga en cuenta que, en este caso, el resultado es *FALSE* para la matriz anterior. Para comparar, si evaluamos la matriz **Sp1matA_2** el resultado es **TRUE** ya que todas las etapas pueden llegar a todas las demás etapas. En este caso, la matriz es irreducible y por tanto cumple con los requisitos necesarios para muchos de los análisis de matrices poblacionales.
 
 ```{r sin_sentido_7}
 
@@ -588,7 +590,7 @@ LCI <- p - (1.96 * sqrt((p * (1 - p)) / n)) # IC bajo
 LCI # Nota que el valor es sin sentido, ya que es negativo (¿qué es una proporción negativa?)
 ```
 
-Un método más fácil es usar la función R *propCI* de la **library(interpretCI)** (Script 12). La función *propCI* calcula el intervalo de confianza del 95% de una proporción binomial. La función requiere el tamaño de la muestra, el número de eventos y el nivel de significancia. En este caso, el tamaño de la muestra es 20, el número de eventos es 1 (un individuo fallecido) y el nivel de significancia es 0.05. Note que el intervalo de confianza incluye valores negativos (**irreales**). Para resolver esto hay que usar funciones estadísticas alternativas como la distribución de Dirichlet en donde no se asume una distribución normal.
+Un método más fácil es usar la función R `propCI()` de la `library(interpretCI)` (Script 12). La función `propCI()` calcula el intervalo de confianza del 95% de una proporción binomial. La función requiere el tamaño de la muestra, el número de eventos y el nivel de significancia. En este caso, el tamaño de la muestra es 20, el número de eventos es 1 (un individuo fallecido) y el nivel de significancia es 0.05. Note que el intervalo de confianza incluye valores negativos (**irreales**). Para resolver esto hay que usar funciones estadísticas alternativas como la distribución de Dirichlet en donde no se asume una distribución normal.
 
 ```{r sin_sentido_14}
 
@@ -637,7 +639,7 @@ stages <- c("plantula", "juvenil", "adulto")
 plc_save(Dirichlet, stages = stages, png = "images/sin_sentido_15_Dirichlet.png")
 ```
 
-Para evaluar el intervalo ICr del 95% simultáneamente de las cuatro transiciones (plántulas a plántulas, plántulas a juvenil, plántulas a adultos y plántulas a muerte), usamos la **library(MCMCpack)**, que es un paquete dedicado a realizar simulaciones de Monte Carlo de Cadenas Markovianas (*Markov Chain Monte Carlo*). Para lo cual usaremos la función `MCmultinomdirichlet`. Tenga en cuenta que la primera lista son las proporciones que se muestran en la matriz para la etapa de plántula `c(.50*n, .2*n, .0*n, .3*n)` multiplicadas por el tamaño de la muestra `n = 25`. La segunda lista son las previas bayesianas `c(0.5, 0.2, 0.0001, 0.2999)`; en este caso asumimos que la suma de las previas es igual a 1. Esto da como resultado una confianza muy baja en la percepción previa de lo que son las transiciones — estamos dando muy poco peso a la percepción previa en los análisis. Otra opción de previa para la transición es que sean iguales; podríamos haber usado `c(1, 1, .0001, 1)`, donde esta previa sugiere una transición igual para todos los estados menos para la transición de plántula a adulto. IMPORTANTE: las previas deberían ser **biológicamente realistas**, usando lo conocido de la biología de los organismos que se estudian. Por experiencia y usando la literatura se puede hacer un estimado de las transiciones y usarlo como previa. El concepto de lo anterior no se puede explicar completamente aquí; consulte las siguientes referencias [@tremblay2021population; @van2021bayesian].
+Para evaluar el intervalo ICr del 95% simultáneamente de las cuatro transiciones (plántulas a plántulas, plántulas a juvenil, plántulas a adultos y plántulas a muerte), usamos la `library(MCMCpack)`, que es un paquete dedicado a realizar simulaciones de Monte Carlo de Cadenas Markovianas (*Markov Chain Monte Carlo*). Para lo cual usaremos la función `MCmultinomdirichlet`. Tenga en cuenta que la primera lista son las proporciones que se muestran en la matriz para la etapa de plántula `c(.50*n, .2*n, .0*n, .3*n)` multiplicadas por el tamaño de la muestra `n = 25`. La segunda lista son las previas bayesianas `c(0.5, 0.2, 0.0001, 0.2999)`; en este caso asumimos que la suma de las previas es igual a 1. Esto da como resultado una confianza muy baja en la percepción previa de lo que son las transiciones — estamos dando muy poco peso a la percepción previa en los análisis. Otra opción de previa para la transición es que sean iguales; podríamos haber usado `c(1, 1, .0001, 1)`, donde esta previa sugiere una transición igual para todos los estados menos para la transición de plántula a adulto. IMPORTANTE: las previas deberían ser **biológicamente realistas**, usando lo conocido de la biología de los organismos que se estudian. Por experiencia y usando la literatura se puede hacer un estimado de las transiciones y usarlo como previa. El concepto de lo anterior no se puede explicar completamente aquí; consulte las siguientes referencias [@tremblay2021population; @van2021bayesian].
 
 Los resultados en la figura muestran que hay mucha dispersión alrededor de la proporción media de las estasis y las transiciones, como se esperaba debido al pequeño tamaño de la muestra.
 

@@ -57,29 +57,29 @@ Archivo fuente: `104-Recopilacion_datos_en_el_campo.qmd` — 23 figura(s)
 
 | # | Fig X.Y | Línea | Tipo | Origen en .qmd | PNG | PDF | Caption |
 |---|---------|------:|------|----------------|-----|-----|---------|
-| 1 | 3.1 | 58 | static | `images/L_autum_epifita.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.1_L_autum_epifita.jpg` | `` | Crecimiento epífito de *Laelia autumnalis* sobre las ramas y tronco de un encino. Foto: Aucencia Emeterio-Lara |
-| 2 | 3.2 | 87 | static | `images/L_autum_rupicola.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.2_L_autum_rupicola.jpg` | `` | *Laelia autumnalis* en su hábitat rupícola, crédito: Foto: Aucencia Emeterio-Lara |
-| 3 | 3.3 | 113 | static | `images/Trichocentrum_undulatum_9_Hong_Liu.jpeg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.3_Trichocentrum_undulatum_9_Hong_Liu.jpeg` | `` | *Trichocentrum undulatum*. Foto: Hong Liu |
-| 4 | 3.4 | 119 | static | `images/Trichocentrum_undulatum_1_Hong_Liu.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.4_Trichocentrum_undulatum_1_Hong_Liu.jpg` | `` | *Trichocentrum undulatum*. Foto: Hong Liu |
-| 5 | 3.5 | 143 | static | `images/lepanthes_rupestris.jpeg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.5_lepanthes_rupestris.jpeg` | `` | *Lepanthes rupestris* con inflorescencias seca y activa. Foto: Raymond L. Tremblay |
-| 6 | 3.6 | 168 | static | `images/Pk_modulo.jpeg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.6_Pk_modulo.jpeg` | `` | *Prosthechea karwinskii*. Foto: Mariana Hernández-Apolinar |
-| 7 | 3.7 | 183 | static | `images/Ci_modulo.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.7_Ci_modulo.png` | `` | *Cypripedium irapeanum*. Foto: Claudia C. Gutiérrez-Paredes |
-| 8 | 3.8 | 198 | static | `images/V_planifolia_monopo.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.8_V_planifolia_monopo.png` | `` | *Vanilla planifolia*. Foto: Mark Blackman |
-| 9 | 3.9 | 206 | static | `images/Ls_simpodio.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.9_Ls_simpodio.jpg` | `` | *Laelia speciosa*. Foto: Leonel López-Toledo |
-| 10 | 3.10 | 237 | static | `images/Figura_4.10.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.10_Figura_4.10.jpg` | `` | Técnica de rapel usada para el muestreo de orquídeas rupícolas: *Dendrobium*. Foto: Hong Liu, 2020. |
-| 11 | 3.11 | 243 | static | `images/Ascenso_Pk.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.11_Ascenso_Pk.jpg` | `` | Muestreo de orquídeas epífitas con ascenso de una sola cuerda: *Prosthechea karwinskii*. Foto: Alonso Argüero |
-| 12 | 3.12 | 257 | static | `images/Cattling_y_Johannson.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.12_Cattling_y_Johannson.png` | `` | Zonificación de árboles hospedero, basada en los modelos Catling (1986) y Johansson (1974). Dibujo de A. Emeterio-Lara |
-| 13 | 3.13 | 314 | static | `images/Ls_xyz.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.13_Ls_xyz.png` | `` | Distribución tridimensional de *Laelia speciosa* sobre *Quercus deserticola*, basada en @hernandez1992dinamica. Figura d |
-| 14 | 3.14 | 320 | static | `images/tree_dist.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.14_tree_dist.png` | `` | Distribución espacial de los árboles hospedero de *Laelia speciosa*. Los círculos dentro del área de muestreo representa |
-| 15 | 3.15 | 332 | static | `images/Triangulation_Method.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.15_Triangulation_Method.jpg` | `` | Método de triangulación para el muestreo de orquídeas terrestres. Se ilustra la forma de determinar la posición ($P_{x}$ |
-| 16 | 3.16 | 366 | static | `images/C_irap_plantula.jpeg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.16_C_irap_plantula.jpeg` | `` | Plántula de *Cypripedium irapeanum*. Foto: Claudia Gutiérrez-Paredes |
-| 17 | 3.17 | 374 | static | `images/Lepanthes_woodburyana.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.17_Lepanthes_woodburyana.jpg` | `` | *Lepanthes woodburyana*. Foto: Edwin Guevara |
-| 18 | 3.18 | 406 | static | `images/Cypripedium_acaule.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.18_Cypripedium_acaule.jpg` | `` | Uso de etiquetas de aluminio en marcaje de *Cypripedium acaule*. Foto: Tremblay |
-| 19 | 3.19 | 412 | static | `images/Laelia_cincho.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.19_Laelia_cincho.png` | `` | Uso de etiquetas de aluminio en marcaje con cinchos de plástico en *Laelia autumnalis*. Foto por Aucencia Emeterio-Lara |
-| 20 | 3.20 | 450 | static | `images/alambrelaelia.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.20_alambrelaelia.jpg` | `` | Marcaje de *Laelia speciosa* abrazando el tronco con alambre plastificado y etiquetas de *dymo*. Foto: Mariana Hernández |
-| 21 | 3.21 | 458 | static | `images/Lep_eltoroensis.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.21_Lep_eltoroensis.png` | `` | Los individuos de *Lepanthes eltoroensis* fueron identificados con una etiqueta de plástico clavada al tronco del árbol; |
-| 22 | 3.22 | 466 | static | `images/Cirap_marcaje.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.22_Cirap_marcaje.png` | `` | Marcaje de *Cypripedium irapeanum* con cinta de *dymo*. Foto: Hernández-Apolinar |
-| 23 | 3.23 | 472 | static | `images/Cyp_acaule_flag.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.23_Cyp_acaule_flag.jpg` | `` | Marcaje de *Cypripedium acaule* con banderitas. Foto: Tremblay |
+| 1 | 3.1 | 55 | static | `images/L_autum_epifita.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.1_L_autum_epifita.jpg` | `` | Crecimiento epífito de *Laelia autumnalis* sobre las ramas y tronco de un encino. Foto: Aucencia Emeterio-Lara |
+| 2 | 3.2 | 82 | static | `images/L_autum_rupicola.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.2_L_autum_rupicola.jpg` | `` | *Laelia autumnalis* en su hábitat rupícola. Foto: Aucencia Emeterio-Lara |
+| 3 | 3.3 | 106 | static | `images/Trichocentrum_undulatum_9_Hong_Liu.jpeg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.3_Trichocentrum_undulatum_9_Hong_Liu.jpeg` | `` | *Trichocentrum undulatum*. Foto: Hong Liu |
+| 4 | 3.4 | 110 | static | `images/Trichocentrum_undulatum_1_Hong_Liu.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.4_Trichocentrum_undulatum_1_Hong_Liu.jpg` | `` | *Trichocentrum undulatum*. Foto: Hong Liu |
+| 5 | 3.5 | 132 | static | `images/lepanthes_rupestris.jpeg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.5_lepanthes_rupestris.jpeg` | `` | *Lepanthes rupestris* con inflorescencias seca y activa. Foto: Raymond L. Tremblay |
+| 6 | 3.6 | 155 | static | `images/Pk_modulo.jpeg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.6_Pk_modulo.jpeg` | `` | *Prosthechea karwinskii*. Foto: Mariana Hernández-Apolinar |
+| 7 | 3.7 | 168 | static | `images/Ci_modulo.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.7_Ci_modulo.png` | `` | *Cypripedium irapeanum*. Foto: Claudia C. Gutiérrez-Paredes |
+| 8 | 3.8 | 181 | static | `images/V_planifolia_monopo.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.8_V_planifolia_monopo.png` | `` | *Vanilla planifolia*. Foto: Mark Blackman |
+| 9 | 3.9 | 187 | static | `images/Ls_simpodio.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.9_Ls_simpodio.jpg` | `` | *Laelia speciosa*. Foto: Leonel López-Toledo |
+| 10 | 3.10 | 216 | static | `images/Figura_4.10.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.10_Figura_4.10.jpg` | `` | Técnica de rapel usada para el muestreo de orquídeas rupícolas: *Dendrobium*. Foto: Hong Liu, 2020. |
+| 11 | 3.11 | 220 | static | `images/Ascenso_Pk.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.11_Ascenso_Pk.jpg` | `` | Muestreo de orquídeas epífitas con ascenso de una sola cuerda: *Prosthechea karwinskii*. Foto: Alonso Argüero |
+| 12 | 3.12 | 233 | static | `images/Cattling_y_Johannson.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.12_Cattling_y_Johannson.png` | `` | Zonificación de árboles hospedero, basada en los modelos Catling (1986) y Johansson (1974). Dibujo de A. Emeterio-Lara |
+| 13 | 3.13 | 290 | static | `images/Ls_xyz.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.13_Ls_xyz.png` | `` | Distribución tridimensional de *Laelia speciosa* sobre *Quercus deserticola*, basada en @hernandez1992dinamica. Figura d |
+| 14 | 3.14 | 296 | static | `images/tree_dist.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.14_tree_dist.png` | `` | Distribución espacial de los árboles hospedero de *Laelia speciosa*. Los círculos dentro del área de muestreo representa |
+| 15 | 3.15 | 307 | static | `images/Triangulation_Method.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.15_Triangulation_Method.jpg` | `` | Método de triangulación para el muestreo de orquídeas terrestres. Se ilustra la forma de determinar la posición ($P_{x}$ |
+| 16 | 3.16 | 337 | static | `images/C_irap_plantula.jpeg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.16_C_irap_plantula.jpeg` | `` | Plántula de *Cypripedium irapeanum*. Foto: Claudia Gutiérrez-Paredes |
+| 17 | 3.17 | 343 | static | `images/Lepanthes_woodburyana.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.17_Lepanthes_woodburyana.jpg` | `` | *Lepanthes woodburyana*. Foto: Edwin Guevara |
+| 18 | 3.18 | 371 | static | `images/Cypripedium_acaule.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.18_Cypripedium_acaule.jpg` | `` | Uso de etiquetas de aluminio en marcaje de *Cypripedium acaule*. Foto: Tremblay |
+| 19 | 3.19 | 375 | static | `images/Laelia_cincho.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.19_Laelia_cincho.png` | `` | Uso de etiquetas de aluminio en marcaje con cinchos de plástico en *Laelia autumnalis*. Foto por Aucencia Emeterio-Lara |
+| 20 | 3.20 | 409 | static | `images/alambrelaelia.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.20_alambrelaelia.jpg` | `` | Marcaje de *Laelia speciosa* abrazando el tronco con alambre plastificado y etiquetas de *dymo*. Foto: Mariana Hernández |
+| 21 | 3.21 | 415 | static | `images/Lep_eltoroensis.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.21_Lep_eltoroensis.png` | `` | Los individuos de *Lepanthes eltoroensis* fueron identificados con una etiqueta de plástico clavada al tronco del árbol; |
+| 22 | 3.22 | 421 | static | `images/Cirap_marcaje.png` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.22_Cirap_marcaje.png` | `` | Marcaje de *Cypripedium irapeanum* con cinta de *dymo*. Foto: Hernández-Apolinar |
+| 23 | 3.23 | 425 | static | `images/Cyp_acaule_flag.jpg` | `figuras_editor/03-Recopilacion_datos_en_el_campo/Fig_3.23_Cyp_acaule_flag.jpg` | `` | Marcaje de *Cypripedium acaule* con banderitas. Foto: Tremblay |
 
 ### 05-Fecundidad
 
@@ -87,11 +87,11 @@ Archivo fuente: `106-calcular_fecundidad.qmd` — 5 figura(s)
 
 | # | Fig X.Y | Línea | Tipo | Origen en .qmd | PNG | PDF | Caption |
 |---|---------|------:|------|----------------|-----|-----|---------|
-| 1 | 5.1 | 121 | static | `images/Diagrama_fecundidad.png` | `figuras_editor/05-Fecundidad/Fig_5.1_Diagrama_fecundidad.png` | `` | Diagrama del proceso de fecundidad en orquídeas, mostrando la cadena de filtros sucesivos: producción floral, polinizaci |
-| 2 | 5.2 | 144 | static | `images/Cant_Hojas_Prob_Fr_Brassavola.jpg` | `figuras_editor/05-Fecundidad/Fig_5.2_Cant_Hojas_Prob_Fr_Brassavola.jpg` | `` | Relación entre la cantidad de hojas y la probabilidad de floración en *Brassavola cucullata* en las islas Saba y San Eus |
-| 3 | 5.3 | 170 | render_dual | `images/fec-life-cycle-1.png` | `figuras_editor/05-Fecundidad/Fig_5.3_fec-life-cycle-1.png` | `figuras_editor/05-Fecundidad/Fig_5.3_fec-life-cycle-1.pdf` |  |
-| 4 | 5.4 | 206 | render_dual | `images/fec-matA-pl.png` | `figuras_editor/05-Fecundidad/Fig_5.4_fec-matA-pl.png` | `figuras_editor/05-Fecundidad/Fig_5.4_fec-matA-pl.pdf` |  |
-| 5 | 5.5 | 233 | render_dual | `images/fec-matA-pl2.png` | `figuras_editor/05-Fecundidad/Fig_5.5_fec-matA-pl2.png` | `figuras_editor/05-Fecundidad/Fig_5.5_fec-matA-pl2.pdf` |  |
+| 1 | 5.1 | 114 | static | `images/Diagrama_fecundidad.png` | `figuras_editor/05-Fecundidad/Fig_5.1_Diagrama_fecundidad.png` | `` | Diagrama del proceso de fecundidad en orquídeas, mostrando la cadena de filtros sucesivos: producción floral, polinizaci |
+| 2 | 5.2 | 135 | static | `images/Cant_Hojas_Prob_Fr_Brassavola.jpg` | `figuras_editor/05-Fecundidad/Fig_5.2_Cant_Hojas_Prob_Fr_Brassavola.jpg` | `` | Relación entre la cantidad de hojas y la probabilidad de floración en *Brassavola cucullata* en las islas Saba y San Eus |
+| 3 | 5.3 | 160 | render_dual | `images/fec-life-cycle-1.png` | `figuras_editor/05-Fecundidad/Fig_5.3_fec-life-cycle-1.png` | `figuras_editor/05-Fecundidad/Fig_5.3_fec-life-cycle-1.pdf` |  |
+| 4 | 5.4 | 196 | render_dual | `images/fec-matA-pl.png` | `figuras_editor/05-Fecundidad/Fig_5.4_fec-matA-pl.png` | `figuras_editor/05-Fecundidad/Fig_5.4_fec-matA-pl.pdf` |  |
+| 5 | 5.5 | 223 | render_dual | `images/fec-matA-pl2.png` | `figuras_editor/05-Fecundidad/Fig_5.5_fec-matA-pl2.png` | `figuras_editor/05-Fecundidad/Fig_5.5_fec-matA-pl2.pdf` |  |
 
 ### 06-matU_matF_matC
 

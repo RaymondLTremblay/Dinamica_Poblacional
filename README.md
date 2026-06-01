@@ -1,6 +1,6 @@
 # Dinámica Poblacional con Ejemplos de Orquídeas
 
-[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-nc/4.0/) [![Quarto](https://img.shields.io/badge/Built%20with-Quarto-blue)](https://quarto.org) [![GitHub Pages](https://img.shields.io/badge/Live%20Book-GitHub%20Pages-green)](https://raymondltremblay.github.io/Dinamica_Poblacional)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20498242.svg)](https://doi.org/10.5281/zenodo.20498242) [![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-nc/4.0/) [![Quarto](https://img.shields.io/badge/Built%20with-Quarto-blue)](https://quarto.org) [![GitHub Pages](https://img.shields.io/badge/Live%20Book-GitHub%20Pages-green)](https://raymondltremblay.github.io/Dinamica_Poblacional)
 
 📖 **Read the book online:** [raymondltremblay.github.io/Dinamica_Poblacional](https://raymondltremblay.github.io/Dinamica_Poblacional)
 
