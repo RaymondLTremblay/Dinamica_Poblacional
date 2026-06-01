@@ -282,24 +282,42 @@ pretty <- function(x, digits = 3, ...) {
 #' etc.) como una serie de flextables: matA, matU, matF, matC y la
 #' clasificación de estadios.
 #'
-#' Emite cada flextable con `flextable::flextable_to_rmd()`, que genera el
-#' contenido apropiado para el formato de salida (HTML/Word/PDF). Por eso el
-#' chunk que llama a esta función **debe** llevar `#| results: asis`; de lo
-#' contrario `print()` mostraría solo la descripción del objeto
-#' ("a flextable object. col_keys: …") en vez de la tabla.
+#' El chunk que llama a esta función **debe** llevar `#| results: asis`.
+#'
+#' En HTML y Word se emiten flextables vía `flextable::flextable_to_rmd()`
+#' (registra dependencias y respeta el tema). En Typst/PDF/LaTeX NO se usa
+#' flextable: dentro de un bucle `results: asis`, flextable rasteriza la tabla
+#' a un PNG en el tempdir de R (fuera del proyecto) y Typst lo rechaza
+#' ("cannot read file outside of project root"). Para esos formatos se emite
+#' una tabla nativa con `knitr::kable()`, que no genera imágenes.
 #'
 #' @param cm     objeto CompadreMat.
 #' @param digits decimales para los valores de las matrices. Default 3.
-#' @return invisible(NULL); emite los flextables como efecto secundario.
+#' @return invisible(NULL); emite las tablas como efecto secundario.
 compmat_to_ft <- function(cm, digits = 3) {
+  to <- knitr::pandoc_to()
+  use_ft <- !is.null(to) && to %in% c("html", "html4", "html5", "docx")
+
+  emit_matrix <- function(m) {
+    if (is.null(rownames(m))) rownames(m) <- as.character(seq_len(nrow(m)))
+    if (is.null(colnames(m))) colnames(m) <- as.character(seq_len(ncol(m)))
+    if (use_ft) {
+      flextable::flextable_to_rmd(mat_to_ft(m, digits = digits))
+    } else {
+      df <- data.frame(" " = rownames(m), round(m, digits),
+                       check.names = FALSE, stringsAsFactors = FALSE)
+      cat(knitr::kable(df, format = "pipe", row.names = FALSE), sep = "\n")
+    }
+    cat("\n\n")
+  }
+
   slots_show <- intersect(c("matA", "matU", "matF", "matC"),
                           methods::slotNames(cm))
   for (sn in slots_show) {
     m <- methods::slot(cm, sn)
     if (!is.matrix(m) || length(m) == 0L) next
     cat(sprintf("\n\n**%s**\n\n", sn))
-    flextable::flextable_to_rmd(mat_to_ft(m, digits = digits))
-    cat("\n\n")
+    emit_matrix(m)
   }
   if ("MatrixClassAuthor" %in% methods::slotNames(cm)) {
     cat("\n\n**Etapas**\n\n")
@@ -308,7 +326,11 @@ compmat_to_ft <- function(cm, digits = 3) {
       Etapa = cm@MatrixClassAuthor,
       stringsAsFactors = FALSE
     )
-    flextable::flextable_to_rmd(flextable::flextable(df))
+    if (use_ft) {
+      flextable::flextable_to_rmd(flextable::flextable(df))
+    } else {
+      cat(knitr::kable(df, format = "pipe", row.names = FALSE), sep = "\n")
+    }
     cat("\n\n")
   }
   invisible(NULL)
