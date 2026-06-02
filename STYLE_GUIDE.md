@@ -32,7 +32,7 @@ Convenciones editoriales del libro. Estándar: español panhispánico (RAE/ASALE
 
 ## Citaciones
 
-- **Estilo CSL**: `peerj.csl` (3 autores completos, "et al." sólo desde 4).
+- **Estilo CSL**: `lankesteriana.csl` (APA *Lankesteriana*; "et al." desde **3** autores; conector «y» en el texto y «&» en la bibliografía, donde se listan **todos** los autores). Migrado de `peerj.csl` el 2026-05-29.
 - **Sintaxis Quarto**: `[@key]` para parentética, `@key` para inline.
 - **Multi-cita**: `[@key1; @key2]` (punto y coma, no coma).
 - **Citas en prosa**: "Tremblay y colaboradores [@tremblay2015stable]" preferido sobre "Tremblay et al. (2015)" en redacción.
@@ -57,6 +57,9 @@ Convenciones editoriales del libro. Estándar: español panhispánico (RAE/ASALE
 - Pies de tabla y figura: "Tabla 1. ..." / "Figura 1. ..." con número y punto.
 - Referencias cruzadas: preferir `[nombre del capítulo](archivo.qmd)` sobre "Capítulo X".
 - Callouts: `::: callout-note`, `::: callout-tip`, `::: callout-important`, `::: callout-warning`.
+- **Espaciador de callouts**: una línea con el texto literal `&nbsp;` (con línea en blanco arriba y abajo) **antes y después** de cada callout. No usar el carácter U+00A0 (no funciona como espaciador y RStudio lo muestra como punto rojo). Ayudante: `scripts/fix_callout_spacers.py`.
+- **Pies de foto con estudio**: en fotos de retrato de especie, añadir el estudio demográfico de esa especie — `![*Especie*. Foto: X. Estudio demográfico: @clave](…)` (usar «Estudios poblacionales: @clave» cuando el estudio es a nivel de género o no usa MPP).
+- **Letras del Glosario e Índice de temas**: como `#### Letra {.unlisted}` (H4), para que no aparezcan en el índice de contenidos (HTML ni Word) y queden solo "Glosario" e "Índice de temas".
 
 ## Comentarios en código R
 

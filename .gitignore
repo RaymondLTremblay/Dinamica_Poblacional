@@ -1,58 +1,51 @@
-# =============================================
-# Archive folder — local cleanup of unused assets, do not commit
-# =============================================
+# NOTE: .gitignore does NOT support trailing inline comments.
+# A "#" mid-line becomes part of the pattern. Keep comments on their own lines.
+
+# Archive folder — local quarantine of unused assets, do not commit
 _archive/
 
-# =============================================
 # Knitr / Quarto regenerable output
-# =============================================
-*_cache/                 # knitr cache (e.g. 107-matU_matF_matC_cache/)
-*_files/                 # Quarto chunk-output folders (e.g. 105-Transiciones_files/)
-file*/                   # leftover htmlwidgets temp folders (e.g. file10bbd7283e2ac/)
+*_cache/
+*_files/
+file[0-9a-f]*
 *.knit.md
 *.utf8.md
 
-# =============================================
-# Quarto Build Outputs — NEVER commit these
-# =============================================
+# Quarto build outputs — never commit
 _site/
 /.quarto/
+.quarto/
 _freeze/
+docs/
 
-# =============================================
 # R / RStudio
-# =============================================
 .Rproj.user/
 .Rhistory
 .RData
 .Ruserdata
-*.Rproj          # keep DinamicaPob.Rproj — remove this line if you want to track it
+COMPADRE_June.RData
+# Keep the project file tracked
+*.Rproj
+!DinamicaPob.Rproj
 
-# renv — only lock file and .Rprofile belong in git
+# renv (only lockfile + .Rprofile belong in git)
 renv/library/
 renv/local/
 renv/cellar/
 renv/staging/
 renv/.gitignore
 
-# =============================================
-# macOS junk
-# =============================================
+# macOS / Windows junk
 .DS_Store
 .AppleDouble
 .LSOverrideDirectory
 __MACOSX/
-
-# =============================================
-# Windows junk
-# =============================================
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+.fuse_hidden*
 
-# =============================================
-# Temp / cache files
-# =============================================
+# Temp / cache / TeX intermediates
 *.log
 *.aux
 *.out
@@ -65,51 +58,36 @@ Desktop.ini
 *~
 \#*\#
 *.swp
-
-# =============================================
-# Typst intermediate (in case keep-typ is ever true)
-# =============================================
 *.typ
+/index.tex
 
-# =============================================
-# Large data / sensitive files — adjust as needed
-# =============================================
-# data/raw/
-# *.csv         # uncomment if raw data should stay local
-
-# =============================================
-# Quarto additional build artifacts
-# =============================================
-.quarto/
-docs/
+# Images that are render scratch, not source
 *.tiff
 *.tif
 
-# =============================================
-# Large data / session files
-# =============================================
-*.RData
-*.Rhistory
-COMPADRE_June.RData
-
-# =============================================
-# Conflicted copies (Dropbox/Syncthing)
-# =============================================
+# Dropbox / Syncthing conflicted copies
 *conflicted copy*
 
-# =============================================
-# Loose web verification / meta files
-# =============================================
-# google*.html  # removed — needed for Google Search Console verification
+# Loose web/meta files (book renders into docs/, not root)
 meta.html
 meta.html.Rhtml
 sitemap.xml
+/1[0-9][0-9]*.html
+/index.html
+/404.html
 
+# Per-chapter Word output (regenerable via render_docx_per_chapter.R)
+docx_chapters/
+
+# One-shot tooling / experiment outputs
+captions_*.json
+palette_*.pdf
+compare_palettes.html
+compare_palettes_files/
+
+# Jupyter / misc
 **/*.quarto_ipynb
 .positai
 
-# =============================================
 # Editor agent working directories — never commit
-# =============================================
 .claude/
-

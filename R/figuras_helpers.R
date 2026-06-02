@@ -146,27 +146,32 @@ save_plot_png <- function(obj, file,
 #'
 #' @param ...   args para Rage::plot_life_cycle.
 #' @param png   ruta del PNG; típicamente "images/<chunk-id>.png".
-#' @return el htmlwidget (para que se muestre como antes en HTML).
+#' @return en HTML, el htmlwidget (se muestra interactivo); en Word/PDF/Typst,
+#'   `knitr::include_graphics(png)` para incrustar el PNG guardado. Así Word no
+#'   intenta rasterizar el widget vía webshot2 (que fallaba con "Could not fetch
+#'   resource ..._files/figure-docx/...png"). Mismo patrón que `render_dual()`.
 plc_save <- function(..., png) {
   if (missing(png) || is.null(png) || !nzchar(png)) {
     stop("plc_save() requiere `png = 'images/<nombre>.png'`")
   }
   p <- Rage::plot_life_cycle(...)
   save_plot_png(p, file = png)
-  p
+  if (knitr::is_html_output()) p else knitr::include_graphics(png)
 }
 
 #' Atajo: `grViz(...)` que ADEMÁS guarda PNG.
 #' @param dot  código DOT.
 #' @param png  ruta del PNG; típicamente "images/<chunk-id>.png".
-#' @return el htmlwidget grViz.
+#' @return en HTML, el htmlwidget grViz; en Word/PDF/Typst,
+#'   `knitr::include_graphics(png)` (incrusta el PNG guardado y evita el
+#'   snapshot webshot2 que fallaba en docx). Mismo patrón que `render_dual()`.
 grviz_save <- function(dot, ..., png) {
   if (missing(png) || is.null(png) || !nzchar(png)) {
     stop("grviz_save() requiere `png = 'images/<nombre>.png'`")
   }
   g <- DiagrammeR::grViz(dot, ...)
   save_plot_png(g, file = png)
-  g
+  if (knitr::is_html_output()) g else knitr::include_graphics(png)
 }
 
 # ---- Renderizado de matrices y objetos como tablas legibles ----
