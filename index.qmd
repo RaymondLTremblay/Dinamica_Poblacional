@@ -320,12 +320,17 @@ safe_version <- function(p) {
   )
 }
 
-data.frame(
-  Paquete = pkgs,
-  Version = vapply(pkgs, safe_version, character(1)),
-  row.names = NULL
-) |>
-  knitr::kable()
+# Etiqueta compacta "paquete (versión)"; si no está instalado, solo el nombre.
+ver <- vapply(pkgs, safe_version, character(1))
+etiquetas <- ifelse(is.na(ver), pkgs, paste0(pkgs, " (", ver, ")"))
+
+# Disponer en varias columnas para una tabla más compacta (menos filas).
+n_col <- 3
+n_fil <- ceiling(length(etiquetas) / n_col)
+etiquetas <- c(etiquetas, rep("", n_fil * n_col - length(etiquetas)))
+
+matrix(etiquetas, ncol = n_col, byrow = TRUE) |>
+  knitr::kable(col.names = rep("", n_col), align = "l")
 ```
 
 ```{r idx-render-tarjeta-deps, echo=FALSE, eval=FALSE, warning=FALSE}

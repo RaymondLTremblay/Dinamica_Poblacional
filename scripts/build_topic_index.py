@@ -415,7 +415,9 @@ def main():
         return chapter_label.split('.', 1)[0].strip()
 
     for letter in sorted(by_letter.keys()):
-        out.append(f"## {letter}\n\n")
+        # H4 + .unlisted: las letras son separadores visuales, no entradas del
+        # TOC. El nivel H4 (< toc-depth=3) las excluye también del TOC de Word.
+        out.append(f"#### {letter} {{.unlisted}}\n\n")
         for term_label, appearances in sorted(by_letter[letter], key=lambda x: x[0].lower()):
             out.append(f"**{term_label}**\n\n")
             # Si el término aparece en >= AGGREGATE_THRESHOLD capítulos,
