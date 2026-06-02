@@ -53,7 +53,7 @@ $$\underbrace{P(\theta \mid \text{datos})}_{\text{posterior}} \propto \underbrac
 
 En español plano: la posterior es proporcional a la previa multiplicada por la verosimilitud. La previa aporta información cuando los datos son escasos; la verosimilitud (los datos) domina cuando hay muchas observaciones. **Esta propiedad es exactamente lo que necesitamos para especies raras**: si observamos 2 plántulas y 0 transiciones a juvenil, el estimador frecuentista da $\hat{p} = 0$ (lo cual implica imposibilidad biológica), mientras que el estimador bayesiano combina las 2 observaciones con la previa y da una probabilidad pequeña pero positiva, con incertidumbre cuantificada.
 
- 
+&nbsp;
 
 ::: callout-note
 **La regla de Bayes en lenguaje cotidiano.**
@@ -63,11 +63,13 @@ $$\text{Lo que crees ahora} \;\propto\; \text{Lo que creías antes} \;\times\; \
 Cuando los datos son muchos y consistentes, dominan: la posterior se parece a la verosimilitud. Cuando los datos son escasos o ambiguos, la previa importa: la posterior se parece a la previa. El método bayesiano hace este equilibrio explícito y reproducible.
 :::
 
- 
+&nbsp;
 
 ::: callout-tip
 **Por qué leer este capítulo (incluso si nunca has hecho un análisis bayesiano).** La estimación clásica de matrices de transición —`projection.matrix()`— es perfectamente adecuada cuando el tamaño de muestra es grande y cada transición se observó muchas veces. Pero en estudios reales de orquídeas, casi nunca es así: las muestras son pequeñas, varias transiciones tienen 0 observaciones, y el resultado es una matriz con ceros que la biología sabe que no son cero. El enfoque bayesiano resuelve esto sin "inventar" datos: usa explícitamente lo que ya sabes sobre el ciclo de vida (la previa) y produce estimaciones realistas con intervalos de credibilidad. Aprender a usarlo es una de las inversiones de mayor retorno en la dinámica poblacional aplicada.
 :::
+
+&nbsp;
 
 ## Introducción a las MPP bayesianas
 
@@ -214,9 +216,9 @@ Este es el formato de salida de `popbio::projection.matrix()`. Si tenemos transi
 Podemos utilizar la función `popbio::projection.matrix()` para obtener los datos necesarios. Hacemos una demostración con los datos de transición y fecundidad de *Lepanthes eltoroensis* **POPNUM 250** en el **periodo 5**. *Lepanthes eltoroensis* es una orquídea epífita, endémica de Puerto Rico y con una distribución limitada a una pequeña región de la isla.
 
 ::: {style="display: flex; justify-content: center; gap: 10px;"}
-![*Lepanthes eltoroensis*. Foto: Edwin Guevara](images/Lepanthes_eltoroensis_Edwin_Guevara.jpg){#fig-lepanthes-eltoroensis-edwin-guevara}
+![*Lepanthes eltoroensis*. Foto: Edwin Guevara. Estudio demográfico: @tremblay2003population](images/Lepanthes_eltoroensis_Edwin_Guevara.jpg){#fig-lepanthes-eltoroensis-edwin-guevara}
 
-![*Lepanthes eltoroensis*. Foto: Edwin Guevara](images/Lepanthes_eltoroensis_Phorophyte_Edwin_Guevara.jpg){#fig-lepanthes-eltoroensis-phorophyte-edwin-guevara}
+![*Lepanthes eltoroensis*. Foto: Edwin Guevara. Estudio demográfico: @tremblay2003population](images/Lepanthes_eltoroensis_Phorophyte_Edwin_Guevara.jpg){#fig-lepanthes-eltoroensis-phorophyte-edwin-guevara}
 :::
 
 ------------------------------------------------------------------------
@@ -402,11 +404,13 @@ Cuando usamos previas informativas en el modelo, podemos ajustar su peso para re
 fill_transitions(TF, N, P = RLT_Tprior, priorweight = 0.5)
 ```
 
- 
+&nbsp;
 
 ::: callout-important
 **El "peso de la previa" es un tamaño de muestra equivalente.** Asignar `priorweight = 0.5` con $N = 2$ observaciones es como decir: "antes de salir al campo, mi creencia tiene la misma fuerza que $0.5 \times 2 = 1$ observación adicional". Si tu previa tiene peso efectivo 5 y observas 50 transiciones, los datos pesarán 10 veces más que la previa. La regla práctica es dejar que los datos dominen: el peso de la previa debería ser **mucho menor** que el tamaño de muestra observado, salvo que tengas razones biológicas muy fuertes para confiar en la previa.
 :::
+
+&nbsp;
 
 Algunos valores típicos de `priorweight`:
 
@@ -415,7 +419,7 @@ Algunos valores típicos de `priorweight`:
 - `priorweight = 1`: la previa pesa lo mismo que los datos. Sólo justificado si los datos son muy escasos y la previa es muy confiable.
 - `priorweight > 1`: la previa pesa más que los datos. Rara vez justificado en estudios poblacionales.
 
- 
+&nbsp;
 
 ::: callout-warning
 **Cuándo no usar una previa informativa fuerte.** Las previas informativas son apropiadas cuando hay conocimiento biológico sólido que no aparece en los datos (e.g., experiencia directa con la especie, estudios en poblaciones cercanas). **No** son apropiadas cuando:
@@ -426,6 +430,8 @@ Algunos valores típicos de `priorweight`:
 
 En estos casos, conviene usar previas débiles (poco peso) o reportar resultados con y sin previa para mostrar la sensibilidad a la elección.
 :::
+
+&nbsp;
 
 **Recomendación general:** asigna a las previas un peso menor (preferiblemente mucho menor) que el tamaño de muestra observado. Esto garantiza que los datos reales tengan mayor peso en el análisis y evita que el conocimiento previo domine injustamente los resultados.
 
@@ -443,13 +449,13 @@ La nueva matriz de transición:
 
 Una vez ajustada la matriz de transición con los datos observados y las previas informativas, podemos calcular los intervalos de credibilidad (ICr) para cada entrada de la matriz.
 
- 
+&nbsp;
 
 ::: callout-note
 **Por qué Dirichlet (transiciones) y Gamma (fecundidad).** Cada columna de una matriz de transición es un vector de probabilidades que suman 1. La distribución natural sobre tales vectores es la **distribución Dirichlet**, generalización multidimensional de la Beta. Al observar transiciones (datos multinomiales) y combinar con una previa Dirichlet, la posterior **también es Dirichlet** (es una previa conjugada) — esto hace los cálculos exactos y rápidos. Para cada entrada individual de la matriz, la distribución marginal es **Beta**, lo cual permite calcular intervalos de credibilidad directamente con `qbeta()`. La fecundidad, por ser un conteo positivo no acotado, se modela con una previa **Gamma** sobre la tasa de Poisson.
 :::
 
- 
+&nbsp;
 
 ::: callout-note
 **Intervalo de confianza (IC) versus intervalo de credibilidad (ICr).** Aunque suenan parecidos, significan cosas distintas:
@@ -459,6 +465,8 @@ Una vez ajustada la matriz de transición con los datos observados y las previas
 
 Lo que la mayoría de las personas *intuitivamente quieren decir* al leer un IC frecuentista es la interpretación bayesiana — y los intervalos de credibilidad son los que efectivamente se la dan.
 :::
+
+&nbsp;
 
 **¿Cómo se calculan?** Cada elemento de la matriz de transición ajustada sigue una distribución beta, ya que proviene de una distribución posterior marginal de una Dirichlet (multinomial-Dirichlet). Esto permite calcular intervalos de credibilidad para las tasas de transición.
 
@@ -679,7 +687,7 @@ flextable(signif(RLT_0.5_summary, digits = 2))
 
 ## ADDENDUM
 
- 
+&nbsp;
 
 ::: callout-important
 **Nunca uses previas uniformes en análisis poblacionales reales.** Una previa uniforme (e.g., Dirichlet con todos los parámetros iguales) asigna la misma probabilidad a transiciones biológicamente plausibles y a transiciones imposibles (un adulto reproductivo "regresando" a plántula, una ballena bebé pasando directamente a madre, una semilla transformándose en árbol adulto en un periodo). El resultado es una matriz matemáticamente válida pero **biológicamente sin sentido**, que infla la incertidumbre con escenarios irreales y puede ocultar señales legítimas en los datos.
@@ -688,6 +696,8 @@ flextable(signif(RLT_0.5_summary, digits = 2))
 
 La sección que sigue muestra qué pasa con una previa uniforme **únicamente con fines didácticos** — para que se vea de primera mano por qué falla. No la copies en un análisis de tu propia especie.
 :::
+
+&nbsp;
 
 ### Uso de previas uniformes
 

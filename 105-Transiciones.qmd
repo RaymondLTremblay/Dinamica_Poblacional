@@ -9,7 +9,7 @@ twitter-card:
 
 # Transiciones {#MatricesT}
 
-Por: Aucencia Emeterio-Lara, Ernesto Mujica, Elaine González y Raymond L. Tremblay
+Por: Aucencia Emeterio-Lara, Ernesto Mujica Benitez, Elaine González y Raymond L. Tremblay
 
 Las transiciones describen los cambios individuales entre estados demográficos —como supervivencia, crecimiento y regresión— que conectan el ciclo de vida con la dinámica poblacional. Este capítulo introduce el concepto de transiciones como los procesos fundamentales que determinan la estructura y evolución de una población a lo largo del tiempo.
 
@@ -88,6 +88,8 @@ La suma de estas proporciones debe ser igual a 1 (o muy cercana, considerando re
 **La suma de cada columna debe ser 1 (incluyendo mortalidad).** Cada individuo que estaba en el estado $j$ en el periodo inicial tiene que terminar en algún destino: otro estadio o "muerto". Por eso la suma de los destinos vivos más la mortalidad debe ser 1. Si la suma de una columna es distinta de 1 (más allá del redondeo), hay un error: o bien faltan transiciones, o bien algún individuo se está contando dos veces.
 :::
 
+&nbsp;
+
 ```{r Trans2}
 
 a <- 1 / 7
@@ -160,6 +162,8 @@ Ahora utilizamos los valores calculados anteriormente para construir la matriz d
 ::: callout-important
 **Convención: columnas = origen, filas = destino.** Cada **columna** $j$ corresponde al estado del individuo en el periodo inicial; cada **fila** $i$ al estado en el siguiente periodo. La entrada $a_{ij}$ es entonces "la proporción de individuos que estaban en $j$ y terminaron en $i$". Confundir filas con columnas invierte el sentido biológico de cada transición y distorsiona todos los análisis posteriores. Conviene siempre asignar `rownames()` y `colnames()` para detectar el error visualmente.
 :::
+
+&nbsp;
 
 Las transiciones hacia el estado “Muerto” no se incluyen en la matriz, ya que los análisis reconocen automáticamente que la proporción de mortalidad se obtiene como:
 
@@ -338,6 +342,8 @@ $$\mathbf{A} = \mathbf{U} + \mathbf{F} + \mathbf{C}$$
 donde $\mathbf{U}$ contiene las **transiciones** entre estadios (supervivencia × cambio de estado), $\mathbf{F}$ las **fecundidades** (reproducción sexual: nuevos individuos incorporados al primer estadio por cada adulto reproductor) y $\mathbf{C}$ el **clonación** (reproducción asexual: nuevos individuos genéticamente idénticos a la planta madre). Mantener las tres matrices separadas permite analizarlas por separado y es la convención usada en bases de datos como COMPADRE.
 :::
 
+&nbsp;
+
 ------------------------------------------------------------------------
 
 ## Matriz de Clonación
@@ -347,6 +353,8 @@ donde $\mathbf{U}$ contiene las **transiciones** entre estadios (supervivencia �
 ::: callout-warning
 **La clonación no es fecundidad.** Aunque ambos procesos generan individuos nuevos, evolutivamente son distintos: la fecundidad sexual produce descendencia genéticamente diferente, mientras que la clonación (keikis, división de rizomas) produce *ramets* con el mismo genoma que la planta madre. Sumarlos en una sola matriz $\mathbf{F}$ confunde dos procesos demográfica y evolutivamente diferentes; conviene separar $\mathbf{C}$ para análisis correctos de selección, deriva genética y estructura poblacional.
 :::
+
+&nbsp;
 
 Muchas orquídeas se reproducen por clonación, lo que significa que los individuos son genéticamente idénticos y se originan a partir de la planta madre. En algunos casos, estos clones se separan mediante un keiki o por división de los rizomas cuando estos se deterioran o mueren. Este es un método de reproducción asexual.
 
@@ -492,3 +500,5 @@ Los autores recomiendan utilizar el **método bayesiano** para el análisis de m
 ::: callout-tip
 **Cambia al método bayesiano cuando los datos son escasos o las transiciones son raras.** El método tradicional (`projection.matrix()`) asume que las proporciones observadas estiman bien las probabilidades de transición. Esta suposición se rompe cuando el tamaño de muestra es pequeño o cuando alguna transición ocurrió con frecuencia 0/n (común en transiciones raras). En esos casos, el método bayesiano incorpora información a priori, evita probabilidades exactamente 0 o 1, y produce intervalos de confianza explícitos. Ver el capítulo [Acercamiento bayesiano para calcular transiciones y fecundidades](108-Bayesian_PPM.qmd).
 :::
+
+&nbsp;

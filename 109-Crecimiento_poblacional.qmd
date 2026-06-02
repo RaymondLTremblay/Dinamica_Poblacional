@@ -54,6 +54,8 @@ La tasa finita o asintótica del crecimiento poblacional, $\lambda$, es el valor
 La palabra clave es *si las condiciones se mantuvieran*: $\lambda$ describe la tendencia que tendría la población **bajo el ambiente actual**, no una predicción de su trayectoria futura, ni el crecimiento observado en el corto plazo (ver el capítulo de [Dinámica de transiciones](112-Dinamica_de_Transiciones.qmd)).
 :::
 
+&nbsp;
+
 Comenzamos por ingresar dos matrices de transición, una para cada año de monitoreo de una poblaciones de *Laelia speciosa*. Los datos provienen de Mariana Hernández-Apolinar y no han sido publicados.
 
 ## Primera matriz
@@ -136,6 +138,8 @@ También es fundamental tomar en cuenta que, $\lambda$ no es la tasa a la que se
 ::: callout-warning
 **$\lambda$ describe el presente, no predice el futuro.** Aunque el lenguaje natural sugiere que "$\lambda = 1.10$ quiere decir que la población crecerá un 10% por año", esto sólo se cumpliría si las tasas vitales fueran exactamente las mismas todos los años — algo prácticamente nunca cierto. $\lambda$ es una **descripción comparable** del estado demográfico actual de la población [@crone2013ability], útil para comparar entre sitios, periodos o tratamientos. Para predicciones a corto plazo conviene usar análisis de dinámica transitoria; para escenarios variables, la tasa estocástica $\lambda_e$ (sección siguiente).
 :::
+
+&nbsp;
 
 Los meta-análisis [@crone2013ability], en cambio, han demostrado que $\lambda$ es una medida robusta de las condiciones actuales, ya que ésta explica la dinámica de las poblaciones durante el período de tiempo en el que se parametrizaron los modelos. Asimismo, $\lambda$ es una buena medida del estado de la población, por lo que es una forma apropiada de comparar el comportamiento de las poblaciones bajo diferentes condiciones, incluyendo variación abiótica, biótica y de manejo. Por ejemplo, los valores de $\lambda$ permiten comparar el comportamiento de una población en distintos periodos de tiempo y con ello entender cómo la variación en las condiciones climáticas afecta su dinámica. Las comparaciones también pueden ser entre poblaciones de la misma especie distribuidas en distintos sitios, para entender los efectos de la variación en el manejo, la vegetación u otras diferencias entre sitios (vea el capítulo [Métodos de simulación poblacional](#VarTempEsp))
 
@@ -230,6 +234,8 @@ La población bajo extracción tiene un valor de $\lambda$ menor (0.990) a aquel
 **Una diferencia entre dos poblaciones no atribuye causa.** En este ejemplo, la población 2 (con extracción) tiene $\lambda = 0.99$ y la población 1 (sin extracción) $\lambda = 1.11$. La diferencia es consistente con un efecto de la extracción, **pero no lo demuestra**: cualquier diferencia ambiental, microclimática o histórica entre los dos sitios podría explicar parte o toda la diferencia. Para inferir causa hace falta replicación: varios sitios con extracción y varios sitios control en la misma región, idealmente con datos previos al inicio del manejo.
 :::
 
+&nbsp;
+
 ------------------------------------------------------------------------
 
 ## Intervalos de confianza de $\lambda$
@@ -242,6 +248,8 @@ La población bajo extracción tiene un valor de $\lambda$ menor (0.990) a aquel
 - **Bootstrap (`popbio::boot.transitions()`):** remuestrea con reemplazo los individuos observados y vuelve a calcular $\lambda$. Apropiado cuando el tamaño de muestra es razonable y todas las transiciones tienen al menos algunas observaciones.
 - **Dirichlet bayesiano (`raretrans`):** usa la distribución posterior de las transiciones, derivada de una previa Dirichlet. Apropiado cuando el tamaño de muestra es pequeño o cuando hay transiciones raras observadas con frecuencia 0/n. Ver el capítulo de [Acercamiento bayesiano](108-Bayesian_PPM.qmd).
 :::
+
+&nbsp;
 
 Para interpretar $\lambda$ apropiadamente necesitamos calcular los intervalos de confianza (IC). Estos intervalos pueden ser calculados con un método de remuestreo con reemplazo (i.e. bootstrap), utilizando las transiciones de estado de los individuos de un periodo a otro; es decir, los datos (i.e. $stage-fate$) usados para construir la matriz de transiciones (ver el capítulo de [Transiciones](105-Transiciones.qmd)). En el remuestreo se puede especificar el tamaño de la muestra remuestreada, la cual fue de 1000 en nuestro caso. Cabe señalar que se tendrán intervalos de confianza amplios cuando se tiene una muestra pequeña de datos originales, o si se tienen pocas observaciones de aquellas transiciones que contribuyen en mayor medida a $\lambda$. Adicionalmente, se puede usar el método del paquete `raretrans` (ver el capítulo de [Acercamiento bayesiano](108-Bayesian_PPM.qmd)), que es apropiado para tamaños de muestra pequeños. La diferencia entre los dos métodos es que `popbio` selecciona aleatoriamente la cantidad de individuos en cada estadio (bootstrap), mientras que `raretrans` simula a partir de la distribución posterior Dirichlet.
 
@@ -330,6 +338,8 @@ La tasa estocástica de crecimiento o $\lambda_e$ se puede estimar si se cuenta 
 
 Cuando hay duda, reportar ambos: si difieren mucho, la variación entre años es importante y la simulación es la métrica más confiable.
 :::
+
+&nbsp;
 
 Es apropiado tomar el tiempo de entender como se calcula $\lambda_e$ y cómo se interpreta. En primer lugar, la aproximación de Tuljapurkar se calcula de la siguiente manera:
 

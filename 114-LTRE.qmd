@@ -108,7 +108,7 @@ Los métodos para calcular los ERTV están constantemente actualizándose y de a
 
 A diferencia de la elasticidad, la cual es un tipo de análisis de perturbación que examina cuánto cambiaría el crecimiento de la población si se cambiaran una de las entradas de la matriz comparando múltiples matrices, el análisis ERTV examina cuánto cambio hay en $\lambda$ en función de la variación observada en las entradas de la matriz [@caswell2000matrix; @caswell2010life; @horvitz1997relative]; y por consecuencia es un análisis que toma en cuenta el cambio de las variaciones individualmente registradas en matrices en diferentes poblaciones/ tiempo / experimentos, etc. [@caswell2010life]. Nota que ERTV es una herramienta suplementaria para evaluar el efecto de perturbaciones como los de elasticidad [@caswell1989analysis], dinámica de transiciones [@stott2011framework] y funciones de transferencias [@stott2012beyond] y no un reemplazo. Cada una de estas herramientas tiene un propósito y una interpretación diferente con sus supuestos.
 
- 
+&nbsp;
 
 ::: callout-important
 **Dos preguntas distintas, dos herramientas distintas.**
@@ -118,6 +118,8 @@ A diferencia de la elasticidad, la cual es un tipo de análisis de perturbación
 
 LTRE es **complementario**, no sustituto, de elasticidad. Cuando la elasticidad de un parámetro es alta pero la varianza observada es baja, ese parámetro contribuye poco al LTRE. Cuando la elasticidad es modesta pero la varianza es grande, ese parámetro puede dominar el LTRE. Las dos métricas pueden señalar resultados distintos, y ambos son útiles.
 :::
+
+&nbsp;
 
 ## Formulación y cálculo de los LTRE
 
@@ -133,7 +135,7 @@ Para ejemplificar el cálculo de los ERTV utilizaremos los datos recabados por R
 
 Como el ERTV es una forma de análisis retrospectivo y es análogo al ANOVA (porque cuantifica los efectos observados de los elementos individuales de matriz sobre la variación observada en $\lambda$, en contraposición a los efectos esperados) se requiere de un valor de referencia para realizar las comparaciones, por lo que se toma la matriz con el valor más alto de $\lambda$ como valor de referencia [@caswell2010life; @timsina2021six].
 
- 
+&nbsp;
 
 ::: callout-tip
 **Cómo elegir la matriz de referencia.**
@@ -147,25 +149,35 @@ El método de Caswell descompone la diferencia $\lambda^{(i)} - \lambda^{(\text{
 La elección de referencia afecta el signo de las contribuciones (no su magnitud relativa), así que conviene declararla explícitamente al reportar resultados.
 :::
 
-A continuación, se muestran dos matrices de tipo Lefkovitch (matrices construidas con base en estadios) para las poblaciones de *O. brachyandrum* y sus valores respectivos de $\lambda$ en los dos hospederos, A) *Q. martinezii* ($\lambda$=1.3; IC: 1.11-1.45) y B) *Q. rugosa* ($\lambda$=0.98; IC: 0.87-0.99). El valor de $\lambda$ fue mayor en *Q. martinezii* por lo que la matriz de esta especie fue la matriz de referencia para calcular los ERTV.
+&nbsp;
+
+A continuación, se muestran dos matrices de tipo Lefkovitch (matrices construidas con base en estadios) para las poblaciones de *O. brachyandrum* y sus valores respectivos de $\lambda$ en los dos hospederos, A) *Q. martinezii* ($\lambda$=1.30; IC: 1.11-1.45) y B) *Q. rugosa* ($\lambda$=0.93; IC: 0.87-0.99). El valor de $\lambda$ fue mayor en *Q. martinezii* por lo que la matriz de esta especie fue la matriz de referencia para calcular los ERTV.
 
 **A)**
 
 |          | Plántula | Infantil | Juvenil | Adulto |
 |----------|----------|----------|---------|--------|
-| Plántula | 0.68     | 0.02     | 3.88    | 16.53  |
-| Infantil | 0.23     | 0.75     | 0.23    | 0      |
-| Juvenil  | 0        | 0.13     | 0.53    | 0.58   |
-| Adulto   | 0        | 0        | 0.17    | 0.38   |
+| Plántula | 0.675    | 0.016    | 3.875   | 16.53  |
+| Infantil | 0.221    | 0.754    | 0.234   | 0      |
+| Juvenil  | 0        | 0.131    | 0.531   | 0.583  |
+| Adulto   | 0        | 0        | 0.172   | 0.383  |
 
 **B)**
 
 |          | Plántula | Infantil | Juvenil | Adulto |
 |----------|----------|----------|---------|--------|
-| Plántula | 0.64     | 0.06     | 0       | 0.005  |
-| Infantil | 0.23     | 0.75     | 0.27    | 0      |
-| Juvenil  | 0        | 0.08     | 0.47    | 0.27   |
-| Adulto   | 0        | 0        | 0.27    | 0.68   |
+| Plántula | 0.636    | 0.056    | 0       | 0.0045 |
+| Infantil | 0.227    | 0.750    | 0.267   | 0      |
+| Juvenil  | 0        | 0.083    | 0.467   | 0.273  |
+| Adulto   | 0        | 0        | 0.267   | 0.682  |
+
+&nbsp;
+
+::: callout-note
+**Supervivencia juvenil del 100% en *Q. rugosa*: una señal de tamaño de muestra pequeño.** En la matriz de *Q. rugosa*, la columna de juveniles suma ≈ 1.0 (mortalidad observada $q_x = 0$): ningún juvenil murió durante el estudio. Esto no significa que los juveniles sean inmortales, sino que el tamaño de muestra fue pequeño ($n = 15$) y la mortalidad —aunque posible— no se observó en el periodo. Conviene interpretar esa supervivencia con cautela: es precisamente el tipo de artefacto de muestreo que se discute en el capítulo de [Impacto de datos sin sentido biológico](122-Impacto_de_Datos_sin_Sentido.qmd).
+:::
+
+&nbsp;
 
 ------------------------------------------------------------------------
 
@@ -186,10 +198,10 @@ Primeramente se creó el ciclo de vida por especie de hospedero utilizando el si
 ```{r LTRE1_Q_martinezii, echo=TRUE}
 
 matmart <- rbind(
-  c(0.68, 0.02, 3.88, 16.53),
-  c(0.22, 0.76, 0.23, 0.0),
-  c(0.0, 0.13, 0.53, 0.58),
-  c(0.0, 0.0, 0.17, 0.38)
+  c(0.675, 0.016, 3.875, 16.53),
+  c(0.221, 0.754, 0.234, 0.0),
+  c(0.0, 0.131, 0.531, 0.583),
+  c(0.0, 0.0, 0.172, 0.383)
 )
 
 colSums(matmart) # sumar las filas de la matriz
@@ -254,10 +266,10 @@ El ciclo de vida de *Oncidium brachyandrum* creciendo sobre *Quercus martinezii*
 #| fig-cap: "Diagrama dirigido del ciclo de vida de *Oncidium brachyandrum* localizados sobre *Quercus rugosa*. Los estados son plántula, infantil, juvenil y adulto y flechas etiquetadas con las transiciones de la matriz."
 
 matrug <- rbind(
-  c(0.64, 0.06, 0, 0.0045),
-  c(0.27, 0.75, 0.27, 0.0),
-  c(0.0, 0.08, 0.47, 0.28),
-  c(0.0, 0.0, 0.27, 0.68)
+  c(0.636, 0.056, 0, 0.0045),
+  c(0.227, 0.750, 0.267, 0.0),
+  c(0.0, 0.083, 0.467, 0.273),
+  c(0.0, 0.0, 0.267, 0.682)
 )
 
 stages <- c("plántula", "infantil", "juvenil", "adulto")
@@ -308,7 +320,7 @@ El ciclo de vida de *Oncidium brachyandrum* creciendo sobre *Quercus rugosa*. La
 Para facilitar el entendimiento de cómo se calcula ERTV se creó la matriz con los términos de referencia (Cuadro 1).
 
 | Estadío | Plántulas (1) | Infantiles (2) | Juveniles (3) | Adultos (4) |
-|---------------|---------------|---------------|---------------|---------------|
+|----|----|----|----|----|
 | Plántulas (1) | p~11~ (permanencia de plántulas) | g~21~ (retroceso de infantiles a plántulas) | f~31~ (plántulas generadas)<br>g~31~ (retroceso de juveniles a plántulas) | f~41~ (plántulas generadas) |
 | Infantiles (2) | g~12~ (crecimiento de plántulas a infantiles) | p~22~ (permanencia de infantiles) | g~32~ (retroceso de juveniles a infantiles) | g~42~ (retroceso de adultos a infantiles) |
 | Juveniles (3) | g~13~ (crecimiento de plántulas a juveniles) | g~23~ (crecimiento de infantiles a juveniles) | p~33~ (permanencia de juveniles) | g~43~ (retroceso de adultos a juveniles) |
@@ -319,7 +331,7 @@ Para facilitar el entendimiento de cómo se calcula ERTV se creó la matriz con 
 
 En la sección **Apéndice C** se encuentra una hoja de Excel para poder realizar los cálculos de ERTV. En esta sección se explica cómo se construye la matriz de términos y cómo se calculan las tasas vitales para cada una de las especies de hospedero.
 
-Una vez colocadas las matrices en la hoja de trabajo el primer paso será sumar las columnas para cada estadio, esto significará la supervivencia (s) por estadio (s~1~, s~2~, s~3~, s~4~); para el caso de *Q. martinezii* en plántulas sería s~1~= 0.68+0.22= 0.90 (Figura 3). Después se tienen que calcular las transiciones con respecto a la supervivencia; por lo que para el caso de la transición g~12~ para la matriz de *Q. martinezii* tenemos g~12~= 0.22/0.90=0.25; este cálculo se realiza para todas las transiciones. Los valores de fecundidad (f) se tomarán tal cual de la matriz de fecundidad `matF`. Una vez obtenido esto se procederá a realizar los cálculos con las ecuaciones que se muestran del lado derecho para cada una de las celdas y, además, esto nos sirve para verificar que hayamos calculado bien cada una de las tasas vitales. Por ejemplo, observamos que una proporción de plántulas en *Q. martinezii* se mantuvo (0.68); este valor se obtiene de multiplicar la supervivencia de plántulas (s~1~ = 0.90) por 1 menos el crecimiento de plántulas a infantiles (1 − 0.25 = 0.75), es decir 0.90 × 0.75 = 0.68 (ecuación s~1~\* (1-g~12~)).
+Una vez colocadas las matrices en la hoja de trabajo el primer paso será sumar las columnas para cada estadio, esto significará la supervivencia (s) por estadio (s~1~, s~2~, s~3~, s~4~); para el caso de *Q. martinezii* en plántulas sería s~1~= 0.675+0.221= 0.896. Después se tienen que calcular las transiciones con respecto a la supervivencia; por lo que para el caso de la transición g~12~ para la matriz de *Q. martinezii* tenemos g~12~= 0.221/0.896 ≈ 0.247; este cálculo se realiza para todas las transiciones. Los valores de fecundidad (f) se tomarán tal cual de la matriz de fecundidad `matF`. Una vez obtenido esto se procederá a realizar los cálculos con las ecuaciones que se muestran del lado derecho para cada una de las celdas y, además, esto nos sirve para verificar que hayamos calculado bien cada una de las tasas vitales. Por ejemplo, observamos que una proporción de plántulas en *Q. martinezii* se mantuvo (0.675); este valor se obtiene de multiplicar la supervivencia de plántulas (s~1~ = 0.896) por 1 menos el crecimiento de plántulas a infantiles (1 − 0.247 = 0.753), es decir 0.896 × 0.753 = 0.675 (ecuación s~1~\* (1-g~12~)).
 
 ------------------------------------------------------------------------
 
@@ -355,13 +367,17 @@ flextable(Oncidium)
 
 **Cuadro 2.** Ejemplo de base para poder calcular los ERTV.
 
+Nota que las matrices se muestran con tres decimales, igual que en la publicación original, mientras que las tasas vitales del Cuadro 2 se calcularon con toda la precisión de los datos; por eso pueden diferir de las matrices mostradas en el último decimal (por ejemplo, $g_{12}$ de *Q. martinezii* es 0.2464 en el Cuadro 2 y ≈ 0.247 si se recalcula a partir de la matriz redondeada).
+
 Es importante colocar en la segunda fila la palabra lambda en la primera columna y después los valores según corresponda a cada tratamiento. Debido a que en *Q. rugosa* no hubo producción de plántulas (f~31~) pero en *Q. martinezii* si hubo se coloca una cantidad muy pequeña pero mayor a cero (e.g. 0.00001) para que se pueda correr el análisis, para las otras transiciones en valor puede ser 0. Una vez culminada la base se guarda el archivo en formato de texto, para continuar en R. Es importante comenzar a colocar las ecuaciones a partir de la segunda fila en la columna matrix.
 
- 
+&nbsp;
 
 ::: callout-warning
 **Una tasa vital observada en cero requiere un manejo especial.** El método LTRE asume que las tasas vitales están definidas y son comparables entre matrices. Si una tasa es 0 en una condición pero positiva en otra (e.g., en el ejemplo *Q. rugosa* no produjo plántulas), el cálculo numérico puede fallar o producir contribuciones engañosas. Una solución práctica es reemplazar el 0 por un valor muy pequeño (e.g., 0.00001), pero hay que reconocer que esto introduce sesgo. Una alternativa más robusta es estimar la tasa vital con métodos bayesianos (ver capítulo de [Acercamiento bayesiano](108-Bayesian_PPM.qmd)), que evitan ceros exactos y producen distribuciones posteriores apropiadas para LTRE.
 :::
+
+&nbsp;
 
 ------------------------------------------------------------------------
 
@@ -547,6 +563,8 @@ ggplot(
 
 ```
 
+&nbsp;
+
 ::: callout-tip
 **Lectura del gráfico de contribuciones.**
 
@@ -555,9 +573,13 @@ ggplot(
 - **Magnitud de la barra:** producto de (i) cuánto cambió la entrada y (ii) cuán sensible es $\lambda$ a esa entrada en la matriz promedio.
 
 Una contribución pequeña no significa "esta tasa vital no importa biológicamente" — sólo significa que su variación entre las condiciones comparadas no movió mucho a $\lambda$. Para evaluar importancia biológica intrínseca, conviene complementar con elasticidad.
+
+Por último, la suma de todas las contribuciones aproxima —pero no iguala exactamente— la diferencia observada en $\lambda$, porque el ERTV es una descomposición de **primer orden** (lineal). Cuando las diferencias entre matrices son grandes —como el desplome de la fecundidad entre estos dos hospederos—, una fracción de la diferencia en $\lambda$ queda sin explicar por la aproximación; para cambios de esa magnitud conviene complementar el ERTV con análisis no lineales (ver el capítulo de [funciones de transferencia](113-Funciones_de_Transferencia.qmd)).
 :::
 
-De acuerdo con el análisis de elasticidad para cada una de las poblaciones de *O. brachyandrum*, tanto en *Q. martinezii* como en *Q. rugosa* la permanencia de individuos infantiles es la que tiene un mayor impacto sobre los valores de la tasa de crecimiento poblacional (@fig-LTRE16). De acuerdo con el ERTV, el cual toma en cuenta las diferencias en las tasas vitales y la sensibilidad de lambda que es una función no lineal de esas tasas vitales, podemos observar que la fecundidad ($f_{sa}$) y el crecimiento de plántulas a juveniles ($g_{sj}$), de juveniles a adultos ($g_{ja}$) y el retroceso de adultos a juveniles ($g_{aj}$) tiene las mayores contribuciones a las diferencias en lambda entre *Q. martinezii* y *Q. rugosa* que la permanencia de plántulas.
+&nbsp;
+
+De acuerdo con el análisis de elasticidad para cada una de las poblaciones de *O. brachyandrum*, tanto en *Q. martinezii* como en *Q. rugosa* la permanencia de los individuos infantiles es la que tiene el mayor impacto **potencial** sobre la tasa de crecimiento poblacional (@fig-LTRE16). El ERTV, en cambio, pondera las diferencias **observadas** en cada tasa vital por la sensibilidad de $\lambda$; bajo este criterio, las mayores contribuciones a la diferencia en $\lambda$ entre *Q. martinezii* y *Q. rugosa* provienen de la fecundidad (la contribución de adultos y de juveniles hacia las plántulas, $f_{41}$ y $f_{31}$), seguida del crecimiento de infantiles a juveniles ($g_{23}$), del crecimiento de juveniles a adultos ($g_{34}$) y del retroceso de adultos a juveniles ($g_{43}$). Este contraste ilustra la diferencia entre un análisis prospectivo (elasticidad) y uno retrospectivo (ERTV): la transición con mayor importancia *potencial* no es necesariamente la que más contribuyó a la diferencia *observada*.
 
 ```{r}
 #| label: fig-LTRE16

@@ -107,6 +107,8 @@ Actualmente, los modelos de dinámica transitoria han demostrado ser herramienta
 Una población con $\lambda = 1.10$ no necesariamente crecerá un 10% el primer año: si su estructura está sesgada (todos plántulas, todos adultos), puede inicialmente decrecer, oscilar o crecer mucho más rápido que $\lambda$ — y sólo después de varios pasos de tiempo el comportamiento converge al asintótico.
 :::
 
+&nbsp;
+
 El marco metodológico propuesto por Stott y colaboradores [-@stott2011framework; -@stott2012beyond; -@stott2012popdemo] incluye procedimientos matemáticos implementados en el software estadístico R, que facilitan el cálculo y análisis de la dinámica transitoria. Para desarrollar un proyecto de este tipo, se recomienda seguir los pasos resumidos a continuación:
 
 ### Procedimiento básico
@@ -136,7 +138,7 @@ Como punto de partida y con la finalidad de contrastar su comportamiento con la 
 a)  *Matriz de transición y estructura poblacional inicial*. Para estimar el crecimiento futuro de la población se debe de contar con la matriz de proyección poblacional y su correspondiente vector de la estructura poblacional observada al inicio del estudio de una o varias poblaciones. En el análisis se usarán los datos obtenidos para *Lepanthes rubripetala*, una orquídea epífita miniatura, endémica de Puerto Rico. Tremblay y colaboradores [-@tremblay2015stable] analizaron mensualmente seis poblaciones de la especie de junio de 1994 a enero de 1996. En específico en este capítulo usaremos la matriz promedio de la población 1 [@tremblay2015stable] y su correspondiente estructura poblacional [@schodelbauerova2010prediction].
 
 ::: img-float
-![*Lepanthes rupestris*. Foto: Tremblay](images/Lepanthes_rupestris_Tremblay.jpeg){#fig-lepanthes-rupestris-tremblay style="float: left; style=margin: 15px; margin: 10px; width: 40% ; "}
+![*Lepanthes rupestris*. Foto: Tremblay. Estudio demográfico: @tremblay2015stable](images/Lepanthes_rupestris_Tremblay.jpeg){#fig-lepanthes-rupestris-tremblay style="float: left; style=margin: 15px; margin: 10px; width: 40% ; "}
 :::
 
 El ciclo de vida de *L. rubripetala* fue dividido en cuatro categorías de estado: plántula (PL), juvenil (J), adulto no reproductivo (NR) y adulto reproductivo (AR). Esta última categoría florece y produce frutos a largo de todo el año [@tremblay2015stable; @schodelbauerova2010prediction]. En consecuencia, la estructura poblacional cuenta con una columna de 4 elementos, que indican el número de individuos encontrado en el estado de plántula (0), juvenil (46), adulto no reproductivo (38) y adulto reproductivo (82) al inicio del estudio, indicado como $t_{0}$ [@schodelbauerova2010prediction]. Por su parte, la matriz de transición de *L. rubripetala* está formada por 4 renglones y 4 columnas [@tremblay2015stable], que corresponden a los estados del ciclo de vida de la especie y los 16 elementos de la probabilidad de permanencia, transición a una categoría superior, retroceso a una categoría inferior y fecundidad promedio por categoría (ver el capítulo de [Transiciones](105-Transiciones.qmd)).
@@ -224,6 +226,8 @@ Por ejemplo, la estructura inicial en la población 1 de *L. rubripetala* fue la
 
 Una población observada lejos de la estructura estable puede comportarse de forma muy distinta a lo que predice $\lambda$.
 :::
+
+&nbsp;
 
 #### Límite inferior
 
@@ -503,6 +507,8 @@ abs.plot
 **Estandarizar permite comparar escenarios sin que $\lambda$ los domine.** Cuando se proyecta la dinámica absoluta de varios escenarios iniciales, la trayectoria que más crece es siempre la que más se acerca a la estructura estable — porque después de unos pocos pasos todas crecen al ritmo asintótico $\lambda$. Para aislar **el efecto de la estructura inicial**, se divide la matriz por $\lambda$ y se escala el vector inicial a sumar 1. Las trayectorias resultantes muestran sólo la respuesta transitoria, lo que las hace **directamente comparables** entre escenarios y entre poblaciones de distintas especies.
 :::
 
+&nbsp;
+
 La dinámica poblacional transitoria estandarizada proyecta de forma cuantitativa los cambios en la población a corto plazo para los escenarios planteados. Con este fin, primero se elimina el efecto a largo plazo de la tasa de crecimiento poblacional y de la estructura inicial de la población, lo cual permite mantener otras propiedades asintóticas, por ejemplo, la estructura estable de estados/edades y las elasticidades [@koons2021transient]. En este proceso se dividen todos los elementos de la matriz sobre el valor de la lambda asintótica ($\lambda_{max}$) obtenida por la iteración de la matriz y se escala a 1 el vector de la estructura poblacional [@koons2021transient]. Como resultado de este proceso, y para cualquier matriz y vector estandarizados, tendremos una $\lambda_{max}$ igual a la unidad y la suma de 1 en el segundo caso, lo cual facilita y hace equitativa la comparación entre los modelos de los distintos escenarios [@stott2011framework; @stott2012beyond; @stott2012popdemo; @koons2021transient].
 
 En el artículo de Tremblay y colaboradores [-@tremblay2015stable], la dinámica transitoria para *L. rubripetala* corresponde a la figura 2B. Esta figura se construye con base en la matriz y vectores estandarizados de los cinco escenarios definidos y se proyecta el crecimiento de la población a 50 meses (4.1 años). Las gráficas de la dinámica transitoria para estos escenarios se generan usando las siguientes funciones de **R**: `standard.A = TRUE` en la estandarización de la matriz y `standard.vec = TRUE` para el vector, `project()` para estimar la tendencia del crecimiento poblacional [@stott2011framework; @stott2012beyond; @stott2012popdemo] y `ggplot2` para agrupar en una sola gráfica la tendencia del crecimiento poblacional de los escenarios.
@@ -739,6 +745,8 @@ Se determinan los *límites de la dinámica transitoria* con el fin de evaluar e
 
 Cada uno tiene una variante "alta" (*upper*) y "baja" (*lower*), correspondiente a estructuras iniciales que producen el máximo o mínimo del índice respectivamente.
 :::
+
+&nbsp;
 
 #### Cálculo de los límites transitorios
 

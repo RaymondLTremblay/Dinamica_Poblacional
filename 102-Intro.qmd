@@ -38,7 +38,7 @@ pre.r {
 
 ```
 
-Por: Raymond L. Tremblay, Ernesto Mujica, Demetria Mondragón
+Por: Raymond L. Tremblay, Ernesto Mujica Benitez, Demetria Mondragón
 
 Las matrices de proyección poblacional (MPP) son la herramienta cuantitativa estándar para responder preguntas sobre el destino de las poblaciones: ¿están creciendo, en declive, o estables? ¿qué etapa del ciclo de vida es más vulnerable? ¿es viable la cosecha sostenible? ¿qué tan rápido se recuperaría la población después de una intervención de manejo? La dinámica poblacional, como disciplina, vincula los procesos demográficos individuales —supervivencia, crecimiento y reproducción— con los patrones observados a nivel de población.
 
@@ -49,30 +49,30 @@ Este libro está organizado alrededor de esa idea. No pretende ser un tratado co
 &nbsp;
 
 ::: callout-tip
-
 ## Las cuatro tareas de un demógrafo
 
 1.  **Construir** el modelo: capítulos sobre ciclo de vida, recolección de datos, transiciones, fecundidad y descomposición U/F/C.
 2.  **Diagnosticar** los datos y la matriz: capítulo sobre métodos bayesianos para transiciones raras y, sobre todo, el capítulo sobre impactos de datos sin sentido biológico.
 3.  **Analizar** el comportamiento: capítulos sobre crecimiento, propiedades, elasticidad, dinámica transitoria, funciones de transferencia, LTRE y simulaciones.
 4.  **Comunicar y defender** los resultados: capítulo con la traducción del protocolo estándar para reportar MPP de Gascoigne et al. [@gascoigne2023standard].
-
 :::
+
+&nbsp;
 
 ¿Por qué orquídeas? Porque su historia de vida es lo bastante extrema —semillas microscópicas, dependencia obligada de hongos micorrízicos para germinación, longevidad alta, eventos reproductivos raros, fenómenos de latencia— para poner a prueba los supuestos clásicos del modelado matricial. Si los métodos del libro funcionan para orquídeas, funcionan para casi cualquier planta o animal cuyo ciclo de vida quiera modelarse.
 
 &nbsp;
 
 ::: callout-note
-
 ## Cómo leer este libro
 
 - **Si está empezando** y nunca ha construido una MPP: lea en orden. Los capítulos del 4 al 11 dan los fundamentos.
 - **Si ya tiene una matriz preliminar** y quiere validarla antes de seguir: vaya directamente al capítulo sobre impactos de datos sin sentido biológico —es la lista de verificación más útil del libro.
 - **Si va a publicar resultados de MPP**: lea el capítulo del protocolo estandarizado antes de redactar la sección de métodos.
 - **Si quiere usar COMPADRE** para análisis comparativos: los capítulos sobre `Rcompadre` y `Rage` son guías prácticas.
-
 :::
+
+&nbsp;
 
 #### Librerías de R requeridas para el siguiente módulo
 
@@ -98,10 +98,10 @@ Tradicionalmente, la conservación se ha fundamentado en la premisa de que la pr
 &nbsp;
 
 ::: callout-note
-
 **La presencia no garantiza la persistencia.** La protección del hábitat es necesaria pero no suficiente para asegurar la viabilidad de una especie. La interacción ecológica entre el dodo y *Calvaria major* ilustra cómo una especie puede persistir en abundancia y aún así estar en una trayectoria demográfica comprometida. Esta es una motivación central para el análisis de dinámica poblacional.
-
 :::
+
+&nbsp;
 
 ## ¿Qué es el estudio de la dinámica poblacional?
 
@@ -114,10 +114,10 @@ La dinámica de poblaciones es fundamental en todas las áreas de la ecología y
 &nbsp;
 
 ::: callout-note
-
 **Definición operativa.** La dinámica poblacional es el estudio de cómo y por qué cambian el tamaño y la estructura de una población a través del tiempo, como resultado de los procesos demográficos fundamentales: supervivencia, crecimiento (en tamaño o estadio) y reproducción. El objetivo central es cuantificar la contribución de cada proceso al cambio poblacional.
-
 :::
+
+&nbsp;
 
 La definición más precisa de los estudios de dinámica poblacional se refiere al análisis de los factores que influyen en el crecimiento, la estabilidad y la reducción del tamaño de una población a lo largo del tiempo. Por ejemplo, la dinámica poblacional de especies invasoras suele incluir un periodo inicial de crecimiento muy lento durante la colonización de un nuevo sitio, seguido por una fase de crecimiento exponencial y, posteriormente, una disminución en la tasa de crecimiento poblacional. La figura siguiente ilustra el cambio en el número de individuos a lo largo del tiempo para una especie invasora hipotética. Lo fundamental es que la dinámica poblacional constituye una herramienta clave para evaluar el impacto de diferentes factores sobre el crecimiento poblacional y su viabilidad.
 
@@ -191,7 +191,7 @@ En este libro presentaremos una introducción a cada una de estas vertientes. Nu
 ### Tabla: El uso potencial de los diferentes acercamientos de MPP
 
 | Categoría de Uso | Uso específico | Referencias generales | Referencias con Orquídeas |
-|:---|:---|:---|---:|
+|:-----------------|:-----------------|:-----------------|-----------------:|
 | Manejo | Identificar las etapas o procesos demográficos claves | [@crouse1987stage] | [@shefferson2003life; @kery2004demographic; @zotz2006population; @zhongjian2008correlation; @tremblay2009dormancy; @tremblay2009population] |
 |  | Determinar cuántos individuos en una población son necesarios para reducir el riesgo de extinción | [@shaffer1981minimum; @armbruster1993population; @traill2007minimum; @flather2011minimum] |  |
 |  | Determinar cuántos individuos se necesitan introducir en un sitio para establecer una población viable | [@bustamante1996population; @bell2003projecting] |  |
@@ -247,10 +247,10 @@ Se suele asumir que la colecta de individuos de especies de orquídeas desde sus
 &nbsp;
 
 ::: callout-warning
-
 **Cuidado con la "extracción de bajo impacto".** Es común suponer que la recolección de un número reducido de individuos —para conservación *ex situ*, propagación o uso comercial— tiene un impacto demográfico despreciable. Este supuesto requiere evaluación crítica: el impacto depende del estadio extraído, de la elasticidad de ese estadio sobre $\lambda$, y de la frecuencia con que se repite la extracción. Sin un análisis demográfico explícito, no se puede afirmar que la extracción es sostenible.
-
 :::
+
+&nbsp;
 
 Por lo tanto, la pregunta central es: ¿cuántos individuos, y en qué etapas del ciclo de vida, pueden ser extraídos sin afectar negativamente el crecimiento poblacional? [@ticktin2020synthesis]. Responder esta cuestión implica comprender la dinámica poblacional y aplicar modelos que permitan estimar umbrales de extracción sostenible.
 
@@ -283,7 +283,6 @@ Otra definición, de carácter evolutivo, considera una población como el conju
 &nbsp;
 
 ::: callout-tip
-
 **¿Qué es una población? Tres maneras de pensarlo.**
 
 - **Operativa:** un grupo de individuos suficientemente cercanos para muestrearlos juntos. Útil en campo, pero sin justificación ecológica explícita.
@@ -291,17 +290,16 @@ Otra definición, de carácter evolutivo, considera una población como el conju
 - **Evolutiva:** un grupo entre el cual ocurre flujo génico durante una generación. La escala depende del tiempo generacional de la especie.
 
 Estas definiciones a menudo no coinciden, y la elección afecta directamente la interpretación de los resultados de un análisis de dinámica poblacional.
-
 :::
+
+&nbsp;
 
 ### Procesos y patrones evolutivos del ciclo de vida que impactan el crecimiento poblacional
 
 Un trabajo que aprovecha la MPP para evaluar procesos evolutivos es el de Ricardo Calvo [@calvo1993evolutionary], quien analizó la dinámica poblacional de *Tolumnia variegata* para determinar si la limitación de polinizadores afecta su viabilidad. El estudio combinó experimentos de polinización manual con modelos matriciales para estimar la tasa de crecimiento poblacional bajo distintos niveles de polinización. Los resultados mostraron que la fructificación natural es extremadamente baja (\<1 %), pero aumenta significativamente con polinización artificial, aunque con costos reproductivos en crecimiento y floración futura. Las simulaciones sugieren que incluso una baja producción de plántulas por fruto podría compensar estos costos, favoreciendo la selección hacia mayor polinización. Sin embargo, la persistencia de baja fructificación en orquídeas engañosas indica que la estrategia puede ser estable si el reclutamiento de plántulas es limitado. Esto resalta la importancia de considerar las interacciones ecológicas y los datos de establecimiento al evaluar la viabilidad poblacional. Este caso nos recuerda que la conservación y la evolución no dependen solo de la presencia de individuos, sino de la compleja red de procesos que sostienen la vida a largo plazo.
 
 ::: img-float
-
-![*Tolumnia variegata*. Foto: Tremblay](images/Tolumnia_variegata_Tremblay.jpeg){#fig-tolumnia-variegata-tremblay style="float: right; margin: 10px;width: 50% ; "}
-
+![*Tolumnia variegata*. Foto: Tremblay. Estudio demográfico: @calvo1993evolutionary](images/Tolumnia_variegata_Tremblay.jpeg){#fig-tolumnia-variegata-tremblay style="float: right; margin: 10px;width: 50% ; "}
 :::
 
 ------------------------------------------------------------------------
@@ -311,10 +309,10 @@ Un trabajo que aprovecha la MPP para evaluar procesos evolutivos es el de Ricard
 &nbsp;
 
 ::: callout-important
-
 **Un modelo es una caricatura útil, no una representación completa.** Todo modelo demográfico es deliberadamente una simplificación. Si se complica en exceso, los patrones no pueden atribuirse a efectos identificables y el modelo pierde generalidad. El criterio práctico es: un modelo debe ser **lo más simple posible, pero no más simple** — suficientemente parsimonioso para interpretarse, pero suficientemente complejo para capturar los procesos esenciales.
-
 :::
+
+&nbsp;
 
 Representar el cambio poblacional mediante diagramas y sus posibles causas permite integrar los diferentes componentes bióticos y abióticos que influyen en la dinámica de una especie. Es importante aclarar que un modelo es una simplificación —una “caricatura”— y no incluye todos los factores que afectan la población. El objetivo de un modelo es reducir la complejidad biológica a los procesos más relevantes; si se complica en exceso, los patrones y dinámicas no pueden atribuirse a efectos proporcionalmente importantes. Además, un modelo demasiado específico sería aplicable solo a una especie o población, limitando su utilidad en otros sistemas.
 
@@ -325,9 +323,7 @@ Los efectos denso-dependientes pueden influir en el número de individuos en el 
 ------------------------------------------------------------------------
 
 ::: {}
-
 ![Factores que influyen en la dinámica de una población](images/Demografia_de_una_poblacion.jpg){#fig-demografia-de-una-poblacion width="50%" style="left; margin: 10px;" fig-align="center"}
-
 :::
 
 ------------------------------------------------------------------------

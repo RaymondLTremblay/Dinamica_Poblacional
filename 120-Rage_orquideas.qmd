@@ -11,7 +11,7 @@ twitter-card:
 
 Por: Raymond L. Tremblay
 
- 
+&nbsp;
 
 ::: callout-note
 ## Qué es este capítulo
@@ -19,7 +19,7 @@ Por: Raymond L. Tremblay
 Este capítulo es una **guía práctica de uso del paquete `Rage`**, organizada por la **pregunta de investigación que cada métrica responde** —no por el orden alfabético de las funciones. Asume que ya tiene un objeto `CompadreDB` filtrado (capítulo anterior) o una matriz construida a mano (capítulos 5–8). Para cada función mostramos: la pregunta biológica, el código mínimo para responderla, y una interpretación de los resultados que tenga sentido en el contexto de orquídeas.
 :::
 
- 
+&nbsp;
 
 ::: callout-tip
 ## ¿Qué métrica para qué pregunta? — Guía rápida
@@ -39,7 +39,7 @@ Este capítulo es una **guía práctica de uso del paquete `Rage`**, organizada 
 | ¿Qué transición tiene el mayor efecto sobre $\lambda$? | Sensibilidad / elasticidad | `popbio::elasticity()` |
 :::
 
- 
+&nbsp;
 
 ::: callout-warning
 ## Trampas comunes con `Rage`
@@ -50,6 +50,8 @@ Este capítulo es una **guía práctica de uso del paquete `Rage`**, organizada 
 - **`life_expect_mean()` asume que el individuo "entra" al modelo en la etapa `start`**. Si su MPP comienza con una etapa cripto (banco de semillas, latencia), la esperanza de vida puede estar inflada.
 - **`gen_time()` y `net_repro_rate()` requieren** que `matF` no sea idénticamente cero. Si la fecundidad sólo aparece en `matC` (clonal), use `matC` en vez de `matF` o redefina su pregunta.
 :::
+
+&nbsp;
 
 #### Librerías de R requeridas para el siguiente módulo
 
@@ -88,11 +90,13 @@ Para los detalles de cómo obtener la base de datos, ver el [capítulo anterior]
 compadre <- readRDS("data/COMPADRE_2026.rds")
 ```
 
- 
+&nbsp;
 
 ::: callout-tip
 **Rage versus Rcompadre.** El paquete `Rcompadre` (capítulo anterior) se enfoca en **acceder y filtrar** la base; el paquete `Rage` se enfoca en **calcular métricas demográficas** a partir de las matrices ya filtradas. La división de tareas es intencional: cargar y validar es un paso, calcular esperanza de vida o entropía es otro. Ambos paquetes pertenecen a la misma familia y comparten convenciones de nombres (e.g., `matU()`, `matF()`).
 :::
+
+&nbsp;
 
 ------------------------------------------------------------------------
 
@@ -385,13 +389,15 @@ lambdaVals2 <- map_dbl(matA(Mat_erg_irred), ~ popbio::lambda(.x))
 
 Hasta este punto hemos usado `Rcompadre` para acceder y filtrar matrices, y `popbio`/`popdemo` para calcular $\lambda$. El paquete `Rage` complementa este flujo con funciones que derivan estadísticos demográficos directamente de las matrices U, F y C. A continuación mostramos tres ejemplos sobre el subconjunto filtrado en `Mat_erg_irred`.
 
- 
+&nbsp;
 
 ::: callout-tip
 ## Recordatorio sobre las submatrices
 
 Las funciones de `Rage` requieren que las matrices estén descompuestas en sus partes (U = supervivencia/crecimiento, F = fecundidad sexual, C = crecimiento clonal). Por eso se extraen con `matU()`, `matF()` y `matC()` en lugar de usar la matriz completa A.
 :::
+
+&nbsp;
 
 ### Esperanza de vida — ¿cuánto vive un individuo?
 
@@ -432,13 +438,15 @@ pretty(summary(esperanza_vida))
 
 De las `r length(es_valida)` matrices del subconjunto, `r sum(!es_valida)` tienen al menos una columna de U con supervivencia ≥ 1 (sin sentido biológico) y se excluyen de esta y las dos métricas siguientes; las `r sum(es_valida)` restantes son cadenas de Markov absorbentes válidas.
 
- 
+&nbsp;
 
 ::: callout-tip
 ## Interpretación
 
 Una esperanza de vida alta (\> 30 pasos de tiempo) indica una especie longeva con mortalidad adulta baja —típico de orquídeas epífitas adultas establecidas. Valores bajos (\< 5 pasos de tiempo) sugieren mortalidad juvenil dominante, lo que es esperable cuando `start = 1L` corresponde a plántulas con supervivencia baja. Si el valor parece irrealista, verifique: (1) que `start` apunte a la etapa correcta, y (2) que la matriz U no contenga valores de supervivencia perfecta (ver el capítulo sobre datos sin sentido biológico).
 :::
+
+&nbsp;
 
 ### Tiempo generacional — ¿cada cuánto se reemplaza la población?
 
@@ -464,13 +472,15 @@ tiempo_gen <- pmap_dbl(
 pretty(summary(tiempo_gen))
 ```
 
- 
+&nbsp;
 
 ::: callout-tip
 ## Interpretación
 
 Un tiempo generacional alto (\> 10) indica especies "lentas", longevas, con generaciones traslapadas —el patrón típico de orquídeas epífitas perennes. Tiempos bajos (\< 2) sugieren especies "rápidas" con ciclos cortos —raras en orquídeas, comunes en hierbas anuales. Las orquídeas terrestres templadas y las epífitas tropicales suelen ubicarse en el rango 5–25, dependiendo de la longevidad observada. Comparar tiempos generacionales entre poblaciones de la misma especie en hábitats distintos es una forma poderosa de detectar diferenciación demográfica local.
 :::
+
+&nbsp;
 
 ### Edad de primera reproducción — ¿cuándo arranca la reproducción?
 
@@ -495,7 +505,7 @@ edad_madurez <- pmap_dbl(
 pretty(summary(edad_madurez))
 ```
 
- 
+&nbsp;
 
 ::: callout-tip
 ## Interpretación
@@ -503,7 +513,7 @@ pretty(summary(edad_madurez))
 En orquídeas terrestres templadas se han documentado edades de primera reproducción de 5–15 años; en epífitas tropicales el rango puede ser similar o mayor. Comparar `mature_age` con `life_expect_mean` da el "esfuerzo prereproductivo" relativo: si un individuo gasta el 40% de su vida esperada antes de reproducirse, la mortalidad juvenil tiene un peso desproporcionado en la dinámica poblacional —y por tanto en cualquier estrategia de conservación.
 :::
 
- 
+&nbsp;
 
 ::: callout-warning
 ## Cómo defender estos números frente a una revisión crítica
@@ -511,19 +521,23 @@ En orquídeas terrestres templadas se han documentado edades de primera reproduc
 Las tres métricas anteriores son robustas matemáticamente pero **sensibles** a tres decisiones del modelador: 1. **Etapa inicial (`start`).** ¿Está reportando esperanza de vida desde la semilla, la plántula, o el adulto recién reclutado? Especifique siempre. 2. **Calidad de la matriz U.** Si `colSums(matU) == 1` para alguna columna (supervivencia perfecta —ver capítulo sobre datos sin sentido biológico), las tres métricas se inflan artificialmente. La esperanza de vida puede tender a infinito. 3. **Reproducción clonal vs. sexual.** Si la mayoría de la reproducción ocurre en `matC` (clonal) y `matF` está casi vacía, `gen_time()` y `mature_age()` no representan lo que el lector espera. Reporte ambas matrices y, si la clonalidad domina, considere usar `matU + matC` en lugar de `matU + matF`.
 :::
 
+&nbsp;
+
 ------------------------------------------------------------------------
 
 ## Variación en el crecimiento poblacional entre especies epífitas y terrestres
 
 En esta sección se seleccionan las especies clasificadas como epífitas y terrestres, agrupándolas en objetos distintos que contienen todas las poblaciones muestreadas correspondientes. Esta separación permite evaluar comparativamente la variación en las tasas de crecimiento poblacional entre ambos grupos funcionales, facilitando el análisis de patrones ecológicos y demográficos asociados a sus respectivos hábitos de vida.
 
- 
+&nbsp;
 
 ::: callout-warning
 ## Cuidado con la pseudoreplicación
 
 Cada matriz de COMPADRE corresponde a una combinación específica de población, año y especie. Una sola especie puede aportar muchas matrices, de modo que comparar directamente los $\lambda$ entre grupos (epífitas vs. terrestres) sin tener en cuenta esta estructura jerárquica subestima la varianza real y puede inflar las diferencias aparentes. Para inferencias formales conviene usar modelos mixtos con la especie (y, idealmente, la población) como efecto aleatorio.
 :::
+
+&nbsp;
 
 ```{r Rage25}
 
@@ -640,13 +654,15 @@ ggplot(ALL_Lambdas, aes(lambda, fill = Habit_Type)) +
 
 Para evaluar si existen diferencias significativas en los valores propios de lambda entre especies epífitas y terrestres, se emplea un modelo lineal utilizando la función `lm()`. En este análisis, la variable **Habit_Type** se utiliza como predictor del valor propio dominante ($\lambda$), lo que permite estimar el efecto del tipo de hábitat sobre la tasa de crecimiento poblacional. Los resultados del modelo indican que las especies epífitas tienden a presentar valores de lambda más bajos en comparación con las especies terrestres. Para obtener los coeficientes específicos de cada grupo, se ajusta un segundo modelo excluyendo el intercepto mediante la inclusión de `-1` en la fórmula. Esta parametrización permite calcular directamente el promedio de lambda para cada grupo funcional, facilitando la comparación entre ellos.
 
- 
+&nbsp;
 
 ::: callout-note
 ## ¿Modelar $\lambda$ o $\log(\lambda)$?
 
 Los valores de $\lambda$ son estrictamente positivos y su escala es multiplicativa: $\lambda = 1$ separa crecimiento de declive y los desvíos por arriba (1.2) y por abajo (0.8) no son simétricos. Por eso muchos demógrafos prefieren modelar $\log(\lambda)$ (o $r = \log(\lambda)$), que sí es simétrico alrededor de cero, suele cumplir mejor los supuestos de normalidad, y conecta directamente con la teoría de crecimiento estocástico (ver el capítulo de simulaciones). Para el ajuste mostrado aquí podrías usar `lm(log(lambda) ~ Habit_Type, data = ALL_Lambdas)`.
 :::
+
+&nbsp;
 
 ```{r Rage30}
 
@@ -770,13 +786,15 @@ Se utilizó el paquete `leaflet` para crear un mapa interactivo que muestra los 
 
 El mapa revela una marcada disparidad en los sitios de muestreo entre los dos tipos de orquídeas. Las poblaciones marcadas en naranja corresponden a especies epífitas, mientras que las azules representan especies terrestres. Se observa que las especies terrestres están principalmente distribuidas en Europa y América del Norte, con escasa representación en Asia y ninguna en África. Por otro lado, las especies epífitas se concentran en el Caribe y América Central (especialmente México), sin presencia en África, Asia ni Australia.
 
- 
+&nbsp;
 
 ::: callout-important
 ## Sesgo geográfico de COMPADRE
 
 La distribución que se ve en el mapa **no refleja la diversidad real de las orquídeas en el mundo**, sino la distribución geográfica del esfuerzo de investigación demográfica. Regiones con altísima diversidad de orquídeas (Borneo, Nueva Guinea, los Andes, el África tropical) están casi ausentes de la base de datos. Cualquier conclusión global sobre patrones demográficos debe interpretarse con esta limitación en mente: estamos describiendo *dónde se ha estudiado*, no *dónde habitan* las orquídeas.
 :::
+
+&nbsp;
 
 Además, el mapa es interactivo y permite hacer zoom para examinar áreas específicas con mayor detalle. Presiona sobre los puntos para obtener información adicional sobre el nombre científico de la especie muestreada en este sitio.
 
@@ -876,7 +894,7 @@ ggplot(metricas, aes(x = habito, y = tiempo_gen, fill = habito)) +
 
 Suponga que el gráfico muestra una mediana mayor en epífitas. Antes de afirmar que esto refleja una diferencia evolutiva real, un revisor crítico preguntará:
 
- 
+&nbsp;
 
 ::: callout-warning
 ## Las cuatro preguntas que un revisor hará
@@ -887,13 +905,15 @@ Suponga que el gráfico muestra una mediana mayor en epífitas. Antes de afirmar
 4.  **¿Calidad de la matriz?** ¿Filtró por `check_NA_A`, `check_ergodic` y `check_irreducible`? ¿Las matrices que pasaron tienen `colSums(matU) ≤ 1`? Sin esas garantías, los números son numéricamente válidos pero biológicamente sospechosos (ver el capítulo sobre datos sin sentido biológico).
 :::
 
+&nbsp;
+
 Un análisis comparativo que **anticipe** estas cuatro preguntas en su discusión —y muestre los gráficos / estadísticas correspondientes— es el que sobrevive la revisión por pares. Reportar la métrica sin enfrentarlas es invitar al rechazo.
 
 ------------------------------------------------------------------------
 
 ## Ejercicios — Pruebe usted mismo
 
- 
+&nbsp;
 
 ::: callout-tip
 ## Ejercicio 1 — Esperanza de vida por especie
@@ -901,7 +921,7 @@ Un análisis comparativo que **anticipe** estas cuatro preguntas en su discusió
 Calcule la mediana de la esperanza de vida (`life_expect_mean`) para cada especie de orquídea en COMPADRE con al menos dos matrices. ¿Cuál es la especie con la esperanza de vida más alta? ¿Y la más baja? ¿Tiene sentido biológico?
 :::
 
- 
+&nbsp;
 
 ::: callout-tip
 ## Ejercicio 2 — Tiempo generacional \~ longevidad
@@ -909,7 +929,7 @@ Calcule la mediana de la esperanza de vida (`life_expect_mean`) para cada especi
 Cree un gráfico de dispersión de `gen_time` contra `life_expect_mean` para todas las matrices del subconjunto. ¿Hay correlación? ¿Qué especies se separan del patrón general?
 :::
 
- 
+&nbsp;
 
 ::: callout-tip
 ## Ejercicio 3 — Sensibilidad al `start`
@@ -917,10 +937,12 @@ Cree un gráfico de dispersión de `gen_time` contra `life_expect_mean` para tod
 Recalcule `life_expect_mean` con `start = 2L` (juvenil) y `start = N` (donde N es la última etapa). Compare con los resultados originales (`start = 1L`). ¿Cuánto cambia? ¿Qué reportaría usted en un manuscrito —y por qué?
 :::
 
- 
+&nbsp;
 
 ::: callout-tip
 ## Ejercicio 4 — Iteroparidad vs. semelparidad
 
 Use `Rage::entropy_d()` sobre el subconjunto. ¿Las orquídeas son más iteróparas (entropía baja) o más semélparas (entropía alta)? Compare con grupos no-orquídeas usando otro `Family` en COMPADRE.
 :::
+
+&nbsp;

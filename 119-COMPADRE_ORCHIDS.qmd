@@ -21,6 +21,8 @@ Este capítulo es una **guía práctica de uso del paquete `Rcompadre`**. No int
 
 :::
 
+&nbsp;
+
 Los datos demográficos comparables son la base para analizar la dinámica de poblaciones de orquídeas a través de especies, regiones y contextos ambientales. Este capítulo presenta el conjunto de datos de orquídeas derivado de la base COMPADRE y describe su organización para usarlos en los modelos y análisis del libro.
 
 ## Alcance y organización de los datos demográficos de orquídeas
@@ -55,6 +57,8 @@ Sin esta armonización, las "comparaciones entre especies" pueden ser artefactos
 
 :::
 
+&nbsp;
+
 #### Librerías de R requeridas para el siguiente módulo
 
 ```{r Compr1, message=FALSE}
@@ -75,7 +79,7 @@ source("R/figuras_helpers.R") # mat_to_ft(), compmat_to_ft(), pretty()
 
 Uno de los esfuerzos más grandes para compilar el conocimiento actual sobre la ecología de poblaciones es la creación y mantenimiento de las bases de datos de COMPADRE y COMADRE. COMPADRE es una base de datos de matrices de proyección poblacional de **plantas**; COMADRE es la base correspondiente para **animales**. En este capítulo se presenta una introducción a COMPADRE y algunas de las funciones del paquete `Rcompadre`. En el próximo capítulo se presentan funciones del paquete `Rage`. La información aquí no sustituye la documentación oficial en la [página web de COMPADRE](https://compadre-db.org/) ni los tutoriales en la [sección Education](https://compadre-db.org/Education).
 
-El valor de las bases de datos reside en tener en un mismo sitio una gran cantidad de información  organizada de manera uniforme y accesible, además de que su formato permite utilizarla directamente en diferentes análisis. En el caso de COMPADRE y COMADRE, la información está organizada en matrices de transición de estados de poblaciones (MPP) que se pueden usar para evaluar la dinámica de poblaciones de plantas y animales y con múltiples variables, tal como sus coordenadas geográficas, el tipo de hábitat, la temporalidad de los datos, la fuente de la información, entre otros.
+El valor de las bases de datos reside en tener en un mismo sitio una gran cantidad de información  organizada de manera uniforme y accesible, además de que su formato permite utilizarla directamente en diferentes análisis. En el caso de COMPADRE y COMADRE, la información está organizada en matrices de transición de estados de poblaciones (MPP) que se pueden usar para evaluar la dinámica de poblaciones de plantas y animales y con múltiples variables, tal como sus coordenadas geográficas, el tipo de hábitat, la temporalidad de los datos, la fuente de la información, entre otros.
 
 En este capítulo se aprenderá a utilizar COMPADRE para evaluar la dinámica de poblaciones de orquídeas, extrayendo diferentes tipos de datos para responder preguntas específicas.
 
@@ -157,6 +161,8 @@ Para la lista completa: `?Rcompadre::CompadreDB` y la documentación oficial.
 
 :::
 
+&nbsp;
+
 ------------------------------------------------------------------------
 
 ## Acceso a los datos de COMPADRE
@@ -209,7 +215,7 @@ dim(compadre)
 
 Se estará evaluando múltiples funciones en `Rcompadre` para aprender a usar la base de datos de COMPADRE.
 
-Para evaluar si la base de datos contiene información sobre especies particulares de orquídeas,  se utilizará la función `cdb_check_species()`. Es relevante mencionar que se pueden evaluar múltiples especies de forma simultánea. Aquí se evaluó si la base contiene información sobre las especies *Epidendrum xanthinum*, *Epipactis gigantea* y *Caladenia latifolia*.
+Para evaluar si la base de datos contiene información sobre especies particulares de orquídeas,  se utilizará la función `cdb_check_species()`. Es relevante mencionar que se pueden evaluar múltiples especies de forma simultánea. Aquí se evaluó si la base contiene información sobre las especies *Epidendrum xanthinum*, *Epipactis gigantea* y *Caladenia latifolia*.
 
 Como podrán notar, solamente existen datos para una de las tres que probamos en la base de datos de COMPADRE.
 
@@ -378,6 +384,8 @@ meta_epi |>
 
 :::
 
+&nbsp;
+
 Para un estudio y especie determinados, la base de datos COMPADRE puede contener múltiples matrices que reflejan diferentes combinaciones de población, año y/o tratamiento. Hay una función que permite obtener una única matriz promedio para cada grupo de interés (p. ej., `MatrixPopulation`) y, por lo tanto, limitar la pseudorreplicación. El término usado es *colapsar* las matrices, con la función `mpm_mean()`.
 
 Seleccionamos la búsqueda anterior y seleccionamos solamente el estudio de Hens et al. en 2017.
@@ -437,6 +445,8 @@ mat_to_ft(matA(Epi_Hens)[[1]])
 **`cdb_flag()` agrega una columna por cada chequeo.** Para una base con muchas matrices, no se filtran las problemáticas: se les agrega banderas (`check_NA_A`, `check_ergodic`, `check_irreducible`, etc.) y luego el usuario decide qué excluir según la pregunta. Por ejemplo, para análisis de elasticidad se requiere ergodicidad e irreducibilidad; para descripciones cualitativas del ciclo de vida, una matriz reducible puede ser perfectamente válida. La filosofía es **transparencia**: nunca se eliminan matrices automáticamente, siempre se documenta por qué se excluyen.
 
 :::
+
+&nbsp;
 
 Es sumamente importante el cumplimiento de los supuestos de los análisis. Si no evaluamos críticamente las condiciones de las matrices, los resultados podrían no ser biológicamente relevantes. Para los análisis de MPP es necesario que las matrices cumplan ciertas condiciones, y dependiendo de la pregunta científica se evalúan las condiciones específicas. La función `cdb_flag()` corre todos los chequeos de calidad disponibles y agrega una columna por cada uno; los principales son:
 
@@ -668,5 +678,7 @@ Para el conjunto del ejercicio 3, ¿qué proporción de matrices pasa los tres c
 **Pista:** después de `cdb_flag()`, use `table(Mat$check_NA_A, Mat$check_ergodic)` o `summarise()` con `dplyr` para contar los modos de falla.
 
 :::
+
+&nbsp;
 
 Estos ejercicios son representativos del trabajo real con COMPADRE: nunca se cargan todas las matrices, siempre se filtra primero, casi siempre hay que combinar criterios biológicos (hábitat, género) con criterios técnicos (`check_*`), y a menudo el resultado es un conjunto menor de matrices "limpias" sobre las que se hacen los análisis del resto del libro.

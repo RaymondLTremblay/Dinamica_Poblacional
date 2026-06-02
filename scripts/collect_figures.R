@@ -241,6 +241,7 @@ parse_figures_in_chapter <- function(qmd_path) {
   chunk_eval_false <- FALSE
   chunk_produces <- FALSE
   chunk_widget_fn <- NA_character_
+  chunk_pending_png <- FALSE
   opt_labels <- character(0)
   unnamed_counter <- 0L
 
@@ -261,6 +262,7 @@ parse_figures_in_chapter <- function(qmd_path) {
       chunk_eval_false <- info$skip
       chunk_produces <- FALSE
       chunk_widget_fn <- NA_character_
+      chunk_pending_png <- FALSE
       opt_labels <- character(0)
       if (is.na(chunk_label)) unnamed_counter <- unnamed_counter + 1L
       next
@@ -305,6 +307,7 @@ parse_figures_in_chapter <- function(qmd_path) {
       chunk_eval_false <- FALSE
       chunk_produces <- FALSE
       chunk_widget_fn <- NA_character_
+      chunk_pending_png <- FALSE
       opt_labels <- character(0)
       next
     }
@@ -332,6 +335,22 @@ parse_figures_in_chapter <- function(qmd_path) {
         str_split(line, "#", n = 2)[[1]][1]
       }
 
+      # Cierre multilínea: una llamada a plc_save()/grviz_save() abierta en una
+      # línea anterior del mismo chunk, con `png =`/`file =` en ESTA línea.
+      if (chunk_pending_png) {
+        m_png <- str_match(code_only, "(?:png|file)\\s*=\\s*[\"']([^\"']+)[\"']")
+        if (!is.na(m_png[1, 1])) {
+          push_fig(list(
+            type = "render_dual", src = m_png[1, 2], line = i,
+            numbered = NA
+          ))
+          chunk_pending_png <- FALSE
+          chunk_produces <- FALSE
+          chunk_widget_fn <- NA_character_
+          next
+        }
+      }
+
       # render_dual()
       m <- str_match(code_only, RENDER_DUAL_RE)
       if (!is.na(m[1, 1])) {
@@ -351,6 +370,12 @@ parse_figures_in_chapter <- function(qmd_path) {
         ))
         chunk_produces <- FALSE
         chunk_widget_fn <- NA_character_
+        next
+      }
+      # plc_save()/grviz_save() abierto en multilínea: el `png =` aparece en
+      # una línea posterior y lo captura el bloque chunk_pending_png de arriba.
+      if (str_detect(code_only, "(?:plc_save|grviz_save)\\s*\\(")) {
+        chunk_pending_png <- TRUE
         next
       }
       # save_plot_png(p, file = "path")
@@ -518,7 +543,15 @@ main <- function() {
     chapter_label <- entry[2]
     qmd_path <- file.path(ROOT, qmd_file)
     figures <- parse_figures_in_chapter(qmd_path)
-    if (length(figures) == 0L) next
+    if (length(figures) == 0L) {
+      if (file.exists(qmd_path)) {
+        message(sprintf(
+          "[collect_figures] AVISO: %s (%s) no produjo figuras detectables.",
+          qmd_file, chapter_label
+        ))
+      }
+      next
+    }
 
     chapter_dir <- file.path(DEST, chapter_label)
     if (!audit) dir.create(chapter_dir, recursive = TRUE, showWarnings = FALSE)
