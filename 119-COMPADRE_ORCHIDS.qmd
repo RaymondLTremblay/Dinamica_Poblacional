@@ -9,7 +9,9 @@ twitter-card:
 
 # COMPADRE y Orquídeas {#Compadre}
 
-*Por: Raymond L. Tremblay*
+Por: Raymond L. Tremblay
+
+&nbsp;
 
 ::: callout-note
 
@@ -23,7 +25,7 @@ Los datos demográficos comparables son la base para analizar la dinámica de po
 
 ## Alcance y organización de los datos demográficos de orquídeas
 
-El conjunto de datos de orquídeas reúne matrices de proyección poblacional y metadatos asociados (especie, ubicación, periodo de muestreo, tipo de hábitat y notas metodológicas) que permiten comparar la dinámica demográfica entre poblaciones y especies. La estructura de los datos facilita la construcción de matrices **U**, **F** y **C**, el cálculo de la tasa de crecimiento poblacional (λ) y la implementación de análisis de sensibilidad, elasticidad y LTRE, así como simulaciones bajo distintos escenarios.
+El conjunto de datos de orquídeas reúne matrices de proyección poblacional y metadatos asociados (especie, ubicación, periodo de muestreo, tipo de hábitat y notas metodológicas) que permiten comparar la dinámica demográfica entre poblaciones y especies. La estructura de los datos facilita la construcción de matrices **U**, **F** y **C**, el cálculo de la tasa de crecimiento poblacional ($\lambda$) y la implementación de análisis de sensibilidad, elasticidad y LTRE, así como simulaciones bajo distintos escenarios.
 
 En esta sección se describe cómo están organizadas las tablas principales —una tabla de **matrices** y una tabla de **metadatos**—, las claves que las conectan (especies/poblaciones/estudios) y las precauciones habituales al trabajar con información heterogénea (año de referencia, definición de estadios, unidades de medida y supuestos de reclutamiento). También se presenta una vista general de la cobertura taxonómica y geográfica del conjunto, con el fin de contextualizar cualquier patrón observado.
 
@@ -38,6 +40,8 @@ Los datos aquí descritos se integran directamente en la descomposición en matr
 ### Cobertura y limitaciones
 
 La cobertura taxonómica y espacial es heterogénea entre especies y poblaciones. Algunas series temporales son cortas o presentan años sin muestreo; en estos casos se debe documentar cualquier decisión de imputación o agregación. Las definiciones de estadios y los supuestos de reclutamiento pueden variar entre estudios; por ello, al comparar poblaciones conviene revisar la documentación asociada y mantener criterios consistentes de armonización.
+
+&nbsp;
 
 ::: callout-warning
 
@@ -75,6 +79,8 @@ El valor de las bases de datos reside en tener en un mismo sitio una gran cantid
 
 En este capítulo se aprenderá a utilizar COMPADRE para evaluar la dinámica de poblaciones de orquídeas, extrayendo diferentes tipos de datos para responder preguntas específicas.
 
+&nbsp;
+
 ::: callout-tip
 
 **Flujo de trabajo recomendado con COMPADRE.**
@@ -88,6 +94,8 @@ En este capítulo se aprenderá a utilizar COMPADRE para evaluar la dinámica de
 Este capítulo cubre los pasos 1–4. El paso 5 se desarrolla en los capítulos analíticos (elasticidad, LTRE, simulaciones, funciones de transferencia).
 
 :::
+
+&nbsp;
 
 ::: callout-tip
 
@@ -110,6 +118,8 @@ Este capítulo cubre los pasos 1–4. El paso 5 se desarrolla en los capítulos 
 
 :::
 
+&nbsp;
+
 ::: callout-warning
 
 ## Trampas comunes con `Rcompadre`
@@ -122,6 +132,8 @@ Este capítulo cubre los pasos 1–4. El paso 5 se desarrolla en los capítulos 
 - **`MatrixCriteriaSize` / `MatrixCriteriaAge` / `MatrixCriteriaOntogeny`** describen cómo se definieron los estadios. Antes de comparar matrices entre estudios, conviene verificar que estos criterios sean compatibles.
 
 :::
+
+&nbsp;
 
 ::: callout-note
 
@@ -197,7 +209,7 @@ dim(compadre)
 
 Se estará evaluando múltiples funciones en `Rcompadre` para aprender a usar la base de datos de COMPADRE.
 
-Para evaluar si la base de datos contiene información sobre especies particulares de orquídeas,  se utilizará la función ‘cdb_check_species’. Es relevante mencionar que se puede evaluar múltiples especies de forma simultánea. Aquí se evaluó si la base contiene información sobre las especies *Epidendrum xanthinum*, *Epipactis gigantea* y *Caladenia latifolia*.
+Para evaluar si la base de datos contiene información sobre especies particulares de orquídeas,  se utilizará la función `cdb_check_species()`. Es relevante mencionar que se pueden evaluar múltiples especies de forma simultánea. Aquí se evaluó si la base contiene información sobre las especies *Epidendrum xanthinum*, *Epipactis gigantea* y *Caladenia latifolia*.
 
 Como podrán notar, solamente existen datos para una de las tres que probamos en la base de datos de COMPADRE.
 
@@ -234,7 +246,7 @@ index_O <- compadre %>%
 
 ### La metadata de la base de datos de COMPADRE
 
-Con la función `cdb_metadata()` se puede evaluar la metadata de la base de datos. La función muestra el número de filas y columnas, que incluye múltiples variables, tal como el nombre de la especie usada en la fuente de información ‘SpeciesAuthor’, el nombre del taxón reconocido “SpeciesAccepted”, la fuente de información como el DOI_ISBN, los años de estudio, sus coordenadas geográficas, el tipo de hábitat, la fuente de la información, entre otros.
+Con la función `cdb_metadata()` se puede evaluar la metadata de la base de datos. La función muestra el número de filas y columnas, que incluye múltiples variables, tal como el nombre de la especie usada en la fuente de información `SpeciesAuthor`, el nombre del taxón reconocido `SpeciesAccepted`, la fuente de información como el `DOI_ISBN`, los años de estudio, sus coordenadas geográficas, el tipo de hábitat, la fuente de la información, entre otros.
 
 ```{=latex}
 \begin{landscape}
@@ -273,7 +285,7 @@ knitr::kable(mat, col.names = NULL, format = "markdown")
 
 Vamos a seleccionar solamente unas matrices de transición de estados de poblaciones de orquídeas. En este caso se selecciona la primera fila del objeto **index_O** que corresponde a la especie ***Laelia speciosa***.
 
-Observamos que hay 4 matriz en la lista. La matriz de transición de estados de poblaciones (matU), la matriz de fecundidad (matF), la matriz de clonación (matC) y la suma de las tres matrices (matA=matU+MatF+matC).
+Observamos que hay 4 matrices en la lista: la matriz de transición de estados de poblaciones (matU), la matriz de fecundidad (matF), la matriz de clonación (matC) y la suma de las tres matrices (matA = matU + matF + matC).
 
 ```{=latex}
 \begin{landscape}
@@ -358,17 +370,19 @@ meta_epi |>
 
 ## Matrices promedio
 
+&nbsp;
+
 ::: callout-tip
 
 **Pseudorreplicación: cuándo colapsar matrices.** Cuando un estudio reporta múltiples matrices para la misma población-año (e.g., diferentes tratamientos o réplicas dentro de un sitio), incluirlas todas en un análisis comparativo entre estudios infla artificialmente el tamaño de muestra. La función `mpm_mean()` reduce el conjunto a una sola matriz promedio por grupo, eliminando la pseudorreplicación. Para ver la dispersión interna del grupo, `mpm_sd()` calcula la matriz de desviaciones estándar elemento por elemento.
 
 :::
 
-Para un estudio y especie determinados, la base de datos COMPADRE puede contener múltiples matrices que reflejan diferentes combinaciones de población, año y/o tratamiento. Hay una función que permite obtener una única matriz promedio para cada grupo de interés (p. ej., `MatrixPopulation`) y, por lo tanto, limitar la pseudorreplicación. El término usado es *colapsar* las matrices, con la función `mpm_mean`.
+Para un estudio y especie determinados, la base de datos COMPADRE puede contener múltiples matrices que reflejan diferentes combinaciones de población, año y/o tratamiento. Hay una función que permite obtener una única matriz promedio para cada grupo de interés (p. ej., `MatrixPopulation`) y, por lo tanto, limitar la pseudorreplicación. El término usado es *colapsar* las matrices, con la función `mpm_mean()`.
 
 Seleccionamos la búsqueda anterior y seleccionamos solamente el estudio de Hens et al. en 2017.
 
-El primer paso es convertir cada una de las matrices de transición de estados de poblaciones en una lista de matrices y luego usar la función mpm_mean para calcular la matriz promedio de todas las matrices de transición de estados de poblaciones. De igual manera se puede calcular la mediana de los elementos de la matriz con la función mpm_median.
+El primer paso es convertir cada una de las matrices de transición de estados de poblaciones en una lista de matrices y luego usar la función `mpm_mean()` para calcular la matriz promedio de todas las matrices de transición de estados de poblaciones. De igual manera se puede calcular la mediana de los elementos de la matriz con la función `mpm_median()`.
 
 ```{r Compr14}
 #| results: asis
@@ -386,7 +400,7 @@ compmat_to_ft(mpm_promedio)
 
 ## Calcular la desviación de los elementos de la matriz
 
-De igual manera se puede calcular la desviación estándar de los elementos de la matriz de transición de estados de poblaciones con la función mpm_sd.
+De igual manera se puede calcular la desviación estándar de los elementos de la matriz de transición de estados de poblaciones con la función `mpm_sd()`.
 
 ```{r Compr15}
 #| results: asis
@@ -416,6 +430,8 @@ mat_to_ft(matA(Epi_Hens)[[1]])
 
 ### Evaluación de cumplimiento de condiciones
 
+&nbsp;
+
 ::: callout-note
 
 **`cdb_flag()` agrega una columna por cada chequeo.** Para una base con muchas matrices, no se filtran las problemáticas: se les agrega banderas (`check_NA_A`, `check_ergodic`, `check_irreducible`, etc.) y luego el usuario decide qué excluir según la pregunta. Por ejemplo, para análisis de elasticidad se requiere ergodicidad e irreducibilidad; para descripciones cualitativas del ciclo de vida, una matriz reducible puede ser perfectamente válida. La filosofía es **transparencia**: nunca se eliminan matrices automáticamente, siempre se documenta por qué se excluyen.
@@ -424,35 +440,35 @@ mat_to_ft(matA(Epi_Hens)[[1]])
 
 Es sumamente importante el cumplimiento de los supuestos de los análisis. Si no evaluamos críticamente las condiciones de las matrices, los resultados podrían no ser biológicamente relevantes. Para los análisis de MPP es necesario que las matrices cumplan ciertas condiciones, y dependiendo de la pregunta científica se evalúan las condiciones específicas. La función `cdb_flag()` corre todos los chequeos de calidad disponibles y agrega una columna por cada uno; los principales son:
 
-- **check_NA_A**: Determinar si hay valores faltantes en 'matA' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices.
+- **check_NA_A**: Determinar si hay valores faltantes en `matA`. Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices.
 
-- **check_NA_U**: Determinar si hay valores faltantes en 'matU' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices. La matriz de supervivencia es la matriz más importante para evaluar el cálculo del largo de vida de una especie.
+- **check_NA_U**: Determinar si hay valores faltantes en `matU`. Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices. La matriz de supervivencia es la matriz más importante para evaluar el cálculo del largo de vida de una especie.
 
-- **check_NA_F**: Determinar si hay valores faltantes en 'matF' Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices. La matriz de fecundidad es la matriz más importante para evaluar el crecimiento de la población, cualquier especie sin fecundidad tenderá a disminuir a través del tiempo.
+- **check_NA_F**: Determinar si hay valores faltantes en `matF`. Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices. La matriz de fecundidad es la matriz más importante para evaluar el crecimiento de la población, cualquier especie sin fecundidad tenderá a disminuir a través del tiempo.
 
-- **check_NA_C**: Determinar si hay valores faltantes en 'matC'. Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices.
+- **check_NA_C**: Determinar si hay valores faltantes en `matC`. Los valores faltantes ("NA") en las matrices impiden que la mayoría de los cálculos utilicen esas matrices.
 
-- **check_zero_U**: Determinar si la 'matU' tiene todos ceros (incluido 'NA'). Las submatrices compuestas enteramente de valores cero pueden resultar problemáticas. Puede haber buenas razones biológicas para este fenómeno. Por ejemplo, en la población focal particular en el año focal particular, realmente no se registró una supervivencia. Sin embargo, las submatrices de valor cero pueden provocar que algunos cálculos fallen y puede ser necesario excluirlas.
+- **check_zero_U**: Determinar si la `matU` tiene todos ceros (incluido 'NA'). Las submatrices compuestas enteramente de valores cero pueden resultar problemáticas. Puede haber buenas razones biológicas para este fenómeno. Por ejemplo, en la población focal particular en el año focal particular, realmente no se registró una supervivencia. Sin embargo, las submatrices de valor cero pueden provocar que algunos cálculos fallen y puede ser necesario excluirlas.
 
-- **check_zero_F**: Determinar si la 'matF' tiene todos ceros (incluido 'NA'). Las submatrices compuestas enteramente de valores cero pueden resultar problemáticas. Puede haber buenas razones biológicas para este fenómeno o que se asocien con preguntas científicas específicas. Por ejemplo, en la población particular en el año particular, realmente no se registró reproducción. Sin embargo, las submatrices con valores de cero pueden provocar que algunos cálculos fallen y puede ser necesario excluirlas. En otros estudios no se evaluó la fecundidad ya que estos parámetros no eran necesarios para contestar las preguntas científicas.
+- **check_zero_F**: Determinar si la `matF` tiene todos ceros (incluido 'NA'). Las submatrices compuestas enteramente de valores cero pueden resultar problemáticas. Puede haber buenas razones biológicas para este fenómeno o que se asocien con preguntas científicas específicas. Por ejemplo, en la población particular en el año particular, realmente no se registró reproducción. Sin embargo, las submatrices con valores de cero pueden provocar que algunos cálculos fallen y puede ser necesario excluirlas. En otros estudios no se evaluó la fecundidad ya que estos parámetros no eran necesarios para contestar las preguntas científicas.
 
-- **check_zero_U_colsum**: Determinar si las columnas de 'matU' suman a cero, esto implica que no hay supervivencia de esa etapa en particular. Esta puede ser una parametrización perfectamente válida para un año/lugar en particular, pero es biológicamente irracional a largo plazo y los usuarios pueden desear excluir matrices problemáticas de su análisis.
+- **check_zero_U_colsum**: Determinar si las columnas de `matU` suman a cero, esto implica que no hay supervivencia de esa etapa en particular. Esta puede ser una parametrización perfectamente válida para un año/lugar en particular, pero es biológicamente irracional a largo plazo y los usuarios pueden desear excluir matrices problemáticas de su análisis.
 
-- **check_singular_U**: Determinar si 'matU' es singular. Se dice que las matrices son singulares si no se pueden invertir. Se requiere inversión para muchos cálculos matriciales y, por lo tanto, la singularidad puede hacer que algunos cálculos fallen.
+- **check_singular_U**: Determinar si `matU` es singular. Se dice que las matrices son singulares si no se pueden invertir. Se requiere inversión para muchos cálculos matriciales y, por lo tanto, la singularidad puede hacer que algunos cálculos fallen.
 
-- **check_component_sum**: Determinar si las submatrices 'matU'/'matF'/'matC' suman a 'matA'. Un MPP completo ("matA") se puede dividir en las submatrices que lo componen (es decir, "matU", "matF" y "matC"). La suma de estas submatrices debe ser igual al MPP completo (es decir, 'matA' = 'matU' + 'matF' + 'matC'). A veces, sin embargo, se producen errores de modo que las submatrices NO suman 'matA'. Normalmente, esto se debe a errores de redondeo, pero es posible que se produzcan errores más importantes.
+- **check_component_sum**: Determinar si las submatrices `matU`/`matF`/`matC` suman a `matA`. Un MPP completo ("matA") se puede dividir en las submatrices que lo componen (es decir, "matU", "matF" y "matC"). La suma de estas submatrices debe ser igual al MPP completo (es decir, `matA` = `matU` + `matF` + `matC`). A veces, sin embargo, se producen errores de modo que las submatrices NO suman `matA`. Normalmente, esto se debe a errores de redondeo, pero es posible que se produzcan errores más importantes.
 
-- **check_ergodic**: Determinar si 'matA' es ergódico (ver isErgodic). Algunos cálculos matriciales requieren que el MPP ("matA") sea ergódico. Los MPP ergódicos son aquellos en los que existe un único estado estable asintótico que no depende de la estructura de la etapa inicial. Por el contrario, los MPP no ergódicos son aquellos en los que existen múltiples estados estables asintóticos, que dependen de la estructura de la etapa inicial. Los MPP que no son ergódicos suelen ser biológicamente irracionales, tanto en términos de la descripción de su ciclo de vida como de su dinámica proyectada. Por tanto, hacen que algunos cálculos fallen.
+- **check_ergodic**: Determinar si `matA` es ergódico (ver isErgodic). Algunos cálculos matriciales requieren que el MPP ("matA") sea ergódico. Los MPP ergódicos son aquellos en los que existe un único estado estable asintótico que no depende de la estructura de la etapa inicial. Por el contrario, los MPP no ergódicos son aquellos en los que existen múltiples estados estables asintóticos, que dependen de la estructura de la etapa inicial. Los MPP que no son ergódicos suelen ser biológicamente irracionales, tanto en términos de la descripción de su ciclo de vida como de su dinámica proyectada. Por tanto, hacen que algunos cálculos fallen.
 
-- **check_irreducible**: Determinar si 'matA' es irreducible (ver isIrreducible). Algunos cálculos matriciales requieren que el MPP ("matA") sea irreducible. Los MPP irreductibles son aquellos en los que las tasas de transición parametrizadas facilitan el paso de todas las etapas a todas las demás etapas. Por el contrario, los MPP reducibles representan ciclos de vida incompletos donde no son posibles caminos desde todas las etapas a todas las demás etapas. Los MPP que son reducibles suelen ser biológicamente irracionales (pero no siempre), tanto en términos de la descripción de su ciclo de vida como de su dinámica proyectada. Por ello, hacen que algunos cálculos fallen. La irreductibilidad es necesaria pero no suficiente para la ergodicidad.
+- **check_irreducible**: Determinar si `matA` es irreducible (ver isIrreducible). Algunos cálculos matriciales requieren que el MPP ("matA") sea irreducible. Los MPP irreductibles son aquellos en los que las tasas de transición parametrizadas facilitan el paso de todas las etapas a todas las demás etapas. Por el contrario, los MPP reducibles representan ciclos de vida incompletos donde no son posibles caminos desde todas las etapas a todas las demás etapas. Los MPP que son reducibles suelen ser biológicamente irracionales (pero no siempre), tanto en términos de la descripción de su ciclo de vida como de su dinámica proyectada. Por ello, hacen que algunos cálculos fallen. La irreductibilidad es necesaria pero no suficiente para la ergodicidad.
 
-- **check_primitive**: Determinar si 'matA' es primitivo (ver isPrimitive). Una matriz primitiva es una matriz no negativa que es irreducible y tiene un solo valor propio de módulo máximo. Por lo tanto, esta verificación es redundante debido a la superposición con 'check_irreducible' y 'checkErdogic'.
+- **check_primitive**: Determinar si `matA` es primitivo (ver isPrimitive). Una matriz primitiva es una matriz no negativa que es irreducible y tiene un solo valor propio de módulo máximo. Por lo tanto, esta verificación es redundante debido a la superposición con `check_irreducible` y `check_ergodic`.
 
-- **check_surv_gte_1**: Determinar si 'matU' contiene valores iguales o mayores que 1. La supervivencia está limitada entre 0 y 1. Los valores superiores a 1 no son biológicamente razonables (ver el capítulo de [Impacto de datos sin sentido](122-Impacto_de_Datos_sin_Sentido.qmd)).
+- **check_surv_gte_1**: Determinar si `matU` contiene valores iguales o mayores que 1. La supervivencia está limitada entre 0 y 1. Los valores superiores a 1 no son biológicamente razonables (ver el capítulo de [Impacto de datos sin sentido](122-Impacto_de_Datos_sin_Sentido.qmd)).
 
-Usando la función cdb_flag se puede evaluar todas las opciones en la base de datos de COMPADRE.
+Usando la función `cdb_flag()` se pueden evaluar todas las opciones en la base de datos de COMPADRE.
 
-Usando la función `cdb_flag()` se identifican problemas potenciales en las matrices de transición de estados de las poblaciones. Esa función añade una fila por opciones en la matriz. Nota que para cada prueba anterior crea una columna con **TRUE** o **FALSE** para cada matriz en la base de datos.
+Usando la función `cdb_flag()` se identifican problemas potenciales en las matrices de transición de estados de las poblaciones. Esa función añade una columna por cada chequeo en la matriz. Nota que para cada prueba anterior crea una columna con **TRUE** o **FALSE** para cada matriz en la base de datos.
 
 Para facilitar el análisis usamos solamente las especies de *Caladenia* y enseñamos solamente las tres primeras filas.
 
@@ -593,7 +609,7 @@ paste(names(meta_ei)[-(1:4)], collapse = ", ")
 Una vez identificadas las matrices que cumplen los chequeos relevantes para tu pregunta, los siguientes pasos típicos son:
 
 - **Calcular métricas demográficas** (esperanza de vida, edad de primera reproducción, generación) con el paquete `Rage` — ver el capítulo siguiente.
-- **Comparar λ entre poblaciones, especies o tratamientos** — ver los capítulos de [Crecimiento poblacional](109-Crecimiento_poblacional.qmd) y [LTRE](#ERTV).
+- **Comparar $\lambda$ entre poblaciones, especies o tratamientos** — ver los capítulos de [Crecimiento poblacional](109-Crecimiento_poblacional.qmd) y [LTRE](#ERTV).
 - **Evaluar sensibilidad y elasticidad** — ver el capítulo de [Elasticidad](#Elasticidad).
 - **Simular dinámicas bajo escenarios alternativos** — ver el capítulo de [Métodos de simulación](115-Metodos_de_simulaciones.qmd).
 
@@ -605,6 +621,8 @@ El conjunto filtrado (`Mat_erg_irred` en el ejemplo) está listo para alimentar 
 
 Aprender `Rcompadre` requiere ensuciarse las manos. Estos ejercicios usan exclusivamente las funciones presentadas en este capítulo. Las soluciones se construyen combinando `cdb_fetch()`, `subset()`/`filter()`, `cdb_flag()`, `matU()`/`matF()`/`matA()` y verbos de `dplyr`.
 
+&nbsp;
+
 ::: callout-tip
 
 ## Ejercicio 1 — *Lepanthes* en COMPADRE
@@ -614,6 +632,8 @@ Aprender `Rcompadre` requiere ensuciarse las manos. Estos ejercicios usan exclus
 **Pista:** filtre por `Genus == "Lepanthes"`, aplique `cdb_flag()`, y use `length(unique(SpeciesAccepted))`.
 
 :::
+
+&nbsp;
 
 ::: callout-tip
 
@@ -625,6 +645,8 @@ Encuentre todas las matrices de orquídeas en COMPADRE asociadas a estudios de c
 
 :::
 
+&nbsp;
+
 ::: callout-tip
 
 ## Ejercicio 3 — Estudios largos
@@ -634,6 +656,8 @@ Liste todas las orquídeas de COMPADRE cuyo estudio duró ≥ 5 años (`StudyEnd
 **Pista:** este filtro le permite identificar el subconjunto de estudios "robustos" para análisis comparativos —tamaño de muestra suficiente y resolución demográfica suficiente.
 
 :::
+
+&nbsp;
 
 ::: callout-tip
 

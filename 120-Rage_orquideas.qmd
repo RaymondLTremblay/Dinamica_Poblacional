@@ -9,7 +9,9 @@ twitter-card:
 
 # Rage y Orquídeas {#Rage}
 
-*Por: Raymond L. Tremblay*
+Por: Raymond L. Tremblay
+
+ 
 
 ::: callout-note
 ## Qué es este capítulo
@@ -17,11 +19,13 @@ twitter-card:
 Este capítulo es una **guía práctica de uso del paquete `Rage`**, organizada por la **pregunta de investigación que cada métrica responde** —no por el orden alfabético de las funciones. Asume que ya tiene un objeto `CompadreDB` filtrado (capítulo anterior) o una matriz construida a mano (capítulos 5–8). Para cada función mostramos: la pregunta biológica, el código mínimo para responderla, y una interpretación de los resultados que tenga sentido en el contexto de orquídeas.
 :::
 
+ 
+
 ::: callout-tip
 ## ¿Qué métrica para qué pregunta? — Guía rápida
 
 | Si quiere responder… | Use la métrica | Función de `Rage` |
-|------------------------|------------------------|------------------------|
+|----|----|----|
 | ¿Cuánto vive un individuo en promedio? | Esperanza de vida media | `life_expect_mean()` |
 | ¿Hay individuos longevos? ¿Y la varianza de longevidad? | Esperanza de vida + varianza | `life_expect_var()` |
 | ¿Cada cuánto se reemplaza la población? | Tiempo generacional | `gen_time()` |
@@ -34,6 +38,8 @@ Este capítulo es una **guía práctica de uso del paquete `Rage`**, organizada 
 | ¿Cómo se distribuyen los individuos entre etapas en estado estable? | Distribución estable de etapas | `popbio::stable.stage()` |
 | ¿Qué transición tiene el mayor efecto sobre $\lambda$? | Sensibilidad / elasticidad | `popbio::elasticity()` |
 :::
+
+ 
 
 ::: callout-warning
 ## Trampas comunes con `Rage`
@@ -82,6 +88,8 @@ Para los detalles de cómo obtener la base de datos, ver el [capítulo anterior]
 compadre <- readRDS("data/COMPADRE_2026.rds")
 ```
 
+ 
+
 ::: callout-tip
 **Rage versus Rcompadre.** El paquete `Rcompadre` (capítulo anterior) se enfoca en **acceder y filtrar** la base; el paquete `Rage` se enfoca en **calcular métricas demográficas** a partir de las matrices ya filtradas. La división de tareas es intencional: cargar y validar es un paso, calcular esperanza de vida o entropía es otro. Ambos paquetes pertenecen a la misma familia y comparten convenciones de nombres (e.g., `matU()`, `matF()`).
 :::
@@ -119,7 +127,7 @@ meta_orq |>
 
 En este bloque de código se construye un nuevo conjunto de datos, SPECIES_O, que resume información clave sobre los estudios incluidos en la base de datos de orquídeas. Se seleccionan variables relevantes como el año de inicio y finalización del estudio (`StudyStart`, `StudyEnd`), el nombre científico aceptado de la especie (`SpeciesAccepted`), el año de publicación (`YearPublication`), los autores (`Authors`), el identificador del artículo (`DOI_ISBN`), el tipo de organismo (`OrganismType`), y el identificador de población (`MatrixPopulation`), junto con la matriz de proyección (`mat`).
 
-Luego, se agrupan los datos por especie, año de publicación, tipo de organismo y periodo del estudio, y se calcula el número de poblaciones únicas muestreadas por especie mediante length(unique(MatrixPopulation)). El resultado se ordena alfabéticamente por especie y se normalizan los valores de los años como variables numéricas. Finalmente, se recodifica la variable OrganismType para traducir los términos originales del inglés al español: "Epiphyte" se convierte en "Epífita" y "Herbaceous perennial" en "Terrestre". Se eliminan los registros con valores faltantes en los años de inicio o finalización del estudio.
+Luego, se agrupan los datos por especie, año de publicación, tipo de organismo y periodo del estudio, y se calcula el número de poblaciones únicas muestreadas por especie mediante `length(unique(MatrixPopulation))`. El resultado se ordena alfabéticamente por especie y se normalizan los valores de los años como variables numéricas. Finalmente, se recodifica la variable `OrganismType` para traducir los términos originales del inglés al español: "Epiphyte" se convierte en "Epífita" y "Herbaceous perennial" en "Terrestre". Se eliminan los registros con valores faltantes en los años de inicio o finalización del estudio.
 
 Este resumen permite visualizar de forma clara cuántas poblaciones fueron muestreadas por especie, en qué periodo se realizaron los estudios, y qué tipo de orquídea fue analizada, lo que facilita comparaciones entre especies y estudios.
 
@@ -203,6 +211,7 @@ La siguiente visualización muestra cómo varía la duración de los estudios se
 
 ```{r}
 #| label: fig-Rage9
+#| fig-height: 10
 #| fig-cap: "Diagrama de rangos (geom_linerange con coord_flip) que muestra el inicio y el fin de cada estudio por especie, coloreado según OrganismType_RC."
 
 SPECIES_O$SpeciesAccepted <- fct_reorder(
@@ -256,7 +265,7 @@ ggplot(SPECIES_O, aes(SpeciesAccepted, ymin = StudyStart, ymax = StudyEnd, color
     legend.position = c(0.2, 0.8),
     legend.title = element_blank()
   ) +
-  theme(axis.text.y = element_text(size = 5)) +
+  theme(axis.text.y = element_text(size = 8)) +
   scale_y_continuous(n.breaks = 12)
 
 # ggsave("images/Lenght_survey.png")
@@ -292,7 +301,8 @@ ggplot(Orquideas, aes(StudyDuration, fill = OrganismType_RC)) +
   xlab("Duración de los estudios") +
   ylab("Frecuencia") +
   rlt_style_fill() +
-  scale_x_continuous(n.breaks = 10)
+  scale_x_continuous(n.breaks = 10) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # ggsave("Duración_Epi_Ter.pdf")
 
@@ -307,9 +317,9 @@ ggsave("images/Duración_Epi_Ter.png")
 
 A partir del conjunto de matrices previamente filtradas por cumplir con las condiciones de ergodicidad e irreducibilidad, se procede al cálculo del valor propio dominante ($\lambda$), el cual representa la tasa de crecimiento poblacional asintótica en modelos matriciales.
 
-Para ello, se emplea la función `eigs()` del paquete `popdemo`, que permite obtener los valores propios de una matriz. Esta función se aplica a cada matriz seleccionada mediante sapply, generando una lista de valores de ($\lambda$) almacenados en el objeto lambdaVals. Cada entrada en esta lista corresponde al valor propio dominante de una matriz matA incluida en el conjunto de datos.
+Para ello, se emplea la función `eigs()` del paquete `popdemo`, que permite obtener los valores propios de una matriz. Esta función se aplica a cada matriz seleccionada mediante `sapply()`, generando una lista de valores de ($\lambda$) almacenados en el objeto `lambdaVals`. Cada entrada en esta lista corresponde al valor propio dominante de una matriz `matA` incluida en el conjunto de datos.
 
-Posteriormente, se utiliza la función summary para obtener una descripción estadística de los valores de ($\lambda$), y la función hist para visualizar su distribución, lo que permite evaluar la variabilidad en las tasas de crecimiento poblacional entre las distintas especies o poblaciones representadas.
+Posteriormente, se utiliza la función `summary()` para obtener una descripción estadística de los valores de ($\lambda$), y la función `hist()` para visualizar su distribución, lo que permite evaluar la variabilidad en las tasas de crecimiento poblacional entre las distintas especies o poblaciones representadas.
 
 #### Matrices ergódicas e irreductibles
 
@@ -354,7 +364,7 @@ ggplot(lambdaVals, aes(value)) +
   theme(legend.position = "none")
 ```
 
-Una metodología alternativa para calcular los valores propios dominantes ($\lambda$) de las matrices de transición poblacional consiste en utilizar la función `map_dbl` de la librería purrr. Esta función permite aplicar una operación a cada elemento de una lista, devolviendo un vector numérico de igual longitud. En este contexto, se aplica una función de cálculo de $\lambda$ a cada matriz de transición (matA), obteniendo así un valor de $\lambda$ por matriz. Esta estrategia resulta eficiente para el procesamiento simultáneo de múltiples matrices dentro de un flujo de trabajo reproducible en R.
+Una metodología alternativa para calcular los valores propios dominantes ($\lambda$) de las matrices de transición poblacional consiste en utilizar la función `map_dbl()` de la librería `purrr`. Esta función permite aplicar una operación a cada elemento de una lista, devolviendo un vector numérico de igual longitud. En este contexto, se aplica una función de cálculo de $\lambda$ a cada matriz de transición (matA), obteniendo así un valor de $\lambda$ por matriz. Esta estrategia resulta eficiente para el procesamiento simultáneo de múltiples matrices dentro de un flujo de trabajo reproducible en R.
 
 ```{r Rage23}
 
@@ -374,6 +384,8 @@ lambdaVals2 <- map_dbl(matA(Mat_erg_irred), ~ popbio::lambda(.x))
 ## Demografía con `Rage`
 
 Hasta este punto hemos usado `Rcompadre` para acceder y filtrar matrices, y `popbio`/`popdemo` para calcular $\lambda$. El paquete `Rage` complementa este flujo con funciones que derivan estadísticos demográficos directamente de las matrices U, F y C. A continuación mostramos tres ejemplos sobre el subconjunto filtrado en `Mat_erg_irred`.
+
+ 
 
 ::: callout-tip
 ## Recordatorio sobre las submatrices
@@ -420,6 +432,8 @@ pretty(summary(esperanza_vida))
 
 De las `r length(es_valida)` matrices del subconjunto, `r sum(!es_valida)` tienen al menos una columna de U con supervivencia ≥ 1 (sin sentido biológico) y se excluyen de esta y las dos métricas siguientes; las `r sum(es_valida)` restantes son cadenas de Markov absorbentes válidas.
 
+ 
+
 ::: callout-tip
 ## Interpretación
 
@@ -450,6 +464,8 @@ tiempo_gen <- pmap_dbl(
 pretty(summary(tiempo_gen))
 ```
 
+ 
+
 ::: callout-tip
 ## Interpretación
 
@@ -479,11 +495,15 @@ edad_madurez <- pmap_dbl(
 pretty(summary(edad_madurez))
 ```
 
+ 
+
 ::: callout-tip
 ## Interpretación
 
 En orquídeas terrestres templadas se han documentado edades de primera reproducción de 5–15 años; en epífitas tropicales el rango puede ser similar o mayor. Comparar `mature_age` con `life_expect_mean` da el "esfuerzo prereproductivo" relativo: si un individuo gasta el 40% de su vida esperada antes de reproducirse, la mortalidad juvenil tiene un peso desproporcionado en la dinámica poblacional —y por tanto en cualquier estrategia de conservación.
 :::
+
+ 
 
 ::: callout-warning
 ## Cómo defender estos números frente a una revisión crítica
@@ -496,6 +516,8 @@ Las tres métricas anteriores son robustas matemáticamente pero **sensibles** a
 ## Variación en el crecimiento poblacional entre especies epífitas y terrestres
 
 En esta sección se seleccionan las especies clasificadas como epífitas y terrestres, agrupándolas en objetos distintos que contienen todas las poblaciones muestreadas correspondientes. Esta separación permite evaluar comparativamente la variación en las tasas de crecimiento poblacional entre ambos grupos funcionales, facilitando el análisis de patrones ecológicos y demográficos asociados a sus respectivos hábitos de vida.
+
+ 
 
 ::: callout-warning
 ## Cuidado con la pseudoreplicación
@@ -616,7 +638,9 @@ ggplot(ALL_Lambdas, aes(lambda, fill = Habit_Type)) +
 
 ## Estimación del crecimiento promedio y evaluación de diferencias significativas
 
-Para evaluar si existen diferencias significativas en los valores propios de lambda entre especies epífitas y terrestres, se emplea un modelo lineal utilizando la función `lm`. En este análisis, la variable **Habit_Type** se utiliza como predictor del valor propio dominante ($\lambda$), lo que permite estimar el efecto del tipo de hábitat sobre la tasa de crecimiento poblacional. Los resultados del modelo indican que las especies epífitas tienden a presentar valores de lambda más bajos en comparación con las especies terrestres. Para obtener los coeficientes específicos de cada grupo, se ajusta un segundo modelo excluyendo el intercepto mediante la inclusión de `-1` en la fórmula. Esta parametrización permite calcular directamente el promedio de lambda para cada grupo funcional, facilitando la comparación entre ellos.
+Para evaluar si existen diferencias significativas en los valores propios de lambda entre especies epífitas y terrestres, se emplea un modelo lineal utilizando la función `lm()`. En este análisis, la variable **Habit_Type** se utiliza como predictor del valor propio dominante ($\lambda$), lo que permite estimar el efecto del tipo de hábitat sobre la tasa de crecimiento poblacional. Los resultados del modelo indican que las especies epífitas tienden a presentar valores de lambda más bajos en comparación con las especies terrestres. Para obtener los coeficientes específicos de cada grupo, se ajusta un segundo modelo excluyendo el intercepto mediante la inclusión de `-1` en la fórmula. Esta parametrización permite calcular directamente el promedio de lambda para cada grupo funcional, facilitando la comparación entre ellos.
+
+ 
 
 ::: callout-note
 ## ¿Modelar $\lambda$ o $\log(\lambda)$?
@@ -641,7 +665,7 @@ flextable(tidy_results)
 
 ### Visualización de las distribuciones de los lambda's
 
-Para representar gráficamente las distribuciones de los coeficientes estimados en el modelo lineal, se emplean las librerías `ggdist` y `distributional`, utilizando la función `stat_halfeye()`. Esta función permite visualizar la forma y dispersión de las distribuciones de los parámetros, proporcionando una representación intuitiva de la incertidumbre asociada a cada estimación. Es importante destacar que stat_halfeye requiere especificar explícitamente la distribución de los datos; en este análisis, se asume que los valores propios de lambda ($\lambda$) siguen una distribución normal. La información utilizada para esta visualización proviene del modelo ajustado previamente (model_lambda), lo que permite comparar directamente los coeficientes entre grupos funcionales como epífitas y terrestres.
+Para representar gráficamente las distribuciones de los coeficientes estimados en el modelo lineal, se emplean las librerías `ggdist` y `distributional`, utilizando la función `stat_halfeye()`. Esta función permite visualizar la forma y dispersión de las distribuciones de los parámetros, proporcionando una representación intuitiva de la incertidumbre asociada a cada estimación. Es importante destacar que `stat_halfeye()` requiere especificar explícitamente la distribución de los datos; en este análisis, se asume que los valores propios de lambda ($\lambda$) siguen una distribución normal. La información utilizada para esta visualización proviene del modelo ajustado previamente (model_lambda), lo que permite comparar directamente los coeficientes entre grupos funcionales como epífitas y terrestres.
 
 ```{r}
 #| label: fig-Rage31
@@ -723,7 +747,7 @@ Lat_Long <- Orchid_data_DOI_Diana_3a %>%
 
 ### Visualización de distribución geoespacial
 
-Para representar la distribución geográfica de las orquídeas registradas en la base de datos `COMPADRE`, se utilizó el paquete `ggplot2`. En esta visualización, se emplea la función **borders**, que incorpora los contornos de los países al mapa. Esta función se basa en el paquete maps, el cual proporciona los datos geográficos necesarios para delinear los límites nacionales, permitiendo contextualizar espacialmente los puntos de muestreo.
+Para representar la distribución geográfica de las orquídeas registradas en la base de datos `COMPADRE`, se utilizó el paquete `ggplot2`. En esta visualización, se emplea la función `borders()`, que incorpora los contornos de los países al mapa. Esta función se basa en el paquete `maps`, el cual proporciona los datos geográficos necesarios para delinear los límites nacionales, permitiendo contextualizar espacialmente los puntos de muestreo.
 
 ```{r, message=FALSE, warning=FALSE}
 #| label: fig-Rage35
@@ -742,9 +766,11 @@ ggplot2::ggplot(Lat_Long, aes(Lon, Lat, colour = OrganismType)) +
 
 ## Mapa de distribución interactivo con Leaflet
 
-Se utilizó el paquete Leaflet para crear un mapa interactivo que muestra los sitios de muestreo de las especies de orquídeas estudiadas en campo. Este enfoque permite explorar visualmente la distribución geográfica de las poblaciones incluidas en los estudios.
+Se utilizó el paquete `leaflet` para crear un mapa interactivo que muestra los sitios de muestreo de las especies de orquídeas estudiadas en campo. Este enfoque permite explorar visualmente la distribución geográfica de las poblaciones incluidas en los estudios.
 
 El mapa revela una marcada disparidad en los sitios de muestreo entre los dos tipos de orquídeas. Las poblaciones marcadas en naranja corresponden a especies epífitas, mientras que las azules representan especies terrestres. Se observa que las especies terrestres están principalmente distribuidas en Europa y América del Norte, con escasa representación en Asia y ninguna en África. Por otro lado, las especies epífitas se concentran en el Caribe y América Central (especialmente México), sin presencia en África, Asia ni Australia.
+
+ 
 
 ::: callout-important
 ## Sesgo geográfico de COMPADRE
@@ -850,6 +876,8 @@ ggplot(metricas, aes(x = habito, y = tiempo_gen, fill = habito)) +
 
 Suponga que el gráfico muestra una mediana mayor en epífitas. Antes de afirmar que esto refleja una diferencia evolutiva real, un revisor crítico preguntará:
 
+ 
+
 ::: callout-warning
 ## Las cuatro preguntas que un revisor hará
 
@@ -865,11 +893,15 @@ Un análisis comparativo que **anticipe** estas cuatro preguntas en su discusió
 
 ## Ejercicios — Pruebe usted mismo
 
+ 
+
 ::: callout-tip
 ## Ejercicio 1 — Esperanza de vida por especie
 
 Calcule la mediana de la esperanza de vida (`life_expect_mean`) para cada especie de orquídea en COMPADRE con al menos dos matrices. ¿Cuál es la especie con la esperanza de vida más alta? ¿Y la más baja? ¿Tiene sentido biológico?
 :::
+
+ 
 
 ::: callout-tip
 ## Ejercicio 2 — Tiempo generacional \~ longevidad
@@ -877,11 +909,15 @@ Calcule la mediana de la esperanza de vida (`life_expect_mean`) para cada especi
 Cree un gráfico de dispersión de `gen_time` contra `life_expect_mean` para todas las matrices del subconjunto. ¿Hay correlación? ¿Qué especies se separan del patrón general?
 :::
 
+ 
+
 ::: callout-tip
 ## Ejercicio 3 — Sensibilidad al `start`
 
 Recalcule `life_expect_mean` con `start = 2L` (juvenil) y `start = N` (donde N es la última etapa). Compare con los resultados originales (`start = 1L`). ¿Cuánto cambia? ¿Qué reportaría usted en un manuscrito —y por qué?
 :::
+
+ 
 
 ::: callout-tip
 ## Ejercicio 4 — Iteroparidad vs. semelparidad

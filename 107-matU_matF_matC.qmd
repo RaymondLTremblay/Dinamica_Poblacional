@@ -52,12 +52,14 @@ Definiciones de las matrices
 - MatC = Matriz de Clonación
 - MatA = MatU + MatF + MatC
 
+&nbsp;
+
 ::: callout-note
 **Cada submatriz sirve análisis diferentes.**
 
 - `matU` se usa para calcular **supervivencia, esperanza de vida y trayectorias por estadios** (no incluye la creación de nuevos individuos).
 - `matF` y `matC` se usan para evaluar **contribución reproductiva** (sexual o clonal) por separado.
-- `matA = matU + matF + matC` se usa para calcular **λ** y proyecciones poblacionales completas.
+- `matA = matU + matF + matC` se usa para calcular **$\lambda$** y proyecciones poblacionales completas.
 
 Mantenerlas separadas es la convención de bases de datos como COMPADRE y permite recombinarlas según el análisis.
 :::
@@ -143,6 +145,8 @@ Los individuos generados por propagación vegetativa difieren radicalmente de la
 
 Por ello, su incorporación en la matriz ocurre generalmente en estadios superiores. El aporte se hace a la categoría de juveniles. Esto puede provocar que en la matriz `matA` las entradas superen el rango típico (0–1), ya que se suman transiciones y fecundidad vía *ramets*.
 
+&nbsp;
+
 ::: callout-note
 **Las entradas de `matA` pueden superar 1 cuando hay clonación.** En matrices puramente de transiciones (`matU`), cada columna suma a lo sumo 1 (incluyendo la mortalidad implícita). Pero al sumar `matU + matF + matC`, las entradas individuales pueden superar 1 porque un mismo individuo puede contribuir simultáneamente a varios destinos: sobrevivir y crecer (`matU`), producir plántulas sexuales (`matF`), y aportar *ramets* (`matC`). Una entrada \> 1 en `matA` no es un error — refleja que la columna ya no es una distribución de probabilidades de destino, sino una contabilidad de transiciones más reclutas.
 :::
@@ -150,6 +154,8 @@ Por ello, su incorporación en la matriz ocurre generalmente en estadios superio
 ------------------------------------------------------------------------
 
 ### Clonación: Diferencia entre *ramet* y *genet*
+
+&nbsp;
 
 ::: callout-important
 **Genet versus *ramet*.**
@@ -308,7 +314,7 @@ Podemos visualizar las transiciones de las diferentes etapas por clonación. Usa
 # remotes::install_github("jonesor/Rage") # Instalar de Github para la más reciente versión
 library(Rage)
 
-matC <- matC(Cyp_cal_2) # extraemos la matriz de clonación de este especie/población
+matC <- matC(Cyp_cal_2) # extraemos la matriz de clonación de esta especie/población
 
 plc_save(
   matC[[1]], # Note aqui se seleciona solamente la matriz de clonación
@@ -416,14 +422,18 @@ En *Cypripedium calceolus*, el aumento en tamaño y número de tallos mediante r
 
 Una revisión exhaustiva sobre este tema se encuentra en Cook [@cook1983clonal] y Vallejo et al. [@vallejo2010ecological].
 
+&nbsp;
+
 ::: callout-tip
 **Regla práctica para distinguir crecimiento vegetativo de clonación.** Mientras los nuevos módulos (pseudobulbos, hijuelos, brotes de rizoma) **permanezcan conectados** a la planta madre y compartan recursos, se contabilizan como **crecimiento vegetativo** (van a `matU` como permanencia o crecimiento entre estadios). Sólo cuando se **separan físicamente** y se vuelven ecológicamente independientes pasan a contabilizarse como **clonación** (van a `matC`). El criterio operativo es: ¿este módulo tiene un destino demográfico independiente del resto?
 :::
 
 ### Importancia de incluir clonación en modelos poblacionales
 
+&nbsp;
+
 ::: callout-warning
-**La mayoría de los modelos poblacionales de especies clonales omiten `matC`.** Janovsky et al. [@janovsky2017accounting] muestran que en COMPADRE la mayoría de las especies con reproducción clonal documentada **no** reportan una matriz `matC`, y muchos artículos que reconocen el clonación como un proceso importante tampoco lo incorporan formalmente al modelo. Esta omisión sesga las estimaciones de λ, oculta el efecto del clonación sobre la diversidad genética, y limita análisis posteriores de selección y deriva.
+**La mayoría de los modelos poblacionales de especies clonales omiten `matC`.** Janovsky et al. [@janovsky2017accounting] muestran que en COMPADRE la mayoría de las especies con reproducción clonal documentada **no** reportan una matriz `matC`, y muchos artículos que reconocen la clonación como un proceso importante tampoco lo incorporan formalmente al modelo. Esta omisión sesga las estimaciones de $\lambda$, oculta el efecto de la clonación sobre la diversidad genética, y limita análisis posteriores de selección y deriva.
 :::
 
 Janovsky et al. [@janovsky2017accounting] destacan la relevancia de la clonación en el crecimiento y la dinámica poblacional. Al analizar la base de datos COMPADRE, encontraron que la mayoría de las especies con clonación no incluyen una matriz matC, y que muchos estudios que reconocen la clonación como factor importante tampoco la incorporan en sus modelos.

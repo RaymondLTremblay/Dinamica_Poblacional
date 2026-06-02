@@ -82,6 +82,8 @@ Esto se traduce en las siguientes proporciones:
 
 La suma de estas proporciones debe ser igual a 1 (o muy cercana, considerando redondeos).
 
+&nbsp;
+
 ::: callout-important
 **La suma de cada columna debe ser 1 (incluyendo mortalidad).** Cada individuo que estaba en el estado $j$ en el periodo inicial tiene que terminar en algún destino: otro estadio o "muerto". Por eso la suma de los destinos vivos más la mortalidad debe ser 1. Si la suma de una columna es distinta de 1 (más allá del redondeo), hay un error: o bien faltan transiciones, o bien algún individuo se está contando dos veces.
 :::
@@ -152,6 +154,8 @@ Ahora utilizamos los valores calculados anteriormente para construir la matriz d
 
 - Las columnas representan el estado en el primer periodo.
 - Las filas representan el estado en el segundo periodo.
+
+&nbsp;
 
 ::: callout-important
 **Convención: columnas = origen, filas = destino.** Cada **columna** $j$ corresponde al estado del individuo en el periodo inicial; cada **fila** $i$ al estado en el siguiente periodo. La entrada $a_{ij}$ es entonces "la proporción de individuos que estaban en $j$ y terminaron en $i$". Confundir filas con columnas invierte el sentido biológico de cada transición y distorsiona todos los análisis posteriores. Conviene siempre asignar `rownames()` y `colnames()` para detectar el error visualmente.
@@ -324,6 +328,8 @@ donde:
 projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF = FALSE)
 ```
 
+&nbsp;
+
 ::: callout-note
 **Descomposición estándar de la matriz de proyección.**
 
@@ -336,13 +342,15 @@ donde $\mathbf{U}$ contiene las **transiciones** entre estadios (supervivencia �
 
 ## Matriz de Clonación
 
+&nbsp;
+
 ::: callout-warning
-**El clonación no es fecundidad.** Aunque ambos procesos generan individuos nuevos, evolutivamente son distintos: la fecundidad sexual produce descendencia genéticamente diferente, mientras que el clonación (keikis, división de rizomas) produce *ramets* con el mismo genoma que la planta madre. Sumarlos en una sola matriz $\mathbf{F}$ confunde dos procesos demográfica y evolutivamente diferentes; conviene separar $\mathbf{C}$ para análisis correctos de selección, deriva genética y estructura poblacional.
+**La clonación no es fecundidad.** Aunque ambos procesos generan individuos nuevos, evolutivamente son distintos: la fecundidad sexual produce descendencia genéticamente diferente, mientras que la clonación (keikis, división de rizomas) produce *ramets* con el mismo genoma que la planta madre. Sumarlos en una sola matriz $\mathbf{F}$ confunde dos procesos demográfica y evolutivamente diferentes; conviene separar $\mathbf{C}$ para análisis correctos de selección, deriva genética y estructura poblacional.
 :::
 
 Muchas orquídeas se reproducen por clonación, lo que significa que los individuos son genéticamente idénticos y se originan a partir de la planta madre. En algunos casos, estos clones se separan mediante un keiki o por división de los rizomas cuando estos se deterioran o mueren. Este es un método de reproducción asexual.
 
-En este contexto, la matriz de transiciones puede modificarse para incluir el clonación. Existen pocos ejemplos en orquídeas donde se incorpora una submatriz de clonación, denominada matC. Desde el punto de vista evolutivo, este proceso representa el crecimiento de un individuo y no debe considerarse como fecundidad, ya que es un mecanismo distinto. Este concepto de crecimiento es relevante en los análisis de selección natural y deriva genética, dos procesos evolutivos fundamentales. Además, la reproducción asexual puede influir en el crecimiento intrínseco y la dinámica poblacional.
+En este contexto, la matriz de transiciones puede modificarse para incluir la clonación. Existen pocos ejemplos en orquídeas donde se incorpora una submatriz de clonación, denominada matC. Desde el punto de vista evolutivo, este proceso representa el crecimiento de un individuo y no debe considerarse como fecundidad, ya que es un mecanismo distinto. Este concepto de crecimiento es relevante en los análisis de selección natural y deriva genética, dos procesos evolutivos fundamentales. Además, la reproducción asexual puede influir en el crecimiento intrínseco y la dinámica poblacional.
 
 Como ejemplo, revisamos el trabajo sobre *Cypripedium calceolus* en Europa [@garcia2010living]. En este estudio, los autores analizaron la dinámica de poblaciones situadas en la periferia de su distribución geográfica, específicamente en los Pirineos y el norte de Europa. Aprovecharemos este caso para mostrar cómo se identifican especies que incluyen una matriz de clonación (`matC`).
 
@@ -465,9 +473,9 @@ digraph {
 )
 ```
 
-Los estudios sobre orquídeas que incorporan matrices de clonación son poco frecuentes, pero es fundamental considerar este proceso en los análisis de dinámica poblacional. El clonación puede tener un impacto significativo tanto en la dinámica de las poblaciones como en la evolución de las especies.
+Los estudios sobre orquídeas que incorporan matrices de clonación son poco frecuentes, pero es fundamental considerar este proceso en los análisis de dinámica poblacional. La clonación puede tener un impacto significativo tanto en la dinámica de las poblaciones como en la evolución de las especies.
 
-En este contexto, el clonación se entiende como una forma de reproducción asexual que puede modificar la estructura genética de la población y afectar su capacidad de adaptación frente a cambios ambientales.
+En este contexto, la clonación se entiende como una forma de reproducción asexual que puede modificar la estructura genética de la población y afectar su capacidad de adaptación frente a cambios ambientales.
 
 ------------------------------------------------------------------------
 
@@ -478,6 +486,8 @@ El uso de métodos tradicionales, ya sea mediante cálculos manuales o utilizand
 En el capítulo [Impacto de datos sin sentido biológico](122-Impacto_de_Datos_sin_Sentido.qmd) se analizan los problemas que ocurren cuando los datos carecen de coherencia biológica, cómo construir matrices más confiables y cuándo es apropiado emplear el método bayesiano en los análisis. Este enfoque permite resolver inconsistencias y garantizar que las matrices sean más compatibles con la biología de la especie estudiada, aumentando así la relevancia de los resultados.
 
 Los autores recomiendan utilizar el **método bayesiano** para el análisis de matrices de transición en la mayoría de los casos, excepto cuando el tamaño de muestra es muy grande y ninguna transición es rara. El método bayesiano es un enfoque estadístico que permite incorporar información previa y ajustar los modelos a los datos observados. Este enfoque es especialmente útil cuando se trabaja con datos escasos o transiciones poco frecuentes. Aunque su implementación puede ser más compleja, ofrece mayor flexibilidad y robustez, además de estimar la confianza en los valores de transición y fecundidad.
+
+&nbsp;
 
 ::: callout-tip
 **Cambia al método bayesiano cuando los datos son escasos o las transiciones son raras.** El método tradicional (`projection.matrix()`) asume que las proporciones observadas estiman bien las probabilidades de transición. Esta suposición se rompe cuando el tamaño de muestra es pequeño o cuando alguna transición ocurrió con frecuencia 0/n (común en transiciones raras). En esos casos, el método bayesiano incorpora información a priori, evita probabilidades exactamente 0 o 1, y produce intervalos de confianza explícitos. Ver el capítulo [Acercamiento bayesiano para calcular transiciones y fecundidades](108-Bayesian_PPM.qmd).

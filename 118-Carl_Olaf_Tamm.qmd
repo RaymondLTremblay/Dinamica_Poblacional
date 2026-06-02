@@ -110,19 +110,23 @@ Los datos de Tamm fueron compartidos de forma visual usando gráficos. En la fig
 - línea entrecortada: individuo no muestreado
 - línea bifurcada: individuos que se clonan
 
+&nbsp;
+
 ::: callout-tip
 **El método visual de Tamm sigue vigente.** El diagrama de líneas verticales —una por individuo, con grosor codificando estado reproductivo y discontinuidades indicando años no muestreados— es esencialmente una representación cruda de un *capture-recapture history*. Mucho antes de que existieran los modelos formales de Cormack-Jolly-Seber, Tamm intuyó que la unidad básica del análisis demográfico es la **historia de cada individuo**, no el conteo agregado. Los métodos bayesianos modernos para estimar latencia (capítulo de [Acercamiento bayesiano](108-Bayesian_PPM.qmd)) son la formalización estadística de lo que Tamm ya hacía visualmente.
 :::
 
-```{r OCTamm_2, echo=FALSE, out.width= "50%", out.extra='style="float:right; padding:10px"', fig.cap="Reproducción de Tamm: 1972, Dactylorhiza incarnata, dibujo por Alondra Martinez Martinez"}
+```{r OCTamm_2, echo=FALSE, out.width= "50%", out.extra='style="float:right; padding:10px"', fig.cap="Reproducción de Tamm: 1972, Dactylorhiza incarnata, dibujo por Alondra Martínez Martínez"}
 
 knitr::include_graphics("images/Tamm_1972_Dactylorhiza_incarnata_2.jpeg")
 ```
 
 Tamm estableció en el campo parcelas de 0.5 m × 0.5 m o de 1.0 m × 1.0 m y muestreó todos los individuos en cada parcela en años consecutivos (las líneas entrecortadas son años no muestreados). Por ejemplo, entre 1945 y 1947 no se muestreó esta parcela a causa de la Segunda Guerra Mundial. Tamm estaba interesado en la dinámica de las orquídeas porque había notado que los individuos no florecen todos los años, y que la floración era un evento relativamente raro. En *Orchis sambucina* (ahora *Dactylorhiza sambucina*) notó que en 1942 solamente 7 plantas florecieron, mientras que en 1945 había 40 con flores [@tamm1948observations]. Tamm sugirió que la poca cantidad de nuevos individuos podría estar correlacionada con la competencia por recursos (nutrientes, luz y agua), y que la capacidad de las plantas de sobrevivir eventos difíciles está parcialmente correlacionada con su edad: las plantas de mayor edad podrían tener una menor probabilidad de supervivencia [@tamm1948observations]. Tamm sugirió, además, que las plantas tienen un límite de años que pueden sobrevivir, es decir que existe senescencia en plantas perennes. Aunque ese concepto estaba bien establecido en animales, no se había considerado seriamente en plantas perennes hasta entonces.
 
+&nbsp;
+
 ::: callout-note
-**Senescencia en plantas perennes: una idea que tardó en aceptarse.** Tamm propuso que las orquídeas terrestres muestran senescencia —la probabilidad de morir aumenta con la edad— una idea que en la década de 1940 era controvertida. Muchos botánicos asumían que las plantas perennes podían vivir indefinidamente bajo condiciones favorables. Estudios posteriores con orquídeas y otras plantas perennes han confirmado el patrón en algunas especies, pero también han mostrado que la longevidad puede variar enormemente entre especies, lo cual hace difícil generalizar (ver [@tremblay2000plant] para *Lepanthes*).
+**Senescencia en plantas perennes: una idea que tardó en aceptarse.** Tamm propuso que las orquídeas terrestres muestran senescencia —la probabilidad de morir aumenta con la edad— una idea que en la década de 1940 era controvertida. Muchos botánicos asumían que las plantas perennes podían vivir indefinidamente bajo condiciones favorables. Estudios posteriores con orquídeas y otras plantas perennes han confirmado el patrón en algunas especies, pero también han mostrado que la longevidad puede variar enormemente entre especies, lo cual hace difícil generalizar (ver @tremblay2000plant para *Lepanthes*).
 :::
 
 ::: img-float
@@ -181,6 +185,8 @@ En la figura siguiente se enseña la grafica de supervivencia de *Dactylorhiza s
 ------------------------------------------------------------------------
 
 ## Re-evaluación de los datos de Tamm
+
+&nbsp;
 
 ::: callout-warning
 **Cuidados al re-analizar datos demográficos antiguos.** Re-aplicar métodos modernos a datos históricos es valioso pero tiene limitaciones:
@@ -293,7 +299,7 @@ Tmat # la matriz de transición final normalizada con los datos del campo
 
 Para tomar en cuenta la fecundidad, se necesita una matriz de fertilidad. En este caso los datos son muy limitados: la cantidad de eventos reproductivos observados es 5 en 1944, 1 en 1948, 2 en 1949 y 1 en 1951 (total 9 eventos; solamente el individuo #5 se reprodujo dos veces). Asumimos que todos los nuevos individuos en la población provienen de estos eventos reproductivos y que ningún reclutamiento proviene de fuentes externas. De 9 eventos reproductivos surgieron 15 nuevos individuos vegetativos entre 1949 y 1967, lo que equivale a una fecundidad observada de $15/9 \approx 1.67$ nuevos individuos por evento reproductivo. Nota que no se trata de la cantidad de semillas producidas, ya que no tenemos información sobre la cantidad de semillas que germinan y se establecen. Lo que tenemos es la cantidad de individuos que florecen y, por consecuencia, producen nuevos individuos vegetativos. El otro supuesto implícito es que las semillas pueden permanecer latentes durante múltiples años, o pueden germinar pero no producir individuos vegetativos o con flores inmediatamente; este periodo de latencia tras la germinación es una etapa no observada y no está en el modelo.
 
-- La latencia de las semillas de orquídeas es un supuesto que no se puede evaluar con los datos de Tamm, pero es un supuesto razonable si uno toma en cuenta los trabajos de Whigham et al. [@whigham2006seed].
+- La latencia de las semillas de orquídeas es un supuesto que no se puede evaluar con los datos de Tamm, pero es un supuesto razonable si uno toma en cuenta los trabajos de Whigham et al. [-@whigham2006seed].
 
 ## Crear la matriz de fecundidad
 
@@ -308,7 +314,7 @@ TF2
 
 ------------------------------------------------------------------------
 
-¿Como se ve el ciclo de vida de esa especie en estos años?
+¿Cómo se ve el ciclo de vida de esa especie en estos años?
 
 - rojo: individuos que se quedan en la misma etapa
 - verde: individuos que pasan de una etapa a otra (excluyendo latente)
@@ -369,9 +375,9 @@ digraph {
 
 Ahora usamos la información de las matrices de transiciones, fertilidades y sus valores de prior para calcular los parámetros de la especie
 
-Antes de seguir, comparamos la matriz original con los valores de la matriz posterior. Para calcular la matriz de transición y de fecundidad posterior se usa la función "priorweight" para reducir o aumentar la confianza que uno tiene sobre los valores prior. Nota que como estos valores provienen de otra especies es buena idea reducir la confianza que uno tiene sobre estos valores de "priors" en los análisis usando un **priorweight** pequeño.
+Antes de seguir, comparamos la matriz original con los valores de la matriz posterior. Para calcular la matriz de transición y de fecundidad posterior se usa la función "priorweight" para reducir o aumentar la confianza que uno tiene sobre los valores prior. Nota que como estos valores provienen de otra especie es buena idea reducir la confianza que uno tiene sobre estos valores de "priors" en los análisis usando un **priorweight** pequeño.
 
-El valor de 0.01, es que se usa 1% de los valores prior y 99% de los valores del campo. Por consecuencia dominará los valores del campo. Nota que en la matriz posterior se observa valores en parámetros que originalmente eran cero (ejemplo: plantas con flores que se queden con flores, valores que no se observaron del campo). Nota ahora tenemos un valor de 2% de individuos que florecen en un año particular que se quedan con flores en el año siguiente. Eso no fue un valor observado en los datos de campo, pero es un valor que se puede calcular con los datos que tenemos, y es probable que sea realista ya que ocurre en otras especies de orquídeas del mismo género. Nota también que hay una pequeña probabilidad que una planta latente sea fértil en el año siguiente (0.004).
+El valor de 0.01, es que se usa 1% de los valores prior y 99% de los valores del campo. Por consecuencia dominará los valores del campo. Nota que en la matriz posterior se observan valores en parámetros que originalmente eran cero (ejemplo: plantas con flores que se queden con flores, valores que no se observaron del campo). Nota que ahora tenemos un valor de 2% de individuos que florecen en un año particular y que se quedan con flores en el año siguiente. Eso no fue un valor observado en los datos de campo, pero es un valor que se puede calcular con los datos que tenemos, y es probable que sea realista ya que ocurre en otras especies de orquídeas del mismo género. Nota también que hay una pequeña probabilidad de que una planta latente sea fértil en el año siguiente (0.004).
 
 ```{r OCTamm_12, warning=FALSE, message=FALSE}
 
@@ -384,7 +390,7 @@ TF3 # la matriz de transiciones posterior
 
 El estimado de $\lambda$
 
-Como es esperado, la población de *Dactylorhiza incarnata* disminuye en el tiempo y el índice de crecimiento es menor que 1.0. El valor de crecimiento intrínseco es de 0.84, lo que sugiere una disminución de la población de aproximadamente 16% por año. Era de esperar que el crecimiento poblacional sea menor que 1.0, ya que la mayoría de los individuos en la población son vegetativos y que la mayoría de los individuos que florecen en un año particular no florecen en el año siguiente, hay poco reclutamiento y el nivel de mortandad es alta.
+Como es esperado, la población de *Dactylorhiza incarnata* disminuye en el tiempo y el índice de crecimiento es menor que 1.0. El valor de crecimiento intrínseco es de 0.84, lo que sugiere una disminución de la población de aproximadamente 16% por año. Era de esperar que el crecimiento poblacional sea menor que 1.0, ya que la mayoría de los individuos en la población son vegetativos y que la mayoría de los individuos que florecen en un año particular no florecen en el año siguiente, hay poco reclutamiento y el nivel de mortandad es alto.
 
 ```{r OCTamm_13}
 

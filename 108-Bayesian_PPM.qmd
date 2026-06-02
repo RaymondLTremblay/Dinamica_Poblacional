@@ -1,25 +1,25 @@
 ---
-description: "Modelos bayesianos de proyección poblacional (MPP bayesianos) que incorporan incertidumbre en transiciones y fecundidad. Implementación en R con priors informativos."
+description: "Matrices de proyección poblacional bayesianas (MPP bayesianas) que incorporan incertidumbre en transiciones y fecundidad. Implementación en R con priors informativos."
 image: "images/Lepanthes_eltoroensis_Edwin_Guevara.jpg"
 open-graph:
-  description: "Modelos bayesianos de proyección poblacional (MPP bayesianos) que incorporan incertidumbre en transiciones y fecundidad. Implementación en R con priors informativos."
+  description: "Matrices de proyección poblacional bayesianas (MPP bayesianas) que incorporan incertidumbre en transiciones y fecundidad. Implementación en R con priors informativos."
 twitter-card:
-  description: "Modelos bayesianos de proyección poblacional (MPP bayesianos) que incorporan incertidumbre en transiciones y fecundidad. Implementación en R con priors informativos."
+  description: "Matrices de proyección poblacional bayesianas (MPP bayesianas) que incorporan incertidumbre en transiciones y fecundidad. Implementación en R con priors informativos."
 ---
 
 # Acercamiento bayesiano para calcular transiciones y fecundidades
 
 Por: Raymond L. Tremblay
 
-Los modelos poblacionales bayesianos permiten integrar explícitamente la incertidumbre demográfica, de muestreo y de proceso en el análisis de la dinámica poblacional. Este capítulo introduce los modelos de proyección poblacional bayesianos (Bayesian MPP) como una extensión coherente de los modelos matriciales clásicos.
+Los modelos poblacionales bayesianos permiten integrar explícitamente la incertidumbre demográfica, de muestreo y de proceso en el análisis de la dinámica poblacional. Este capítulo introduce las matrices de proyección poblacional bayesianas (MPP bayesianas) como una extensión coherente de los modelos matriciales clásicos.
 
-## Modelos de proyección poblacional bayesianos: integrar incertidumbre y proceso
+## Matrices de proyección poblacional bayesianas: integrar incertidumbre y proceso
 
-Los modelos de proyección poblacional bayesianos (Bayesian Population Projection Models, MPP) extienden los modelos matriciales tradicionales al tratar los parámetros vitales (supervivencia, crecimiento y fecundidad) como variables aleatorias en lugar de valores puntuales fijos. Esta formulación permite propagar explícitamente la incertidumbre desde los datos primarios hasta las proyecciones de abundancia y crecimiento poblacional (λ), algo fundamental en poblaciones con tamaños de muestra reducidos, series temporales cortas o alta variabilidad ambiental.
+Las matrices de proyección poblacional bayesianas (MPP bayesianas) extienden los modelos matriciales tradicionales al tratar los parámetros vitales (supervivencia, crecimiento y fecundidad) como variables aleatorias en lugar de valores puntuales fijos. Esta formulación permite propagar explícitamente la incertidumbre desde los datos primarios hasta las proyecciones de abundancia y crecimiento poblacional ($\lambda$), algo fundamental en poblaciones con tamaños de muestra reducidos, series temporales cortas o alta variabilidad ambiental.
 
-En este capítulo se presenta el marco conceptual de los Bayesian MPP, mostrando cómo se combinan modelos de observación y proceso dentro de una jerarquía bayesiana para estimar matrices poblacionales con distribuciones posteriores completas. Se discuten las ventajas clave de este enfoque frente a métodos frecuentistas, incluyendo la incorporación de información previa, el manejo coherente de datos faltantes y la cuantificación directa de la incertidumbre en predicciones a corto y largo plazo.
+En este capítulo se presenta el marco conceptual de las MPP bayesianas, mostrando cómo se combinan modelos de observación y proceso dentro de una jerarquía bayesiana para estimar matrices poblacionales con distribuciones posteriores completas. Se discuten las ventajas clave de este enfoque frente a métodos frecuentistas, incluyendo la incorporación de información previa, el manejo coherente de datos faltantes y la cuantificación directa de la incertidumbre en predicciones a corto y largo plazo.
 
-A través de ejemplos aplicados, se ilustra cómo los Bayesian MPP facilitan la evaluación del riesgo poblacional, la comparación entre escenarios de manejo y la integración posterior con análisis de elasticidad, sensibilidad y LTRE. Este capítulo se diferencia de los anteriores porque desplaza el énfasis desde la estimación puntual de parámetros hacia la inferencia probabilística completa de la dinámica poblacional, un enfoque especialmente relevante en biología de la conservación y ecología aplicada.
+A través de ejemplos aplicados, se ilustra cómo las MPP bayesianas facilitan la evaluación del riesgo poblacional, la comparación entre escenarios de manejo y la integración posterior con análisis de elasticidad, sensibilidad y LTRE. Este capítulo se diferencia de los anteriores porque desplaza el énfasis desde la estimación puntual de parámetros hacia la inferencia probabilística completa de la dinámica poblacional, un enfoque especialmente relevante en biología de la conservación y ecología aplicada.
 
 ```{r, message=FALSE, warning=FALSE}
 #| docx_fit: true
@@ -53,23 +53,23 @@ $$\underbrace{P(\theta \mid \text{datos})}_{\text{posterior}} \propto \underbrac
 
 En español plano: la posterior es proporcional a la previa multiplicada por la verosimilitud. La previa aporta información cuando los datos son escasos; la verosimilitud (los datos) domina cuando hay muchas observaciones. **Esta propiedad es exactamente lo que necesitamos para especies raras**: si observamos 2 plántulas y 0 transiciones a juvenil, el estimador frecuentista da $\hat{p} = 0$ (lo cual implica imposibilidad biológica), mientras que el estimador bayesiano combina las 2 observaciones con la previa y da una probabilidad pequeña pero positiva, con incertidumbre cuantificada.
 
-::: callout-note
+ 
 
+::: callout-note
 **La regla de Bayes en lenguaje cotidiano.**
 
 $$\text{Lo que crees ahora} \;\propto\; \text{Lo que creías antes} \;\times\; \text{Lo que dicen los datos}$$
 
 Cuando los datos son muchos y consistentes, dominan: la posterior se parece a la verosimilitud. Cuando los datos son escasos o ambiguos, la previa importa: la posterior se parece a la previa. El método bayesiano hace este equilibrio explícito y reproducible.
-
 :::
+
+ 
 
 ::: callout-tip
-
 **Por qué leer este capítulo (incluso si nunca has hecho un análisis bayesiano).** La estimación clásica de matrices de transición —`projection.matrix()`— es perfectamente adecuada cuando el tamaño de muestra es grande y cada transición se observó muchas veces. Pero en estudios reales de orquídeas, casi nunca es así: las muestras son pequeñas, varias transiciones tienen 0 observaciones, y el resultado es una matriz con ceros que la biología sabe que no son cero. El enfoque bayesiano resuelve esto sin "inventar" datos: usa explícitamente lo que ya sabes sobre el ciclo de vida (la previa) y produce estimaciones realistas con intervalos de credibilidad. Aprender a usarlo es una de las inversiones de mayor retorno en la dinámica poblacional aplicada.
-
 :::
 
-## Introducción al MPP Bayesiano
+## Introducción a las MPP bayesianas
 
 Este capítulo presenta una alternativa bayesiana para estimar los parámetros de las matrices de transición y fecundidad en modelos poblacionales, especialmente útil en el estudio de especies raras. Estas especies suelen tener tamaños de muestra reducidos o transiciones vitales poco frecuentes, lo que dificulta obtener estimaciones confiables. El enfoque bayesiano propuesto permite incorporar conocimiento previo sobre el ciclo de vida de la especie para generar estimaciones más realistas.
 
@@ -183,7 +183,7 @@ install.packages("raretrans")
 library(raretrans)
 ```
 
-Ver el siguiente enlace para más información, la información que se presenta a continuación es una traducción y ampliación de la información del siguiente enlace. A continuación se muestra el uso del paquete `raretrans` para estimar los parámetros en una población y en un periodo de transición determinados.
+El contenido que se presenta a continuación es una traducción y ampliación de la documentación del siguiente enlace:
 
 <https://atyre2.github.io/raretrans/articles/onepopperiod.html>
 
@@ -209,16 +209,14 @@ rlt_theme <- theme(
 
 - **Matriz de fecundidad**: Número de nuevos individuos producidos por cada etapa reproductiva.
 
-Este es el formato de salida de `popbio::projection.matrix`. Si tenemos transiciones individuales en nuestra base de datos (con clase `data.frame()`), podemos usar `raretrans::get_state_vector` para obtener el número inicial de individuos por etapa.
+Este es el formato de salida de `popbio::projection.matrix()`. Si tenemos transiciones individuales en nuestra base de datos (con clase `data.frame()`), podemos usar `raretrans::get_state_vector()` para obtener el número inicial de individuos por etapa.
 
-Podemos utilizar la función `popbio::projection.matrix` para obtener los datos necesarios. Hacemos una demostración con los datos de transición y fecundidad de *Lepanthes eltoroensis* **POPNUM 250** en el **periodo 5**. *Lepanthes eltoroensis* es una orquídea epífita, endémica de Puerto Rico y con una distribución limitada a una pequeña región de la isla.
+Podemos utilizar la función `popbio::projection.matrix()` para obtener los datos necesarios. Hacemos una demostración con los datos de transición y fecundidad de *Lepanthes eltoroensis* **POPNUM 250** en el **periodo 5**. *Lepanthes eltoroensis* es una orquídea epífita, endémica de Puerto Rico y con una distribución limitada a una pequeña región de la isla.
 
 ::: {style="display: flex; justify-content: center; gap: 10px;"}
-
 ![*Lepanthes eltoroensis*. Foto: Edwin Guevara](images/Lepanthes_eltoroensis_Edwin_Guevara.jpg){#fig-lepanthes-eltoroensis-edwin-guevara}
 
 ![*Lepanthes eltoroensis*. Foto: Edwin Guevara](images/Lepanthes_eltoroensis_Phorophyte_Edwin_Guevara.jpg){#fig-lepanthes-eltoroensis-phorophyte-edwin-guevara}
-
 :::
 
 ------------------------------------------------------------------------
@@ -345,6 +343,7 @@ Lo que vimos anteriormente fueron algunos de los problemas reales que encontramo
 
 ```{r}
 #| docx_fit: true
+#| out.width: "100%"
 #| label: fig-bayes11
 #| fig-cap: "Diagrama del ciclo de vida de la matriz de transiciones Tmat con los estadios plántulas, juveniles y adultos."
 
@@ -379,7 +378,7 @@ RLT_Tprior <- matrix(
 
 Note que en la matriz, la 1ª fila, 3ª columna es 0.0, porque esta transición es imposible. Las previas se construyen de manera que las columnas sumen 1, lo que crea mayor flexibilidad para la ponderación de los valores *a priori*. Por defecto, la suma es 1, interpretado como un *tamaño de muestra a priori* de 1.
 
-Ahora, usando la función `fill_transitions` se agregan los valores del campo **TF**, el tamaño de muestra en el tiempo inicial **N**, la matriz de valores con *priors* informativos, y se calcula la matriz de transición *a posteriori*. Compare **TF** con esta matriz para ver los cambios.
+Ahora, usando la función `fill_transitions()` se agregan los valores del campo **TF**, el tamaño de muestra en el tiempo inicial **N**, la matriz de valores con *priors* informativos, y se calcula la matriz de transición *a posteriori*. Compare **TF** con esta matriz para ver los cambios.
 
 ```{r bayes13}
 
@@ -403,10 +402,10 @@ Cuando usamos previas informativas en el modelo, podemos ajustar su peso para re
 fill_transitions(TF, N, P = RLT_Tprior, priorweight = 0.5)
 ```
 
+ 
+
 ::: callout-important
-
 **El "peso de la previa" es un tamaño de muestra equivalente.** Asignar `priorweight = 0.5` con $N = 2$ observaciones es como decir: "antes de salir al campo, mi creencia tiene la misma fuerza que $0.5 \times 2 = 1$ observación adicional". Si tu previa tiene peso efectivo 5 y observas 50 transiciones, los datos pesarán 10 veces más que la previa. La regla práctica es dejar que los datos dominen: el peso de la previa debería ser **mucho menor** que el tamaño de muestra observado, salvo que tengas razones biológicas muy fuertes para confiar en la previa.
-
 :::
 
 Algunos valores típicos de `priorweight`:
@@ -416,8 +415,9 @@ Algunos valores típicos de `priorweight`:
 - `priorweight = 1`: la previa pesa lo mismo que los datos. Sólo justificado si los datos son muy escasos y la previa es muy confiable.
 - `priorweight > 1`: la previa pesa más que los datos. Rara vez justificado en estudios poblacionales.
 
-::: callout-warning
+ 
 
+::: callout-warning
 **Cuándo no usar una previa informativa fuerte.** Las previas informativas son apropiadas cuando hay conocimiento biológico sólido que no aparece en los datos (e.g., experiencia directa con la especie, estudios en poblaciones cercanas). **No** son apropiadas cuando:
 
 - El tamaño de muestra ya es grande y todas las transiciones se observaron varias veces — la previa solo introduce sesgo.
@@ -425,7 +425,6 @@ Algunos valores típicos de `priorweight`:
 - Se está comparando entre poblaciones — usar la misma previa para todas puede borrar diferencias reales.
 
 En estos casos, conviene usar previas débiles (poco peso) o reportar resultados con y sin previa para mostrar la sensibilidad a la elección.
-
 :::
 
 **Recomendación general:** asigna a las previas un peso menor (preferiblemente mucho menor) que el tamaño de muestra observado. Esto garantiza que los datos reales tengan mayor peso en el análisis y evita que el conocimiento previo domine injustamente los resultados.
@@ -444,21 +443,21 @@ La nueva matriz de transición:
 
 Una vez ajustada la matriz de transición con los datos observados y las previas informativas, podemos calcular los intervalos de credibilidad (ICr) para cada entrada de la matriz.
 
+ 
+
 ::: callout-note
-
 **Por qué Dirichlet (transiciones) y Gamma (fecundidad).** Cada columna de una matriz de transición es un vector de probabilidades que suman 1. La distribución natural sobre tales vectores es la **distribución Dirichlet**, generalización multidimensional de la Beta. Al observar transiciones (datos multinomiales) y combinar con una previa Dirichlet, la posterior **también es Dirichlet** (es una previa conjugada) — esto hace los cálculos exactos y rápidos. Para cada entrada individual de la matriz, la distribución marginal es **Beta**, lo cual permite calcular intervalos de credibilidad directamente con `qbeta()`. La fecundidad, por ser un conteo positivo no acotado, se modela con una previa **Gamma** sobre la tasa de Poisson.
-
 :::
 
-::: callout-note
+ 
 
+::: callout-note
 **Intervalo de confianza (IC) versus intervalo de credibilidad (ICr).** Aunque suenan parecidos, significan cosas distintas:
 
 - **IC frecuentista al 95%:** "si repitiéramos este estudio infinitas veces, el 95% de los intervalos calculados contendrían el valor verdadero". No es una afirmación sobre el parámetro en este estudio.
 - **ICr bayesiano al 95%:** "dada la previa y los datos, hay un 95% de probabilidad de que el verdadero valor del parámetro esté en este intervalo". Es una afirmación directa sobre el parámetro.
 
 Lo que la mayoría de las personas *intuitivamente quieren decir* al leer un IC frecuentista es la interpretación bayesiana — y los intervalos de credibilidad son los que efectivamente se la dan.
-
 :::
 
 **¿Cómo se calculan?** Cada elemento de la matriz de transición ajustada sigue una distribución beta, ya que proviene de una distribución posterior marginal de una Dirichlet (multinomial-Dirichlet). Esto permite calcular intervalos de credibilidad para las tasas de transición.
@@ -500,7 +499,7 @@ b <- sum(TN[, 1]) - TN[, 1] # cambie 1 a 2, 3 etc para obtener la distribución 
 p <- a / (a + b)
 lcl <- qbeta(0.025, a, b) # el valor 0.025 de la distribución beta
 ucl <- qbeta(0.975, a, b) # el valor 0.975 de la distribución beta
-knitr::kable(sprintf("%.4f (%.4f, %.4f)", p, lcl, ucl)) # Crear una tabla con los resultados con 4 cifras decimales (note la ultima fila son los fallecidos)
+knitr::kable(sprintf("%.4f (%.4f, %.4f)", p, lcl, ucl)) # Crear una tabla con los resultados con 4 cifras decimales (note la última fila son los fallecidos)
 ```
 
 Una de las grandes ventajas de usar el paquete `raretrans` es que podemos calcular los intervalos de credibilidad de las tasas de transición y fecundidad de manera rápida y sencilla. Además, los intervalos de credibilidad están limitados a los valores entre 0 y 1, lo que es importante para las tasas de transición y fecundidad. Esto es especialmente útil cuando se trabaja con datos de campo donde el tamaño de muestra es pequeño y las transiciones raras son comunes. Muchos métodos estadísticos no pueden calcular intervalos de confianza para tasas de transición y fecundidad, y cuando lo hacen tienen valores ilógicos, como proporciones negativas o mayores a 1.
@@ -574,13 +573,13 @@ Siguiendo el marco bayesiano que hemos venido trabajando en este capítulo, es n
 ```{r bayes17}
 
 alpha <- matrix(c(
-  NA_real_, NA_real_, 1e-5,
+  NA_real_, NA_real_, 1e-4,
   NA_real_, NA_real_, NA_real_,
   NA_real_, NA_real_, NA_real_
 ), nrow = 3, ncol = 3, byrow = TRUE)
 
 beta <- matrix(c(
-  NA_real_, NA_real_, 1e-5,
+  NA_real_, NA_real_, 1e-4,
   NA_real_, NA_real_, NA_real_,
   NA_real_, NA_real_, NA_real_
 ), nrow = 3, ncol = 3, byrow = TRUE)
@@ -615,7 +614,7 @@ Ahora simulamos 5000 veces, calculamos el valor $\lambda$ de cada matriz y cream
 #| label: fig-bayes19
 #| fig-cap: "Histograma de la distribución posterior de la tasa finita de crecimiento λ obtenida a partir de 5000 matrices simuladas, con una línea vertical en λ = 1."
 
-# set.seed(8390278) # make this part reproducible
+set.seed(8390278) # make this part reproducible
 alpha2 <- matrix(c(
   NA_real_, NA_real_, 0.025,
   NA_real_, NA_real_, NA_real_,
@@ -680,14 +679,14 @@ flextable(signif(RLT_0.5_summary, digits = 2))
 
 ## ADDENDUM
 
-::: callout-important
+ 
 
+::: callout-important
 **Nunca uses previas uniformes en análisis poblacionales reales.** Una previa uniforme (e.g., Dirichlet con todos los parámetros iguales) asigna la misma probabilidad a transiciones biológicamente plausibles y a transiciones imposibles (un adulto reproductivo "regresando" a plántula, una ballena bebé pasando directamente a madre, una semilla transformándose en árbol adulto en un periodo). El resultado es una matriz matemáticamente válida pero **biológicamente sin sentido**, que infla la incertidumbre con escenarios irreales y puede ocultar señales legítimas en los datos.
 
 **Siempre construye previas informadas** que reflejen el ciclo de vida de la especie: marca con 0 las transiciones imposibles, asigna probabilidades pequeñas a las raras pero posibles, y concentra masa en las transiciones que la biología espera. La regla práctica es: si no puedes defender la previa frente a un especialista de la especie, no la uses.
 
 La sección que sigue muestra qué pasa con una previa uniforme **únicamente con fines didácticos** — para que se vea de primera mano por qué falla. No la copies en un análisis de tu propia especie.
-
 :::
 
 ### Uso de previas uniformes
