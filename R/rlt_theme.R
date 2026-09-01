@@ -52,6 +52,22 @@ diverging <- c(
   "#0072B2", "#D55E00", "#CC79A7", "#000000"
 )
 
+# Color para las figuras de UNA SOLA SERIE (histogramas, barras y líneas sin
+# variable de agrupación). Es el teal de la marca del libro, que ya era el más
+# usado en esas figuras. Debe ir FUERA de aes():
+#
+#     geom_histogram(fill = rlt_col1, colour = "white")   # correcto
+#     geom_histogram(aes(fill = "blue"))                  # INCORRECTO
+#
+# Poner un color literal dentro de aes() no pinta de ese color: ggplot lo trata
+# como una variable categórica de un solo nivel, lo mapea al PRIMER color de la
+# paleta (naranja) y añade una leyenda con el texto "blue". Es lo que hacía que
+# unas figuras de serie única salieran naranjas y otras teal.
+rlt_col1 <- "#009392"
+
+# Color de las líneas de referencia (hline/vline de umbral).
+rlt_col_ref <- "red"
+
 # Combinar tema + escala en una lista que se añade al gráfico con un solo '+'.
 rlt_style_fill <- function() {
   list(

@@ -25,7 +25,7 @@ A diferencia de los capítulos sobre transiciones demográficas estáticas o des
 
 A continuación se presentan los enfoques utilizados para representar transiciones demográficas que cambian en el tiempo, incluyendo formulaciones determinísticas y dependientes de covariables. La variación temporal de las transiciones puede representarse mediante secuencias de matrices **U** y **F**, descritas en el capítulo sobre matrices U, F y C.
 
-#### Librerías de R requeridas para el siguiente módulo
+#### Librerías de R requeridas para el siguiente módulo {.unnumbered .unlisted}
 
 ```{r transA, warning=FALSE, message=FALSE}
 
@@ -43,43 +43,7 @@ library(flextable)
 ```{r trans-din-theme, echo=FALSE, message=FALSE}
 # Mi tema de formato de las gráficas de ggplot2 personal
 
-rlt_theme <- theme(
-  text = element_text(family = "Libertinus Serif"),
-  axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
-  axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
-  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
-  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
-) +
-  theme(
-    # Remover los bordes
-    panel.border = element_blank(),
-    # Remover las líneas
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    # Remover el fondo del panel
-    panel.background = element_blank(),
-    # añadir lineas más gruesas
-    axis.line.x = element_line(colour = "black", linewidth = 1),
-    axis.line.y = element_line(colour = "black", linewidth = 1)
-  )
-
-diverging <- c("#E69F00", "#56B4E9", "#009392", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000")
-
-# --- 2. Combinarlos en un objeto de tipo lista ---
-# Esta lista se puede añadir al gráfico con un solo '+'
-rlt_style_fill <- function() {
-  list(
-    rlt_theme,
-    scale_fill_manual(values = diverging)
-  )
-}
-
-rlt_style_colour <- function() {
-  list(
-    rlt_theme,
-    scale_colour_manual(values = diverging)
-  )
-}
+source("R/rlt_theme.R") # tema + paleta canónicos, y rlt_col1 (serie única)
 ```
 
 ## Dinámica poblacional a largo y corto plazo
@@ -104,7 +68,7 @@ Actualmente, los modelos de dinámica transitoria han demostrado ser herramienta
 - **Asintótica ($\lambda$):** ¿qué pasaría con la población **a largo plazo** si las tasas vitales y la estructura de estadios se mantuvieran constantes? Indiferente a la estructura inicial.
 - **Transitoria:** ¿qué pasa con la población **inmediatamente después** de una perturbación, antes de que alcance la estructura estable? **Depende fuertemente** de la estructura inicial.
 
-Una población con $\lambda = 1.10$ no necesariamente crecerá un 10% el primer año: si su estructura está sesgada (todos plántulas, todos adultos), puede inicialmente decrecer, oscilar o crecer mucho más rápido que $\lambda$ — y sólo después de varios pasos de tiempo el comportamiento converge al asintótico.
+Una población con $\lambda = 1.10$ no necesariamente crecerá un 10% el primer año: si su estructura está sesgada (todos plántulas, todos adultos), puede inicialmente decrecer, oscilar o crecer mucho más rápido que $\lambda$ — y solo después de varios pasos de tiempo el comportamiento converge al asintótico.
 :::
 
 &nbsp;
@@ -138,10 +102,10 @@ Como punto de partida y con la finalidad de contrastar su comportamiento con la 
 a)  *Matriz de transición y estructura poblacional inicial*. Para estimar el crecimiento futuro de la población se debe de contar con la matriz de proyección poblacional y su correspondiente vector de la estructura poblacional observada al inicio del estudio de una o varias poblaciones. En el análisis se usarán los datos obtenidos para *Lepanthes rubripetala*, una orquídea epífita miniatura, endémica de Puerto Rico. Tremblay y colaboradores [-@tremblay2015stable] analizaron mensualmente seis poblaciones de la especie de junio de 1994 a enero de 1996. En específico en este capítulo usaremos la matriz promedio de la población 1 [@tremblay2015stable] y su correspondiente estructura poblacional [@schodelbauerova2010prediction].
 
 ::: img-float
-![*Lepanthes rupestris*. Foto: Tremblay. Estudio demográfico: @tremblay2015stable](images/Lepanthes_rupestris_Tremblay.jpeg){#fig-lepanthes-rupestris-tremblay style="float: left; style=margin: 15px; margin: 10px; width: 40% ; "}
+![*Lepanthes rupestris*. Foto: Tremblay. Estudio demográfico: @tremblay2015stable.](images/Lepanthes_rupestris_Tremblay.jpeg){#fig-lepanthes-rupestris-tremblay style="float: left; style=margin: 15px; margin: 10px; width: 40% ; "}
 :::
 
-El ciclo de vida de *L. rubripetala* fue dividido en cuatro categorías de estado: plántula (PL), juvenil (J), adulto no reproductivo (NR) y adulto reproductivo (AR). Esta última categoría florece y produce frutos a largo de todo el año [@tremblay2015stable; @schodelbauerova2010prediction]. En consecuencia, la estructura poblacional cuenta con una columna de 4 elementos, que indican el número de individuos encontrado en el estado de plántula (0), juvenil (46), adulto no reproductivo (38) y adulto reproductivo (82) al inicio del estudio, indicado como $t_{0}$ [@schodelbauerova2010prediction]. Por su parte, la matriz de transición de *L. rubripetala* está formada por 4 renglones y 4 columnas [@tremblay2015stable], que corresponden a los estados del ciclo de vida de la especie y los 16 elementos de la probabilidad de permanencia, transición a una categoría superior, retroceso a una categoría inferior y fecundidad promedio por categoría (ver el capítulo de [Transiciones](105-Transiciones.qmd)).
+El ciclo de vida de *L. rubripetala* fue dividido en cuatro categorías de estado: plántula (PL), juvenil (J), adulto no reproductivo (NR) y adulto reproductivo (AR). Esta última categoría florece y produce frutos a largo de todo el año [@tremblay2015stable; @schodelbauerova2010prediction]. En consecuencia, la estructura poblacional cuenta con una columna de 4 elementos, que indican el número de individuos encontrado en el estado de plántula (0), juvenil (46), adulto no reproductivo (38) y adulto reproductivo (82) al inicio del estudio, indicado como $t_{0}$ [@schodelbauerova2010prediction]. Por su parte, la matriz de transición de *L. rubripetala* está formada por 4 renglones y 4 columnas [@tremblay2015stable], que corresponden a los estados del ciclo de vida de la especie y los 16 elementos de la probabilidad de permanencia, transición a una categoría superior, retrogresión a una categoría inferior y fecundidad promedio por categoría (ver el capítulo de [Transiciones](105-Transiciones.qmd)).
 
 En el siguiente recuadro incorporamos la información de *L. rubripetala* en **R**. Se usó la función `matrix()` para construir la matriz de transición y `n0` para nombrar al vector de la estructura inicial observada.
 
@@ -187,7 +151,7 @@ n0
 
 b)  *Crecimiento asintótico*. El crecimiento de la población de tipo asintótico, $\lambda$ (de ahora en adelante $\lambda_{max}$), se estima en **R** con la función `lambda()`. Este crecimiento se alcanza a largo plazo si se mantienen las condiciones constantes de la población, y se evidencia cuando se mantiene constante o estable la proporción de individuos en la estructura poblacional.
 
-En el siguiente recuadro se calcula $\lambda_{max}$ para la población 1 de *L. rubripetala*. El resultado indica que la tasa de crecimiento poblacional es de 1.007. Esto implica que si existieran 1000 individuos en la población, a esta tasa la población aumentaría en siete individuos del primer mes ($t_{0}$) al siguiente ($t_{1}$). Este ejemplo sólo permite ilustrar el concepto, ya que las poblaciones de *Lepanthes* nunca serán tan grandes en la naturaleza [@tremblay1997distribution].
+En el siguiente recuadro se calcula $\lambda_{max}$ para la población 1 de *L. rubripetala*. El resultado indica que la tasa de crecimiento poblacional es de 1.007. Esto implica que si existieran 1000 individuos en la población, a esta tasa la población aumentaría en siete individuos del primer mes ($t_{0}$) al siguiente ($t_{1}$). Este ejemplo solo permite ilustrar el concepto, ya que las poblaciones de *Lepanthes* nunca serán tan grandes en la naturaleza [@tremblay1997distribution].
 
 ```{r trans3}
 
@@ -211,7 +175,7 @@ El cálculo y análisis de la dinámica transitoria es menos directo en comparac
 
 *Modelo sesgado por categoría*. Stott y colaboradores [-@stott2010boom; -@stott2011framework] comentan que la proyección de la dinámica transitoria o a corto plazo es muy sensible a la estructura poblacional, así que lo mejor es hacer una selección adecuada de este vector. Una opción es proyectar la dinámica transitoria a partir de la abundancia de individuos observada al inicio del estudio, denotada como $n_{0}$, y otra es hacerlo a través de una selección de cambios en la proporción de individuos por categoría [@stott2012modelling]. Con la primera opción se describiría el caso específico de *L. rubripetala*, mientras que la segunda ofrece la opción de comparar los resultados con otras especies al representar distintos escenarios que ocurren o pueden ocurrir de forma aleatoria en la población de estudio [@stott2012modelling].
 
-Las fluctuaciones aleatorias en la estructura debidas a una perturbación de origen biótico, abiótico o antropogénico son incorporadas por Stott y colaboradores como estocasticidad demográfica [-@stott2010boom; -@stott2011framework]. Este tipo de estocasticidad se refiere a la sobrevivencia y reproducción en número entero y finito; es decir, un individuo sobrevive o no, lo cual se representa con 1 o 0, al igual que puede reproducirse (1) o no (0). La incorporación de esta característica en los individuos genera una variación no cíclica ni predecible en la respuesta de los individuos de una población y pueden tener un impacto considerable en el tamaño de la población [@stott2012modelling].
+Las fluctuaciones aleatorias en la estructura debidas a una perturbación de origen biótico, abiótico o antropogénico son incorporadas por Stott y colaboradores como estocasticidad demográfica [-@stott2010boom; -@stott2011framework]. Este tipo de estocasticidad se refiere a la supervivencia y reproducción en número entero y finito; es decir, un individuo sobrevive o no, lo cual se representa con 1 o 0, al igual que puede reproducirse (1) o no (0). La incorporación de esta característica en los individuos genera una variación no cíclica ni predecible en la respuesta de los individuos de una población y pueden tener un impacto considerable en el tamaño de la población [@stott2012modelling].
 
 Por ejemplo, la estructura inicial en la población 1 de *L. rubripetala* fue la siguiente: (0,46,38,82). En este caso, al modificar la proporción de individuos presente en una, dos o en todas las categorías de la población se simuló el cambio en la dinámica en el corto plazo; es decir, en un momento previo a que se alcance el crecimiento estable o a largo plazo. En *L. rubripetala* se hicieron cinco simulaciones o escenarios al suponer las siguientes proporciones de individuos por categoría [@tremblay2015stable]:
 
@@ -229,23 +193,23 @@ Una población observada lejos de la estructura estable puede comportarse de for
 
 &nbsp;
 
-#### Límite inferior
+#### Límite inferior {.unnumbered}
 
 (1,0,0,0): todos los individuos de la población se encuentran en la categoría de plántulas (*lower bound*). Esto representa, por ejemplo, una población que se está estableciendo, ya que todos los individuos son plántulas y no hay individuos en las otras categorías.
 
-#### Inicio I
+#### Inicio I {.unnumbered}
 
 (0.15, 0.35, 0.30, 0.20): mayor proporción de individuos en las categorías juvenil y adulto no reproductivo.
 
-#### Estructura estable de la población
+#### Estructura estable de la población {.unnumbered}
 
 Los individuos de la población tienen una abundancia de acuerdo con *w-max*.
 
-#### Inicio II
+#### Inicio II {.unnumbered}
 
 (0.4, 0.2, 0.2, 0.2): mayor proporción de plántulas y una proporción similar en las categorías juvenil, adulto no reproductivo y adulto reproductivo.
 
-#### Límite superior
+#### Límite superior {.unnumbered}
 
 (0,0,0,1): los individuos de la población se encuentran en la categoría de adulto reproductivo. Esto representa, por ejemplo, una población que se encuentra en su máximo potencial reproductivo, ya que todos los individuos son adultos reproductivos. Esto pudiese representar una población que tenga dificultad de producir nuevos individuos, es decir, una población que se encuentra en un estado de declive.
 
@@ -257,7 +221,7 @@ En los siguientes recuadros se proyecta la dinámica poblacional absoluta de *L.
 
 ### Proyección por escenarios
 
-#### Escenario 1 (límite inferior):
+#### Escenario 1 (límite inferior): {.unnumbered}
 
 Límite inferior (1,0,0,0): todos los individuos de la población se encuentran en la categoría de plántulas (*lower bound*). Esto representa, por ejemplo, una población que se está estableciendo, ya que todos los individuos son plántulas y no hay individuos en las otras categorías.
 
@@ -291,7 +255,7 @@ pr1df <- as.data.frame(pr1)
 pr1df$time <- seq(1, nrow(pr1df), 1)
 
 ggplot(pr1df, aes(time, pr1)) +
-  geom_line(aes(color = "blue"), size = 2) +
+  geom_line(colour = rlt_col1, linewidth = 2) +
   geom_hline(yintercept = 1, linetype = "dashed", color = "red") +
   xlab("Intervalos de tiempo") +
   ylab("Tamaño/densidad poblacional relativa") +
@@ -305,7 +269,7 @@ ggplot(pr1df, aes(time, pr1)) +
 
 ------------------------------------------------------------------------
 
-#### Segundo escenario:
+#### Segundo escenario: {.unnumbered}
 
 En este escenario, se supone que la población tiene una mayor proporción de individuos en las categorías juvenil y adulto no reproductivo (0.15, 0.35, 0.30, 0.20). En este caso, la población decrece rápidamente en los primeros periodos, pero después de unos 5 periodos de tiempo la población comienza a crecer y alcanza un tamaño poblacional relativo similar al comienzo después de ±16 periodos de tiempo. Esto indica que la población se recupera rápidamente y alcanza un tamaño poblacional estable en un periodo relativamente corto.
 
@@ -323,9 +287,9 @@ pr2df$time <- seq(1, nrow(pr2df), 1)
 
 ------------------------------------------------------------------------
 
-#### Tercer escenario (estructura estable):
+#### Tercer escenario (estructura estable): {.unnumbered}
 
-Como la población tiene una estructura estable, la población no tiene un crecimiento diferente a 1, por lo que alcanza un tamaño poblacional estable en un periodo relativamente corto o inmediato. Debido a que la población tiene una estructura estable, el tamaño relativo de la población es constante.
+Como la población ya parte de su estructura estable, no hay transitorio: su tamaño relativo se mantiene constante desde el primer intervalo. En la gráfica siguiente eso se ve como una línea plana en 1 porque la matriz está dividida entre $\lambda$; en escala absoluta la población sí crece, a razón de $\lambda^t$.
 
 ```{r, message=FALSE}
 #| label: fig-trans6
@@ -346,7 +310,7 @@ pr3 <- project(Lr1st, vector = Wmax, time = 50)
 pr3df <- as.data.frame(pr3)
 pr3df$time <- seq(1, nrow(pr3df), 1)
 ggplot(pr3df, aes(time, pr3)) +
-  geom_line(aes(color = "blue"), size = 2) +
+  geom_line(colour = rlt_col1, linewidth = 2) +
   geom_hline(yintercept = 1, linetype = "dashed", color = "red") +
   xlab("Intervalos de tiempo") +
   ylab("Tamaño/densidad poblacional relativa") +
@@ -362,7 +326,7 @@ ggplot(pr3df, aes(time, pr3)) +
 
 ------------------------------------------------------------------------
 
-#### Cuarto escenario:
+#### Cuarto escenario: {.unnumbered}
 
 En este escenario, se supone que la población tiene una mayor proporción de plántulas y una proporción similar en las categorías juvenil, adulto no reproductivo y adulto reproductivo (0.4, 0.2, 0.2, 0.2). En este caso, la población decrece rápidamente en los primeros periodos, pero después de unos ±7 periodos de tiempo la población comienza a crecer y alcanza un tamaño poblacional relativo similar al comienzo después de ±36 periodos de tiempo. Esto indica que la población se recupera rápidamente y alcanza un tamaño poblacional estable en un periodo relativamente corto, si la población comienza con esta estructura demográfica.
 
@@ -379,7 +343,7 @@ pr4df$time <- seq(1, nrow(pr4df), 1)
 
 ------------------------------------------------------------------------
 
-#### Quinto escenario:
+#### Quinto escenario: {.unnumbered}
 
 En este escenario, se supone que la población tiene una mayor proporción de individuos en la categoría de adulto reproductivo (0,0,0,1). En el escenario 5, la población crece rápidamente en los primeros periodos, sufriendo una reducción después de ±5 meses; no obstante, se reconoce que la población aumenta rápidamente.
 
@@ -400,7 +364,7 @@ pr5 <- project(Lr1, vector = nLr5, time = 50)
 pr5df <- as.data.frame(pr5)
 pr5df$time <- seq(1, nrow(pr5df), 1)
 ggplot(pr5df, aes(time, pr5)) +
-  geom_line(aes(color = "blue"), size = 2) +
+  geom_line(colour = rlt_col1, linewidth = 2) +
   geom_hline(yintercept = 1, linetype = "dashed", color = "red") +
   xlab("Intervalos de tiempo") +
   ylab("Tamaño/densidad poblacional relativa") +
@@ -423,20 +387,27 @@ En el siguiente recuadro se integran en una sola gráfica los resultados de la d
 pr1df <- rename(pr1df, Pop = pr1) # renombrar la columna con el nombre de la proyección
 pr1df$Escenario <- "Límite inferior" # añadir una columna con el nombre de la proyección
 
-pr3df <- rename(pr3df, Pop = pr3)
-pr3df$Escenario <- "Estable"
+# El escenario 3 se proyecto arriba con la matriz estandarizada (Lr1/lambda),
+# que es lo correcto para esa figura. Aqui la comparacion es en escala
+# absoluta, asi que se reproyecta con la matriz SIN estandarizar: una poblacion
+# con estructura estable no se queda plana, crece a lambda^t.
+pr3abs <- project(Lr1, vector = Wmax, time = 50)
+pr3absdf <- as.data.frame(pr3abs)
+pr3absdf$time <- seq(1, nrow(pr3absdf), 1)
+pr3absdf <- rename(pr3absdf, Pop = pr3abs)
+pr3absdf$Escenario <- "Estable"
 
 pr5df <- rename(pr5df, Pop = pr5)
 pr5df$Escenario <- "Límite superior"
 
-Population_density <- bind_rows(pr1df, pr3df, pr5df) # combine the data frames into one
+Population_density <- bind_rows(pr1df, pr3absdf, pr5df) # combine the data frames into one
 
 # Population_density
 ```
 
 ```{r, message=FALSE}
 #| label: fig-trans10
-#| fig-cap: "Curvas de densidad poblacional relativa en función del tiempo para los distintos escenarios de proyección, con línea horizontal discontinua en y=1."
+#| fig-cap: "Tamaño poblacional en escala absoluta en función del tiempo para los escenarios 1, 3 y 5, con línea horizontal discontinua en el tamaño inicial (y=1). El escenario estable no se mantiene plano: crece a $\\lambda^t$."
 
 ggplot(Population_density, aes(time, Pop, color = Escenario)) +
   geom_line(size = 1) +
@@ -444,7 +415,7 @@ ggplot(Population_density, aes(time, Pop, color = Escenario)) +
   labs(
     title = "Proyecciones de dinámica poblacional",
     x = "Intervalos de tiempo",
-    y = "Tamaño/densidad poblacional relativa"
+    y = "Tamaño poblacional (escala absoluta)"
   ) +
   theme_minimal() +
   rlt_style_colour()+
@@ -504,12 +475,12 @@ abs.plot
 &nbsp;
 
 ::: callout-tip
-**Estandarizar permite comparar escenarios sin que $\lambda$ los domine.** Cuando se proyecta la dinámica absoluta de varios escenarios iniciales, la trayectoria que más crece es siempre la que más se acerca a la estructura estable — porque después de unos pocos pasos todas crecen al ritmo asintótico $\lambda$. Para aislar **el efecto de la estructura inicial**, se divide la matriz por $\lambda$ y se escala el vector inicial a sumar 1. Las trayectorias resultantes muestran sólo la respuesta transitoria, lo que las hace **directamente comparables** entre escenarios y entre poblaciones de distintas especies.
+**Estandarizar permite comparar escenarios sin que $\lambda$ los domine.** Cuando se proyecta la dinámica absoluta de varios escenarios iniciales, todas las trayectorias acaban creciendo al ritmo asintótico $\lambda$ tras unos pocos pasos, pero la que alcanza mayor densidad es la de mayor inercia, que no es necesariamente la más cercana a la estructura estable. Para aislar **el efecto de la estructura inicial**, se divide la matriz por $\lambda$ y se escala el vector inicial a sumar 1. Las trayectorias resultantes muestran solo la respuesta transitoria, lo que las hace **directamente comparables** entre escenarios y entre poblaciones de distintas especies.
 :::
 
 &nbsp;
 
-La dinámica poblacional transitoria estandarizada proyecta de forma cuantitativa los cambios en la población a corto plazo para los escenarios planteados. Con este fin, primero se elimina el efecto a largo plazo de la tasa de crecimiento poblacional y de la estructura inicial de la población, lo cual permite mantener otras propiedades asintóticas, por ejemplo, la estructura estable de estados/edades y las elasticidades [@koons2021transient]. En este proceso se dividen todos los elementos de la matriz sobre el valor de la lambda asintótica ($\lambda_{max}$) obtenida por la iteración de la matriz y se escala a 1 el vector de la estructura poblacional [@koons2021transient]. Como resultado de este proceso, y para cualquier matriz y vector estandarizados, tendremos una $\lambda_{max}$ igual a la unidad y la suma de 1 en el segundo caso, lo cual facilita y hace equitativa la comparación entre los modelos de los distintos escenarios [@stott2011framework; @stott2012beyond; @stott2012popdemo; @koons2021transient].
+La dinámica poblacional transitoria estandarizada proyecta de forma cuantitativa los cambios en la población a corto plazo para los escenarios planteados. Con este fin, primero se elimina el efecto a largo plazo de la tasa de crecimiento poblacional y el del tamaño (densidad) inicial de la población, lo cual permite mantener otras propiedades asintóticas, por ejemplo, la estructura estable de estados/edades y las elasticidades [@koons2021transient]. En este proceso se dividen todos los elementos de la matriz sobre el valor de la λ asintótica ($\lambda_{max}$) obtenida por la iteración de la matriz y se escala a 1 el vector de la estructura poblacional [@koons2021transient]. Como resultado de este proceso, y para cualquier matriz y vector estandarizados, tendremos una $\lambda_{max}$ igual a la unidad y la suma de 1 en el segundo caso, lo cual facilita y hace equitativa la comparación entre los modelos de los distintos escenarios [@stott2011framework; @stott2012beyond; @stott2012popdemo; @koons2021transient].
 
 En el artículo de Tremblay y colaboradores [-@tremblay2015stable], la dinámica transitoria para *L. rubripetala* corresponde a la figura 2B. Esta figura se construye con base en la matriz y vectores estandarizados de los cinco escenarios definidos y se proyecta el crecimiento de la población a 50 meses (4.1 años). Las gráficas de la dinámica transitoria para estos escenarios se generan usando las siguientes funciones de **R**: `standard.A = TRUE` en la estandarización de la matriz y `standard.vec = TRUE` para el vector, `project()` para estimar la tendencia del crecimiento poblacional [@stott2011framework; @stott2012beyond; @stott2012popdemo] y `ggplot2` para agrupar en una sola gráfica la tendencia del crecimiento poblacional de los escenarios.
 
@@ -578,7 +549,7 @@ pr2.4 <- project(
 
 ## Gráfica de la dinámica poblacional transitoria estandarizada por escenario
 
-La proyección de la dinámica transitoria para los tres escenarios definidos (1, 3, y 5) tiene un comportamiento contrastante, lo cual es evidente en la gráfica del siguiente recuadro. El crecimiento es constante (i.e. lambda =1) cuando se considera la estructura estable de estados. Cuando la estructura poblacional corresponde al Inicio I se determina un decremento en la población en los primeros 5 meses, el cual se mantiene en el tiempo a lo largo de la proyección. Si la población está representada por adultos reproductivos, ésta crece en los primeros cinco meses y este crecimiento se mantiene a lo largo de los 50 meses.
+La proyección de la dinámica transitoria para los tres escenarios definidos (1, 3, y 5) tiene un comportamiento contrastante, lo cual es evidente en la gráfica del siguiente recuadro. El crecimiento es constante (i.e. λ = 1) cuando se considera la estructura estable de estados. Cuando la estructura poblacional corresponde al Inicio I se determina un decremento en la población en los primeros 5 meses, el cual se mantiene en el tiempo a lo largo de la proyección. Si la población está representada por adultos reproductivos, esta crece en los primeros cinco meses y este crecimiento se mantiene a lo largo de los 50 meses.
 
 ```{r trans-din-safe-log-ylim, echo=FALSE}
 safe_log_ylim <- function(y, mult_pad = 0.1) {
@@ -748,7 +719,7 @@ Cada uno tiene una variante "alta" (*upper*) y "baja" (*lower*), correspondiente
 
 &nbsp;
 
-#### Cálculo de los límites transitorios
+#### Cálculo de los límites transitorios {.unnumbered}
 
 - Escenario 1 (límite inferior):
 
@@ -805,7 +776,7 @@ inertia5
 lim.trans[5, 3] <- inertia5
 ```
 
-#### Crear una tabla de los índices transitorios
+#### Crear una tabla de los índices transitorios {.unnumbered}
 
 ```{r trans20,  results = FALSE, message=FALSE, warning=FALSE}
 # Escenario 2 (inicio I):
@@ -843,13 +814,13 @@ flextable(lim.trans)
 
 ------------------------------------------------------------------------
 
-## Gráfica de dinámica poblacional transitoria integrando los índices transitorios: escenarios 1, 3 y 5.
+## Gráfica de dinámica poblacional transitoria integrando los índices transitorios: escenarios 1, 3 y 5
 
 En el siguiente recuadro se integran en una sola gráfica los resultados de la dinámica transitoria estandarizada de *L. rubripetala* para los escenarios 1, 3 y 5.
 
 ```{r, message=FALSE, warning=FALSE}
 #| label: fig-trans22
-#| fig-cap: "Curvas de densidad poblacional relativa a λ máx por escenario (Límite inferior, Estable, Límite superior), con anotaciones de los valores de amortiguamiento (ρ) y reactividad (ρ̄)."
+#| fig-cap: "Curvas de densidad poblacional relativa a λ máx por escenario (Límite inferior, Estable, Límite superior), con anotaciones de la atenuación máxima (ρ̲) y la amplificación máxima (ρ̄) en la notación de Stott y colaboradores."
 
 len <- nrow(pr2.1)
 Population_density <- rbind(
@@ -881,7 +852,7 @@ trans.plot +
     y = maxatt1$maxatt,
     # 1. Change expression() to a string
     # 2. Add parse = TRUE
-    label = "underline(rho) == 0.46",
+    label = paste0("underline(rho) == ", round(maxatt1$maxatt, 2)),
     parse = TRUE,
     hjust = 1.0,
     vjust = -1
@@ -892,7 +863,7 @@ trans.plot +
     y = maxamp5$maxamp,
     # 1. Change expression() to a string
     # 2. Add parse = TRUE
-    label = "bar(rho) == 1",
+    label = paste0("bar(rho) == ", round(maxamp5$maxamp, 2)),
     parse = TRUE,
     hjust = 1.22,
     vjust = -1
@@ -911,11 +882,11 @@ theme(
 
 ------------------------------------------------------------------------
 
-La gráfica a continuación corresponde a los cinco escenarios planteados para la población 1 de *L. rubripetala*, equivalente a la figura 2B del artículo de Tremblay y colaboradores [-@tremblay2015stable]. Esta permitirá comparar tus resultados y verificar que los escenarios que has desarrollado estén correctos.
+La gráfica a continuación corresponde a los cinco escenarios planteados para la población 1 de *L. rubripetala*, equivalente a la figura 2B del artículo de Tremblay y colaboradores [-@tremblay2015stable]. Esta permitirá comparar sus resultados y verificar que los escenarios desarrollados estén correctos.
 
 ```{r, message=FALSE, warning=FALSE}
 #| label: fig-trans23
-#| fig-cap: "Curvas de la dinámica transitoria para cinco escenarios iniciales sobre la matriz Lr1, con anotaciones de los valores de amortiguamiento (ρ) y reactividad (ρ̄) por escenario."
+#| fig-cap: "Curvas de la dinámica transitoria para cinco escenarios iniciales sobre la matriz Lr1, con anotaciones de la atenuación máxima (ρ̲) y la amplificación máxima (ρ̄) por escenario, en la notación de Stott y colaboradores."
 len <- nrow(pr2.1)
 
 Population_density_complete <- rbind(
@@ -953,7 +924,7 @@ trans.plot +
     "text",
     x = 49,
     y = maxatt1$maxatt,
-    label = "underline(rho) == 0.46",
+    label = paste0("underline(rho) == ", round(maxatt1$maxatt, 2)),
     parse = TRUE,
     hjust = 0.5,
     vjust = -0.8
@@ -962,7 +933,7 @@ trans.plot +
     "text",
     x = 49,
     y = maxatt2$maxatt,
-    label = "underline(rho) == 0.89",
+    label = paste0("underline(rho) == ", round(maxatt2$maxatt, 2)),
     parse = TRUE,
     hjust = 0.5,
     vjust = -0.1
@@ -971,7 +942,7 @@ trans.plot +
     "text",
     x = 49,
     y = maxatt4$maxatt,
-    label = "underline(rho) == 0.79",
+    label = paste0("underline(rho) == ", round(maxatt4$maxatt, 2)),
     parse = TRUE,
     hjust = 0.5,
     vjust = 0
@@ -980,7 +951,7 @@ trans.plot +
     "text",
     x = 49,
     y = maxamp5$maxamp,
-    label = "bar(rho) == 1.22",
+    label = paste0("bar(rho) == ", round(maxamp5$maxamp, 2)),
     parse = TRUE,
     hjust = 0.5,
     vjust = -0.8

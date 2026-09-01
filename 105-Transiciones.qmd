@@ -17,11 +17,11 @@ Las transiciones describen los cambios individuales entre estados demográficos 
 
 Las transiciones representan los procesos mediante los cuales los individuos cambian de estado entre intervalos de tiempo, ya sea permaneciendo en el mismo estadio, creciendo a uno nuevo, retrocediendo o contribuyendo a la población a través de la reproducción. En los modelos de proyección poblacional, estas transiciones constituyen los elementos básicos de la matriz, conectando las tasas vitales individuales con la dinámica poblacional a nivel agregado.
 
-En este capítulo se analizan las transiciones como componentes explícitos del ciclo de vida, mostrando cómo su definición y parametrización influyen directamente en la estructura de la matriz de proyección y en la dinámica resultante. Se discute cómo diferentes formulaciones de las transiciones reflejan supuestos biológicos distintos, tales como crecimiento continuo versus discreto, estasis, o la incorporación de retrocesos ontogenéticos.
+En este capítulo se analizan las transiciones como componentes explícitos del ciclo de vida, mostrando cómo su definición y parametrización influyen directamente en la estructura de la matriz de proyección y en la dinámica resultante. Se discute cómo diferentes formulaciones de las transiciones reflejan supuestos biológicos distintos, tales como crecimiento continuo versus discreto, estasis, o la incorporación de retrogresiones ontogenéticas.
 
 A diferencia de los capítulos sobre crecimiento poblacional o propiedades matriciales, este capítulo se centra en el nivel **causal** de la dinámica demográfica: los procesos que generan los patrones observados de crecimiento, estabilidad o declive. Comprender las transiciones es esencial para interpretar análisis posteriores de sensibilidad, elasticidad, proyecciones poblacionales y modelos bayesianos, ya que cualquier cambio en estas métricas surge directamente de modificaciones en las transiciones subyacentes.
 
-#### Librerías de R requeridas para el siguiente módulo
+#### Librerías de R requeridas para el siguiente módulo {.unnumbered .unlisted}
 
 ```{r, message=FALSE}
 #| docx_fit: true
@@ -297,7 +297,7 @@ En nuestro caso, solo los adultos pueden reproducirse, añadiendo nuevos individ
 
 $$\text{Fecundidad} = \frac{1}{6} = 0.1666$$
 
-Esto significa que, en promedio, cada adulto añade un nuevo individuo a la clase "plantas pequeñas" en el segundo periodo de tiempo.
+Esto significa que, en promedio, cada adulto añade 0.17 individuos a la clase "plantas pequeñas" en el segundo periodo de tiempo. Dicho de otro modo: de los seis adultos, solo uno aportó un recluta. La fecundidad de una matriz es un promedio por individuo, no un conteo, y por eso casi siempre es un número fraccionario.
 
 Aquí un ejemplo de la función:
 
@@ -305,7 +305,7 @@ Aquí un ejemplo de la función:
 
 ```{r Trans7}
 
-Orchis_ficticia_df <- as.data.frame(Orchis_ficticia_por_ind) # Nota que es importante convertir la tabla de datos a un data frame si es en formato de tibble.
+Orchis_ficticia_df <- as.data.frame(Orchis_ficticia_por_ind) # Note que es importante convertir la tabla de datos a un data frame si es en formato de tibble.
 
 stages <- c("plantas_pequeñas", "juvenil", "adulto") # Las etapas del modelo en el primer muestreo
 
@@ -316,11 +316,11 @@ projection.matrix(Orchis_ficticia_df, stage, fate, fertilidad, stages, TF = TRUE
 
 ## Unión de matrices
 
-Si deseas obtener una matriz que combine tanto las transiciones como la fecundidad, puedes utilizar el argumento `TF = FALSE` en relación con `matA`.
+Si desea obtener una matriz que combine tanto las transiciones como la fecundidad, puede utilizar el argumento `TF = FALSE` en relación con `matA`.
 
 En este caso, la matriz resultante se define como:
 
-$$matA = \text{matT} + \text{matF}$$
+$$`matA` = \text{matT} + \text{`matF`}$$
 
 donde:
 
@@ -358,7 +358,7 @@ donde $\mathbf{U}$ contiene las **transiciones** entre estadios (supervivencia �
 
 Muchas orquídeas se reproducen por clonación, lo que significa que los individuos son genéticamente idénticos y se originan a partir de la planta madre. En algunos casos, estos clones se separan mediante un keiki o por división de los rizomas cuando estos se deterioran o mueren. Este es un método de reproducción asexual.
 
-En este contexto, la matriz de transiciones puede modificarse para incluir la clonación. Existen pocos ejemplos en orquídeas donde se incorpora una submatriz de clonación, denominada matC. Desde el punto de vista evolutivo, este proceso representa el crecimiento de un individuo y no debe considerarse como fecundidad, ya que es un mecanismo distinto. Este concepto de crecimiento es relevante en los análisis de selección natural y deriva genética, dos procesos evolutivos fundamentales. Además, la reproducción asexual puede influir en el crecimiento intrínseco y la dinámica poblacional.
+En este contexto, la matriz de transiciones puede modificarse para incluir la clonación. Existen pocos ejemplos en orquídeas donde se incorpora una submatriz de clonación, denominada `matC`. Desde el punto de vista evolutivo, este proceso representa el crecimiento de un individuo y no debe considerarse como fecundidad, ya que es un mecanismo distinto. Este concepto de crecimiento es relevante en los análisis de selección natural y deriva genética, dos procesos evolutivos fundamentales. Además, la reproducción asexual puede influir en el crecimiento intrínseco y la dinámica poblacional.
 
 Como ejemplo, revisamos el trabajo sobre *Cypripedium calceolus* en Europa [@garcia2010living]. En este estudio, los autores analizaron la dinámica de poblaciones situadas en la periferia de su distribución geográfica, específicamente en los Pirineos y el norte de Europa. Aprovecharemos este caso para mostrar cómo se identifican especies que incluyen una matriz de clonación (`matC`).
 
@@ -399,9 +399,9 @@ Cyp_cal_matC <- compadre %>%
 # Cyp_cal_matC$mat # para el año 2000 a 2001
 ```
 
-### matA de *Cypripedium calceolus*, MatrixID = 242623
+### `matA` de *Cypripedium calceolus*, MatrixID = 242623
 
-La matriz de transiciones de *Cypripedium calceolus* tiene una matriz de transiciones, una de fecundidad y una de clonación: matA = matU + matF + matC.
+La matriz de transiciones de *Cypripedium calceolus* tiene una matriz de transiciones, una de fecundidad y una de clonación: `matA` = `matU` + `matF` + `matC`.
 
 ```{r Trans12}
 
@@ -412,7 +412,7 @@ mat_to_ft(matcc)
 
 ## Extracción de la matriz de Clonación
 
-Nota que la matriz de clonación es la siguiente.
+Note que la matriz de clonación es la siguiente.
 
 Lo que se observa es que hay nuevos individuos en el tiempo $\text{t}_{i+1}$ que provienen de los individuos en el tiempo $\text{t}_i$. En este caso, son individuos que provienen de las etapas 4, 5 y 6 los que producen nuevos individuos (por clonación) en las etapas 3 y 4.
 

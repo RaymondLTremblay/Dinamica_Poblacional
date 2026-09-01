@@ -94,33 +94,48 @@ CSV_PATH <- file.path(ROOT, "Figuras_Inventario.csv")
 MD_PATH <- file.path(ROOT, "Figuras_Manifiesto.md")
 
 # ---- Mapeo qmd → directorio destino ----
+# IMPORTANTE: el número que abre cada etiqueta ES el número de capítulo que
+# Quarto asigna, y de él se derivan tanto el nombre de la carpeta como el
+# prefijo `Fig_X.Y`. Por eso esta lista sigue el orden de `_quarto.yml`, NO el
+# orden alfabético de los archivos .qmd.
+#
+# Dos detalles que provocaron un error de etiquetado en la entrega de julio de
+# 2026 (carpetas desfasadas en uno, y rotas a partir de la 15):
+#   1. `index.qmd` SÍ recibe número: lleva `title:` en su YAML, así que es el
+#      capítulo 1 y todo lo demás corre a partir del 2.
+#   2. La parte «Historia» se declara al final de `_quarto.yml`, de modo que
+#      117_Historia_breve y 118-Carl_Olaf_Tamm son los capítulos 21 y 22,
+#      aunque sus nombres de archivo los ordenen antes alfabéticamente.
+#
+# Al añadir un capítulo, insértalo en la posición que ocupa en `_quarto.yml` y
+# renumera las etiquetas siguientes.
 CHAPTERS <- list(
-  c("index.qmd", "00-Prefacio"),
-  c("102-Intro.qmd", "01-Introduccion"),
-  c("103-Ciclos_de_Vida.qmd", "02-Ciclos_de_Vida"),
-  c("104-Recopilacion_datos_en_el_campo.qmd", "03-Recopilacion_datos_en_el_campo"),
-  c("105-Transiciones.qmd", "04-Transiciones"),
-  c("106-calcular_fecundidad.qmd", "05-Fecundidad"),
-  c("107-matU_matF_matC.qmd", "06-matU_matF_matC"),
-  c("108-Bayesian_PPM.qmd", "07-Bayesian_PPM"),
-  c("109-Crecimiento_poblacional.qmd", "08-Crecimiento_poblacional"),
-  c("110-Propriedades.qmd", "09-Propiedades"),
-  c("111-Elasticidad.qmd", "10-Elasticidad"),
-  c("112-Dinamica_de_Transiciones.qmd", "11-Dinamica_transitoria"),
-  c("113-Funciones_de_Transferencia.qmd", "12-Funciones_de_Transferencia"),
-  c("114-LTRE.qmd", "13-LTRE"),
-  c("115-Metodos_de_simulaciones.qmd", "14-Metodos_de_simulaciones"),
-  c("117_Historia_breve.qmd", "15-Historia_breve"),
-  c("118-Carl_Olaf_Tamm.qmd", "16-Carl_Olaf_Tamm"),
-  c("119-COMPADRE_ORCHIDS.qmd", "17-COMPADRE"),
-  c("120-Rage_orquideas.qmd", "18-Rage"),
-  c("121-Traduccion_protocolo_informacion.qmd", "19-Protocolo"),
-  c("122-Impacto_de_Datos_sin_Sentido.qmd", "20-Datos_sin_sentido"),
-  c("123-Conclusion.qmd", "21-Conclusion"),
+  c("index.qmd", "01-Preliminares"),
+  c("102-Intro.qmd", "02-Introduccion"),
+  c("103-Ciclos_de_Vida.qmd", "03-Ciclos_de_Vida"),
+  c("104-Recopilacion_datos_en_el_campo.qmd", "04-Recopilacion_datos_en_el_campo"),
+  c("105-Transiciones.qmd", "05-Transiciones"),
+  c("106-calcular_fecundidad.qmd", "06-Fecundidad"),
+  c("107-matU_matF_matC.qmd", "07-matU_matF_matC"),
+  c("108-Bayesian_PPM.qmd", "08-Bayesian_PPM"),
+  c("109-Crecimiento_poblacional.qmd", "09-Crecimiento_poblacional"),
+  c("110-Propriedades.qmd", "10-Propiedades"),
+  c("111-Elasticidad.qmd", "11-Elasticidad"),
+  c("112-Dinamica_de_Transiciones.qmd", "12-Dinamica_transitoria"),
+  c("113-Funciones_de_Transferencia.qmd", "13-Funciones_de_Transferencia"),
+  c("114-LTRE.qmd", "14-LTRE"),
+  c("115-Metodos_de_simulaciones.qmd", "15-Metodos_de_simulaciones"),
+  c("119-COMPADRE_ORCHIDS.qmd", "16-COMPADRE"),
+  c("120-Rage_orquideas.qmd", "17-Rage"),
+  c("121-Traduccion_protocolo_informacion.qmd", "18-Protocolo"),
+  c("122-Impacto_de_Datos_sin_Sentido.qmd", "19-Datos_sin_sentido"),
+  c("123-Conclusion.qmd", "20-Conclusion"),
+  c("117_Historia_breve.qmd", "21-Historia_breve"),
+  c("118-Carl_Olaf_Tamm.qmd", "22-Carl_Olof_Tamm"),
   c("Appendix_A_Species_List.qmd", "ApA-Lista_especies"),
   c("Appendix_B_Hoja_de_datos.qmd", "ApB-Hoja_de_datos"),
   c("Appendix_C_Datos.qmd", "ApC-Datos"),
-  c("Agradecimientos.qmd", "Agradecimientos")
+  c("Agradecimientos.qmd", "23-Agradecimientos")
 )
 
 # ---- Listas de detección ----
@@ -549,6 +564,23 @@ main <- function() {
           "[collect_figures] AVISO: %s (%s) no produjo figuras detectables.",
           qmd_file, chapter_label
         ))
+        # Se crea igualmente la carpeta, con una nota, para que la secuencia
+        # entregada a la editorial no tenga huecos. Un capitulo sin figuras
+        # (1, 16, 20, 23) es una ausencia legitima, no un archivo perdido.
+        if (!audit) {
+          empty_dir <- file.path(DEST, chapter_label)
+          dir.create(empty_dir, recursive = TRUE, showWarnings = FALSE)
+          writeLines(
+            c(
+              sprintf("Capitulo %s: sin figuras.", chapter_label),
+              "",
+              "Esta carpeta se entrega vacia a proposito: el capitulo no",
+              "contiene ninguna figura. Se incluye para que la numeracion de",
+              "carpetas coincida exactamente con la del libro."
+            ),
+            file.path(empty_dir, "SIN_FIGURAS.txt")
+          )
+        }
       }
       next
     }

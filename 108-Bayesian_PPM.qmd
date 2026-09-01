@@ -21,6 +21,8 @@ En este capítulo se presenta el marco conceptual de las MPP bayesianas, mostran
 
 A través de ejemplos aplicados, se ilustra cómo las MPP bayesianas facilitan la evaluación del riesgo poblacional, la comparación entre escenarios de manejo y la integración posterior con análisis de elasticidad, sensibilidad y LTRE. Este capítulo se diferencia de los anteriores porque desplaza el énfasis desde la estimación puntual de parámetros hacia la inferencia probabilística completa de la dinámica poblacional, un enfoque especialmente relevante en biología de la conservación y ecología aplicada.
 
+#### Librerías de R requeridas para el siguiente módulo {.unnumbered .unlisted}
+
 ```{r, message=FALSE, warning=FALSE}
 #| docx_fit: true
 #| label: fig-bayes-setup
@@ -77,7 +79,7 @@ Este capítulo presenta una alternativa bayesiana para estimar los parámetros d
 
 ### Ejemplo de especie con tres etapas
 
-Consideremos una especie hipotética con tres etapas en su ciclo de vida: semillas, plántulas y adultos. En este caso, sólo los adultos producen semillas. El primer paso del análisis consiste en identificar qué etapas tienen mayor influencia en la dinámica poblacional y cómo optimizar la recolección de datos en campo.
+Consideremos una especie hipotética con tres etapas en su ciclo de vida: semillas, plántulas y adultos. En este caso, solo los adultos producen semillas. El primer paso del análisis consiste en identificar qué etapas tienen mayor influencia en la dinámica poblacional y cómo optimizar la recolección de datos en campo.
 
 La primera figura muestra el ciclo de vida considerado. Tras definirlo, se recolectaron datos de campo y se estimaron las tasas de transición y fecundidad. Los resultados revelaron lo siguiente:
 
@@ -90,7 +92,7 @@ La primera figura muestra el ciclo de vida considerado. Tras definirlo, se recol
 
 - ¿Es realista asumir que todas las plántulas mueren durante el ciclo de vida de una especie?
 
-Estas interpretaciones extremas —que ningún individuo muere o que todos mueren— no son biológicamente realistas. Sin embargo, pueden surgir como resultado de un tamaño de muestra reducido. Por ejemplo, si sólo se observaron 4 plantas adultas (debido a que la especie es rara) y todas sobrevivieron, se estimaría una tasa de supervivencia del 100%, lo que implicaría que los individuos son "inmortales". Este resultado no refleja la realidad biológica, sino una limitación del muestreo: por simple azar, no se observó ninguna muerte. Por lo tanto, es fundamental reconocer cuándo los parámetros estimados no representan adecuadamente la historia de vida típica de la especie.
+Estas interpretaciones extremas —que ningún individuo muere o que todos mueren— no son biológicamente realistas. Sin embargo, pueden surgir como resultado de un tamaño de muestra reducido. Por ejemplo, si solo se observaron 4 plantas adultas (debido a que la especie es rara) y todas sobrevivieron, se estimaría una tasa de supervivencia del 100%, lo que implicaría que los individuos son "inmortales". Este resultado no refleja la realidad biológica, sino una limitación del muestreo: por simple azar, no se observó ninguna muerte. Por lo tanto, es fundamental reconocer cuándo los parámetros estimados no representan adecuadamente la historia de vida típica de la especie.
 
 ### El papel del paquete `raretrans`
 
@@ -131,7 +133,7 @@ Además, la matriz poblacional estimada presenta dos propiedades estructurales p
 
 1.  **No es ergódica**: No es posible transitar desde cualquier estado a cualquier otro estado dentro del ciclo de vida. Esto limita la conectividad entre etapas y reduce la capacidad de la matriz para representar adecuadamente la dinámica poblacional.
 
-2.  **Es reducible**: Una o más filas y columnas pueden eliminarse sin alterar las propiedades fundamentales de la matriz (como sus eigenvalores y eigenvectores). Esto indica que ciertas etapas del ciclo de vida no contribuyen significativamente a la dinámica poblacional, lo cual puede ser un artefacto del muestreo o de una estructura biológica mal representada.
+2.  **Es reducible**: el grafo del ciclo de vida no es fuertemente conexo, es decir, hay estadios desde los cuales no se puede alcanzar a todos los demás, de modo que la matriz puede reordenarse en bloques triangulares. Suele ser un artefacto del muestreo o de una estructura biológica mal representada.
 
 ```{r}
 #| docx_fit: true
@@ -143,11 +145,11 @@ plc_save(matA, stages = stages, png = "images/bayes2.png")
 
 ### Interpretaciones biológicamente irreales de los datos existentes
 
-Al estudiar especies longevas como *Sequoia sempervirens*, es común enfrentar interpretaciones erróneas derivadas de datos limitados o mal contextualizados. Esta especie puede alcanzar tamaños extraordinarios (diámetros a la altura del pecho, *dbh*, mayores a 3 metros) y tener una longevidad estimada entre 1,200 y 2,200 años.
+Al estudiar especies longevas como *Sequoia sempervirens*, es común enfrentar interpretaciones erróneas derivadas de datos limitados o mal contextualizados. Esta especie puede alcanzar tamaños extraordinarios (diámetros a la altura del pecho, *dbh*, mayores a 3 metros) y tener una longevidad estimada entre 1200 y 2200 años.
 
-Supongamos que se realiza un muestreo de más de 1,000 individuos grandes. Es posible que, en un intervalo de uno o incluso diez años, no se observe la muerte de ningún individuo. A partir de estos datos, se podría concluir erróneamente que la supervivencia anual es del 100%. Sin embargo, esta interpretación es biológicamente poco realista por varias razones:
+Supongamos que se realiza un muestreo de más de 1000 individuos grandes. Es posible que, en un intervalo de uno o incluso diez años, no se observe la muerte de ningún individuo. A partir de estos datos, se podría concluir erróneamente que la supervivencia anual es del 100%. Sin embargo, esta interpretación es biológicamente poco realista por varias razones:
 
-1.  **Tamaño de muestra insuficiente**: Si el muestreo se ampliara a 10,000 o 100,000 individuos, probablemente se detectarían muertes, aunque fueran pocas. Esto sugiere que la mortalidad es baja, pero no nula.
+1.  **Tamaño de muestra insuficiente**: Si el muestreo se ampliara a 10 000 o 100 000 individuos, probablemente se detectarían muertes, aunque fueran pocas. Esto sugiere que la mortalidad es baja, pero no nula.
 
 2.  **Relación entre tamaño y mortalidad**: En plantas, la probabilidad de morir suele disminuir con el tamaño del individuo. Los árboles más grandes tienen mayor resistencia a factores ambientales y biológicos, lo que reduce su tasa de mortalidad.
 
@@ -165,7 +167,7 @@ En la siguiente sección usaremos el paquete `raretrans`, que facilita los estim
 
 Resumen
 
-Las matrices de proyección poblacional (MPP) son una herramienta común para predecir el comportamiento de la población a corto y largo plazo. Sin embargo, cuando se utilizan para especies raras, amenazadas y en peligro de extinción los datos disponibles suelen tener tamaños de muestra reducido. En consecuencia, algunos eventos demográficos podrían perderse en la modelización dando como resultado matrices con eventos faltantes que reflejen trayectorias de ciclo de vida incompletas o biológicamente poco realistas. Estas matrices con eventos faltantes (ceros; e.g., sin observación de semillas que se transforman en plántulas) a menudo se sustituyen utilizando información de la literatura aunque información referente a otras poblaciones, otros períodos de tiempo, otras especies usualmente se omite.
+Las matrices de proyección poblacional (MPP) son una herramienta común para predecir el comportamiento de la población a corto y largo plazo. Sin embargo, cuando se utilizan para especies raras, amenazadas y en peligro de extinción los datos disponibles suelen tener tamaños de muestra reducidos. En consecuencia, algunos eventos demográficos podrían perderse en la modelización dando como resultado matrices con eventos faltantes que reflejen trayectorias de ciclo de vida incompletas o biológicamente poco realistas. Estas matrices con eventos faltantes (ceros; e.g., sin observación de semillas que se transforman en plántulas) a menudo se sustituyen utilizando información de la literatura aunque información referente a otras poblaciones, otros períodos de tiempo, otras especies usualmente se omite.
 
 Una forma de abordar este problema es a través de métodos bayesianos para el ajuste de los parámetros matriciales. Este marco estadístico nos permite usar información previa para completar los valores faltantes usando, por ejemplo, una distribución de Dirichlet para incluir información sobre las transiciones de estado y una distribución Gamma como previa para la fecundidad. Este método permite integrar información conocida (*a priori*) e incluir explícitamente el peso de la información previa en las distribuciones posteriores. Además, al establecer explícitamente las distribuciones previas, los resultados son reproducibles y se pueden volver a evaluar con diferentes distribuciones *a priori* en el futuro. A continuación mostramos cómo el uso de estos métodos en datos reales influye en la dispersión de los resultados posteriores y origina matrices irreducibles y ergódicas, permitiendo hacer inferencias biológicamente más realistas sobre las probabilidades de transición y fecundidad.
 
@@ -191,18 +193,6 @@ El contenido que se presenta a continuación es una traducción y ampliación de
 
 A continuación se ejemplifica el uso del paquete `raretrans` para estimar los parámetros en una población y en un periodo de transición determinados.
 
-```{r bayes5, message = FALSE}
-
-# Mi tema de formato de las gráficas de ggplot2 personal
-rlt_theme <- theme(
-  text = element_text(family = "Libertinus Serif"),
-  axis.title.y = element_text(colour = "grey20", size = 15, face = "bold"),
-  axis.text.x = element_text(colour = "grey20", size = 15, face = "bold"),
-  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
-  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
-)
-```
-
 ## Obtención de la matriz de proyección
 
 `raretrans` supone que la matriz de proyección es una lista con dos componentes:
@@ -216,9 +206,9 @@ Este es el formato de salida de `popbio::projection.matrix()`. Si tenemos transi
 Podemos utilizar la función `popbio::projection.matrix()` para obtener los datos necesarios. Hacemos una demostración con los datos de transición y fecundidad de *Lepanthes eltoroensis* **POPNUM 250** en el **periodo 5**. *Lepanthes eltoroensis* es una orquídea epífita, endémica de Puerto Rico y con una distribución limitada a una pequeña región de la isla.
 
 ::: {style="display: flex; justify-content: center; gap: 10px;"}
-![*Lepanthes eltoroensis*. Foto: Edwin Guevara. Estudio demográfico: @tremblay2003population](images/Lepanthes_eltoroensis_Edwin_Guevara.jpg){#fig-lepanthes-eltoroensis-edwin-guevara}
+![*Lepanthes eltoroensis*. Foto: Edwin Guevara. Estudio demográfico: @tremblay2003population.](images/Lepanthes_eltoroensis_Edwin_Guevara.jpg){#fig-lepanthes-eltoroensis-edwin-guevara}
 
-![*Lepanthes eltoroensis*. Foto: Edwin Guevara. Estudio demográfico: @tremblay2003population](images/Lepanthes_eltoroensis_Phorophyte_Edwin_Guevara.jpg){#fig-lepanthes-eltoroensis-phorophyte-edwin-guevara}
+![*Lepanthes eltoroensis*. Foto: Edwin Guevara. Estudio demográfico: @tremblay2003population.](images/Lepanthes_eltoroensis_Phorophyte_Edwin_Guevara.jpg){#fig-lepanthes-eltoroensis-phorophyte-edwin-guevara}
 :::
 
 ------------------------------------------------------------------------
@@ -235,7 +225,7 @@ head(L_elto) |> flextable()
 
 ## Organización de los datos en el "data.frame"
 
-Supongamos que tienes una base de datos llamada `L_elto` con las siguientes columnas:
+Supongamos que tiene una base de datos llamada `L_elto` con las siguientes columnas:
 
 - `pop`: identificador de la población
 - `period`: periodo de tiempo
@@ -280,7 +270,7 @@ TF <- popbio::projection.matrix(
   sort = c("s", "j", "a"),
   TF = TRUE
 )
-TF # Esta es la estructura de etapas de vida para esa población. Nota que tenemos dos matrices, una de transiciones **T** y otra de fecundidad **F**.
+TF # Esta es la estructura de etapas de vida para esa población. Note que tenemos dos matrices, una de transiciones **T** y otra de fecundidad **F**.
 ```
 
 ------------------------------------------------------------------------
@@ -339,7 +329,7 @@ pretty(N2) # N2 es un vector con nombres → flextable de 2 columnas
 
 ### ¿Cómo se ve el ciclo de vida de la población en ese periodo?
 
-A la matriz mostrada le falta la transición de plántula a juvenil. Además, dado que ninguno de los 6 juveniles murió, hay una sobreestimación de su supervivencia. La tasa de crecimiento asintótica de la población observada es $\lambda$. La matriz no es ergódica (no se puede llegar a cualquier otro estado desde uno o más estados), y es reducible, lo que significa que una o más columnas y filas se pueden descartar y tienen las mismas propiedades en términos de sus eigenvalores y eigenvectores.
+A la matriz mostrada le falta la transición de plántula a juvenil. Además, dado que ninguno de los 6 juveniles murió, hay una sobreestimación de su supervivencia. La tasa de crecimiento asintótica de la población observada es $\lambda$. La matriz no es ergódica (no se puede llegar a cualquier otro estado desde uno o más estados), y es reducible, lo que significa que una o más columnas y filas se pueden descartar y tienen las mismas propiedades en términos de sus valores y vectores propios.
 
 Lo que vimos anteriormente fueron algunos de los problemas reales que encontramos cuando usamos datos de campo y hay tamaños de muestra pequeños o transiciones raras. A continuación veremos cómo resolverlos.
 
@@ -407,7 +397,7 @@ fill_transitions(TF, N, P = RLT_Tprior, priorweight = 0.5)
 &nbsp;
 
 ::: callout-important
-**El "peso de la previa" es un tamaño de muestra equivalente.** Asignar `priorweight = 0.5` con $N = 2$ observaciones es como decir: "antes de salir al campo, mi creencia tiene la misma fuerza que $0.5 \times 2 = 1$ observación adicional". Si tu previa tiene peso efectivo 5 y observas 50 transiciones, los datos pesarán 10 veces más que la previa. La regla práctica es dejar que los datos dominen: el peso de la previa debería ser **mucho menor** que el tamaño de muestra observado, salvo que tengas razones biológicas muy fuertes para confiar en la previa.
+**El "peso de la previa" es un tamaño de muestra equivalente.** Asignar `priorweight = 0.5` con $N = 2$ observaciones es como decir: "antes de salir al campo, mi creencia tiene la misma fuerza que $0.5 \times 2 = 1$ observación adicional". Si su previa tiene peso efectivo 5 y observa 50 transiciones, los datos pesarán 10 veces más que la previa. La regla práctica es dejar que los datos dominen: el peso de la previa debería ser **mucho menor** que el tamaño de muestra observado, salvo que tengas razones biológicas muy fuertes para confiar en la previa.
 :::
 
 &nbsp;
@@ -416,8 +406,20 @@ Algunos valores típicos de `priorweight`:
 
 - `priorweight = -1` (defecto): la previa contribuye su suma original, típicamente 1 observación equivalente. Útil como previa débil.
 - `priorweight = 0.1` a `0.5`: la previa pesa entre 10% y 50% del tamaño de muestra observado. Apropiado cuando hay conocimiento experto pero los datos deben dominar.
-- `priorweight = 1`: la previa pesa lo mismo que los datos. Sólo justificado si los datos son muy escasos y la previa es muy confiable.
+- `priorweight = 1`: la previa pesa lo mismo que los datos. Solo justificado si los datos son muy escasos y la previa es muy confiable.
 - `priorweight > 1`: la previa pesa más que los datos. Rara vez justificado en estudios poblacionales.
+
+&nbsp;
+
+::: callout-important
+**El peso de la previa es proporcional a $N$, así que no es el mismo en todos los estadios.**
+
+Como `priorweight` multiplica al tamaño de muestra, un mismo valor produce pesos muy distintos según cuántos individuos se hayan observado en cada estadio. Con `priorweight = 0.1`, un estadio con 100 individuos recibe una previa que vale 10 observaciones, y otro con 3 individuos recibe una que vale 0.3.
+
+El efecto es contraintuitivo: **la previa pesa menos justamente donde los datos son más escasos**, que es donde más falta hace. Si el objetivo es sostener los estadios raros, conviene comprobar el peso resultante estadio por estadio, no solo elegir un valor global. En el capítulo de [Métodos de simulaciones](115-Metodos_de_simulaciones.qmd) hay un caso trabajado en el que ese peso va de 0.02 a 0.99 dentro de la misma matriz.
+
+Recuerde además que `priorweight` no altera la forma de la previa, solo su influencia. Una previa mal razonada no mejora por pesar poco.
+:::
 
 &nbsp;
 
@@ -439,8 +441,7 @@ En estos casos, conviene usar previas débiles (poco peso) o reportar resultados
 
 La nueva matriz de transición:
 
-- Es ergódica (todas las etapas están conectadas directa o indirectamente).
-- Es reducible, lo que significa que algunas etapas pueden no ser alcanzables desde otras, dependiendo del ciclo de vida.
+- Es ergódica e irreducible: todas las etapas están conectadas directa o indirectamente, por lo que la dinámica asintótica ya no depende de la estructura inicial.
 - Presenta tasas de mortandad y transición más realistas, gracias a la incorporación del conocimiento experto.
 
 ------------------------------------------------------------------------
@@ -478,7 +479,7 @@ Para obtener estos valores, se puede usar el tipo de retorno TN, que proporciona
 
 ### Ejemplo: etapa de plántula
 
-Supongamos que estamos analizando las transiciones desde la etapa de plántula (s). Si el número de transiciones observadas es 2, y el peso de las previas es 1, el tamaño de muestra efectivo es 3. Esto genera un intervalo de credibilidad más amplio, reflejando la alta incertidumbre en la estimación. Por ejemplo:
+Supongamos que estamos analizando las transiciones desde la etapa de plántula (s). En estos datos se observaron `r N[1]` transiciones desde ese estadio. Como `priorweight` es un **multiplicador sobre el tamaño de muestra observado**, con `priorweight = 0.1` la previa aporta `r round(0.1 * N[1], 1)` observaciones equivalentes y el tamaño de muestra efectivo es `r round(1.1 * N[1], 1)`. Aun así el intervalo de credibilidad resulta amplio, lo que refleja la alta incertidumbre de la estimación. Por ejemplo:
 
 - La tasa de mortandad puntual es 0.31.
 - El intervalo de credibilidad al 95% va de 0.096 a 0.585.
@@ -493,7 +494,9 @@ Un intervalo de credibilidad amplio significa que hay mucha incertidumbre en la 
 - Previas bien fundamentadas.
 - Un análisis cuidadoso del tamaño de muestra efectivo.
 
-```{r bayes15}
+```{r}
+#| label: tbl-bayes-icr
+#| tbl-cap: "Estimación puntual e intervalo de credibilidad del 95 % para los destinos posibles de un individuo que estaba en el estadio de plántula, con `priorweight = 0.1`. La última fila es la mortalidad."
 
 TN <- fill_transitions(
   TF,
@@ -507,7 +510,21 @@ b <- sum(TN[, 1]) - TN[, 1] # cambie 1 a 2, 3 etc para obtener la distribución 
 p <- a / (a + b)
 lcl <- qbeta(0.025, a, b) # el valor 0.025 de la distribución beta
 ucl <- qbeta(0.975, a, b) # el valor 0.975 de la distribución beta
-knitr::kable(sprintf("%.4f (%.4f, %.4f)", p, lcl, ucl)) # Crear una tabla con los resultados con 4 cifras decimales (note la última fila son los fallecidos)
+
+# Se rotula cada fila con su destino: sin nombres, la tabla era una sola
+# columna llamada «x» y no se sabía a qué estadio correspondía cada valor.
+data.frame(
+  Destino = c("Plántula (s)", "Juvenil (j)", "Adulto (a)", "Muere"),
+  Estimacion = sprintf("%.4f", p),
+  ICr = sprintf("(%.4f, %.4f)", lcl, ucl)
+) |>
+  flextable() |>
+  set_header_labels(
+    Destino = "Destino en t+1",
+    Estimacion = "Estimación puntual",
+    ICr = "ICr 95 %"
+  ) |>
+  autofit()
 ```
 
 Una de las grandes ventajas de usar el paquete `raretrans` es que podemos calcular los intervalos de credibilidad de las tasas de transición y fecundidad de manera rápida y sencilla. Además, los intervalos de credibilidad están limitados a los valores entre 0 y 1, lo que es importante para las tasas de transición y fecundidad. Esto es especialmente útil cuando se trabaja con datos de campo donde el tamaño de muestra es pequeño y las transiciones raras son comunes. Muchos métodos estadísticos no pueden calcular intervalos de confianza para tasas de transición y fecundidad, y cuando lo hacen tienen valores ilógicos, como proporciones negativas o mayores a 1.
@@ -516,7 +533,7 @@ Una de las grandes ventajas de usar el paquete `raretrans` es que podemos calcul
 
 ### El efecto del tamaño de muestra sobre los intervalos de credibilidad
 
-Cuando se aumenta el **tamaño de muestra efectivo**, los **intervalos de credibilidad** se vuelven más estrechos, lo que indica mayor confianza en las estimaciones puntuales. Aumentar el tamaño de muestra efectivo a $20$ especificando: `priorweight`$= 9 (9*2 = 18 + 2 = 20)$ hace que los intervalos de credibilidad se reduzcan bastante. Entonces, es importante enfatizar en que el tamaño de muestra tiene gran impacto sobre la confianza que se tiene sobre el estimador puntual (el promedio) de las transiciones, permanencias y mortalidad. Note en la figura como el tamaño del intervalo de credibilidad cambia drásticamente cuando se aumenta el número de datos.
+Cuando se aumenta el **tamaño de muestra efectivo**, los **intervalos de credibilidad** se vuelven más estrechos, lo que indica mayor confianza en las estimaciones puntuales. Si se especifica `priorweight = 9`, la previa aporta $9 \times$ `r N[1]` $=$ `r 9 * N[1]` observaciones equivalentes y el tamaño de muestra efectivo pasa a `r 10 * N[1]`, de modo que los intervalos de credibilidad se estrechan mucho. Conviene advertir que este caso es deliberadamente extremo: la previa pesa nueve veces más que los datos, es decir, lo que se muestra ya no es la información del campo sino la de la previa. Se incluye para ilustrar el efecto del tamaño de muestra efectivo, no como una recomendación. Entonces, es importante enfatizar en que el tamaño de muestra tiene gran impacto sobre la confianza que se tiene sobre el estimador puntual (el promedio) de las transiciones, permanencias y mortalidad. Note en la figura como el tamaño del intervalo de credibilidad cambia drásticamente cuando se aumenta el número de datos.
 
 El intervalo de credibilidad se estrecha cuando el tamaño de muestra efectivo aumenta, reflejando mayor confianza en el estimador puntual.
 
@@ -528,7 +545,7 @@ IMPORTANTE: Aunque este ejemplo muestra cómo el tamaño de muestra afecta la cr
 
 ```{r}
 #| label: fig-bayes16
-#| fig-cap: "Probabilidades posteriores de transición por destino para dos pesos del prior (1 y 9), representadas con puntos y barras de error del intervalo de credibilidad del 95%."
+#| fig-cap: "Probabilidades posteriores de transición por destino para dos pesos de la previa (priorweight = 0.1 y 9), representadas con puntos y barras de error del intervalo de credibilidad del 95%."
 
 TN <- fill_transitions(
   TF,
@@ -543,7 +560,7 @@ p2 <- a / (a + b)
 lcl2 <- qbeta(0.025, a, b)
 ucl2 <- qbeta(0.975, a, b)
 alltogethernow <- tibble(
-  priorweight = factor(rep(c(1, 9), each = 4)),
+  priorweight = factor(rep(c(0.1, 9), each = 4)), # 0.1 es el peso usado en el bloque anterior
   fate = factor(
     rep(c("s", "j", "a", "dead"), times = 2),
     levels = c("s", "j", "a", "dead")
@@ -576,7 +593,7 @@ Obtener intervalos de credibilidad para la tasa de crecimiento asintótica, $\la
 
 ### Simulación de una matriz de transición
 
-Siguiendo el marco bayesiano que hemos venido trabajando en este capítulo, es necesario especificar las previas de la fecundidad como una matriz. Las celdas de la matriz de los estados en los que no hay reproducción deben ser `NA`, usando `NA_real_`, el cual es un valor que no está presente pero podría aceptar valores con puntos decimales. Nota que el valor *a priori* de la fecundidad es 0.0001.
+Siguiendo el marco bayesiano que hemos venido trabajando en este capítulo, es necesario especificar las previas de la fecundidad como una matriz. Las celdas de la matriz de los estados en los que no hay reproducción deben ser `NA`, usando `NA_real_`, el cual es un valor que no está presente pero podría aceptar valores con puntos decimales. Conviene detenerse en la parametrización. La previa Gamma se especifica con dos matrices, `alpha` y `beta`, y en la parametrización *forma–tasa* que usa `raretrans` la **media previa de la fecundidad es** $\alpha/\beta$, mientras que $\beta$ hace las veces de **tamaño de muestra previo**. Con $\alpha = \beta = 10^{-4}$, la media previa es $10^{-4}/10^{-4} = 1$, no $0.0001$: lo que vale $10^{-4}$ es el **peso** de esa previa, es decir, es una previa prácticamente sin información. Por eso el resultado que sigue queda dominado por los datos observados.
 
 ```{r bayes17}
 
@@ -616,7 +633,15 @@ sim_transitions(
 
 ### Simulación de 5000 matrices de transición
 
-Ahora simulamos 5000 veces, calculamos el valor $\lambda$ de cada matriz y creamos un histograma de su distribución. Se añaden los valores de lambda en un objeto llamado `RLT_0.5`. Se visualiza la distribución de $\lambda$ usando un histograma. Note que el valor de $\lambda = 1$ queda dentro de la distribución; en otras palabras, el histograma muestra que la mayoría de los valores de $\lambda$ están cerca de 1.
+Ahora simulamos 5000 veces, calculamos el valor $\lambda$ de cada matriz y creamos un histograma de su distribución. Se añaden los valores de $\lambda$ en un objeto llamado `RLT_0.5`. Se visualiza la distribución de $\lambda$ usando un histograma. Nótese que en este bloque la previa de la fecundidad **cambia** respecto de la del bloque anterior: se pasa de $\alpha = \beta = 10^{-4}$ a $\alpha_2 = 0.025$ y $\beta_2 = 1$. La media previa sigue siendo pequeña ($\alpha_2/\beta_2 = 0.025$), pero ahora la previa **sí pesa**, equivalente a una observación ($\beta_2 = 1$). El cambio es deliberado: con la previa anterior, prácticamente sin peso, las simulaciones de fecundidad resultaban demasiado dispersas. Note que el valor de $\lambda = 1$ queda dentro de la distribución; en otras palabras, el histograma muestra que la mayoría de los valores de $\lambda$ están cerca de 1.
+
+&nbsp;
+
+::: callout-warning
+**La probabilidad posterior depende de la previa que se declare.** El valor de `p_increase` que se obtiene más adelante procede de estas dos matrices, `alpha2` y `beta2`, y no solo de los datos. Cambiar $\alpha_2$ o $\beta_2$ desplaza la distribución posterior de $\lambda$ y, con ella, la probabilidad de crecimiento. Es un buen ejercicio volver a correr este bloque con la previa del apartado anterior ($\alpha = \beta = 10^{-4}$) y comparar el resultado: comprobar esta sensibilidad forma parte de cualquier análisis bayesiano bien hecho, y conviene reportar siempre la previa empleada junto con el resultado.
+:::
+
+&nbsp;
 
 ```{r}
 #| label: fig-bayes19
@@ -661,7 +686,7 @@ ggplot(
 
 ## Probabilidad posterior de que la población esté creciendo (λ \> 1)
 
-A diferencia de un contraste de hipótesis frecuentista (donde se obtiene un valor-p), el marco bayesiano nos permite responder directamente la pregunta de interés: **¿con qué probabilidad la población está creciendo?** Lo hacemos contando qué proporción de las simulaciones de la distribución posterior produjo $\lambda > 1$. En este caso, $P(\lambda > 1 \mid \text{datos}, \text{previas}) = 0.14$, lo que indica que sólo en el 14% de los escenarios consistentes con los datos y la previa la población crece. La evidencia para crecimiento poblacional es débil; lo más probable es que la población esté en declive. La estadística `p_increase` reporta exactamente este valor.
+A diferencia de un contraste de hipótesis frecuentista (donde se obtiene un valor-p), el marco bayesiano nos permite responder directamente la pregunta de interés: **¿con qué probabilidad la población está creciendo?** Lo hacemos contando qué proporción de las simulaciones de la distribución posterior produjo $\lambda > 1$. En este caso, con la previa declarada arriba ($\alpha_2 = 0.025$, $\beta_2 = 1$, `priorweight = 0.5`), $P(\lambda > 1 \mid \text{datos}, \text{previas}) = 0.14$, lo que indica que solo en el 14% de los escenarios consistentes con los datos y la previa la población crece. La evidencia para crecimiento poblacional es débil; lo más probable es que la población esté en declive. La estadística `p_increase` reporta exactamente este valor.
 
 ```{r bayes20}
 
@@ -676,7 +701,7 @@ RLT_0.5_summary <- summarize(
 )
 ```
 
-### Tabla de resultado de lambda
+### Tabla de resultados de $\lambda$
 
 ```{r bayes21}
 
@@ -692,9 +717,9 @@ flextable(signif(RLT_0.5_summary, digits = 2))
 ::: callout-important
 **Nunca uses previas uniformes en análisis poblacionales reales.** Una previa uniforme (e.g., Dirichlet con todos los parámetros iguales) asigna la misma probabilidad a transiciones biológicamente plausibles y a transiciones imposibles (un adulto reproductivo "regresando" a plántula, una ballena bebé pasando directamente a madre, una semilla transformándose en árbol adulto en un periodo). El resultado es una matriz matemáticamente válida pero **biológicamente sin sentido**, que infla la incertidumbre con escenarios irreales y puede ocultar señales legítimas en los datos.
 
-**Siempre construye previas informadas** que reflejen el ciclo de vida de la especie: marca con 0 las transiciones imposibles, asigna probabilidades pequeñas a las raras pero posibles, y concentra masa en las transiciones que la biología espera. La regla práctica es: si no puedes defender la previa frente a un especialista de la especie, no la uses.
+**Siempre construye previas informadas** que reflejen el ciclo de vida de la especie: marca con 0 las transiciones imposibles, asigna probabilidades pequeñas a las raras pero posibles, y concentra masa en las transiciones que la biología espera. La regla práctica es: si no puede defender la previa frente a un especialista de la especie, no la use.
 
-La sección que sigue muestra qué pasa con una previa uniforme **únicamente con fines didácticos** — para que se vea de primera mano por qué falla. No la copies en un análisis de tu propia especie.
+La sección que sigue muestra qué pasa con una previa uniforme **únicamente con fines didácticos** — para que se vea de primera mano por qué falla. No la copie en un análisis de su propia especie.
 :::
 
 &nbsp;
@@ -707,7 +732,7 @@ Esta sección es para demostrar por qué no es recomendable el uso de distribuci
 
 A continuación vamos a añadir una distribución Dirichlet uniforme como previa con un peso = $1$ a la matriz de transición, $T$. En este caso, tenemos 4 destinos (3 + muerte), por lo que cada destino añade 0.25 a la matriz de destinos *observados* (¡no a la matriz de transición!). Cuando especificamos una matriz con valores *a priori* para las transiciones, hay una fila más que columnas. Esta fila extra representa la mortalidad por etapa.
 
-Note que no se recomienda el uso de una previa uniforme; aquí se utiliza sólo para mostrar el concepto. Una distribución previa uniforme no refleja un ciclo de vida razonable para especies biológicas. Por ejemplo, una previa uniforme podría hacer que las plántulas pasen a adulto de un tiempo a otro o que los adultos regresen a ser plántulas, lo cual no tiene mucho sentido biológico en muchas especies. Considera lo siguiente: ¿es posible que una ballena bebé pueda pasar a ser madre al año siguiente? Añadir una transición de 0.25 de ballena bebé a madre no tiene sentido biológico.
+Note que no se recomienda el uso de una previa uniforme; aquí se utiliza solo para mostrar el concepto. Una distribución previa uniforme no refleja un ciclo de vida razonable para especies biológicas. Por ejemplo, una previa uniforme podría hacer que las plántulas pasen a adulto de un tiempo a otro o que los adultos regresen a ser plántulas, lo cual no tiene mucho sentido biológico en muchas especies. Considere lo siguiente: ¿es posible que una ballena bebé pueda pasar a ser madre al año siguiente? Añadir una transición de 0.25 de ballena bebé a madre no tiene sentido biológico.
 
 Note que ahora la matriz de transición es ergódica pero no tiene sentido biológico. Compare la matriz con las previas uniformes versus la matriz original.
 
@@ -741,6 +766,6 @@ Tobs <- Tobs + 0.25 # añadir los valores de las previas
 sweep(Tobs, 2, colSums(Tobs), "/")[-4, ] # dividir por la suma de la columna y descarta la fila de muerte
 ```
 
-La previa uniforme "rellena" las transiciones faltantes, pero también crea problemas porque algunos de los valores de transición que se asignan son biológicamente imposibles en muchas especies. Por ejemplo, para la transición de adulto a plántula se asigna un valor; sin embargo, este valor sólo es posible en la matriz de fecundidad $F$ en las especies de *Lepanthes*. Debido a esto, no es recomendable el uso de previas uniformes, ya que no toman en cuenta el ciclo de vida de nuestra especie. Será necesario crear una matriz de *priors* que refleje el ciclo de vida de la especie de interés.
+La previa uniforme "rellena" las transiciones faltantes, pero también crea problemas porque algunos de los valores de transición que se asignan son biológicamente imposibles en muchas especies. Por ejemplo, para la transición de adulto a plántula se asigna un valor; sin embargo, este valor solo es posible en la matriz de fecundidad $F$ en las especies de *Lepanthes*. Debido a esto, no es recomendable el uso de previas uniformes, ya que no toman en cuenta el ciclo de vida de nuestra especie. Será necesario crear una matriz de *priors* que refleje el ciclo de vida de la especie de interés.
 
 ------------------------------------------------------------------------

@@ -21,7 +21,7 @@ En este capítulo se introduce el concepto de $\lambda$ como el valor propio dom
 
 A través de ejemplos prácticos, se explora cómo cambios en las tasas vitales modifican $\lambda$ y cómo esta métrica sirve como punto de partida para análisis posteriores de sensibilidad, elasticidad y proyecciones poblacionales. Este capítulo se diferencia de los anteriores porque establece el vínculo formal entre la estructura del ciclo de vida y la dinámica poblacional global, proporcionando la base teórica sobre la cual se construyen los análisis de manejo, conservación y simulación desarrollados más adelante.
 
-#### Librerías de R requeridas para el siguiente módulo
+#### Librerías de R requeridas para el siguiente módulo {.unnumbered .unlisted}
 
 ```{r, message=FALSE, warning=FALSE}
 #| docx_fit: true
@@ -34,9 +34,15 @@ library(Rage)
 library(tidyverse)
 library(flextable)
 source("R/figuras_helpers.R") # plc_save(), grviz_save(), save_plot_png()
+
+# Semilla fija: este capitulo cita en la prosa resultados de funciones
+# aleatorias (remuestreos y simulaciones). Sin set.seed(), y con el cache
+# de Quarto desactivado, cada render produciria numeros distintos de los
+# que afirma el texto.
+set.seed(1234)
 ```
 
-En los modelos matriciales, uno de los parámetros más útiles es la tasa de crecimiento poblacional proyectada, $\lambda$ (lambda). Su importancia radica en integrar las tasas de crecimiento, supervivencia y reproducción en un sólo parámetro, el cual proyecta qué tan rápido crece o decrece una población. A pesar de su relevancia, $\lambda$ también es uno de los parámetros que más ha sido malinterpretado. A continuación describiremos qué implica la tasa de crecimiento poblacional, se muestra cómo calcularla y analizamos cómo interpretarla. Para ello, usamos los datos demográficos de *Laelia speciosa*, una orquídea epífita, cuyos datos poblacionales fueron recabados en dos sitios, por dos años.
+En los modelos matriciales, uno de los parámetros más útiles es la tasa de crecimiento poblacional proyectada, $\lambda$ (lambda). Su importancia radica en integrar las tasas de crecimiento, supervivencia y reproducción en un solo parámetro, el cual proyecta qué tan rápido crece o decrece una población. A pesar de su relevancia, $\lambda$ también es uno de los parámetros que más ha sido malinterpretado. A continuación describiremos qué implica la tasa de crecimiento poblacional, se muestra cómo calcularla y analizamos cómo interpretarla. Para ello, usamos los datos demográficos de *Laelia speciosa*, una orquídea epífita, cuyos datos poblacionales fueron recabados en dos sitios, por dos años.
 
 ## Interpretación de la tasa de crecimiento poblacional asintótica: $\lambda$
 
@@ -56,7 +62,7 @@ La palabra clave es *si las condiciones se mantuvieran*: $\lambda$ describe la t
 
 &nbsp;
 
-Comenzamos por ingresar dos matrices de transición, una para cada año de monitoreo de una poblaciones de *Laelia speciosa*. Los datos provienen de Mariana Hernández-Apolinar y no han sido publicados.
+Comenzamos por ingresar dos matrices de transición, una para cada año de monitoreo de una población de *Laelia speciosa*. Los datos provienen de Mariana Hernández-Apolinar y no han sido publicados.
 
 ## Primera matriz
 
@@ -136,12 +142,12 @@ También es fundamental tomar en cuenta que, $\lambda$ no es la tasa a la que se
 &nbsp;
 
 ::: callout-warning
-**$\lambda$ describe el presente, no predice el futuro.** Aunque el lenguaje natural sugiere que "$\lambda = 1.10$ quiere decir que la población crecerá un 10% por año", esto sólo se cumpliría si las tasas vitales fueran exactamente las mismas todos los años — algo prácticamente nunca cierto. $\lambda$ es una **descripción comparable** del estado demográfico actual de la población [@crone2013ability], útil para comparar entre sitios, periodos o tratamientos. Para predicciones a corto plazo conviene usar análisis de dinámica transitoria; para escenarios variables, la tasa estocástica $\lambda_e$ (sección siguiente).
+**$\lambda$ describe el presente, no predice el futuro.** Aunque el lenguaje natural sugiere que "$\lambda = 1.10$ quiere decir que la población crecerá un 10% por año", esto solo se cumpliría si las tasas vitales fueran exactamente las mismas todos los años — algo prácticamente nunca cierto. $\lambda$ es una **descripción comparable** del estado demográfico actual de la población [@crone2013ability], útil para comparar entre sitios, periodos o tratamientos. Para predicciones a corto plazo conviene usar análisis de dinámica transitoria; para escenarios variables, la tasa estocástica $\lambda_e$ (sección siguiente).
 :::
 
 &nbsp;
 
-Los meta-análisis [@crone2013ability], en cambio, han demostrado que $\lambda$ es una medida robusta de las condiciones actuales, ya que ésta explica la dinámica de las poblaciones durante el período de tiempo en el que se parametrizaron los modelos. Asimismo, $\lambda$ es una buena medida del estado de la población, por lo que es una forma apropiada de comparar el comportamiento de las poblaciones bajo diferentes condiciones, incluyendo variación abiótica, biótica y de manejo. Por ejemplo, los valores de $\lambda$ permiten comparar el comportamiento de una población en distintos periodos de tiempo y con ello entender cómo la variación en las condiciones climáticas afecta su dinámica. Las comparaciones también pueden ser entre poblaciones de la misma especie distribuidas en distintos sitios, para entender los efectos de la variación en el manejo, la vegetación u otras diferencias entre sitios (vea el capítulo [Métodos de simulación poblacional](#VarTempEsp))
+Los meta-análisis [@crone2013ability], en cambio, han demostrado que $\lambda$ es una medida robusta de las condiciones actuales, ya que esta explica la dinámica de las poblaciones durante el período de tiempo en el que se parametrizaron los modelos. Asimismo, $\lambda$ es una buena medida del estado de la población, por lo que es una forma apropiada de comparar el comportamiento de las poblaciones bajo diferentes condiciones, incluyendo variación abiótica, biótica y de manejo. Por ejemplo, los valores de $\lambda$ permiten comparar el comportamiento de una población en distintos periodos de tiempo y con ello entender cómo la variación en las condiciones climáticas afecta su dinámica. Las comparaciones también pueden ser entre poblaciones de la misma especie distribuidas en distintos sitios, para entender los efectos de la variación en el manejo, la vegetación u otras diferencias entre sitios (vea el capítulo [Métodos de simulación poblacional](#VarTempEsp))
 
 ------------------------------------------------------------------------
 
@@ -157,7 +163,7 @@ El resultado es una lista de los siguientes parámetros:
 - El tamaño poblacional esperado para cada año proyectado (suma de individuos en cada estadio)
 - El crecimiento intrínseco esperado para cada año proyectado, entendido como tasa de crecimiento potencial máxima de una población en condiciones ambientales ideales [@skalski2010wildlife].
 
-A partir de una población inicial de 10 individuos en cada estadio (25% del total de la población en cada uno) y después de proyectar la población por siete iteraciones, podemos ver que el valor de $\lambda$ esperado es muy similar al calculado anteriormente, ±12% de crecimiento. Las diferencias radican en el vector de estadios, en el cual se observan cambios importantes en la proporción de individuos por estadio. La proporción de juveniles y plántulas, de ser un 25 % respectivamente, incrementa drásticamente y pasa a dominar la población (90 %, suma de ambas) en seis años. El crecimiento poblacional se mide con la suma de los individuos en cada estadio por año proyectado (**pop.sizes**) sobre la cantidad de individuos del año anterior. Por ejemplo, en el primer año la población pasa de 40 individuos a 56.8 individuos, lo que evidencia un incremento en la abundancia de individuos, correspondiente a un crecimiento de 42% (56.8/40=1.42). En el segundo año se espera que la población crezca de 56.8 a 70.2 individuos, lo que representa un crecimiento de 24% (70.2/56.8=1.24).
+A partir de una población inicial de 10 individuos en cada estadio (25% del total de la población en cada uno) y después de proyectar la población por siete iteraciones, podemos ver que el valor de $\lambda$ esperado es muy similar al calculado anteriormente, ±12% de crecimiento. Las diferencias radican en el vector de estadios, en el cual se observan cambios importantes en la proporción de individuos por estadio. La proporción de juveniles y plántulas, de ser un 25 % cada una, se incrementa y pasa a dominar la población (cerca del 78 % entre ambas) en seis años, acercándose al 79 % que les corresponde en la estructura estable. El crecimiento poblacional se mide con la suma de los individuos en cada estadio por año proyectado (**pop.sizes**) sobre la cantidad de individuos del año anterior. Por ejemplo, en el primer año la población pasa de 40 individuos a 56.8 individuos, lo que evidencia un incremento en la abundancia de individuos, correspondiente a un crecimiento de 42% (56.8/40=1.42). En el segundo año se espera que la población crezca de 56.8 a 70.2 individuos, lo que representa un crecimiento de 24% (70.2/56.8=1.24).
 
 ## Proyección de la población 1, año 1
 
@@ -167,7 +173,7 @@ pop_1 <- pop.projection(mat1.1, n = c(10, 10, 10, 10), iterations = 7)
 pop_1
 ```
 
-#### Visualizar el crecimiento poblacional proyectado por año
+### Visualizar el crecimiento poblacional proyectado por año
 
 El crecimiento poblacional proyectado por año se puede visualizar, usando la función **plot** en el paquete `popbio`. En este caso, se observa que la población crece de forma exponencial, lo que es consistente con el valor de $\lambda$ calculado anteriormente. Este mismo código puede ser usado para responder las siguientes preguntas: ¿Qué pasa si cambian el número de individuos en cada estadio inicial? ¿Qué pasa si cambian la cantidad de iteraciones/time a un número grande? Para esto, se tiene que modificar **n** y el número 7, que representa las iteraciones.
 
@@ -202,7 +208,7 @@ stage.vector.plot(cambio$stage.vectors, col = 2:4, ylim = c(0, 0.6))
 
 ## Comparación de valor de $\lambda$ entre poblaciones (1 y 2)
 
-Nuestra segunda población de *Laelia speciosa* se establece en un hábitat similar a la población 1 y fue monitoreada durante al mismo tiempo. Sin embargo, ésta fue sujeta a la extracción. Si comparamos los valores de $\lambda$ de nuestras dos poblaciones, podemos hacer inferencias sobre los efectos de la extracción. La población 2 no produjo frutos y tampoco se observaron plántulas. Debido a esto, fue necesario incluir el valor de 0.001 para la transición de la matriz adulta2-\> plántula y con esto asegurar que nuestra matriz de estudio sea irreducible y primitiva (ver el capítulo de [Propiedades poblacionales](110-Propriedades.qmd)).
+Nuestra segunda población de *Laelia speciosa* se establece en un hábitat similar a la población 1 y fue monitoreada durante al mismo tiempo. Sin embargo, esta fue sujeta a la extracción. Si comparamos los valores de $\lambda$ de nuestras dos poblaciones, podemos hacer inferencias sobre los efectos de la extracción. La población 2 no produjo frutos y tampoco se observaron plántulas. Debido a esto, fue necesario incluir el valor de 0.001 para la transición de la matriz adulta2-\> plántula y con esto asegurar que nuestra matriz de estudio sea irreducible y primitiva (ver el capítulo de [Propiedades poblacionales](110-Propriedades.qmd)).
 
 ## Proyección de la población 2, año 1
 
@@ -326,7 +332,7 @@ En el ejemplo anterior, hemos asumido que las condiciones bajo las cuales se con
 
 ## Tasa estocástica de crecimiento $\lambda_e$
 
-La tasa estocástica de crecimiento o $\lambda_e$ se puede estimar si se cuenta con datos colectados por 2 o más periodos y, por lo tanto, se tienen 2 o más matrices de transición. La tasa estocástica se puede calcular a través del método de simulación de Cohen o por la aproximación de Tuljapurkar [@caswell2001matrix]. En la simulación, las matrices son seleccionadas aleatoriamente para un número específico de intervalos de tiempo (50,000 por omisión en `popbio`). Se calcula $\lambda_e$ como la tasa media del crecimiento para un lapso de tiempo. En la aproximación de Tuljapurkar, se calcula $\lambda_e$ como el valor propio dominante de la matriz de transición promedio. El método de Tuljapurkar es más rápido, pero menos robusto que el método de simulación. Pero es recomendable solamente cuando la variación entre las matrices de diferentes periodos sean pequeñas [@caswell2001matrix], aunque Morris y Doak mencionan que el método funciona bastante bien aunque varían las matrices [@morris2002quantitative]. En la próxima sección se muestra cómo calcular $\lambda_e$.
+La tasa estocástica de crecimiento o $\lambda_e$ se puede estimar si se cuenta con datos colectados por 2 o más periodos y, por lo tanto, se tienen 2 o más matrices de transición. La tasa estocástica se puede calcular a través del método de simulación de Cohen o por la aproximación de Tuljapurkar [@caswell2001matrix]. En la simulación, las matrices son seleccionadas aleatoriamente para un número específico de intervalos de tiempo (50 000 por omisión en `popbio`). Se calcula $\lambda_e$ como la tasa media del crecimiento para un lapso de tiempo. En la aproximación de Tuljapurkar, se parte del valor propio dominante de la matriz de transición promedio y se le resta una corrección por la varianza y la covarianza temporal de las entradas (ver la ecuación más adelante). El método de Tuljapurkar es más rápido, pero menos robusto que el método de simulación. Pero es recomendable solamente cuando la variación entre las matrices de diferentes periodos sean pequeñas [@caswell2001matrix], aunque Morris y Doak mencionan que el método funciona bastante bien aunque varían las matrices [@morris2002quantitative]. En la próxima sección se muestra cómo calcular $\lambda_e$.
 
 &nbsp;
 
@@ -334,7 +340,7 @@ La tasa estocástica de crecimiento o $\lambda_e$ se puede estimar si se cuenta 
 **¿Cuándo usar cada método para** $\lambda_e$?
 
 - **Simulación de Cohen** (defecto en `popbio::stoch.growth.rate()`): selecciona aleatoriamente entre las matrices observadas durante miles de iteraciones y calcula la tasa media de crecimiento logarítmico. Más robusta, especialmente cuando las matrices difieren mucho entre sí.
-- **Aproximación de Tuljapurkar:** fórmula analítica basada en la matriz promedio y la covarianza entre entradas. Más rápida, pero precisa sólo cuando la variación entre matrices es modesta.
+- **Aproximación de Tuljapurkar:** fórmula analítica basada en la matriz promedio y la covarianza entre entradas. Más rápida, pero precisa solo cuando la variación entre matrices es modesta.
 
 Cuando hay duda, reportar ambos: si difieren mucho, la variación entre años es importante y la simulación es la métrica más confiable.
 :::
@@ -349,11 +355,11 @@ donde $\tau^2$ es igual a:
 
 $$\tau^2=\sum_{i=1}^{S}\sum_{j=1}^{S}\sum_{k=1}^{S}\sum_{l=1}^{S}Cov(\alpha_{ij}, \alpha_{kl})\bar{S_{ij}}\bar{S_{kl}}$$
 
-La variable de la ecuación incluye $\bar\lambda_1$, que representa el log del valor propio ($\lambda$) promedio de las matrices de transición $\bar{\text{A}}$, en el que cada entrada de la matriz es un valor promedio de los elementos de las matrices analizadas. Si tenemos 4 matrices de transición, $\bar{\text{A}}$ es la matriz de transición promedio. Por ejemplo, si la transiciones de plántula a juvenil en la matriz 1 es 0.1, en la matriz 2 es 0.2, en la matriz 3 es 0.15 y en la matriz 4 es 0.05, entonces el valor promedio en la $\bar{\text{A}}$ de la transición de plántula a juvenil sería (0.1 + 0.2 + 0.15 + 0.05)/4 = 0.125. Por consecuencia el valor de $\bar{\alpha}_{1,1}=0.125$ y así sucesivamente para cada elemento de la matriz.
+La variable de la ecuación incluye $\bar\lambda_1$, que es el valor propio dominante de la matriz de transición promedio $\bar{\text{A}}$, en el que cada entrada de la matriz es un valor promedio de los elementos de las matrices analizadas. Si tenemos 4 matrices de transición, $\bar{\text{A}}$ es la matriz de transición promedio. Por ejemplo, si la transiciones de plántula a juvenil en la matriz 1 es 0.1, en la matriz 2 es 0.2, en la matriz 3 es 0.15 y en la matriz 4 es 0.05, entonces el valor promedio en la $\bar{\text{A}}$ de la transición de plántula a juvenil sería (0.1 + 0.2 + 0.15 + 0.05)/4 = 0.125. Por consecuencia el valor de $\bar{\alpha}_{1,1}=0.125$ y así sucesivamente para cada elemento de la matriz.
 
-El componente $\frac{\tau^2}{\bar\lambda_1^2}$ es un aproximado de la variación temporal del crecimiento poblacional a causa de la estocasticidad temporal. En este caso, $\tau^2$ es el efecto de la sensibilidad de $\lambda$ causada por los cambios en los elementos $\bar{\alpha}_{i,j}$. La covarianza $\text{Cov}$ mide las correlaciones entre las transiciones de estado $i$ a $j$ y $k$ a $l$, y se denota como $Cov(\alpha_{ij}, \alpha_{kl})$. Recuerda que no todos los valores en la matriz tienen el mismo impacto si fuesen a cambiar (ver capítulo de elasticidad). Se espera que algunos de los elementos tengan sobre $\lambda$ un impacto relativo e influencia de forma positiva o negativa, por lo que la covarianza puede ser positiva o negativa. Por ejemplo, si la transición de plántula a juvenil aumenta, es probable que la transición de juvenil a adulto aumente también en un buen año, y viceversa; por lo tanto, la covarianza entre estas transiciones es positiva. La covarianza tendrá un valor negativo, por ejemplo, si aumenta la transición de plántulas a juvenil, lo cual implicará una reducción en la cantidad de plántulas que siguen en este estadio en el próximo año.
+El componente $\frac{\tau^2}{\bar\lambda_1^2}$ es un aproximado de la variación temporal del crecimiento poblacional a causa de la estocasticidad temporal. En este caso, $\tau^2$ es el efecto de la sensibilidad de $\lambda$ causada por los cambios en los elementos $\bar{\alpha}_{i,j}$. La covarianza $\text{Cov}$ mide las correlaciones entre las transiciones de estado $i$ a $j$ y $k$ a $l$, y se denota como $Cov(\alpha_{ij}, \alpha_{kl})$. Recuerde que no todos los valores en la matriz tienen el mismo impacto si fuesen a cambiar (ver capítulo de elasticidad). Se espera que algunos de los elementos tengan sobre $\lambda$ un impacto relativo e influencia de forma positiva o negativa, por lo que la covarianza puede ser positiva o negativa. Por ejemplo, si la transición de plántula a juvenil aumenta, es probable que la transición de juvenil a adulto aumente también en un buen año, y viceversa; por lo tanto, la covarianza entre estas transiciones es positiva. La covarianza tendrá un valor negativo, por ejemplo, si aumenta la transición de plántulas a juvenil, lo cual implicará una reducción en la cantidad de plántulas que siguen en este estadio en el próximo año.
 
-En lo anterior, una vez más, se asume que las condiciones bajo las cuales se construyeron las matrices de transición son constantes en el tiempo. Por lo tanto, $\lambda_e$ no debe ser interpretado literalmente, ni tampoco como una herramienta predictiva. En adición los valores de IC se restan y se suma al valor de $\lambda$ promedio obtenido para tener el rango de 95% de su valor.
+A diferencia de $\lambda$, la tasa estocástica $\lambda_e$ no supone un ambiente constante: para eso se calcula. Lo que sí supone es que la secuencia de ambientes futuros se distribuye como la muestra de matrices observadas, que con solo dos o tres matrices es un supuesto muy fuerte. Por eso $\lambda_e$ tampoco debe interpretarse literalmente como una herramienta predictiva. En adición los valores de IC se restan y se suma al valor de $\lambda$ promedio obtenido para tener el rango de 95% de su valor.
 
 ```{r cre_pop_5}
 
@@ -468,7 +474,7 @@ tribble(
 
 En general, $\lambda_e$, al igual que $\lambda$, es útil cuando se caracterizan las condiciones, ya sea actuales o pasadas del periodo de tiempo en que se monitorea a las poblaciones. También es una herramienta poderosa para explorar la fuerza relativa de diferentes factores en el crecimiento poblacional. Sin embargo, al igual que $\lambda$, $\lambda_e$ no debe interpretarse literalmente para predecir el futuro.
 
-Es importante recalcar algunos puntos importante sobre el crecimiento poblacional. Primero, la tasa de crecimiento poblacional es una medida robusta de las condiciones actuales, ya que explica la dinámica de las poblaciones durante el período de tiempo en que se parametrizaron los modelos. Segundo, la tasa de crecimiento poblacional es una buena medida del estado de la población, por lo que es una forma apropiada de comparar el comportamiento de las poblaciones bajo diferentes condiciones, incluyendo variación abiótica, biótica y de manejo. Por último, la tasa de crecimiento poblacional es una medida útil para comparar el comportamiento de las poblaciones en distintos periodos de tiempo y con ello entender cómo la variación en las condiciones climáticas afecta su dinámica. Las comparaciones también pueden ser entre poblaciones de la misma especie distribuidas en distintos sitios, para entender los efectos de la variación en el manejo, la vegetación u otras diferencias entre sitios.
+Es importante recalcar algunos puntos sobre el crecimiento poblacional. Primero, la tasa de crecimiento poblacional es una medida robusta de las condiciones actuales, ya que explica la dinámica de las poblaciones durante el período de tiempo en que se parametrizaron los modelos. Segundo, la tasa de crecimiento poblacional es una buena medida del estado de la población, por lo que es una forma apropiada de comparar el comportamiento de las poblaciones bajo diferentes condiciones, incluyendo variación abiótica, biótica y de manejo. Por último, la tasa de crecimiento poblacional es una medida útil para comparar el comportamiento de las poblaciones en distintos periodos de tiempo y con ello entender cómo la variación en las condiciones climáticas afecta su dinámica. Las comparaciones también pueden ser entre poblaciones de la misma especie distribuidas en distintos sitios, para entender los efectos de la variación en el manejo, la vegetación u otras diferencias entre sitios.
 
 Reconocer que $\lambda$, el crecimiento poblacional estimado de dos periodos, no considera la variabilidad en las tasas vitales por causa de procesos estocásticos, espacial ni temporal, por lo que es importante que se realicen análisis de sensibilidad para evaluar el impacto de la variabilidad en las tasas vitales en la estimación de $\lambda$.
 

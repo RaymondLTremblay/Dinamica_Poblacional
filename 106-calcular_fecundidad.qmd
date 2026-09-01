@@ -27,14 +27,14 @@ En este capítulo se examinan los fundamentos para calcular la fecundidad a part
 - **Potencial:** lo que un individuo *podría* producir en condiciones óptimas (p. ej., número máximo de semillas si todas las flores son polinizadas).
 - **Realizada:** lo que un individuo efectivamente contribuye a la siguiente generación, descontando aborto, fallas en polinización, semillas inviables, fallas de germinación y mortalidad temprana.
 
-Para modelos demográficos sólo es relevante la fecundidad **realizada**, expresada en las mismas unidades que el primer estadio del modelo.
+Para modelos demográficos solo es relevante la fecundidad **realizada**, expresada en las mismas unidades que el primer estadio del modelo.
 :::
 
 &nbsp;
 
 Asimismo, se analiza cómo la fecundidad se integra en la matriz de proyección, generalmente a través de la submatriz **F**, y cómo su parametrización influye en el crecimiento poblacional y en análisis posteriores de sensibilidad y elasticidad. Este capítulo se diferencia de los anteriores porque se centra en la cuantificación explícita de un proceso demográfico específico, estableciendo el vínculo entre datos reproductivos y modelos poblacionales utilizados para inferir patrones de crecimiento y evaluar escenarios de manejo.
 
-#### Librerías de R requeridas para el siguiente módulo
+#### Librerías de R requeridas para el siguiente módulo {.unnumbered .unlisted}
 
 ```{r, message=FALSE}
 #| docx_fit: true
@@ -59,12 +59,30 @@ Un error común es calcular la fecundidad usando el número de semillas producid
 &nbsp;
 
 ::: callout-important
-**La fecundidad debe expresarse en las mismas unidades que el primer estadio del modelo.** Si la primera etapa es "plántula", la entrada de fecundidad cuenta nuevas plántulas por individuo reproductor, no semillas. Mezclar unidades (e.g., poner "número de semillas" en una matriz cuya primera etapa son plántulas) introduce un error sistemático que infla $\lambda$ por órdenes de magnitud. Cuando sólo se conoce la producción de semillas, hay que multiplicarla por las tasas de germinación y supervivencia hasta plántula antes de incorporarla a la matriz.
+**La fecundidad debe expresarse en las mismas unidades que el primer estadio del modelo.** Si la primera etapa es "plántula", la entrada de fecundidad cuenta nuevas plántulas por individuo reproductor, no semillas. Mezclar unidades (e.g., poner "número de semillas" en una matriz cuya primera etapa son plántulas) introduce un error sistemático que infla $\lambda$ por órdenes de magnitud. Cuando solo se conoce la producción de semillas, hay que multiplicarla por las tasas de germinación y supervivencia hasta plántula antes de incorporarla a la matriz.
 :::
 
 &nbsp;
 
 ## Estimación de la fecundidad a partir de datos
+
+Antes de calcular nada hay que declarar **cuándo se hizo el censo respecto a la reproducción**, porque de eso depende qué debe contener la entrada de fecundidad. Es una decisión que no cambia los datos de campo, pero sí cómo se traducen a la matriz, y omitirla es una de las causas más frecuentes de que dos estudios de la misma especie no sean comparables.
+
+&nbsp;
+
+::: callout-important
+**Declare el tipo de censo antes de construir la matriz F.**
+
+En un **censo prerreproductivo** los individuos se cuentan justo antes de la ventana reproductiva. El primer estadio del modelo no son recién nacidos, sino individuos que ya sobrevivieron desde su origen, de modo que la entrada de fecundidad **tiene que incluir la supervivencia de la descendencia** hasta el censo siguiente.
+
+En un **censo posreproductivo** los individuos se cuentan justo después de la reproducción. El primer estadio son los recién producidos, así que la entrada de fecundidad es simplemente **el número de descendientes producidos**, sin esa supervivencia.
+
+**Los ejemplos de este libro asumen un censo prerreproductivo con intervalo de proyección de un año.** Se reconoce en que la fecundidad cuenta plántulas establecidas en $t_{+1}$ por adulto en $t_0$: la producción de semillas, la germinación y la supervivencia hasta plántula ya están dentro de **F**. Por eso la fecundidad de los ejemplos es una fracción o un número pequeño, y no un conteo de semillas.
+
+Si su estudio cuenta frutos o semillas en el momento de producirlos, esos números **no** se pueden colocar directamente en una matriz cuyo primer estadio sea "plántula": faltaría multiplicarlos por la germinación y la supervivencia, que es exactamente el cálculo de la sección siguiente. Ver la entrada «Censo pre-reproductivo / post-reproductivo» del [Glosario](Apendice_Glosario.qmd).
+:::
+
+&nbsp;
 
 A continuación se presentan los métodos y cálculos utilizados para estimar la fecundidad y su incorporación en matrices de proyección poblacional.
 
@@ -88,7 +106,7 @@ Por otro lado, la polinización cruzada incrementa el éxito reproductivo al int
 
 Algunas especies presentan autopolinización estricta mediante flores cleistógamas, que nunca se abren pero producen frutos fértiles, como en *Lepanthes dodiana*. Esta estrategia es común en plantas colonizadoras o adaptadas a ambientes extremos, donde la ausencia de polinizadores o individuos cercanos limita la polinización cruzada [@barreda2024allogamy]. La autogamia, además, requiere menos inversión energética al no producir recompensas florales [@eckert2004using], similar a las especies que emplean polinización por engaño, donde la ausencia de recompensas se traduce en menor éxito reproductivo [@golubov2009que].
 
-Se estima que aproximadamente el 65% de las especies de *Orchidaceae* ofrecen algún tipo de recompensa floral [@llabres2015estudio]. El néctar constituye la recompensa más común para atraer polinizadores [@neiland1998fruit]; sin embargo, su producción pudiese implicar un elevado costo energético para la planta, lo que puede limitar el desarrollo de otras estructuras. Ante esta restricción, muchas orquídeas han evolucionado mecanismos de polinización por engaño, estrategia presente en cerca de un tercio de las especies (entre 6,000 y 8,000) [@tremblay2005variation; @case2009enhancing; @ackerman1989limitations; @dafni1983pollination]. Estas especies no ofrecen recompensa alguna, lo que reduce el gasto energético. La ausencia de recompensas permite a las orquídeas con polinización por engaño invertir recursos en otras características, como mayor número de flores, incremento en la altura de la planta y en el tamaño de la inflorescencia [@henneresse2017effects; @scopece2017fluctuating], rasgos que aumentan la atracción visual y la frecuencia de visitas de polinizadores [@peakall1989new; @burd1995pollinator; @aragon2004does; @grindeland2005effects; @li2011floral; @sletvold2011among]. Tanto la autogamia como la polinización por engaño requieren menor inversión energética al no producir recompensas [@eckert2004using]; sin embargo, esta estrategia suele traducirse en menor éxito reproductivo. De hecho, se ha reportado que las orquídeas que emplean polinización por engaño producen, en promedio, solo la mitad de frutos en comparación con aquellas que ofrecen recompensas [@johnson1997evidence; @neiland1998fruit; @tremblay2005variation; @jersakova2006mechanisms].
+Se estima que aproximadamente el 65% de las especies de *Orchidaceae* ofrecen algún tipo de recompensa floral [@llabres2015estudio]. El néctar constituye la recompensa más común para atraer polinizadores [@neiland1998fruit]; sin embargo, su producción pudiese implicar un elevado costo energético para la planta, lo que puede limitar el desarrollo de otras estructuras. Ante esta restricción, muchas orquídeas han evolucionado mecanismos de polinización por engaño, estrategia presente en cerca de un tercio de las especies (entre 6000 y 8000) [@tremblay2005variation; @case2009enhancing; @ackerman1989limitations; @dafni1983pollination]. Estas especies no ofrecen recompensa alguna, lo que reduce el gasto energético. La ausencia de recompensas permite a las orquídeas con polinización por engaño invertir recursos en otras características, como mayor número de flores, incremento en la altura de la planta y en el tamaño de la inflorescencia [@henneresse2017effects; @scopece2017fluctuating], rasgos que aumentan la atracción visual y la frecuencia de visitas de polinizadores [@peakall1989new; @burd1995pollinator; @aragon2004does; @grindeland2005effects; @li2011floral; @sletvold2011among]. Tanto la autogamia como la polinización por engaño requieren menor inversión energética al no producir recompensas [@eckert2004using]; sin embargo, esta estrategia suele traducirse en menor éxito reproductivo. De hecho, se ha reportado que las orquídeas que emplean polinización por engaño producen, en promedio, solo la mitad de frutos en comparación con aquellas que ofrecen recompensas [@johnson1997evidence; @neiland1998fruit; @tremblay2005variation; @jersakova2006mechanisms].
 
 ## Producción de frutos en orquídeas
 
@@ -104,7 +122,7 @@ El número de semillas por fruto en las orquídeas puede variar desde miles hast
 
 Aunque una planta puede producir una gran cantidad de semillas viables, tras la dispersión estas enfrentan múltiples factores que limitan su éxito. Las condiciones abióticas —como temperatura, luz y humedad—, junto con factores bióticos, como las características del forófito, la disponibilidad de hongos endófitos y la presión de herbívoros o depredadores de semillas y plántulas, influyen tanto en la micorrización como en la germinación y el establecimiento de nuevas plántulas [@dressler1993phylogeny].
 
-Estos elementos definen micrositios específicos para la germinación, que pueden incluir fisuras en la corteza de un árbol, mechones de musgo, superficies de raíces vivas o acumulaciones de humus [@rasmussen2015germination]. A medida que las semillas atraviesan las distintas etapas de germinación, desde la imbibición hasta el desarrollo de plántulas con dos hojas [@arditti1967factors], la mortalidad se mantiene en niveles muy altos. Por ejemplo, Batty et al. [@batty2001constraints] estimaron que, en *Caladenia arenicola*, de aproximadamente 34,500 semillas, menos del 1% alcanzó la etapa de plántula capaz de sobrevivir a la primera sequía estival.
+Estos elementos definen micrositios específicos para la germinación, que pueden incluir fisuras en la corteza de un árbol, mechones de musgo, superficies de raíces vivas o acumulaciones de humus [@rasmussen2015germination]. A medida que las semillas atraviesan las distintas etapas de germinación, desde la imbibición hasta el desarrollo de plántulas con dos hojas [@arditti1967factors], la mortalidad se mantiene en niveles muy altos. Por ejemplo, Batty et al. [@batty2001constraints] estimaron que, en *Caladenia arenicola*, de aproximadamente 34 500 semillas, menos del 1% alcanzó la etapa de plántula capaz de sobrevivir a la primera sequía estival.
 
 ## Reclutamiento
 
@@ -123,7 +141,7 @@ A pesar de estas limitaciones, existen estudios que han registrado plántulas so
 &nbsp;
 
 ::: {style="float: none; margin: 10px; width: 100%;"}
-![Diagrama del proceso de fecundidad en orquídeas, mostrando la cadena de filtros sucesivos: producción floral, polinización exitosa, cuajado de fruto, producción de semillas con embrión, germinación y establecimiento de plántulas](images/Diagrama_fecundidad.png){#fig-diagrama-fecundidad fig-alt="Diagrama esquemático del proceso de fecundidad en orquídeas, con la cadena de eventos desde la flor hasta el establecimiento de la plántula"}
+![Diagrama del proceso de fecundidad en orquídeas, mostrando la cadena de filtros sucesivos: producción floral, polinización exitosa, cuajado de fruto, producción de semillas con embrión, germinación y establecimiento de plántulas.](images/Diagrama_fecundidad.png){#fig-diagrama-fecundidad fig-alt="Diagrama esquemático del proceso de fecundidad en orquídeas, con la cadena de eventos desde la flor hasta el establecimiento de la plántula"}
 :::
 
 ------------------------------------------------------------------------
@@ -144,14 +162,14 @@ Los estudios disponibles indican que las orquídeas presentan un crecimiento len
 Para estimar el crecimiento y la edad reproductiva en *Lycaste aromatica*, se ha utilizado la producción regular de pseudobulbos, los cuales permanecen varios años en la planta. Con base en este patrón, se predice que *Encyclia tampensis* alcanza la floración aproximadamente a los 15 años. No obstante, bajo condiciones controladas de cultivo, la fase de pre-bulbo puede durar entre 0.5 y 2 años, y la primera floración ocurrir en tan solo 5 a 6 años (H. Lutero, comunicación personal).
 
 ::: {style="float: right; margin: 10px; width: 60%;"}
-![Relación entre la cantidad de hojas y la probabilidad de floración en *Brassavola cucullata* en las islas Saba y San Eustaquio](images/Cant_Hojas_Prob_Fr_Brassavola.jpg){#fig-cant-hojas-prob-fr-brassavola fig-alt="Gráfica de la probabilidad de floración como función del número de hojas en Brassavola cucullata, con curvas separadas para las poblaciones de Saba y San Eustaquio"}
+![Relación entre la cantidad de hojas y la probabilidad de floración en *Brassavola cucullata* en las islas Saba y San Eustaquio.](images/Cant_Hojas_Prob_Fr_Brassavola.jpg){#fig-cant-hojas-prob-fr-brassavola fig-alt="Gráfica de la probabilidad de floración como función del número de hojas en *Brassavola cucullata*, con curvas separadas para las poblaciones de Saba y San Eustaquio"}
 :::
 
 Un caso interesante se observa en *Brassavola cucullata*, una especie rupícola y epífita de las Antillas Menores. En esta orquídea, los pseudobulbos presentan hojas lanceoladas, y la probabilidad de floración no depende de la longitud de las hojas, sino de la cantidad de hojas por individuo. De hecho, el número estimado de hojas constituye un buen predictor de la capacidad de una planta para producir flores, aunque se han registrado diferencias en esta relación entre las poblaciones de las islas Saba y San Eustaquio.
 
 ## Ejemplo de cálculo de fecundidad basado en semillas
 
-En este ejemplo, la primera fila de la matriz representa la fecundidad de la población en la posición (3,1) (columna, fila), correspondiente al número promedio de semillas producidas por un individuo adulto. Sin embargo, la fecundidad en modelos demográficos debe expresarse en términos de plántulas, no de semillas. Por ello, es necesario convertir la cantidad de semillas producidas en plántulas mediante una tasa de germinación o una tasa de supervivencia hasta la etapa de plántula. De lo contrario, el cálculo presentará un sesgo, ya que se estaría estimando fecundidad con base en semillas, sin considerar su capacidad real de generar nuevos individuos.
+En este ejemplo, la primera fila de la matriz representa la fecundidad de la población en la posición $a_{1,3}$ (fila 1, columna 3), correspondiente al número promedio de semillas producidas por un individuo adulto. Sin embargo, la fecundidad en modelos demográficos debe expresarse en términos de plántulas, no de semillas. Por ello, es necesario convertir la cantidad de semillas producidas en plántulas mediante una tasa de germinación o una tasa de supervivencia hasta la etapa de plántula. De lo contrario, el cálculo presentará un sesgo, ya que se estaría estimando fecundidad con base en semillas, sin considerar su capacidad real de generar nuevos individuos.
 
 ```{r fec-matA-sem}
 matA_sem <- rbind(
@@ -180,25 +198,27 @@ Una alternativa para estimar la fecundidad en términos demográficos consiste e
 
 Por ejemplo, si:
 
-- la tasa de germinación es 50%,
-- la tasa de supervivencia de plántulas es 20%,
-- y existen 75 adultos reproductivos,
+- cada adulto produce en promedio 1000 semillas,
+- la tasa de germinación es 1%,
+- y la tasa de supervivencia hasta plántula es 10%,
 
 entonces la fecundidad en términos de plántulas se calcula como:
 
-$$\text{Fecundidad} = \frac{(1000 \times 0.5 \times 0.2)}{75} = 1.33$$
+$$\text{Fecundidad} = 1000 \times 0.01 \times 0.10 = 1$$
 
-Esto significa que, en promedio, cada adulto contribuiría con 1.33 plántulas al siguiente periodo.
+Esto significa que, en promedio, cada adulto contribuiría con una plántula al siguiente periodo. Incluso estas dos tasas son generosas para una orquídea: en el campo el producto de germinación y supervivencia suele ser varios órdenes de magnitud menor, y por eso la fecundidad de un modelo matricial de orquídea casi siempre es una fracción.
+
+Note que no hay que dividir entre el número de adultos de la población: las 1000 semillas ya son una cantidad *por adulto*, igual que la entrada de fecundidad de una matriz. La división entre el número de adultos solo corresponde cuando se parte de la producción **total** de la población, como en el ejemplo de la sección siguiente.
 
 Por consecuencia la matriz cambia a:
 
 ```{r}
 #| docx_fit: true
 #| label: fig-fec-matA-pl
-#| fig-cap: "Ciclo de vida generado a partir de la matriz `matA_pl` con fecundidad de 1.333 plántulas por adulto."
+#| fig-cap: "Ciclo de vida generado a partir de la matriz `matA_pl` con fecundidad de 1 plántula por adulto."
 
 matA_pl <- rbind(
-  c(0.0, 0.0, 1.333),
+  c(0.0, 0.0, 1.0), #  fecundidad 1 plántula en promedio por adulto
   c(0.5, 0.0, 0.0),
   c(0.0, 0.4, 0.0)
 )

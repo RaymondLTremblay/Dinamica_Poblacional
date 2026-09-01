@@ -17,7 +17,7 @@ La elasticidad poblacional permite identificar qué transiciones del ciclo de vi
 
 La elasticidad describe cuánto cambia la tasa de crecimiento poblacional ($\lambda$) ante pequeñas variaciones proporcionales en los parámetros vitales de la matriz (supervivencia, crecimiento, fecundidad). A diferencia de la sensibilidad, que evalúa cambios absolutos, la elasticidad normaliza por la magnitud del parámetro y permite comparar la influencia relativa de transiciones con escalas distintas. En este módulo se muestra: (i) cómo derivar elasticidades a partir del modelo matricial de Leslie/Lefkovitch, (ii) por qué ciertas etapas (p. ej., supervivencia en adultos de larga vida) dominan $\lambda$, y (iii) cómo interpretar estos resultados para priorizar acciones de manejo (protección de etapas clave, reducción de variabilidad en tasas vitales críticas, etc.). Incluimos ejemplos reproducibles con matrices reales y gráficos que contrastan elasticidades vs. sensibilidades, destacando cuándo la decisión de manejo cambiaría si usamos una u otra métrica. Finalizamos con recomendaciones prácticas: cómo reportar elasticidades con intervalos de confianza, cómo evitar interpretaciones erróneas cuando existen correlaciones entre transiciones, y cómo integrar elasticidades en un análisis LTRE o en simulaciones de escenarios. Esta lección se diferencia de las anteriores (fecundidad, crecimiento poblacional) porque conecta directamente la teoría con decisiones de conservación, mostrando el impacto marginal de cada transición sobre $\lambda$ en términos comparables y accionables.
 
-#### Librerías de R requeridas para el siguiente módulo
+#### Librerías de R requeridas para el siguiente módulo {.unnumbered .unlisted}
 
 ```{r Elas1, message=FALSE, warning=FALSE, comment=FALSE}
 library(popdemo)
@@ -38,7 +38,7 @@ source("R/rlt_theme.R") # tema + paleta canónicos (R/rlt_theme.R)
 
 Las matrices de elasticidad son un complemento de las matrices de transición que nos permiten evaluar el efecto de pequeños cambios proporcionales en los parámetros de la matriz sobre la tasa finita de crecimiento poblacional ($\lambda$); las entradas de la matriz de elasticidad con los valores más altos son las que más impacto tendrán sobre el comportamiento de $\lambda$ [@caswell2001matrix; @de1986elasticity]. Para matrices no negativas, las elasticidades de las entradas positivas son no negativas: aumentar $a_{ij}$ incrementa (o no afecta) a $\lambda$, y disminuirla la reduce (o no la afecta) [@caswell2001matrix]. El uso de las elasticidades en ecología de plantas se remonta a 1974, cuando Sarukhán y Gadgil intentaron evaluar la importancia relativa de la reproducción sexual versus la reproducción vegetativa de tres especies de *Ranunculus* [@sarukhan1974studies; @de1986elasticity].
 
-El concepto de elasticidad en biología es un método orientado a evaluar el cambio proporcional en una variable en respuesta a un cambio proporcional en otra variable. En términos de matrices de transición, la elasticidad es una medida de la sensibilidad de la tasa de crecimiento poblacional a los cambios en alguna de las entradas de la matriz. En otras palabras, si uno cambia uno de los parámetros de la matriz de transición, la elasticidad mide cuánto cambiaría la tasa de crecimiento poblacional [@de1986elasticity]. En biología, la elasticidad es una herramienta para entender la importancia *del cambio* de cada etapa de la historia de vida sobre la tasa de crecimiento poblacional, ya que permite identificar las etapas que más contribuyen a la tasa de crecimiento poblacional. Esta herramienta es muy útil para la conservación de especies y para la gestión de recursos naturales, porque en parte nos indica cuán sensible está el crecimiento poblacional cuando se cambian los parámetros de la historia de vida (crecimiento, supervivencia y fecundidad) de una especie. Un cambio proporcional se refiere a que, por ejemplo, si se cambió el crecimiento en 1%, qué efecto tuvo sobre el crecimiento intrínseco de la población, versus si se cambió el 1% de la fertilidad. De esta forma uno tiene una herramienta de comparación del impacto hipotético que tendrían los cambios, en el caso de que se pudieran lograr.
+El concepto de elasticidad en biología es un método orientado a evaluar el cambio proporcional en una variable en respuesta a un cambio proporcional en otra variable. En términos de matrices de transición, la elasticidad es una medida de la sensibilidad de la tasa de crecimiento poblacional a los cambios en alguna de las entradas de la matriz. En otras palabras, si uno cambia uno de los parámetros de la matriz de transición, la elasticidad mide cuánto cambiaría la tasa de crecimiento poblacional [@de1986elasticity]. En biología, la elasticidad es una herramienta para entender la importancia *del cambio* de cada etapa de la historia de vida sobre la tasa de crecimiento poblacional, ya que permite identificar las etapas que más contribuyen a la tasa de crecimiento poblacional. Esta herramienta es muy útil para la conservación de especies y para la gestión de recursos naturales, porque en parte nos indica cuán sensible está el crecimiento poblacional cuando se cambian los parámetros de la historia de vida (crecimiento, supervivencia y fecundidad) de una especie. Un cambio proporcional se refiere a que, por ejemplo, si se cambió el crecimiento en 1%, qué efecto tuvo sobre el crecimiento intrínseco de la población, versus si se cambió el 1% de la fecundidad. De esta forma uno tiene una herramienta de comparación del impacto hipotético que tendrían los cambios, en el caso de que se pudieran lograr.
 
 Los valores de elasticidad en la Biología de la Conservación se pueden interpretar como la vulnerabilidad de la población a perturbaciones en cada transición. Formalmente, la elasticidad cuantifica el efecto proporcional sobre $\lambda$ de un cambio proporcional en una entrada de la matriz, suponiendo equilibrio demográfico y perturbaciones infinitesimales. Responde a la pregunta: ¿cuál de los cambios en las tasas vitales, tomados de uno en uno y manteniendo los demás constantes, produciría el mayor efecto sobre $\lambda$? En la práctica, las tasas vitales con una baja elasticidad suelen tener una alta variabilidad temporal, mientras que las de elevada elasticidad suelen variar poco — un patrón de canalización demográfica reportado por Ehrlén [-@ehrlen1998direct]. Por ello no solo se debe tener en cuenta cuán sensible es $\lambda$ a una transición, sino también cuánta variación en esa transición ocurre realmente y cómo covaría con otras transiciones [@ehrlen1998direct].
 
@@ -68,7 +68,7 @@ Las matrices de elasticidad tienen la ventaja de que la suma de las entradas es 
 
 ### Sensibilidad y elasticidad
 
-La diferencia entre sensibilidad y elasticidad es que la sensibilidad mide el impacto en $\lambda$ de cambiar la magnitud absoluta de una tasa vital particular en relación con el cambio de otras tasas vitales [@caswell1989analysis], lo que implica que los cambios en las tasas de crecimiento y permanencia tendrán un valor de uno (ya que estas tasas son proporciones), en tanto que los cambios en fecundidad podrán ser desde uno hasta cientos o miles, ya que la fecundidad se calcula con base en otra escala biológica (tal como número de semillas o plántulas). La elasticidad por su parte calcula la sensibilidad proporcional de $\lambda$ a los cambios en una tasa vital [@de1986elasticity] evitando de esta forma el efecto de la magnitud del cambio. Cuanto mayor sea el valor de la elasticidad de la tasa vital, mayor será la contribución relativa de esa tasa vital al valor de lambda ($\lambda$).
+La diferencia entre sensibilidad y elasticidad es que la sensibilidad mide el impacto en $\lambda$ de cambiar la magnitud absoluta de una tasa vital particular en relación con el cambio de otras tasas vitales [@caswell1989analysis], lo que implica que la sensibilidad se expresa en las unidades de cada entrada: las probabilidades de crecimiento y permanencia están acotadas entre 0 y 1, mientras que la fecundidad se calcula en otra escala biológica (número de semillas o plántulas) y puede valer decenas o cientos. Por eso las sensibilidades de entradas de distinta escala no son comparables entre sí. La elasticidad por su parte calcula la sensibilidad proporcional de $\lambda$ a los cambios en una tasa vital [@de1986elasticity] evitando de esta forma el efecto de la magnitud del cambio. Cuanto mayor sea el valor de la elasticidad de la tasa vital, mayor será la contribución relativa de esa tasa vital al valor de lambda ($\lambda$).
 
 ------------------------------------------------------------------------
 
@@ -123,21 +123,21 @@ ec_df %>%
 
 ### Cómo se calcula una elasticidad: mirar bajo el capó
 
-Los valores anteriores son producidos por `popbio::elas()`, que internamente combina los autovectores derecho e izquierdo de la matriz con el producto de Hadamard. Para ilustrar de dónde sale un valor de elasticidad, podemos reconstruirlos paso a paso a partir de los autovectores. La sensibilidad se obtiene de:
+Los valores anteriores son producidos por `popbio::elas()`, que internamente combina los vectores propios derecho e izquierdo de la matriz con el producto de Hadamard. Para ilustrar de dónde sale un valor de elasticidad, podemos reconstruirlos paso a paso a partir de los vectores propios. La sensibilidad se obtiene de:
 
 $$s_{ij} = \frac{v_i\, w_j}{\langle v, w \rangle}$$
 
-donde $w$ es el autovector derecho dominante (estructura estable de estadios), $v$ el autovector izquierdo dominante (valor reproductivo) y $\langle v, w \rangle = \sum_k v_k w_k$. La matriz de elasticidad se obtiene como $\mathbf{E} = (1/\lambda)\,\mathbf{S} \circ \mathbf{A}$ [@caswell2001matrix].
+donde $\mathbf{w}$ es el vector propio derecho dominante (estructura estable de estadios), $\mathbf{v}$ el vector propio izquierdo dominante (valor reproductivo) y $\langle v, w \rangle = \sum_k v_k w_k$. La matriz de elasticidad se obtiene como $\mathbf{E} = (1/\lambda)\,\mathbf{S} \circ \mathbf{A}$ [@caswell2001matrix].
 
 ```{r ElasManual, message=FALSE, warning=FALSE}
 
-# Paso 1: autovalor dominante y autovectores
+# Paso 1: valor propio dominante y vectores propios
 ev <- eigen(ec)
 lambda <- Re(ev$values[1]) # tasa finita de crecimiento (lambda)
-w <- Re(ev$vectors[, 1]) # autovector derecho: estructura estable
+w <- Re(ev$vectors[, 1]) # vector propio derecho: estructura estable
 
 ev_t <- eigen(t(ec))
-v <- Re(ev_t$vectors[, 1]) # autovector izquierdo: valor reproductivo
+v <- Re(ev_t$vectors[, 1]) # vector propio izquierdo: valor reproductivo
 
 # Paso 2: matriz de sensibilidad S
 S <- outer(v, w) / sum(v * w)
@@ -162,8 +162,8 @@ La suma de cada grupo:
 
 - Permanencia: 0.713
 - Crecimiento: 0.170
-- Retrogresión: 0.060
-- Fecundidad: 0.058
+- Retrogresión: 0.059
+- Fecundidad: 0.059
 
 ```{r}
 #| label: tbl-elas2
@@ -219,12 +219,12 @@ Por lo que, de manera simplista, pudiéramos decir que, si quisiéramos desarrol
 
 ### Comparación entre especies
 
-Las elasticidades también han sido utilizadas para establecer el comportamiento demográfico de las especies, lo que ha permitido generar patrones entre formas de vida, así como comparaciones tanto entre formas de vida como entre especies [@mondragon2015population; @silvertown1996interpretation]. Así, por ejemplo, si quisiéramos comparar el comportamiento demográfico de las orquídeas de ramillas versus las orquídeas epífitas convencionales (@tbl-elas3) (reconstruido de [@mondragon2007life]), veríamos que para ambos tipos de orquídeas lo más importante es la permanencia (supervivencia) de los individuos, en tanto que se puede observar una diferencia entre la orquídea de ramilla y las otras, en la contribución de los estadios al comportamiento de lambda, ya que para la primera, los individuos reproductivos presentan mayores valores de elasticidad (al igual que para *Lepanthes eltoroensis*), en tanto que para las otras orquídea los valores más altos de elasticidad los tienen los individuos no reproductivos [@mondragon2007life].
+Las elasticidades también han sido utilizadas para establecer el comportamiento demográfico de las especies, lo que ha permitido generar patrones entre formas de vida, así como comparaciones tanto entre formas de vida como entre especies [@mondragon2015population; @silvertown1996interpretation]. Así, por ejemplo, si quisiéramos comparar el comportamiento demográfico de las orquídeas de ramillas versus las orquídeas epífitas convencionales (@tbl-elas3) (reconstruido de [@mondragon2007life]), veríamos que para ambos tipos de orquídeas lo más importante es la permanencia (supervivencia) de los individuos, en tanto que se puede observar una diferencia entre la orquídea de ramilla y las otras, en la contribución de los estadios al comportamiento de lambda, ya que para la primera, los individuos reproductivos presentan mayores valores de elasticidad (al igual que para *Lepanthes eltoroensis*), en tanto que para las otras orquídeas los valores más altos de elasticidad los tienen los individuos no reproductivos [@mondragon2007life].
 
 En la @fig-Elas7 se observan los valores de elasticidad añadidos por proceso de historia de vida para cinco especies de orquídeas epífitas:
 
 ::: img-float
-![*Lepanthes eltoroensis*. Foto: Tremblay. Estudio demográfico: @tremblay2003population](images/Lepanthes_eltoroensis_Tremblay.jpeg){#fig-lepanthes-eltoroensis-tremblay style="float: left; margin: 20px;width: 40% ; "}
+![*Lepanthes eltoroensis*. Foto: Tremblay. Estudio demográfico: @tremblay2003population.](images/Lepanthes_eltoroensis_Tremblay.jpeg){#fig-lepanthes-eltoroensis-tremblay style="float: left; margin: 20px;width: 40% ; "}
 :::
 
 - *Artorima erubescens* [@garcia2003demografia]
@@ -241,7 +241,7 @@ Se observa que los valores de elasticidad más altos corresponden a la permanenc
 
 Elasticidad_s <- tribble(
   ~Especie, ~Fecundidad, ~Estasis, ~Crecimiento, ~Plántulas, ~No_reproductivos, ~Reproductivos,
-  "*Erycina crista-galli*", 0.035, 0.718, 0.247, 0.0345, 0.0456, 0.9197,
+  "*Erycina crista-galli*", 0.059, 0.713, 0.228, 0.059, 0.015, 0.926,
   "*Artorima erubescens*", 0.000, 0.646, 0.354, 0.0023, 0.7207, 0.277,
   "*Laelia speciosa*", 0.116, 0.651, 0.328, 0.120, 0.669, 0.216,
   "*Lepanthes eltoroensis*", 0.005, 0.880, 0.115, 0.1133, 0.0784, 0.8083,
@@ -251,7 +251,7 @@ Elasticidad_s <- tribble(
 
 ```{r}
 #| label: tbl-elas3
-#| tbl-cap: "Valores de elasticidad por proceso y por estadios no reproductivos y reproductivos de cinco especies de orquídeas epífitas (*Erycina crista-galli* considerada orquídea de ramilla)."
+#| tbl-cap: "Valores de elasticidad por proceso y por estadios no reproductivos y reproductivos de cinco especies de orquídeas epífitas (*Erycina crista-galli* considerada orquídea de ramilla). La fila de *Erycina crista-galli* se calculó a partir de la matriz presentada antes en este mismo capítulo, de modo que coincide con los valores del texto; la columna «Crecimiento» agrupa crecimiento y retrogresión. Las demás filas provienen de sus publicaciones de origen."
 #| echo: false
 
 Elasticidad_s %>%
@@ -262,11 +262,11 @@ Elasticidad_s %>%
 <br>
 
 ::: img-float
-![*Lepanthes caritensis*. Foto: Edwin Guevara. Estudio demográfico: @tremblay1997lepanthes](images/Lepanthes_caritensis_Edwin_Guevara.jpg){#fig-lepanthes-caritensis-edwin-guevara style="float: left; margin: 10px;width: 50%; "}
+![*Lepanthes caritensis*. Foto: Edwin Guevara. Estudio demográfico: @tremblay1997lepanthes.](images/Lepanthes_caritensis_Edwin_Guevara.jpg){#fig-lepanthes-caritensis-edwin-guevara style="float: left; margin: 10px;width: 50%; "}
 :::
 
 ::: img-float
-![*Lepanthes caritensis*. Foto: Edwin Guevara. Estudio demográfico: @tremblay1997lepanthes](images/Lepanthes_caritensis_Phorophyte.jpg){#fig-lepanthes-caritensis-phorophyte style="float: right; margin: 10px;width: 50%;"}
+![*Lepanthes caritensis*. Foto: Edwin Guevara. Estudio demográfico: @tremblay1997lepanthes.](images/Lepanthes_caritensis_Phorophyte.jpg){#fig-lepanthes-caritensis-phorophyte style="float: right; margin: 10px;width: 50%;"}
 :::
 
 <br>
@@ -301,7 +301,7 @@ ggplot(EE, aes(x = s, y = Elasticidad, fill = Especie)) +
   rlt_style_fill()
 ```
 
-En la @fig-Elas8 se observan los valores de elasticidad agrupados por estadios (plántulas, individuos no reproductivos y reproductivos). Los valores de elasticidad son más altos en los estadios no reproductivo en tres especies y reproductivos (adultos activos) en dos especies. Las plántulas tienen las elasticidad más pequeñas en todas las especies.
+En la @fig-Elas8 se observan los valores de elasticidad agrupados por estadios (plántulas, individuos no reproductivos y reproductivos). Los valores de elasticidad son más altos en los estadios no reproductivo en tres especies y reproductivos (adultos activos) en dos especies. Las plántulas tienen las elasticidades más pequeñas en cuatro de las cinco especies. La excepción es *L. eltoroensis*, donde superan a las de los individuos no reproductivos (0.113 frente a 0.078).
 
 ```{r, message=FALSE}
 #| label: fig-Elas8
@@ -345,7 +345,7 @@ Las dos herramientas son complementarias: la elasticidad identifica las transici
 ------------------------------------------------------------------------
 
 ::: img-float
-![*Laelia speciosa*. Foto: Eduardo A. Pérez García. Estudio demográfico: @hernandez1992dinamica](images/Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg){#fig-laelia-speciosa-eduardo-a-perez-garcia style="float: right; margin: 10px;width: 40% ; "}
+![*Laelia speciosa*. Foto: Eduardo A. Pérez García. Estudio demográfico: @hernandez1992dinamica.](images/Laelia_speciosa_Eduardo_A._Perez_Garcia.jpeg){#fig-laelia-speciosa-eduardo-a-perez-garcia style="float: right; margin: 10px;width: 40% ; "}
 
 ## Limitaciones {#limitaciones}
 
@@ -399,7 +399,7 @@ N0_ec
 
 ## La función `eigen.analysis()`
 
-Para calcular los autovalores y autovectores de la matriz se usa la función `eigen.analysis()` del paquete `popbio`. Se obtiene el crecimiento intrínseco **Lambda**, la sensibilidad, elasticidad, valor reproductivo y *damping ratio*. En el capítulo de propiedades se presenta la interpretación de los valores reproductivos y el *damping ratio*.
+Para calcular los valores y vectores propios de la matriz se usa la función `eigen.analysis()` del paquete `popbio`. Se obtiene el crecimiento intrínseco **λ**, la sensibilidad, elasticidad, valor reproductivo y *damping ratio*. En el capítulo de propiedades se presenta la interpretación de los valores reproductivos y el *damping ratio*.
 
 ```{r Elas10}
 

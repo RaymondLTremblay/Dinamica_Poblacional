@@ -74,7 +74,7 @@ Este libro está organizado alrededor de esa idea. No pretende ser un tratado co
 
 &nbsp;
 
-#### Librerías de R requeridas para el siguiente módulo
+#### Librerías de R requeridas para el siguiente módulo {.unnumbered .unlisted}
 
 ```{r intro-setup, message=FALSE, warning=FALSE}
 
@@ -151,10 +151,19 @@ source("R/rlt_theme.R") # tema + paleta canónicos (R/rlt_theme.R)
 
 ```{r}
 #| label: fig-Pop-fig_1
-#| fig-cap: "Cambio poblacional en tiempo"
+#| fig-cap: "Trayectoria hipotética de una población invasora: un retraso inicial durante la colonización, una fase de crecimiento exponencial y una desaceleración al acercarse a la capacidad de carga."
 
-ggplot(pressure, aes(temperature, pressure)) +
-  geom_point() +
+# Curva logística hipotetica: reproduce las tres fases descritas en el texto.
+# K = capacidad de carga, r = tasa de crecimiento, t0 = punto de inflexion.
+invasion <- data.frame(tiempo = seq(0, 50, by = 0.5))
+invasion$N <- 1000 / (1 + exp(-0.25 * (invasion$tiempo - 25)))
+
+ggplot(invasion, aes(tiempo, N)) +
+  geom_line(linewidth = 1.2, colour = "#009392") +
+  geom_hline(yintercept = 1000, linetype = "dashed", colour = "grey50") +
+  annotate("text", x = 3, y = 950, hjust = 0, size = 3.5,
+    label = "Capacidad de carga"
+  ) +
   rlt_theme +
   xlab("Tiempo") +
   ylab("Tamaño poblacional, N")
@@ -220,7 +229,7 @@ En general, se observa que a menor tamaño poblacional (N), mayor es el riesgo d
 
 En el caso de las orquídeas, se sabe que una de las etapas más vulnerables es la de semilla, ya que en condiciones naturales depende del establecimiento de una interacción micorrícica específica. Por ejemplo, ¿cuál es la probabilidad de que las semillas se depositen en un sitio adecuado, encuentren su hongo específico, germinen y cuenten con las condiciones ambientales necesarias para crecer hasta convertirse en juveniles? Estas transiciones son extremadamente raras.
 
-Por consiguiente, al evaluar la viabilidad de una nueva población de orquídeas, no basta con considerar la cantidad de individuos presentes; también es necesario estimar la probabilidad de que las semillas lleguen a convertirse en adultos reproductores. Darwin [@darwin1877various] estimó que un fruto de *Orchis maculata* produce aproximadamente 6,200 semillas, y una planta puede generar hasta 30 cápsulas, lo que equivale a 186,300 semillas. En un acre, la suma de todas las plantas podría producir más de 32,400,000,000 semillas. Sin duda, la probabilidad de que una semilla germine y llegue a ser una planta adulta es extremadamente baja; de lo contrario, estaríamos cubiertos de orquídeas en apenas dos generaciones.
+Por consiguiente, al evaluar la viabilidad de una nueva población de orquídeas, no basta con considerar la cantidad de individuos presentes; también es necesario estimar la probabilidad de que las semillas lleguen a convertirse en adultos reproductores. Darwin [@darwin1877various] estimó que un fruto de *Orchis maculata* produce aproximadamente 6210 semillas, y una planta puede generar hasta 30 cápsulas, lo que equivale a 186 300 semillas. En un acre, la suma de todas las plantas podría producir más de 32 400 000 000 semillas. Sin duda, la probabilidad de que una semilla germine y llegue a ser una planta adulta es extremadamente baja; de lo contrario, estaríamos cubiertos de orquídeas en apenas dos generaciones.
 
 ### Determinar cuántos individuos se necesita introducir en un sitio para establecer una población viable
 
@@ -228,7 +237,7 @@ Determinar cuántos individuos se necesitan introducir en un sitio para establec
 
 En los últimos años, diversas organizaciones y científicos han implementado programas de reintroducción de especies en sus hábitats nativos, e incluso en áreas urbanas [@bellis2024identifying; @d2024best].
 
-En Corea, dos estudios ilustran la complejidad del proceso. En la isla de Jeju, se translocó la orquídea *Thrixspermum japonicum*, cuya población original era de aproximadamente 50 individuos, de los cuales solo uno produjo frutos. A partir de este individuo se propagaron plántulas que fueron reintroducidas en el sitio. De los 216 individuos translocados, el 73% sobrevivió el primer año y el 63% el segundo año; entre el 16% y el 35% produjo frutos en los dos años siguientes [@kim2016restoration]. En otro estudio, en la isla de Bogildo, se reintrodujeron más de 13,000 individuos de *Dendrobium moniliforme* propagados artificialmente. Los autores demostraron que la ubicación y las condiciones del microhábitat son variables críticas: las áreas abiertas con luz solar directa favorecieron un crecimiento más rápido que las zonas sombreadas, y la especie de árbol huésped también influyó significativamente [@kim2016restoration].
+En Corea, dos estudios ilustran la complejidad del proceso. En la isla de Jeju, se translocó la orquídea *Thrixspermum japonicum*, cuya población original era de aproximadamente 50 individuos, de los cuales solo uno produjo frutos. A partir de este individuo se propagaron plántulas que fueron reintroducidas en el sitio. De los 216 individuos translocados, el 73% sobrevivió el primer año y el 63% el segundo año; entre el 16% y el 35% produjo frutos en los dos años siguientes [@kim2016restoration]. En otro estudio, en la isla de Bogildo, se reintrodujeron más de 13 000 individuos de *Dendrobium moniliforme* propagados artificialmente. Los autores demostraron que la ubicación y las condiciones del microhábitat son variables críticas: las áreas abiertas con luz solar directa favorecieron un crecimiento más rápido que las zonas sombreadas, y la especie de árbol huésped también influyó significativamente [@kim2016restoration].
 
 Desafortunadamente, ninguno de estos estudios aplicó métodos de análisis de viabilidad poblacional (PVA) para determinar el tamaño mínimo de reintroducción necesario para establecer poblaciones viables. Además, no se consideraron factores como la probabilidad de germinación y el éxito en alcanzar la etapa adulta. Un ejemplo de esta complejidad es el trabajo de Zoe Fae Smith [@smith2006reintro], quien evaluó la germinación in situ de *Diuris fragrantissima* y *D. punctata* en Australia utilizando 640 mallas según el método de [@rasmussen1993seed]. Ninguna semilla germinó en campo, lo que evidencia la necesidad de estudios más detallados sobre viabilidad y estrategias de reintroducción.
 
@@ -278,7 +287,7 @@ La mayoría de las especies están divididas en múltiples poblaciones, aunque e
 
 En ecología, una población debería definirse como un grupo de individuos que interactúan entre sí, o que al menos tienen cierta probabilidad de hacerlo. Por ejemplo, si hablamos de una población de *Catasetum*, los individuos deberían estar lo suficientemente próximos para que las abejas polinizadoras (i.e., *Euglossa* spp.) puedan transportar el polen entre ellos. La distancia y el potencial de movimiento de estas abejas varían considerablemente según la especie y la estructura del paisaje [@tonhasca2003dispersal; @pokorny2015dispersal; @opedal2017euglossine].
 
-Otra definición, de carácter evolutivo, considera una población como el conjunto de individuos entre los cuales ocurre flujo génico a lo largo de una generación. El tiempo generacional depende de la longevidad de la especie, que puede variar ampliamente. Por ejemplo, en las orquídeas epífitas de ramitas (*twig epiphytes*), el ciclo generacional puede ser de 3 a 4 años, mientras que en *Cypripedium calceolus*, una especie terrestre de zonas templadas, los individuos adultos pueden vivir más de 50 años. Cabe destacar que la “longevidad” se define como la mediana de la edad de los individuos en una población, excluyendo casos extremos. El único estudio que ha evaluado la longevidad en orquídeas es [@tremblay2000plant], limitado a especies del género *Lepanthes*.
+Otra definición, de carácter evolutivo, considera una población como el conjunto de individuos entre los cuales ocurre flujo génico a lo largo de una generación. El tiempo generacional depende de la longevidad de la especie, que puede variar ampliamente. Por ejemplo, en las orquídeas epífitas de ramitas (*twig epiphytes*), el ciclo generacional puede ser de 3 a 4 años, mientras que en *Cypripedium calceolus*, una especie terrestre de zonas templadas, los individuos adultos pueden vivir más de 50 años. Cabe destacar que la «longevidad» no es la edad media de los individuos vivos —eso describe la estructura de edades de la población, no su tiempo de vida—, sino la edad a la que sobrevive una fracción pequeña de la cohorte (por ejemplo el 1 %), estimable a partir de la submatriz `matU` con funciones como `Rage::longevity()`. El único estudio que ha evaluado la longevidad en orquídeas es [@tremblay2000plant], limitado a especies del género *Lepanthes*.
 
 &nbsp;
 
@@ -299,7 +308,7 @@ Estas definiciones a menudo no coinciden, y la elección afecta directamente la 
 Un trabajo que aprovecha la MPP para evaluar procesos evolutivos es el de Ricardo Calvo [@calvo1993evolutionary], quien analizó la dinámica poblacional de *Tolumnia variegata* para determinar si la limitación de polinizadores afecta su viabilidad. El estudio combinó experimentos de polinización manual con modelos matriciales para estimar la tasa de crecimiento poblacional bajo distintos niveles de polinización. Los resultados mostraron que la fructificación natural es extremadamente baja (\<1 %), pero aumenta significativamente con polinización artificial, aunque con costos reproductivos en crecimiento y floración futura. Las simulaciones sugieren que incluso una baja producción de plántulas por fruto podría compensar estos costos, favoreciendo la selección hacia mayor polinización. Sin embargo, la persistencia de baja fructificación en orquídeas engañosas indica que la estrategia puede ser estable si el reclutamiento de plántulas es limitado. Esto resalta la importancia de considerar las interacciones ecológicas y los datos de establecimiento al evaluar la viabilidad poblacional. Este caso nos recuerda que la conservación y la evolución no dependen solo de la presencia de individuos, sino de la compleja red de procesos que sostienen la vida a largo plazo.
 
 ::: img-float
-![*Tolumnia variegata*. Foto: Tremblay. Estudio demográfico: @calvo1993evolutionary](images/Tolumnia_variegata_Tremblay.jpeg){#fig-tolumnia-variegata-tremblay style="float: right; margin: 10px;width: 50% ; "}
+![*Tolumnia variegata*. Foto: Tremblay. Estudio demográfico: @calvo1993evolutionary.](images/Tolumnia_variegata_Tremblay.jpeg){#fig-tolumnia-variegata-tremblay style="float: right; margin: 10px;width: 50% ; "}
 :::
 
 ------------------------------------------------------------------------
@@ -323,7 +332,7 @@ Los efectos denso-dependientes pueden influir en el número de individuos en el 
 ------------------------------------------------------------------------
 
 ::: {}
-![Factores que influyen en la dinámica de una población](images/Demografia_de_una_poblacion.jpg){#fig-demografia-de-una-poblacion width="50%" style="left; margin: 10px;" fig-align="center"}
+![Factores que influyen en la dinámica de una población.](images/Demografia_de_una_poblacion.jpg){#fig-demografia-de-una-poblacion width="50%" style="left; margin: 10px;" fig-align="center"}
 :::
 
 ------------------------------------------------------------------------

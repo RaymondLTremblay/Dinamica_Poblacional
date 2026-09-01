@@ -23,7 +23,7 @@ Asimismo, se analiza el papel de las simulaciones como herramientas complementar
 
 Las simulaciones se construyen a partir de las transiciones demográficas introducidas en el capítulo de [Transiciones](105-Transiciones.qmd). Las trayectorias simuladas se interpretan en relación con la tasa de crecimiento poblacional discutida en el capítulo de [Crecimiento poblacional](109-Crecimiento_poblacional.qmd). A diferencia de los análisis [LTRE](#ERTV), que explican diferencias observadas, las simulaciones permiten explorar escenarios futuros no observados. Las simulaciones pueden extenderse naturalmente dentro de un marco bayesiano, como se describe en el capítulo de [Acercamiento bayesiano](108-Bayesian_PPM.qmd).
 
-#### Librerías de R requeridas para el siguiente módulo
+#### Librerías de R requeridas para el siguiente módulo {.unnumbered .unlisted}
 
 ```{r sim1, message=FALSE, warning=FALSE}
 
@@ -34,47 +34,17 @@ library(popbio)
 library(raretrans)
 library(ggpubr)
 library(flextable)
+
+# Semilla fija: este capitulo cita en la prosa resultados de funciones
+# aleatorias (remuestreos y simulaciones). Sin set.seed(), y con el cache
+# de Quarto desactivado, cada render produciria numeros distintos de los
+# que afirma el texto.
+set.seed(1234)
 ```
 
 ```{r sim-theme}
 
-rlt_theme <- theme(
-  text = element_text(family = "Libertinus Serif"),
-  axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
-  axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
-  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
-  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
-) +
-  theme(
-    # Remover los bordes
-    panel.border = element_blank(),
-    # Remover las líneas
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    # Remover el fondo del panel
-    panel.background = element_blank(),
-    # añadir lineas más gruesas
-    axis.line.x = element_line(colour = "black", linewidth = 1),
-    axis.line.y = element_line(colour = "black", linewidth = 1)
-  )
-
-diverging <- c("#E69F00", "#56B4E9", "#009392", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000")
-
-# --- 2. Combinarlos en un objeto de tipo lista ---
-# Esta lista se puede añadir al gráfico con un solo '+'
-rlt_style_fill <- function() {
-  list(
-    rlt_theme,
-    scale_fill_manual(values = diverging)
-  )
-}
-
-rlt_style_colour <- function() {
-  list(
-    rlt_theme,
-    scale_colour_manual(values = diverging)
-  )
-}
+source("R/rlt_theme.R") # tema + paleta canónicos, y rlt_col1 (serie única)
 ```
 
 ## Implementación de simulaciones poblacionales
@@ -88,31 +58,31 @@ El término **biología** pudiese ser un sinónimo de variación biológica. No 
 - Variación entre poblaciones.
 - Variación temporal (entre periodos de tiempo).
 
-Todos estos componentes de variación tendrán impacto en la dispersión de los estimados de los parámetros de la matriz de transición y el crecimiento poblacional, además del comportamiento de la población en el tiempo. Hay un componente que frecuentemente se deja en el olvido: el efecto de la variación por **tamaño de muestra pequeño** sobre los estimados, que llamamos **estocasticidad demográfica**. En este capítulo se discute el efecto de la variación en tiempo, espacio y tamaño de muestra sobre los estimados de los parámetros de la matriz y el crecimiento poblacional.
+Todos estos componentes de variación tendrán impacto en la dispersión de los estimados de los parámetros de la matriz de transición y el crecimiento poblacional, además del comportamiento de la población en el tiempo. Hay un componente que frecuentemente se deja en el olvido: el efecto de la variación por **tamaño de muestra pequeño** sobre los estimados, es decir, la **incertidumbre paramétrica**. Conviene no confundirla con la **estocasticidad demográfica**, que es la aleatoriedad propia del carácter entero y finito de nacimientos y muertes en poblaciones pequeñas —tal como se define en el capítulo de [Dinámica de transiciones](112-Dinamica_de_Transiciones.qmd)—. La incertidumbre paramétrica es una limitación de nuestro conocimiento sobre la matriz; la estocasticidad demográfica es una propiedad de la población misma. Ambas se agravan cuando hay pocos individuos, y por eso se confunden con facilidad, pero no son lo mismo. En este capítulo se discute el efecto de la variación en tiempo, espacio y tamaño de muestra sobre los estimados de los parámetros de la matriz y el crecimiento poblacional.
 
 ### Componentes de Variación
 
-#### La variación sub-individual
+#### La variación sub-individual {.unnumbered}
 
 La variación sub-individual es la variación que se observa en un individuo. Por ejemplo, la variación en el **tamaño** de hojas, flores, frutos, semillas dentro del mismo individuo o la **cantidad** de hojas, flores, frutos, semillas en tiempos distintos. Este tipo de variación es común en plantas y es un componente importante de la variación total pero raramente se considera en los análisis. Carlos Herrera ha demostrado claramente que este componente no solamente es parte de la variación total de las especies, sino que es importante para entender los procesos ecológicos y evolutivos [@herrera2009multiplicity]. Además, cuando uno compara la variación total con la variación sub-individual, la variación sub-individual es mucho más grande que la variación entre individuos y poblaciones. Esta variación, al conocimiento de los presentes autores, nunca ha sido incluida en análisis de dinámica poblacional ni integrada dentro de un MPP. En un estudio del tamaño de las flores en *Lepanthes rupestris* se observó que la variación en el tamaño de flores disminuye a lo largo de la inflorescencia y que la probabilidad de remoción de pollinia y de deposición de estas sobre el estigma no siguen el mismo patrón: la probabilidad de remoción de pollinia aumenta con flores más pequeñas, pero la probabilidad de frutos disminuye [@tremblay2006effect]. Por consecuencia, cuando se recolecta la información sobre el esfuerzo reproductivo de una especie, puede ser que la variación sub-individual impacte los estimados de la matriz de transiciones, debido a que las flores en este periodo eran de diferentes tamaños. Las inflorescencias de *Lepanthes* pueden ser activas produciendo flores por meses y años.
 
-#### La variación entre individuos
+#### La variación entre individuos {.unnumbered}
 
 La variación entre individuos es la diferencia que se observa entre individuos de una misma población. Por ejemplo, la variación en el tamaño de los individuos, cantidad de hojas, cantidad de flores, cantidad de frutos entre individuos de una misma población influye en la probabilidad de sobrevivir, crecer y reproducirse. La variación entre individuos de diferentes tamaños o etapas impacta grandemente la supervivencia, crecimiento y reproducción de los individuos. Los trabajos de Harper y otros han demostrado que esa variación es común en las plantas [@harper1977population] y típicamente es más importante que la edad de los individuos en la mayoría de las plantas. En orquídeas, un ejemplo de esa variación es que la mayoría de los individuos reproductivos en una población no produce frutos [@ackerman2020small].
 
-#### La variación entre poblaciones
+#### La variación entre poblaciones {.unnumbered}
 
 La variación entre poblaciones es la variación que se observa entre grupos de individuos de una misma especie en diferentes sitios. Poblaciones distintas pudiesen ser influenciadas por las diferencias abióticas e interacciones bióticas únicas a cada población. Esa variación pudiese influenciar la dinámica de cada población y la dinámica de la especie en general. Las diferencias entre poblaciones pudiesen ser influenciadas por condiciones específicas como la variación genética entre poblaciones, variación abiótica (recursos como el agua, nitrógeno, luz), variación en la interacción biótica (e.g. micorriza, diversidad y cantidad de polinizadores, tipo de forófitos), variación en la historia de la población (procesos de sucesión), entre otros factores, además de la plasticidad fenotípica que se define como la interacción del ambiente sobre la expresión genética [@nicotra2010plant]. Sin duda, las variables abióticas y bióticas pueden influenciar las transiciones, estasis y reproducción de forma diferencial entre las diferentes etapas del ciclo de vida de la especie.
 
-#### La variación entre tiempo
+#### La variación entre tiempo {.unnumbered}
 
 Este componente de variación incluye la variación típicamente relacionada a la variación *abiótica* que cambia de un periodo de tiempo a otro; por ejemplo, el efecto de la cantidad de lluvia, número de días sin lluvia, temperatura, entre muchas otras variables. Pero no se debería limitar a considerar solamente la variación abiótica en el tiempo, ya que la variación *biótica* también puede cambiar de un periodo de tiempo a otro. Por ejemplo, la densidad y/o composición de especies en una comunidad cambia de un periodo de tiempo a otro, e incluso la variación de patógenos y otras interacciones bióticas alrededor de la especie de interés. Todo lo anterior pudiese influenciar la dinámica y los estimados de los parámetros de la matriz. Por ejemplo, considera la variación en la presencia de herbívoros o patógenos que cambia de un periodo de tiempo a otro, resultando en variación en la competencia interespecífica. Por consecuencia, la variación en el tiempo es mucho más que la variación *abiótica* en el tiempo. Allí, uno también tiene que incluir el efecto de bonanzas (eventos raros positivos, por ejemplo: reclutamiento excepcional en algunos años) [@antonini2020protected] y catástrofes (eventos raros negativos, por ejemplo: huracanes, mortandad de un hospedero) [@hiernaux2009woody], que pudiesen influenciar la dinámica de la especie de interés. Un ejemplo drástico de su impacto es la mortandad casi completa de epífitas al pasar huracanes fuertes [@goode2008impacts], o que el efecto sea diferencial entre especies o sustratos [@rodriguez1990host].
 
-#### Variación en tamaño de muestra pequeña
+#### Incertidumbre paramétrica por tamaño de muestra pequeño {.unnumbered}
 
 La gran mayoría de los estudios usando MPP son para evaluar la probabilidad de supervivencia en una especie en peligro de extinción. La razón principal de estos estudios es que quedan muy pocos individuos en la población o pocas poblaciones, y esas poblaciones se consideran en riesgo.
 
-Por ejemplo si tuviésemos en una población solamente de un adulto y este adulto sobrevive de un año a otro entonces la probabilidad de supervivencia es 1.0. Pero si tuviésemos solamente un adulto y este adulto muere entonces la probabilidad de supervivencia es 0.0. Las probabilidad de supervivencia pueden ser solamente 1.0 o 0.0 respectivamente y otros valores no son posibles, pero la interpretación biológica es sesgada, porque ya hay solamente dos alternativas. Pero si tuviésemos 1,000 o 10,000 individuos es muy poco probable que todos se mueren o todos sobreviven, y hay muchas alternativas posibles. Este es un ejemplo extremo pero ilustra claramente el problema de estimar la probabilidad de supervivencia y transiciones en una población con un tamaño de muestra pequeña y puede resultar en estimados sesgados.
+Por ejemplo si tuviésemos en una población solamente de un adulto y este adulto sobrevive de un año a otro entonces la probabilidad de supervivencia es 1.0. Pero si tuviésemos solamente un adulto y este adulto muere entonces la probabilidad de supervivencia es 0.0. Las probabilidad de supervivencia pueden ser solamente 1.0 o 0.0 respectivamente y otros valores no son posibles, pero la interpretación biológica es sesgada, porque ya hay solamente dos alternativas. Pero si tuviésemos 1000 o 10 000 individuos es muy poco probable que todos se mueren o todos sobreviven, y hay muchas alternativas posibles. Este es un ejemplo extremo pero ilustra claramente el problema de estimar la probabilidad de supervivencia y transiciones en una población con un tamaño de muestra pequeña y puede resultar en estimados sesgados.
 
 En las próximas secciones vemos métodos de simulaciones y estimaciones de intervalos de confianza para abordar la variación biológica en tiempo y espacio y la variación por el tamaño de muestra pequeña.
 
@@ -122,8 +92,10 @@ En las próximas secciones vemos métodos de simulaciones y estimaciones de inte
 **Tres fuentes de incertidumbre que las simulaciones pueden capturar.**
 
 - **Estocasticidad espacial:** variación entre poblaciones de la misma especie. Se modela seleccionando aleatoriamente entre matrices de distintos sitios.
-- **Estocasticidad temporal:** variación entre años o periodos. Se modela seleccionando aleatoriamente entre matrices de distintos tiempos.
-- **Estocasticidad demográfica:** variación intrínseca debida al tamaño de muestra pequeño. Se modela usando distribuciones beta/Dirichlet sobre los parámetros (enfoque bayesiano).
+- **Estocasticidad ambiental (temporal):** variación entre años o periodos, debida a que las condiciones del ambiente cambian y afectan a todos los individuos a la vez. Se modela seleccionando aleatoriamente entre matrices de distintos tiempos.
+- **Incertidumbre paramétrica:** no sabemos con precisión cuánto valen los elementos de la matriz, porque se estimaron con pocos individuos. Se modela usando distribuciones beta/Dirichlet sobre los parámetros (enfoque bayesiano).
+
+A estas tres hay que añadir la **estocasticidad demográfica** propiamente dicha: aunque conociéramos las probabilidades exactas, en una población de diez individuos el número de supervivientes es un conteo entero y aleatorio, y esa aleatoriedad no desaparece por tener mejores datos. Es la fuente que domina en poblaciones muy pequeñas y la que hace que el riesgo de extinción no sea despreciable aun con $\lambda > 1$.
 
 Las tres pueden combinarse en un solo modelo, pero conviene evaluarlas por separado para entender cuál domina en una población dada.
 :::
@@ -144,13 +116,13 @@ En este caso vemos el efecto de la variación espacial en la probabilidad en los
 
 ### Entrada de datos
 
-El primer paso es definir las diferentes matrices, una por cada periodo de tiempo. En el siguiente script se enseña cómo entrar los datos para múltiples matrices en un solo objeto. Nota que es una lista de matrices.
+El primer paso es definir las diferentes matrices, una por cada periodo de tiempo. En el siguiente script se enseña cómo entrar los datos para múltiples matrices en un solo objeto. Note que es una lista de matrices.
 
 ::: img-float
-![*Serapias cordigera*. Foto: Guiseppe Pelligrino. Estudio demográfico: @pellegrino2014effects](images/Serapias_cordigera_5_Giuseppe_Pellegrino.jpeg){#fig-serapias-cordigera-5-giuseppe-pellegrino style="float: right; margin: 10px;width: 50% ; "}
+![*Serapias cordigera*. Foto: Giuseppe Pellegrino. Estudio demográfico: @pellegrino2014effects.](images/Serapias_cordigera_5_Giuseppe_Pellegrino.jpeg){#fig-serapias-cordigera-5-giuseppe-pellegrino style="float: right; margin: 10px;width: 50% ; "}
 :::
 
-Los datos provienen de un estudio de la dinámica de una población de *Serapias cordigera* de 1999 al 2012 evaluando el impacto antropogénico sobre la dinámica de la población [@pellegrino2014effects]. En este caso se emplean solamente 6 matrices de transición de la población de *Serapias cordigera* en 1999, tres de estas son poblaciones que tienen impacto antropogénico (A1, A2 y A3) y tres poblaciones naturales, sin impacto antropogénico (N1, N2, N3). Nota que se construye una lista (`list()`) de matrices de transición, una por cada periodo de tiempo.
+Los datos provienen de un estudio de la dinámica de una población de *Serapias cordigera* de 1999 al 2012 evaluando el impacto antropogénico sobre la dinámica de la población [@pellegrino2014effects]. En este caso se emplean solamente 6 matrices de transición de la población de *S. cordigera* en 1999, tres de estas son poblaciones que tienen impacto antropogénico (A1, A2 y A3) y tres poblaciones naturales, sin impacto antropogénico (N1, N2, N3). Note que se construye una lista (`list()`) de matrices de transición, una por cada periodo de tiempo.
 
 ```{r sim2}
 
@@ -240,9 +212,9 @@ Serapia
 
 ------------------------------------------------------------------------
 
-#### Simulaciones con igual probabilidad de selección
+#### Simulaciones con igual probabilidad de selección {.unnumbered}
 
-Si uno asume que hay igual cantidad de poblaciones afectadas antropogénicamente y naturales, entonces se puede hacer un análisis de la variación espacial en la probabilidad de supervivencia. Se puede simular el crecimiento con igual probabilidad de selección de las matrices de transición. En otras palabras, cada matriz será seleccionada al azar 1/6 de las veces. Este supuesto es razonable si uno asume que hay igual cantidad de poblaciones afectadas antropogénicamente y naturales. El objetivo es ver la variación en la probabilidad de supervivencia en la población de *Serapias cordigera* en 1999, o más precisamente, cuál sería el tamaño poblacional típico de la especie si esta se comporta como las siguientes matrices [@pellegrino2014effects].
+Si uno asume que hay igual cantidad de poblaciones afectadas antropogénicamente y naturales, entonces se puede hacer un análisis de la variación espacial en la probabilidad de supervivencia. Se puede simular el crecimiento con igual probabilidad de selección de las matrices de transición. En otras palabras, cada matriz será seleccionada al azar 1/6 de las veces. Este supuesto es razonable si uno asume que hay igual cantidad de poblaciones afectadas antropogénicamente y naturales. El objetivo es ver la variación en la probabilidad de supervivencia en la población de *S. cordigera* en 1999, o más precisamente, cuál sería el tamaño poblacional típico de la especie si esta se comporta como las siguientes matrices [@pellegrino2014effects].
 
 La función `stoch.projection()` del paquete `popbio` permite hacer simulaciones de la dinámica de una población y da una lista de la cantidad de individuos esperado por cada etapa de la vida. Comenzamos por definir el tamaño de la población inicial por etapa de la vida, **n**, el nombre de las etapas de la vida y luego usamos la función `stoch.projection()` para hacer las simulaciones.
 
@@ -261,10 +233,10 @@ as.data.frame(head(Serapia.eq)) |> flextable() # vemos las primeras 6 simulacion
 
 ### ¿Cuál es la distribución de la cantidad de individuos esperada?
 
-Para observar cuántos individuos hubiese en el futuro de la población de *Serapias cordigera* si la especie se comporta como las matrices de transición. Se observa que las poblaciones tendrían pocos individuos, típicamente menos de 2-3 individuos en todas las etapas, sin importar si fuesen latente, plántula, rosetta o con flores.
+Para observar cuántos individuos hubiese en el futuro de la población de *S. cordigera* si la especie se comporta como las matrices de transición. Se observa que las poblaciones tendrían pocos individuos, típicamente menos de 2-3 individuos en todas las etapas, sin importar si fuesen latente, plántula, rosetta o con flores.
 
 ::: img-float
-![*Serapias cordigera*. Foto: Guiseppe Pelligrino. Estudio demográfico: @pellegrino2014effects](images/Serapias_cordigera_7_Giuseppe_Pellegrino.jpg){#fig-serapias-cordigera-7-giuseppe-pellegrino style="float: left; margin: 10px;width: 40% ; "}
+![*Serapias cordigera*. Foto: Giuseppe Pellegrino. Estudio demográfico: @pellegrino2014effects.](images/Serapias_cordigera_7_Giuseppe_Pellegrino.jpg){#fig-serapias-cordigera-7-giuseppe-pellegrino style="float: left; margin: 10px;width: 40% ; "}
 :::
 
 ```{r}
@@ -277,7 +249,7 @@ Serapia.eq %>%
   gather(key = "etapa", value = "individuos") %>% # convertir el data frame de formato ancho a largo
   mutate(etapa = factor(etapa, levels = c("plantula", "latente", "rosetta", "con_flor"))) %>% # ordenar las etapas de la vida
   ggplot(aes(x = individuos)) +
-  geom_histogram(bins = 30, aes(fill = "blue"), color = "white") +
+  geom_histogram(bins = 30, fill = rlt_col1, colour = "white") +
   facet_wrap(~etapa, scales = "free") +
   rlt_style_fill() +
   labs(
@@ -288,7 +260,7 @@ Serapia.eq %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-En la siguiente figura se suma el total de individuos por simulación, que es una medida de la cantidad de individuos esperada en el futuro. En el siguiente gráfico se muestra la distribución de la cantidad de individuos esperada en el futuro de la población de *Serapias cordigera* si la especie se comporta como las matrices de transición de arriba, seleccionadas al azar con la misma probabilidad. Se observa que la mayoría de las simulaciones tienen menos de 10 individuos en el futuro.
+En la siguiente figura se suma el total de individuos por simulación, que es una medida de la cantidad de individuos esperada en el futuro. En el siguiente gráfico se muestra la distribución de la cantidad de individuos esperada en el futuro de la población de *S. cordigera* si la especie se comporta como las matrices de transición de arriba, seleccionadas al azar con la misma probabilidad. Se observa que la mayoría de las simulaciones tienen menos de 10 individuos en el futuro.
 
 ```{r}
 #| label: fig-sim5
@@ -299,7 +271,7 @@ Serapia_eq_T <- Serapia.eq %>%
 
 
 ggplot(Serapia_eq_T, aes(x = total)) +
-  geom_histogram(bins = 30, aes(fill = "blue"), color = "white") +
+  geom_histogram(bins = 30, fill = rlt_col1, colour = "white") +
   rlt_style_fill() +
   labs(
     title = "Distribución de total de individuos esperado de *Serapias cordigera*",
@@ -346,7 +318,7 @@ Serapia.uneq_T <- Serapia.uneq %>%
   mutate(total = rowSums(across(where(is.numeric))))
 
 ggplot(Serapia.uneq_T, aes(total)) +
-  geom_histogram(bins = 30, aes(fill = "blue"), color = "white") +
+  geom_histogram(bins = 30, fill = rlt_col1, colour = "white") +
   geom_histogram(data = Serapia_eq_T, aes(x = total), bins = 30,colour="black", alpha = .7) +
   rlt_style_fill() +
   labs(
@@ -359,11 +331,11 @@ ggplot(Serapia.uneq_T, aes(total)) +
 
 ------------------------------------------------------------------------
 
-#### Simulación de crecimiento poblacional de *Serapias cordigera*
+#### Simulación de crecimiento poblacional de *S. cordigera* {.unnumbered}
 
 En el siguiente script podemos evaluar el crecimiento poblacional y su variación en el espacio.
 
-Nota: aquí se calcula el log del crecimiento poblacional estocástico de *Serapias cordigera* por aproximación y simulaciones siguiendo la fórmula de Tuljapurkar [@tuljapurkar2013population]. Se puede ver que la especie tiene un crecimiento poblacional negativo en la mayoría de las simulaciones. Esto sugiere que la especie está en declive. Pero también se puede ver que hay variación en el crecimiento poblacional de la especie. El script incluye un parámetro para indicar por cuánto tiempo queremos que la simulación ocurra, **maxt=**; en este caso se simula por 50 periodos de tiempo. Si no se añade nada, la simulación dura por 50000 periodos de tiempo. Nota que **maxt** es en la unidad de tiempo de la matriz de transición; si esta fue construida en un periodo de meses, entonces la simulación opera en ese intervalo de tiempo.
+Nota: aquí se calcula el log del crecimiento poblacional estocástico de *S. cordigera* por aproximación y simulaciones siguiendo la fórmula de Tuljapurkar [@tuljapurkar2013population]. Se puede ver que la especie tiene un crecimiento poblacional negativo en la mayoría de las simulaciones. Esto sugiere que la especie está en declive. Pero también se puede ver que hay variación en el crecimiento poblacional de la especie. El script incluye un parámetro para indicar por cuánto tiempo queremos que la simulación ocurra, **maxt=**; en este caso se simula por 50 periodos de tiempo. Si no se añade nada, la simulación dura por 50000 periodos de tiempo. Note que **maxt** es en la unidad de tiempo de la matriz de transición; si esta fue construida en un periodo de meses, entonces la simulación opera en ese intervalo de tiempo.
 
 Cuando se usa el log de crecimiento poblacional estocástico se calcula $r$, donde $r = \ln(\lambda)$. La interpretación de $r$ es distinta a la de $\lambda$:
 
@@ -371,7 +343,7 @@ Cuando se usa el log de crecimiento poblacional estocástico se calcula $r$, don
 - $r$ = log(crecimiento poblacional estocástico) \< 0 la población decrece
 - $r$ = log(crecimiento poblacional estocástico) = 0 la población es estable
 
-El crecimiento estocástico de las poblaciones de *Serapias cordigera* en 1999 es negativo, lo que sugiere que la especie está en declive. Pero también se puede ver que hay variación en el crecimiento poblacional de la especie. Se usa la función `stoch.growth.rate()`.
+El crecimiento estocástico de las poblaciones de *S. cordigera* en 1999 es negativo, lo que sugiere que la especie está en declive. Pero también se puede ver que hay variación en el crecimiento poblacional de la especie. Se usa la función `stoch.growth.rate()`.
 
 Simulaciones por selección de matriz con igual probabilidad
 
@@ -396,7 +368,7 @@ SGR_uneq <- stoch.growth.rate(Serapia, maxt = 50, prob = c(.3, .3, .25, .05, .05
 SGR_uneq
 ```
 
-Para convertir el log(crecimiento poblacional estocástico) a lambda se usa la siguiente fórmula $e^r$ donde $r$ es el log(crecimiento poblacional estocástico). Como ejemplo se muestra la metodología con las simulaciones con probabilidad desigual de selección de las matrices de transición.
+Para convertir el log(crecimiento poblacional estocástico) a λ se usa la siguiente fórmula $e^r$ donde $r$ es el log(crecimiento poblacional estocástico). Como ejemplo se muestra la metodología con las simulaciones con probabilidad desigual de selección de las matrices de transición.
 
 &nbsp;
 
@@ -406,9 +378,9 @@ Para convertir el log(crecimiento poblacional estocástico) a lambda se usa la s
 
 &nbsp;
 
-#### Conversión de $r$ a $\lambda$
+#### Conversión de $r$ a $\lambda$ {.unnumbered}
 
-Lambda — probabilidad desigual de selección
+λ — probabilidad desigual de selección
 
 ```{r sim10}
 
@@ -481,9 +453,9 @@ ggplot(Serapia_eq_N, aes(total)) +
 ## Estocasticidad temporal
 
 ::: img-float
-![*Serapias cordigera*. Foto: Guiseppe Pelligrino. Estudio demográfico: @pellegrino2014effects](images/Serapias_cordigera_3_Giuseppe_Pellegrino.jpeg){#fig-serapias-cordigera-3-giuseppe-pellegrino style="float: left; margin: 10px;width: 50% ; "}
+![*Serapias cordigera*. Foto: Giuseppe Pellegrino. Estudio demográfico: @pellegrino2014effects.](images/Serapias_cordigera_3_Giuseppe_Pellegrino.jpeg){#fig-serapias-cordigera-3-giuseppe-pellegrino style="float: left; margin: 10px;width: 50% ; "}
 
-El objetivo de evaluar la variación en el tiempo es determinar si los efectos temporales son importantes para predecir los cambios en el crecimiento o la estabilidad poblacional. Seguimos con los datos de *Serapias cordigera*, pero ahora evaluamos cuál es el efecto de la variación en los parámetros de la matriz usando múltiples censos. Vemos el efecto en una de esas poblaciones con impacto antropogénico, solamente la población **A1**, en los 13 años de muestreo, desde 1999 hasta 2011, inclusive.
+El objetivo de evaluar la variación en el tiempo es determinar si los efectos temporales son importantes para predecir los cambios en el crecimiento o la estabilidad poblacional. Seguimos con los datos de *S. cordigera*, pero ahora evaluamos cuál es el efecto de la variación en los parámetros de la matriz usando múltiples censos. Vemos el efecto en una de esas poblaciones con impacto antropogénico, solamente la población **A1**, en los 13 años de muestreo, desde 1999 hasta 2011, inclusive.
 :::
 
 El primer paso es entrar los datos en una lista de matrices de transición.
@@ -667,9 +639,9 @@ Serapia_tiempo <- list(
 
 ------------------------------------------------------------------------
 
-#### Simulaciones con igual probabilidad de selección.
+### Simulaciones con igual probabilidad de selección
 
-El análisis evalúa la variación temporal en el crecimiento poblacional de la especie de *Serapias cordigera* en 1999 a 2012. Usando la función `stoch.projection()` se observa la variación en cantidad de individuos por etapa.
+El análisis evalúa la variación temporal en el crecimiento poblacional de la especie de *S. cordigera* en 1999 a 2012. Usando la función `stoch.projection()` se observa la variación en cantidad de individuos por etapa.
 
 ```{r sim15}
 
@@ -680,11 +652,11 @@ Serapia_tiempo_eq <- stoch.projection(Serapia_tiempo, n, nreps = 5000) # simulac
 as.data.frame(head(Serapia_tiempo_eq)) |> flextable() # vemos las primeras 6 simulaciones de tamaño de muestra
 ```
 
-Para evaluar el cambio de crecimiento poblacional en la especie de *Serapias cordigera* en 1999 a 2011 se usa la función `stoch.growth.rate()`.
+Para evaluar el cambio de crecimiento poblacional en la especie de *S. cordigera* en 1999 a 2011 se usa la función `stoch.growth.rate()`.
 
 Se observa que el crecimiento poblacional es cerca de cero en la mayoría de las simulaciones, lo que sugiere que la especie no está en declive ni creciendo. Los intervalos de confianza solapan el cero, dando apoyo a que el crecimiento temporal de la población no es diferente del de una población estable durante este periodo de tiempo.
 
-Nota que se puede cambiar la probabilidades de selección de las matrices de transición, en este caso se asume que hay igual cantidad de poblaciones afectadas antropogénicamente y naturales. Pero considera por ejemplo que hay eventos abióticos como temperatura o lluvia fuera de lo común en un año, entonces se puede cambiar la probabilidad de selección de las matrices de transición para evaluar el efecto de estos eventos de cambio climatológico en el crecimiento poblacional de la especie. Si, por ejemplo, en el área donde están estas especies hay predicción de que un factor abiótico —por ejemplo, una reducción en la lluvia (aumento en la sequía)— cambiará en las próximas décadas, se pudiese cambiar la probabilidad de selección de las matrices que corresponden a periodos de sequía para que sean seleccionadas más frecuentemente en las simulaciones. El objetivo es de simular los efectos de cambio en tiempo sobre el crecimiento poblacional de la especie basado en un patrón esperado de factores abióticos o bióticos.
+Note que se puede cambiar la probabilidades de selección de las matrices de transición, en este caso se asume que hay igual cantidad de poblaciones afectadas antropogénicamente y naturales. Pero considera por ejemplo que hay eventos abióticos como temperatura o lluvia fuera de lo común en un año, entonces se puede cambiar la probabilidad de selección de las matrices de transición para evaluar el efecto de estos eventos de cambio climatológico en el crecimiento poblacional de la especie. Si, por ejemplo, en el área donde están estas especies hay predicción de que un factor abiótico —por ejemplo, una reducción en la lluvia (aumento en la sequía)— cambiará en las próximas décadas, se pudiese cambiar la probabilidad de selección de las matrices que corresponden a periodos de sequía para que sean seleccionadas más frecuentemente en las simulaciones. El objetivo es de simular los efectos de cambio en tiempo sobre el crecimiento poblacional de la especie basado en un patrón esperado de factores abióticos o bióticos.
 
 ```{r sim16}
 
@@ -700,11 +672,11 @@ exp(SGR_Temp_eq$sim.CI[2]) # Lambda del intervalo de confianza superior
 
 ------------------------------------------------------------------------
 
-#### Comparación entre la variaciones espacial y temporal
+#### Comparación entre la variaciones espacial y temporal {.unnumbered}
 
-Comparar la variación temporal en el crecimiento poblacional de la especie de *Serapias cordigera* en 1999 a 2011 con la variación espacial.
+Comparar la variación temporal en el crecimiento poblacional de la especie de *S. cordigera* en 1999 a 2011 con la variación espacial.
 
-Lo que se observa es que la variación temporal y la variación espacial es más o menos igual (el rango de variación, diff), pero que hay menos variación temporal que espacial. Por lo menos para los datos seleccionado de [@pellegrino2014effects] la variación temporal no es tan grande como la variación espacial y solapa el lambda de 1, al contrario la variación espacial no solapa el lambda de 1 (ambos CI son menores de 1, sugiriendo una reducción posible de las poblaciones). Note que no usamos todos los datos de Pellegrino [@pellegrino2014effects] pero un sub-grupo y por consecuencia el análisis es sesgado.
+Lo que se observa es que la variación temporal y la variación espacial es más o menos igual (el rango de variación, diff), pero que hay menos variación temporal que espacial. Por lo menos para los datos seleccionado de [@pellegrino2014effects] la variación temporal no es tan grande como la variación espacial y solapa la λ de 1, al contrario la variación espacial no solapa la λ de 1 (ambos CI son menores de 1, sugiriendo una reducción posible de las poblaciones). Note que no usamos todos los datos de Pellegrino [@pellegrino2014effects] pero un sub-grupo y por consecuencia el análisis es sesgado.
 
 ```{r sim17, echo=FALSE}
 
@@ -720,9 +692,9 @@ flextable(Tabla_resultado)
 
 ### Comparación visual de la variación temporal y espacial en un gráfico
 
-Observación de la variación temporal y espacial en el crecimiento poblacional de la especie de *Serapias cordigera* en un gráfico.
+Observación de la variación temporal y espacial en el crecimiento poblacional de la especie de *S. cordigera* en un gráfico.
 
-Se nota que el crecimiento poblacional intrínseco de *Serapias cordigera* es negativo en la mayoría de las simulaciones cuando se evalúan múltiples poblaciones, pero la población **A1**, en general, tiene un crecimiento positivo o es estable cuando se evalúa tomando en cuenta la variación temporal. La línea horizontal representa un crecimiento poblacional de 1; si el crecimiento poblacional es mayor de 1, la población crece; si es menor de 1, la población decrece. En el análisis temporal vemos que el intervalo de confianza solapa el 1, lo que sugiere que no hay evidencia de que el crecimiento poblacional sea diferente del de una población estable.
+Se nota que el crecimiento poblacional intrínseco de *S. cordigera* es negativo en la mayoría de las simulaciones cuando se evalúan múltiples poblaciones, pero la población **A1**, en general, tiene un crecimiento positivo o es estable cuando se evalúa tomando en cuenta la variación temporal. La línea horizontal representa un crecimiento poblacional de 1; si el crecimiento poblacional es mayor de 1, la población crece; si es menor de 1, la población decrece. En el análisis temporal vemos que el intervalo de confianza solapa el 1, lo que sugiere que no hay evidencia de que el crecimiento poblacional sea diferente del de una población estable.
 
 ```{r}
 #| label: fig-sim18
@@ -753,37 +725,57 @@ Comenzamos con lo más básico, probabilidades de dos grupos. Consideramos un gr
 
 Si tenemos tres grupos, digamos, plántulas que se quedan como plántula, que crecen a juveniles o que mueren. En este caso tenemos tres grupos (multinomial) y la probabilidad de que un individuo de las proporciones tiene que sumar a 1. En este caso la probabilidad de que un individuo se queda como plántula es $p_1=0.5$, la probabilidad de que un individuo crece a juvenil es $p_2=0.3$ y la probabilidad de que un individuo muere es $p_3=0.2$. La suma de estas probabilidades tiene que ser igual a 1, en otra palabra $p_1 + p_2 + p_3 = 1$.
 
-La otra ventaja de usar la función Dirichlet es que se basa en la distribución beta. Esta es una distribución donde tanto los parámetros como el promedio y los intervalos de confianza están limitados a 0 y 1. Otra manera de decir lo mismo es que no se pueden tener intervalos de confianza menores que 0 o mayores que 1. Hagan el ejercicio mental de tratar de entender un intervalo de confianza con una probabilidad de -0.10. Nota que si uno usa una distribución normal, los intervalos de confianza pueden ser negativos o mayores de 1, lo que no tiene sentido biológico ni matemático en el contexto de probabilidad. De allí viene la ventaja de usar la distribución beta para calcular los parámetros y tener claro qué distribución se usa para estimar los parámetros.
+La otra ventaja de usar la función Dirichlet es que se basa en la distribución beta. Esta es una distribución donde tanto los parámetros como el promedio y los intervalos de confianza están limitados a 0 y 1. Otra manera de decir lo mismo es que no se pueden tener intervalos de confianza menores que 0 o mayores que 1. Hagan el ejercicio mental de tratar de entender un intervalo de confianza con una probabilidad de -0.10. Note que si uno usa una distribución normal, los intervalos de confianza pueden ser negativos o mayores de 1, lo que no tiene sentido biológico ni matemático en el contexto de probabilidad. De allí viene la ventaja de usar la distribución beta para calcular los parámetros y tener claro qué distribución se usa para estimar los parámetros.
 
-### Seleccionar una población de *Serapias cordigera*
+### Seleccionar una población de *S. cordigera*
 
-Se selecciona la población A3 de *Serapias cordigera* para hacer el análisis. Esta población es una de las poblaciones afectadas antropogénicamente, y tiene un tamaño de muestra pequeño, lo que hace que sea interesante para ver el efecto del tamaño de muestra en los parámetros de la matriz de transición.
+Se selecciona la población A3 de *S. cordigera* para hacer el análisis. Esta población es una de las poblaciones afectadas antropogénicamente, y tiene un tamaño de muestra pequeño, lo que hace que sea interesante para ver el efecto del tamaño de muestra en los parámetros de la matriz de transición.
 
 ```{r sim19}
 
 n <- c(2, 0, 4, 99) # población inicial por etapa
 names(n) <- c("latente", "plantula", "rosetta", "con flor")
-Serapia_A3 <- splitA(Serapia$A3_1999) # separar la matriz A3 en sus componentes (transición y fecundidad)
+# splitA() asigna POR OMISION toda la primera fila a la matriz de fecundidad
+# (r = 1). Aqui la primera fila es "latente": son las transiciones hacia la
+# latencia, no fecundidad. Esta matriz no contiene reproduccion sexual, asi que
+# se le pasa una matriz logica de fecundidad vacia y toda A queda como matriz
+# de transicion. Sin esto, las tres entradas de la fila 1 salian de la matriz de
+# transicion y la mortalidad estimada de "con flor" subia de 0.114 a ~0.61.
+sin_fecundidad <- matrix(FALSE, nrow = 4, ncol = 4)
+Serapia_A3 <- splitA(Serapia$A3_1999, r = sin_fecundidad) # separar A3 en transición y fecundidad
 ```
 
 ------------------------------------------------------------------------
 
 ### Asignar una previa a los datos
 
-En el siguiente paso vamos a asignar una previa a los datos. Estas previas provienen de Tremblay, no representan la visión de los autores del artículo. Se añade una previa también para la proporción de plantas que fallece en cada etapa (la quinta fila). Nota que es importante que la suma de cada columna sea igual a 1. Típicamente uno debería obtener la previa de la literatura o de un especialista en la biología de la especie antes de la recolección de datos, pero en este caso no se tiene información previa.
+En el siguiente paso vamos a asignar una previa a los datos. Estas previas provienen de Tremblay, no representan la visión de los autores del artículo. Se añade una previa también para la proporción de plantas que fallece en cada etapa (la quinta fila). La suma de cada columna tiene que ser igual a 1, así que esa quinta fila no se escribe a mano: se calcula como el complemento de las otras cuatro, y una comprobación con `stopifnot()` detiene el análisis si alguna columna no suma 1. Típicamente uno debería obtener la previa de la literatura o de un especialista en la biología de la especie antes de la recolección de datos, pero en este caso no se tiene información previa.
 
 ```{r sim20}
 
+# Las cuatro primeras filas son las transiciones previas entre estadios.
 RLT_Serapia_previa <- matrix(
   c(
-    0.5, 0.1, 0.4, 0.4,
-    0.2, 0., 0.0, 0.0,
-    0.0, 0.025, 0.25, 0.3,
-    0.15, 0.05, 0.25, 0.2,
-    0.05, 0.025, 0.1, 0.1
+    0.5,  0.1,   0.4,  0.4,
+    0.2,  0.0,   0.0,  0.0,
+    0.0,  0.025, 0.25, 0.3,
+    0.15, 0.05,  0.25, 0.2
   ),
-  byrow = TRUE, nrow = 5, ncol = 4
+  byrow = TRUE, nrow = 4, ncol = 4
 )
+
+# La quinta fila es la mortalidad, y NO se escribe a mano: es el complemento de
+# cada columna. Asi cada columna suma exactamente 1 por construccion y no puede
+# volver a descuadrarse al retocar una transicion. Antes estaba escrita a mano y
+# las columnas de latente y plantula sumaban 0.90 y 0.20.
+RLT_Serapia_previa <- rbind(
+  RLT_Serapia_previa,
+  1 - colSums(RLT_Serapia_previa)
+)
+rownames(RLT_Serapia_previa) <- c("latente", "plantula", "rosetta", "con flor", "muere")
+colnames(RLT_Serapia_previa) <- c("latente", "plantula", "rosetta", "con flor")
+
+stopifnot(all(abs(colSums(RLT_Serapia_previa) - 1) < 1e-12))
 ```
 
 ------------------------------------------------------------------------
@@ -792,15 +784,38 @@ RLT_Serapia_previa <- matrix(
 
 La distribución posterior marginal de un elemento en un multinomio es una distribución beta, y usamos esto para obtener intervalos creíbles en nuestras tasas de transición. Podemos usar el tipo de retorno TN para obtener los parámetros del multinomio deseado.
 
-Nota que:
+Note que:
 
-- TF tiene que ser una matriz divido entre la transición y de fecundidad (matT + matF),
+- TF tiene que ser una matriz divido entre la transición y de fecundidad (matT + `matF`),
 - N es el tamaño de muestra de cada etapa de la vida,
 - P es la previa de la matriz de transición,
-- priorweight es el peso de la previa (en este caso estamos dando muy poca importancia a la previa, como si fuese una décima de un individuo), lo que resulta en que los datos del campo dominan el análisis.
+- `priorweight` es el peso de la previa. Aquí se le da muy poca importancia, de modo que los datos de campo dominan el análisis. Cuánto pesa exactamente se explica en el recuadro siguiente, porque no es una cantidad fija.
 - Regresa el posterior de la matriz de transición. Eso quiere decir que calcula los parámetros de la distribución beta para cada elemento de la matriz de transición tomando en cuenta tanto los valores de la matriz **TF** y la previa **P**.
 
-En el script vemos los intervalos de confianza de la matriz de transición de *Serapias cordigera* en 1999 para la población A3.
+&nbsp;
+
+::: callout-important
+**Cuánto pesa realmente la previa: no es un número fijo, depende del estadio.**
+
+`priorweight` es un **multiplicador sobre el tamaño de muestra**, no una cantidad absoluta. La previa aporta `priorweight` $\times N$ observaciones equivalentes, y como cada estadio tiene su propio $N$, su peso cambia de una columna a otra. Con `n <- c(2, 0, 4, 99)` y `priorweight = 0.01`:
+
+| Estadio  | $N$ observado | Peso de la previa |
+|:---------|--------------:|------------------:|
+| latente  |             2 |              0.02 |
+| plántula |             0 |              0.00 |
+| rosetta  |             4 |              0.04 |
+| con flor |            99 |              0.99 |
+
+La previa pesa unas cincuenta veces más en el estadio que ya tiene 99 individuos que en el que tiene 2. Conviene tenerlo presente, porque es al revés de lo que uno esperaría: la previa está justamente para sostener la estimación cuando faltan datos.
+
+El caso extremo es la columna de plántula. Con $N = 0$ no hay datos, y la previa aporta 0.00 observaciones equivalentes: esa columna del posterior no está sostenida por nada y no debe leerse como una estimación.
+
+**No confundir dos cosas distintas.** `priorweight` cambia *cuánto pesa* la previa; nunca cambia *su forma*. La forma la fija la matriz de previas, y esa sí debe ser siempre biológicamente realista. Una previa plana, que asigne la misma probabilidad a todas las transiciones, no lo es nunca: diría que una plántula tiene la misma probabilidad de florecer que de seguir siendo plántula. Ver el capítulo de [Datos sin sentido biológico](122-Impacto_de_Datos_sin_Sentido.qmd).
+:::
+
+&nbsp;
+
+En el script vemos los intervalos de confianza de la matriz de transición de *S. cordigera* en 1999 para la población A3.
 
 Lo más dramático de ese primer análisis es que los intervalos de credibilidad son muy grandes: casi todos los intervalos de credibilidad **lcl** y **ucl** van de muy cerca de cero a valores muy grandes. Esto sugiere que hay mucha incertidumbre en los datos. Este resultado es esperado, porque la muestra es muy pequeña; solamente 2 individuos fueron muestreados en el campo de esta etapa.
 
@@ -841,12 +856,12 @@ A3df
 &nbsp;
 
 ::: callout-warning
-**La simulación no inventa información que no está en los datos.** Una población con sólo 2 plántulas observadas tendrá intervalos de credibilidad muy amplios, y eso es lo correcto: refleja la verdadera incertidumbre del muestreo. Aumentar el número de simulaciones (`nreps`) no estrecha los intervalos — sólo los estima con más precisión. Para estrechar intervalos se necesitan **más datos de campo** (más individuos marcados, más años de muestreo) o **previas informativas más fuertes** (justificadas por conocimiento experto). El enfoque bayesiano hace explícito este tradeoff entre datos y conocimiento previo.
+**La simulación no inventa información que no está en los datos.** Una población con solo 2 plántulas observadas tendrá intervalos de credibilidad muy amplios, y eso es lo correcto: refleja la verdadera incertidumbre del muestreo. Aumentar el número de simulaciones (`nreps`) no estrecha los intervalos — solo los estima con más precisión. Para estrechar intervalos se necesitan **más datos de campo** (más individuos marcados, más años de muestreo) o **previas informativas más fuertes** (justificadas por conocimiento experto). El enfoque bayesiano hace explícito este tradeoff entre datos y conocimiento previo.
 :::
 
 &nbsp;
 
-Como ejercicio, vemos qué tipo de intervalos tendríamos si tuviésemos un tamaño de muestra de 500 individuos en la etapa de adulto. Nota que, aunque los intervalos de credibilidad son más pequeños, no se debería asumir que no hay variación demográfica en la etapa de adulto, por procesos estocásticos.
+Como ejercicio, vemos qué tipo de intervalos tendríamos si tuviésemos un tamaño de muestra de 500 individuos en la etapa de adulto. Note que, aunque los intervalos de credibilidad son más pequeños, no se debería asumir que no hay variación demográfica en la etapa de adulto, por procesos estocásticos.
 
 ```{r sim24}
 
@@ -857,7 +872,7 @@ b500 <- sum(TN[, 4]) - TN[, 4] # cambie 1 a 2, 3 etc. para obtener la distribuci
 p500 <- a500 / (a500 + b500)
 lcl <- qbeta(0.025, a500, b500)
 ucl <- qbeta(0.975, a500, b500)
-A3 <- knitr::kable(sprintf("%.3f, %.3f, %.3f", p, lcl, ucl))
+A3 <- knitr::kable(sprintf("%.3f, %.3f, %.3f", p500, lcl, ucl))
 
 A3df <- round(data.frame(p, lcl, ucl), digits = 3)
 A3df$etapa_futura <- c("latente", "plantula", "rosetta", "con flor", "fallece")
@@ -881,23 +896,24 @@ plot_beta <- function(alpha, beta) {
   y <- dbeta(x, alpha, beta)
   data <- data.frame(x = x, y = y)
   ggplot(data, aes(x, y)) +
-    geom_line()
+    geom_line(colour = rlt_col1) +
+    rlt_theme
 }
 
 # Distirbuciones beta
-Latentes <- plot_beta(0.396, 99.594) +
+Latentes <- plot_beta(49.698, 50.292) +
   xlim(0, .1) +
   labs(
-    title = paste("Distribución de latentes \n (alpha =", 0.396, ", beta =", 99.594, ")"),
+    title = paste("Distribución de latentes \n (alpha =", 49.698, ", beta =", 50.292, ")"),
     x = "Probabilidad", y = "Densidad"
   ) +
   theme(text = element_text(size = 6)) +
-  geom_vline(xintercept = 0.004, linetype = "dashed", color = "#009392")
+  geom_vline(xintercept = 0.498, linetype = "dashed", color = "#009392")
 
 Plantulas <- plot_beta(0.000, 99.990) +
   xlim(0, .025) + ylim(0, .05) +
   labs(
-    title = paste("Distribución de plántulas \n (alpha =", 0.000, ", beta =", 99.90, ")"),
+    title = paste("Distribución de plántulas \n (alpha =", 0.000, ", beta =", 99.990, ")"),
     x = "probabilidad", y = "Densidad"
   ) +
   theme(text = element_text(size = 6)) +
@@ -921,14 +937,14 @@ Adultos <- plot_beta(10.197, 89.793) +
   theme(text = element_text(size = 6)) +
   geom_vline(xintercept = 0.102, linetype = "dashed", color = "#009392")
 
-Fallecidos <- plot_beta(60.687, 39.303) +
+Fallecidos <- plot_beta(11.385, 88.605) +
   xlim(.40, .8) +
   labs(
-    title = paste("Distribución de fallecidos \n (alpha =", 60.687, ", beta =", 39.303, ")"),
+    title = paste("Distribución de fallecidos \n (alpha =", 11.385, ", beta =", 88.605, ")"),
     x = "probabilidad", y = "Densidad"
   ) +
   theme(text = element_text(size = 6)) +
-  geom_vline(xintercept = 0.607, linetype = "dashed", color = "#009392")
+  geom_vline(xintercept = 0.114, linetype = "dashed", color = "#009392")
 
 ggarrange(Latentes, Plantulas, Rosetta, Adultos, Fallecidos, ncol = 3, nrow = 2)
 
@@ -939,7 +955,7 @@ ggsave("images/distribucion_beta_Serapias_A3.png")
 
 ## Ventaja de usar simulaciones
 
-La primera ventaja de usar métodos de análisis por simulaciones es que se pueden calcular intervalos de confianza. Si los intervalos de confianza de lambda solapan el uno (1) (o solapan el 0 para $\log\lambda$) entonces no hay evidencia de que el crecimiento poblacional sea diferente de estable.
+La primera ventaja de usar métodos de análisis por simulaciones es que se pueden calcular intervalos de confianza. Si los intervalos de confianza de λ solapan el uno (1) (o solapan el 0 para $\log\lambda$) entonces no hay evidencia de que el crecimiento poblacional sea diferente de estable.
 
 La segunda ventaja de usar simulaciones es que hay que recordar que los análisis están basado en datos limitados y que si hubiese más o menos datos para estimar los elementos de la matriz, los parámetros de la matriz pudiesen ser diferentes. Entonces hay un componente de incertidumbre en los estimados de los parámetros de la matriz, los valores de promedio no recolectan esa variación entre individuos, tiempo y espacio.
 

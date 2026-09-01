@@ -25,7 +25,7 @@ Además, se introduce el concepto de valor reproductivo como una medida de la co
 
 A continuación se ilustran las propiedades matemáticas de las matrices de proyección poblacional y su cálculo mediante herramientas computacionales.
 
-#### Librerías de R requeridas para el siguiente módulo
+#### Librerías de R requeridas para el siguiente módulo {.unnumbered .unlisted}
 
 ```{r, message=FALSE, warning=FALSE}
 #| docx_fit: true
@@ -41,43 +41,7 @@ source("R/figuras_helpers.R") # plc_save(), grviz_save(), save_plot_png()
 ```
 
 ```{r prop-theme, echo=FALSE, message=FALSE, warning=FALSE}
-rlt_theme <- theme(
-  text = element_text(family = "Libertinus Serif"),
-  axis.title.y = element_text(colour = "grey20", size = 10, face = "bold"),
-  axis.text.x = element_text(colour = "grey20", size = 10, face = "bold"),
-  axis.text.y = element_text(colour = "grey20", size = 15, face = "bold"),
-  axis.title.x = element_text(colour = "grey20", size = 15, face = "bold")
-) +
-  theme(
-    # Remover los bordes
-    panel.border = element_blank(),
-    # Remover las líneas
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    # Remover el fondo del panel
-    panel.background = element_blank(),
-    # añadir lineas más gruesas
-    axis.line.x = element_line(colour = "black", linewidth = 1),
-    axis.line.y = element_line(colour = "black", linewidth = 1)
-  )
-
-diverging <- c("#E69F00", "#56B4E9", "#009392", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000")
-
-# --- 2. Combinarlos en un objeto de tipo lista ---
-# Esta lista se puede añadir al gráfico con un solo '+'
-rlt_style_fill <- function() {
-  list(
-    rlt_theme,
-    scale_fill_manual(values = diverging)
-  )
-}
-
-rlt_style_colour <- function() {
-  list(
-    rlt_theme,
-    scale_colour_manual(values = diverging)
-  )
-}
+source("R/rlt_theme.R") # tema + paleta canónicos, y rlt_col1 (serie única)
 ```
 
 ```{r prop-pdf-fallback, echo=FALSE, message=FALSE, warning=FALSE}
@@ -119,7 +83,7 @@ Estos se basan en modelos de proyección poblacional (MPP) y nos permiten entend
 - **Valor reproductivo**: muestra la importancia de cada clase en la reproducción futura.
 - **Estructura estable**: describe la distribución de la población cuando todo se estabiliza.
 
-Si quieres profundizar en estos índices, te recomiendo consultar [@caswell2001matrix] y [@stott2011framework].
+Si desea profundizar en estos índices, se recomienda consultar [@caswell2001matrix] y [@stott2011framework].
 
 ## Construcción de una matriz poblacional
 
@@ -345,12 +309,12 @@ En esta sección se revisan los índices poblacionales obtenidos a partir del an
 
 ### Estructura estable
 
-La estructura poblacional estable ($W$, también conocida como eigenvector derecho) indica la proporción esperada de individuos en cada categoría de edad o estado cuando la población ha alcanzado el equilibrio a largo plazo. Por ejemplo, en *L. rubripetala* se espera que la estructura estable sea:
+La estructura poblacional estable ($\mathbf{w}$, también llamada vector propio derecho) indica la proporción esperada de individuos en cada categoría de edad o estado cuando la población ha alcanzado el equilibrio a largo plazo. Por ejemplo, en *L. rubripetala* se espera que la estructura estable sea:
 
-- Plántulas: 0.088
-- Juveniles: 0.206
-- Adultos no reproductivos: 0.369
-- Adultos reproductivos: 0.337
+- Plántulas: `r round(stable.stage(Lr1)[1], 3)`
+- Juveniles: `r round(stable.stage(Lr1)[2], 3)`
+- Adultos no reproductivos: `r round(stable.stage(Lr1)[3], 3)`
+- Adultos reproductivos: `r round(stable.stage(Lr1)[4], 3)`
 
 Este índice supone que la tasa de crecimiento poblacional ($\lambda$) se mantiene constante en el tiempo, lo cual solo ocurre bajo condiciones ambientales estables. Sin embargo, en la naturaleza esto es poco común. Además, la estructura estable asume que el periodo de muestreo y las condiciones abióticas y bióticas son típicas y no cambian.
 
@@ -395,7 +359,7 @@ Wdf$Categorias <- factor(
 library(ggplot2)
 
 ggplot(Wdf, aes(y = Wmax, x = Categorias)) +
-  geom_bar(stat = "identity", aes(fill = "blue")) +
+  geom_bar(stat = "identity", fill = rlt_col1) +
   labs(
     title = "Estructura estable de estados esperada",
     x = "Etapas",
@@ -411,25 +375,27 @@ ggplot(Wdf, aes(y = Wmax, x = Categorias)) +
 ### Valor reproductivo
 
 ::: img-float
-![*Spathoglottis plicata*. Foto: Tremblay. Estudio demográfico: @falcon2017quantifying](images/Spathoglottis_plicata_Tremblay.jpeg){#fig-spathoglottis-plicata-tremblay style="float: left; margin: 10px;width: 40% ; "}
+![*Spathoglottis plicata*. Foto: Tremblay. Estudio demográfico: @falcon2017quantifying.](images/Spathoglottis_plicata_Tremblay.jpeg){#fig-spathoglottis-plicata-tremblay style="float: left; margin: 10px;width: 40% ; "}
 :::
 
-El valor reproductivo ($v$, también llamado eigenvector izquierdo) indica la contribución esperada de cada categoría de edad o estado a la reproducción de la población.
+El valor reproductivo ($\mathbf{v}$, también llamado vector propio izquierdo) indica la contribución esperada de cada categoría de edad o estado a la reproducción de la población.
 
 En el caso de *L. rubripetala*, los valores reproductivos esperados son:
 
-- Plántulas: 1.00
-- Juveniles: 1.52
-- Adultos no reproductivos: 2.32
-- Adultos reproductivos: 2.66
+- Plántulas: `r round(reproductive.value(Lr1)[1], 2)`
+- Juveniles: `r round(reproductive.value(Lr1)[2], 2)`
+- Adultos no reproductivos: `r round(reproductive.value(Lr1)[3], 2)`
+- Adultos reproductivos: `r round(reproductive.value(Lr1)[4], 2)`
 
 Este índice es muy útil porque muestra qué etapas son más importantes para el crecimiento poblacional a largo plazo. La primera categoría siempre tiene un valor de 1.00, ya que representa el inicio del ciclo de vida y sirve como referencia para calcular los demás valores.
 
-Además, el valor reproductivo ayuda a definir estrategias de manejo. Por ejemplo:
+El valor reproductivo también orienta las decisiones de manejo, pero conviene precisar qué pregunta responde y cuál no. El valor reproductivo mide cuánto vale demográficamente **un individuo** de cada estadio: cuánta descendencia futura, ponderada por $\lambda$, cabe esperar de él. Por eso sirve para comparar individuos. Por ejemplo:
 
-- En *Spathoglottis plicata*, una orquídea terrestre invasora, las acciones de control deberían enfocarse en las categorías con mayor valor reproductivo, porque son las que más contribuyen al crecimiento poblacional.
+- En *Spathoglottis plicata*, una orquídea terrestre invasora, retirar un individuo de un estadio con valor reproductivo alto elimina más contribución futura que retirar uno de un estadio con valor bajo.
 
-- Por el contrario, si se busca remover individuos con el menor impacto posible, conviene actuar sobre las etapas con valores reproductivos bajos.
+- Por el contrario, si se busca remover individuos con el menor impacto posible sobre la población, conviene actuar sobre los estadios con valores reproductivos bajos.
+
+Lo que el valor reproductivo **no** responde es en qué transición conviene intervenir para modificar $\lambda$. Esa es una pregunta sobre la matriz, no sobre los individuos, y la contestan la sensibilidad y la elasticidad, que se tratan en el capítulo de [Elasticidad y sensibilidad](111-Elasticidad.qmd). Un estadio puede tener un valor reproductivo alto y, a la vez, una elasticidad baja, si la transición que lleva a él ya está próxima a su máximo biológico.
 
 ```{r Indice11}
 # Valor reproductivo
@@ -470,92 +436,41 @@ dr(Lr1) # usando la función "dr" para "damping ratio" en el paquete "popdemo"
 
 ### Graficación del índice de amortiguamiento
 
-El comportamiento del índice de amortiguamiento se puede visualizar mediante una gráfica de líneas, que muestra cómo responde un sistema ante un cambio súbito (un "paso de entrada") y cómo varía esa respuesta en el tiempo según diferentes niveles de amortiguamiento.
+Lo que $\rho$ mide es la rapidez con que se desvanece la influencia del segundo valor propio. Tras una perturbación, la desviación respecto a la estructura estable decae de forma proporcional a $\rho^{-t}$: cuanto mayor sea $\rho$, antes desaparece la huella de la estructura inicial. Por construcción $\rho \geq 1$, ya que el teorema de Perron y Frobenius garantiza que $\lambda_1 \geq |\lambda_2|$.
 
-Para facilitar la comprensión, en el siguiente bloque se incluye el código que genera una gráfica ilustrando el comportamiento de una población perturbada:
+La siguiente gráfica compara esa caída para cuatro valores de $\rho$, incluido el de *L. rubripetala*:
 
 ```{r, message=FALSE, warning=FALSE}
 #| label: fig-Indice13
-#| fig-cap: "Tamaño poblacional en función del tiempo para cuatro coeficientes de amortiguamiento (0.3, 1.0, 2.0, 3.0), representado con líneas de color según el coeficiente."
+#| fig-cap: "Influencia relativa del segundo valor propio en función del tiempo, para cuatro valores del índice de amortiguamiento. La curva de 1.21 corresponde a *L. rubripetala*; la línea discontinua marca el 10% de influencia restante."
 
 library(ggplot2)
 
-# --- Definir los parametros ---
-# Población inicial en el tiempo t=0. Ese el punto de equilibrio inicial.
-poblacion_inicial <- 1000
+# Valores de rho a comparar. 1.21 es el de L. rubripetala, calculado arriba.
+rho_valores <- c(1.05, 1.21, 1.5, 3.0)
 
-# Factores de amortiguamiento para graficar.
-# 0,3 = Subamortiguado (oscila)
-# 1,0 = Críticamente amortiguado (retorno más rápido sin oscilación)
-# 2,0 = Sobreamortiguado (retorno lento sin oscilación)
-amortiguamiento <- c(0.3, 1.0, 2.0, 3.0)
+tiempo <- seq(0, 50, by = 0.5)
 
-# Frecuencia de la oscilación (omega_n).
-frecuencia <- 0.5
-
-# Tiempo total para la simulación
-tiempo_total <- 50
-
-# Paso de tiempo para la simulación (más pequeño para una curva más suave)
-etapa_tiempo <- 0.1
-
-# --- Generar los datos de oscilación amortiguada para múltiples coeficientes ---
-# Crear un data frame vacío para almacenar todos los datos
-todo_data_df <- data.frame()
-
-# Recorra cada relación de amortiguamiento para generar los datos
-for (zeta in amortiguamiento) {
-  # Crear una secuencia de puntos de tiempo
-  time_points <- seq(0, tiempo_total, by = etapa_tiempo)
-
-  # Calcular la población en cada punto de tiempo según el coeficiente de amortiguamiento.
-  # La forma matemática de la respuesta al escalón cambia según el coeficiente de amortiguamiento.
-
-  if (zeta < 1) {
-    # Caso subamortiguado: onda sinusoidal amortiguada
-    omega_d <- frecuencia * sqrt(1 - zeta^2)
-    population_data <- poblacion_inicial *
-      (1 -
-        exp(-zeta * frecuencia * time_points) *
-          (cos(omega_d * time_points) +
-            (zeta / sqrt(1 - zeta^2)) * sin(omega_d * time_points)))
-  } else if (zeta == 1) {
-    # Caso amortiguado críticamente
-    population_data <- poblacion_inicial *
-      (1 - exp(-frecuencia * time_points) * (1 + frecuencia * time_points))
-  } else {
-    # Caso sobreamortiguado
-    s1 <- -zeta * frecuencia + frecuencia * sqrt(zeta^2 - 1)
-    s2 <- -zeta * frecuencia - frecuencia * sqrt(zeta^2 - 1)
-    population_data <- poblacion_inicial *
-      (1 -
-        (s2 * exp(s1 * time_points) - s1 * exp(s2 * time_points)) / (s2 - s1))
-  }
-
-  # Añadir los datos del coeficiente actual a un data frame temporal
-  temp_df <- data.frame(
-    Time = time_points,
-    Population = population_data,
-    DampingRatio = factor(zeta) # guardar el coeficiente de amortiguamiento como factor para el color
+# Tras una perturbacion, la desviacion respecto a la estructura estable
+# decae de forma proporcional a rho^(-t).
+amortiguamiento_df <- do.call(rbind, lapply(rho_valores, function(rho) {
+  data.frame(
+    Tiempo = tiempo,
+    Influencia = rho^(-tiempo),
+    Rho = factor(rho)
   )
+}))
 
-  # Unir el data frame temporal al data frame principal
-  todo_data_df <- rbind(todo_data_df, temp_df)
-}
-
-# --- Crear el gráfico usando ggplot2 ---
-ggplot(todo_data_df, aes(x = Time, y = Population, color = DampingRatio)) +
-  # Añadir las líneas para cada coeficiente de amortiguamiento
+ggplot(amortiguamiento_df, aes(x = Tiempo, y = Influencia, color = Rho)) +
   geom_line(linewidth = 1.2) +
-  # Establecer el título y las etiquetas
+  geom_hline(yintercept = 0.1, linetype = "dashed", colour = "grey50") +
   labs(
-    title = "El efecto de amortiguamiento \n sobre el tamaño de población",
-    subtitle = "La población se estabiliza a un equilibrio de 1000",
-    x = "Tiempo",
-    y = "Tamaño poblacional",
-    color = expression("Amortiguamiento (" * zeta * ")")
+    title = "Velocidad de convergencia según el índice \n de amortiguamiento",
+    subtitle = "Cuánto pesa todavía la estructura inicial al pasar el tiempo",
+    x = "Tiempo (en las unidades en que se construyó la matriz)",
+    y = "Influencia relativa del segundo valor propio",
+    color = "Índice (rho)"
   ) +
-  # Personalizar el tema del gráfico para mejor estética
   rlt_style_colour() +
   theme_minimal(base_size = 14) +
   theme(
@@ -567,28 +482,23 @@ ggplot(todo_data_df, aes(x = Time, y = Population, color = DampingRatio)) +
 
 ### Interpretación del gráfico de amortiguamiento
 
-La figura resultante ilustra el efecto de diferentes coeficientes de amortiguamiento en la respuesta de una población a un cambio súbito. El gráfico muestra cuatro comportamientos distintos para la población perturbada y su retorno a un estado de equilibrio, correspondiente a un tamaño poblacional de 1000 individuos.
+Las cuatro curvas muestran cuánto pesa todavía la estructura inicial a medida que pasa el tiempo. El punto de comparación práctico es cuándo cada una cruza el 10%, es decir, cuándo la influencia del segundo valor propio ha caído a la décima parte, que es el mismo criterio que usa `dr()` con `x = 10`:
 
-La respuesta de la población ante cuatro índices de amortiguamiento es la siguiente:
-
-- **Subamortiguado** ($\zeta = 0.3$): Esta es la respuesta oscilante. El sistema sobrepasa el punto de equilibrio y luego oscila; con el tiempo la amplitud de las oscilaciones disminuye gradualmente hasta estabilizarse en el equilibrio.
-- **Amortiguado críticamente** ($\zeta = 1.0$): Esta es la respuesta más rápida, la cual alcanza el equilibrio sin oscilaciones ni sobreamortiguaciones. Se considera la respuesta ideal para sistemas que requieren un retorno rápido y estable al valor objetivo.
-- **Sobreamortiguado** ($\zeta = 2.0$): Esta respuesta es lenta y se aproxima al punto de equilibrio sin oscilaciones. En comparación con el caso críticamente amortiguado, tarda mucho más en estabilizarse, ya que la fuerza de amortiguamiento es muy grande.
-- **Sobreamortiguado** ($\zeta = 3.0$): Similar al caso anterior, pero con un amortiguamiento aún mayor. La respuesta es muy lenta y se acerca al equilibrio de manera gradual sin oscilaciones.
+- $\rho = 1.05$: unos 47 pasos. La convergencia es tan lenta que, con una matriz anual, el resultado asintótico no describe nada que el investigador vaya a observar.
+- $\rho = 1.21$ (*L. rubripetala*): unos 12 pasos. Como la matriz es mensual, equivale aproximadamente a un año.
+- $\rho = 1.5$: unos 6 pasos.
+- $\rho = 3.0$: unos 2 pasos. La población olvida su estructura inicial casi de inmediato.
 
 &nbsp;
 
 ::: callout-note
-**Cuatro regímenes de amortiguamiento.**
+**Cómo leer el índice de amortiguamiento.**
 
-| ζ | Régimen | Comportamiento |
-|----|----|----|
-| $< 1$ | **Subamortiguado** | Sobrepasa el equilibrio y oscila; la amplitud decrece con el tiempo. |
-| $= 1$ | **Críticamente amortiguado** | Retorno más rápido posible sin oscilaciones. |
-| $> 1$ (moderado) | **Sobreamortiguado** | Retorno lento sin oscilaciones; la fuerza de amortiguamiento es alta. |
-| $\gg 1$ | **Muy sobreamortiguado** | Retorno extremadamente lento; el sistema apenas reacciona. |
-
-En poblaciones reales, la mayoría de las matrices de proyección se encuentran en el régimen sobreamortiguado: regresan al equilibrio sin oscilar, pero pueden tardar muchas generaciones.
+- $\rho \geq 1$ siempre. Un modelo matricial de proyección es un sistema lineal en tiempo discreto y de primer orden, de modo que no tiene los regímenes «subamortiguado» ni «críticamente amortiguado» de un oscilador mecánico: esa clasificación pertenece a otro tipo de sistema y no se aplica aquí.
+- $\rho$ cercano a 1: convergencia lenta, la estructura inicial se sigue notando durante muchos pasos de tiempo.
+- $\rho$ grande: convergencia rápida.
+- $\rho = 1$: la población no converge. Ocurre en matrices imprimitivas, cuyo ciclo de vida impone oscilaciones que nunca se amortiguan.
+- Si $\lambda_2$ es un número complejo, la convergencia es oscilante: la desviación respecto a la estructura estable cambia de signo con un periodo de $2\pi/\theta$, donde $\theta$ es el argumento de $\lambda_2$. En *L. rubripetala* no sucede, porque $\lambda_2 = 0.8322$ es real.
 :::
 
 &nbsp;
@@ -623,7 +533,7 @@ Por ejemplo, si se comienza con una población inicial de 8, 20, 27 y 34 individ
 
 - Estructura inicial cercana a la estable (ej. 8, 20, 27, 34): convergencia en \~6 meses.
 - Estructura inicial moderadamente sesgada: \~18 meses.
-- Estructura completamente sesgada (sólo plántulas): \~25 meses.
+- Estructura completamente sesgada (solo plántulas): \~25 meses.
 
 Esto tiene implicaciones prácticas en conservación: si introduces una nueva población o una población en restauración, la composición inicial determina cuándo el modelo asintótico empieza a aplicar. Para acelerar la convergencia, conviene introducir individuos en proporciones cercanas a la estructura estable cuando sea factible.
 :::
@@ -644,7 +554,7 @@ Por ejemplo, se estima que *L. rubripetala* alcanzaría la estructura estable en
 
 La población comienza en cada etapa con 100 individuos y se simula durante 22 pasos de tiempo. El gráfico resultante muestra cómo la población converge a su estructura estable a lo largo del tiempo, con cada etapa representada por una línea de color diferente. La línea horizontal indica el valor de la proporción de la etapa estable y la línea vertical representa el tiempo en que se espera que la etapa llegue a su nivel de estructura estable.
 
-Nota que si las condiciones se mantienen iguales en el tiempo, se espera que la población converja a una estructura estable, es decir, que la proporción de individuos en cada etapa se mantenga constante a lo largo del tiempo. En este caso, la proporción de individuos en cada etapa converge a 0.088, 0.206, 0.369 y 0.337 para las categorías de plántulas, juveniles, adultos no reproductivos y adultos reproductivos, respectivamente, en 3, 17, 15 y 9 periodos (el tiempo de re-muestreo corresponde a la construcción de la matriz).
+Note que si las condiciones se mantienen iguales en el tiempo, se espera que la población converja a una estructura estable, es decir, que la proporción de individuos en cada etapa se mantenga constante a lo largo del tiempo. En este caso, la proporción de individuos en cada etapa converge a `r round(stable.stage(Lr1)[1], 3)`, `r round(stable.stage(Lr1)[2], 3)`, `r round(stable.stage(Lr1)[3], 3)` y `r round(stable.stage(Lr1)[4], 3)` para las categorías de plántulas, juveniles, adultos no reproductivos y adultos reproductivos, respectivamente, en 3, 17, 15 y 9 periodos (el tiempo de re-muestreo corresponde a la construcción de la matriz).
 
 ```{r}
 #| label: fig-indice16
@@ -718,14 +628,14 @@ for (t in 0:total_time_steps) {
   n_current <- n_next
 }
 # --- Calcular la Distribución de Etapa Estable (SSD) ---
-# Se calcula el vector propio derecho (eigenvector) del valor propio dominante.
+# Se calcula el vector propio derecho del valor propio dominante.
 # Este vector representa la proporción de individuos en cada etapa en el estado estable.
 eigen_results <- eigen(transition_matrix)
 
 # Encontrar el valor propio dominante (más grande)
 dominant_eigenvalue <- max(Re(eigen_results$values))
 
-# Encontrar el vector propio derecho correspondiente (eigenvector)
+# Encontrar el vector propio derecho correspondiente
 stable_stage_distribution_raw <- Re(eigen_results$vectors[, which.max(Re(
   eigen_results$values
 ))])

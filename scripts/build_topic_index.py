@@ -23,29 +23,54 @@ from collections import defaultdict
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "Apendice_Indice_Temas.qmd"
 
+# IMPORTANTE: el numero de cada etiqueta es el que Quarto asigna realmente, y
+# esta lista sigue el orden de `_quarto.yml`, NO el orden alfabetico de los
+# archivos .qmd. Dos detalles que descuadraron este indice hasta septiembre de
+# 2026 (102-115 salian con -1, 119-123 con +1 y 117/118 con -6):
+#   1. `index.qmd` SI recibe numero: lleva `title:` en su YAML, de modo que es
+#      el capitulo 1 y todo lo demas corre a partir del 2. No se rastrea aqui
+#      porque son los preliminares, pero ocupa el numero 1.
+#   2. La parte «Historia» se declara al final de `_quarto.yml`, asi que
+#      117_Historia_breve y 118-Carl_Olaf_Tamm son los capitulos 21 y 22,
+#      aunque sus nombres de archivo los ordenen antes alfabeticamente.
+# Al anadir un capitulo, insertalo en su posicion de `_quarto.yml` y renumera
+# las etiquetas siguientes.
 CHAPTERS = [
-    ("102-Intro.qmd",                          "1. Introducción"),
-    ("103-Ciclos_de_Vida.qmd",                 "2. Ciclos de Vida"),
-    ("104-Recopilacion_datos_en_el_campo.qmd", "3. Recopilación de datos"),
-    ("105-Transiciones.qmd",                   "4. Transiciones"),
-    ("106-calcular_fecundidad.qmd",            "5. Fecundidad"),
-    ("107-matU_matF_matC.qmd",                 "6. Matrices U, F y C"),
-    ("108-Bayesian_PPM.qmd",                   "7. Acercamiento bayesiano"),
-    ("109-Crecimiento_poblacional.qmd",        "8. Crecimiento poblacional"),
-    ("110-Propriedades.qmd",                   "9. Propiedades de la matriz"),
-    ("111-Elasticidad.qmd",                    "10. Elasticidad y sensibilidad"),
-    ("112-Dinamica_de_Transiciones.qmd",       "11. Dinámica transitoria"),
-    ("113-Funciones_de_Transferencia.qmd",     "12. Funciones de transferencia"),
-    ("114-LTRE.qmd",                           "13. LTRE"),
-    ("115-Metodos_de_simulaciones.qmd",        "14. Métodos de simulaciones"),
-    ("117_Historia_breve.qmd",                 "15. Historia breve"),
-    ("118-Carl_Olaf_Tamm.qmd",                 "16. Carl Olaf Tamm"),
-    ("119-COMPADRE_ORCHIDS.qmd",               "17. COMPADRE"),
-    ("120-Rage_orquideas.qmd",                 "18. Rage"),
-    ("121-Traduccion_protocolo_informacion.qmd","19. Protocolo estándar"),
-    ("122-Impacto_de_Datos_sin_Sentido.qmd",   "20. Datos sin sentido"),
-    ("123-Conclusion.qmd",                     "21. Conclusión"),
+    ("102-Intro.qmd",                           "2. Introducción"),
+    ("103-Ciclos_de_Vida.qmd",                  "3. Ciclos de Vida"),
+    ("104-Recopilacion_datos_en_el_campo.qmd",  "4. Recopilación de datos"),
+    ("105-Transiciones.qmd",                    "5. Transiciones"),
+    ("106-calcular_fecundidad.qmd",             "6. Fecundidad"),
+    ("107-matU_matF_matC.qmd",                  "7. Matrices U, F y C"),
+    ("108-Bayesian_PPM.qmd",                    "8. Acercamiento bayesiano"),
+    ("109-Crecimiento_poblacional.qmd",         "9. Crecimiento poblacional"),
+    ("110-Propriedades.qmd",                    "10. Propiedades de la matriz"),
+    ("111-Elasticidad.qmd",                     "11. Elasticidad y sensibilidad"),
+    ("112-Dinamica_de_Transiciones.qmd",        "12. Dinámica transitoria"),
+    ("113-Funciones_de_Transferencia.qmd",      "13. Funciones de transferencia"),
+    ("114-LTRE.qmd",                            "14. LTRE"),
+    ("115-Metodos_de_simulaciones.qmd",         "15. Métodos de simulaciones"),
+    ("119-COMPADRE_ORCHIDS.qmd",                "16. COMPADRE"),
+    ("120-Rage_orquideas.qmd",                  "17. Rage"),
+    ("121-Traduccion_protocolo_informacion.qmd","18. Protocolo estándar"),
+    ("122-Impacto_de_Datos_sin_Sentido.qmd",    "19. Datos sin sentido"),
+    ("123-Conclusion.qmd",                      "20. Conclusión"),
+    ("117_Historia_breve.qmd",                  "21. Historia breve"),
+    ("118-Carl_Olaf_Tamm.qmd",                  "22. Carl Olof Tamm"),
 ]
+
+# Extension de los enlaces internos del indice.
+#   ".qmd"  -> Quarto reescribe el enlace segun el formato (.html en la web,
+#              referencia interna en PDF/Word). Es lo que pide STYLE_GUIDE.md
+#              y lo unico que funciona en el libro impreso.
+#   ".html" -> lo que se emitia hasta septiembre de 2026: en Typst y docx los
+#              enlaces quedan muertos porque el .html no existe.
+# CAVEAT a comprobar en el proximo render completo: en Typst, Quarto puede
+# sustituir el texto de un enlace que apunte a un capitulo por el titulo del
+# capitulo (por eso el formato compacto de mas abajo usa texto plano). Si al
+# revisar el PDF los titulos de seccion aparecen sustituidos por titulos de
+# capitulo, poner ENLACES = None para emitir texto plano sin hiperenlace.
+ENLACES = ".qmd"
 
 # Vocabulario indexable: (clave-de-orden, regex, etiqueta).
 # La clave es lo que se usa para ordenar alfabéticamente.
@@ -370,7 +395,7 @@ def main():
                 if sec_title:
                     unique_sections.add((sec_title, sec_anchor))
             if unique_sections:
-                qmd_html = qmd_file.replace('.qmd', '.html')
+                qmd_html = qmd_file if ENLACES == '.qmd' else qmd_file.replace('.qmd', ENLACES or '.html')
                 appearances[(chapter_label, qmd_html)] = sorted(unique_sections)
         if appearances:
             index_entries.append((term_key, term_label, appearances))
@@ -461,7 +486,10 @@ def main():
                         entries.append((sec_title, qmd_html, cnum, chapter_label))
                 # Ordenar por título de sección (alfabético) para facilitar lectura
                 for sec_title, qmd_html, cnum, chapter_label in sorted(entries, key=lambda x: x[0].lower()):
-                    out.append(f": [{sec_title}]({qmd_html}) — Cap. {cnum}\n")
+                    if ENLACES is None:
+                        out.append(f": {sec_title} — Cap. {cnum}\n")
+                    else:
+                        out.append(f": [{sec_title}]({qmd_html}) — Cap. {cnum}\n")
             out.append("\n")
         out.append("\n")
 
