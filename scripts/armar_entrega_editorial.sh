@@ -56,12 +56,16 @@ rm -rf ".entrega_tmp"
 mkdir -p "$STAGE"/{01_Libro_completo,02_Capitulos_en_Word,03_Figuras,04_Prologos}
 
 cp "$WORD" "$STAGE/01_Libro_completo/"
+# Quarto rotula los apéndices «Appendix A — …» en inglés y esa cadena no
+# es localizable en 1.9.38. Se traduce sobre la copia empaquetada.
+python3 scripts/fix_docx_appendix_label.py "$STAGE/01_Libro_completo/$(basename "$WORD")" >/dev/null
+rm -f "$STAGE/01_Libro_completo/$(basename "$WORD").bak"
 [ -f "$PDF" ] && cp "$PDF" "$STAGE/01_Libro_completo/"
 
 cp docx_chapters/*.docx "$STAGE/02_Capitulos_en_Word/" 2>/dev/null || true
 cp -R figuras_editor/. "$STAGE/03_Figuras/"
 
-for f in Prologos*.docx docs/Prologos.docx; do
+for f in Prologos*.docx docs/Prologos.docx docx_chapters/Prologos.docx; do
   [ -f "$f" ] && cp "$f" "$STAGE/04_Prologos/"
 done
 

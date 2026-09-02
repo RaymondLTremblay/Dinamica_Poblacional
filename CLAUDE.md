@@ -123,6 +123,9 @@ All R scripts can be run with `Rscript scripts/<name>.R [args]` from anywhere in
 | `apply_captions.R` | one-shot | Reads a `{label: caption}` JSON and replaces `[TODO: caption]` placeholders in `.qmd` files. `Rscript scripts/apply_captions.R --json captions_drafted.json [--dry]`. |
 | `style_all.R` | manual, periodic | Runs `styler::style_file()` on every `.R`, `.Rprofile`, and `.qmd` (chunks only) under the project. Skips auto-generated appendices. Commit before running so the diff is reviewable. `Rscript scripts/style_all.R [--dry]`. |
 | `render_docx_per_chapter.R` | manual, on-demand | Renders each chapter as a **standalone `.docx`** (one file per chapter) into `docx_chapters/`. Designed for editor review of one chapter at a time without lugging around a 500-page combined Word doc. Source in RStudio, then call `render_chapter("105-Transiciones.qmd")` or `render_all_chapters()`. See "Per-chapter Word output" workflow below. |
+| `armar_entrega_editorial.sh` | manual, on-demand | Packs the full `.zip` for the publisher: combined Word + PDF, per-chapter `.docx`, `figuras_editor/`, the forewords, and a generated `_LEER_PRIMERO.md`. Renders nothing — run it AFTER `quarto render` and `render_all_chapters()`. Refuses to build if a source file is newer than the combined Word (`FORZAR=1` overrides). See "Assemble the editorial delivery" below. |
+| `fix_docx_appendix_label.py` | called by the packaging script | Rewrites the English «Appendix A/B/C» headings to «Apéndice» in the packaged copy of the Word file. Quarto 1.9.38 does not localize that string, so it is fixed post-render on the copy, never on `docs/`. |
+| `embed_fonts_docx.py` | manual, after a docx render | Embeds JetBrains Mono into the final `.docx` (idempotent). Pandoc copies `fontTable.xml` but not the font binaries, so this has to run on the rendered file. See "Render only the Word version" below. |
 | `fix_callout_spacers.py` | manual, re-runnable | Converts standalone U+00A0 spacer lines to literal `&nbsp;` and guarantees a `&nbsp;` spacer **before and after every callout** (idempotent; normalizes any blank/`&nbsp;` run). Run `python3 scripts/fix_callout_spacers.py *.qmd` after adding callouts. See "Callout spacers" in Editorial conventions. |
 | `build_topic_index.py` | pre-render hook | **Still Python.** Builds `Apendice_Indice_Temas.qmd`. Convert to R if you prefer. |
 | `build_index_fig_tab.py` | pre-render hook | **Still Python.** Builds `Apendice_Indice_Fig_Tab.qmd`. Convert to R if you prefer. |
@@ -244,7 +247,7 @@ For most other chunks (model construction, plotting, flextable rendering), let t
 
 1.  Create `NNN-titulo.qmd` at repo root.
 2.  Add the filename to the `chapters:` list in `_quarto.yml` (under the appropriate part if any).
-3.  Add the matching `("NNN-titulo.qmd", "NN-titulo")` tuple to the `CHAPTERS` list in `scripts/collect_figures.R` so the figure pipeline knows about it.
+3.  Add the matching `("NNN-titulo.qmd", "NN-titulo")` tuple to the `CHAPTERS` list in `scripts/collect_figures.R` so the figure pipeline knows about it, and the filename to `.CHAPTERS` in `scripts/render_docx_per_chapter.R` so it gets a per-chapter `.docx`. Neither list reads `_quarto.yml`.
 4.  `quarto render`.
 
 ### Add a new figure (static image)
@@ -305,7 +308,7 @@ For editor review one chapter at a time — much easier than navigating one gian
 ``` r
 source("scripts/render_docx_per_chapter.R")
 render_chapter("105-Transiciones.qmd")     # just one (~1–2 min)
-render_all_chapters()                      # all 27 (~30 min)
+render_all_chapters()                      # all 28 (~30 min)
 render_all_chapters(dry_run = TRUE)        # list without rendering
 
 source("scripts/render_docx_per_chapter.R")
@@ -314,9 +317,30 @@ render_all_chapters()
 
 Output: `docx_chapters/<chapter>.docx`, one file per chapter.
 
-**How it works (and why the script is non-trivial)**: Quarto books compile any single-chapter `docx` render into the *whole book* because `.docx` is a single-file format. To get one-per-chapter output, the script renders each chapter in a temp directory with a stripped `_quarto.yml` (no `project: type: book`), symlinks the shared assets (`R/`, `images/`, `figs/`, `data/`, `fonts/`, `.Rprofile`, `book.bib`, `lankesteriana.csl`, `reference.docx`, the `.lua` filters), then moves the result to `docx_chapters/`. (Keep `.SHARED_ASSETS` in sync when you add a shared file the render needs — e.g. `reference.docx`/`lankesteriana.csl` were added so per-chapter docx carry the Word styling + citation style.) Uses `quarto::quarto_render()` from the `quarto` R package when available (resolves the quarto binary path on macOS without depending on the subprocess `PATH`).
+**How it works (and why the script is non-trivial)**: Quarto books compile any single-chapter `docx` render into the *whole book* because `.docx` is a single-file format. To get one-per-chapter output, the script renders each chapter in a temp directory with a stripped `_quarto.yml` (no `project: type: book`), symlinks the shared assets (`R/`, `images/`, `figs/`, `data/`, `fonts/`, `.Rprofile`, `.renvignore`, `book.bib`, `packages.bib`, `lankesteriana.csl`, `reference.docx`, the `.lua` filters), then moves the result to `docx_chapters/`. (Keep `.SHARED_ASSETS` in sync when you add a shared file the render needs — e.g. `reference.docx`/`lankesteriana.csl` were added so per-chapter docx carry the Word styling + citation style; `packages.bib` and `.renvignore` were added 2026-09-02 because `index.qmd` was the only chapter failing, see "A chapter with its own `bibliography:`" under Known caveats.) `.CHAPTERS` is the list of what gets rendered and is separate from `_quarto.yml` — `Prologos.qmd` was missing from it until 2026-09-02. Uses `quarto::quarto_render()` from the `quarto` R package when available (resolves the quarto binary path on macOS without depending on the subprocess `PATH`).
 
 **Caveats**: - Cross-chapter references like `@fig-something-in-another-chapter` render as `?@fig-...` (each chapter is standalone, no knowledge of others). Within-chapter refs still work. - Figure numbers restart at "Figura 1.1" in each chapter (not continuous with book numbering). Captions are correct; only the number prefix differs. - `figuras_editor/` is **not refreshed** by this script — it's only generated by the full-book `quarto render` post-hook. So edit chapters individually for the editor, but run the full book render whenever you want fresh figure deliverables. - Each chapter starts a fresh R session — `.Rprofile` + setup chunks run normally, so all helpers and packages are available the same way as in the book render. - Safe to interrupt: chapters already done stay in `docx_chapters/`; rerun for just the failed/missing ones with `render_chapter("...")`.
+
+### Assemble the editorial delivery (`.zip` for Lankester)
+
+Strict order — the packaging script renders nothing, it only packs what it finds:
+
+```
+quarto render                                            # book + figuras_editor/
+Rscript -e 'source("scripts/render_docx_per_chapter.R"); render_all_chapters()'
+bash scripts/armar_entrega_editorial.sh
+```
+
+Output: `Entrega_Editorial_<fecha>.zip` at the repo root, with `01_Libro_completo/`
+(Word + PDF), `02_Capitulos_en_Word/`, `03_Figuras/`, `04_Prologos/` and a generated
+`_LEER_PRIMERO.md`.
+
+The script aborts if any `.qmd`, `_quarto.yml`, `_language.yml`, `R/` or `scripts/`
+file is newer than the combined Word — that means the package would carry a stale
+build, which is the most expensive mistake here. `FORZAR=1 bash scripts/armar_entrega_editorial.sh`
+overrides it; only do that when you know the newer files don't change the output
+(e.g. an edit to a build script). The forewords are picked up from `Prologos*.docx`,
+`docs/Prologos.docx` or `docx_chapters/Prologos.docx`.
 
 ### Style all R code with `styler`
 
@@ -334,6 +358,7 @@ Reformats every `.R`, `.Rprofile`, and `.qmd` chunk to the tidyverse style guide
 - **Widgets without PNG**: chunks that call `Rage::plot_life_cycle()` or `DiagrammeR::grViz()` directly (without the `plc_save` / `grviz_save` wrappers) won't have a PNG in `figuras_editor/`. The manifest lists them at the end with chapter + line. Either switch to the helper wrapper or take a manual screenshot.
 - **Diagram figures missing from Word ("Could not fetch resource …_files/figure-docx/…png")**: caused by a chunk returning a DiagrammeR/`plot_life_cycle` **widget** as its value — knitr then tries to webshot2-snapshot it into `*_files/figure-docx/` for docx, which fails, so Word substitutes alt-text. Fixed 2026-06-02: `plc_save`/`grviz_save` (and `render_dual`) now return `knitr::include_graphics(png)` for non-HTML output, so Word/PDF embed the saved `images/*.png` directly. If you add a new diagram chunk, use these wrappers (not a bare widget) so it embeds in Word.
 - **`ggsave()` without sibling PDF**: bare `ggsave("foo.png", ...)` calls only produce a PNG. `collect_figures.R` wraps the PNG into a PDF via `magick` so the editor still gets a `.pdf`, but it is **raster, not vector**. Prefer `save_plot_png()` (`R/figuras_helpers.R`) for vector PDFs.
+- **A chapter with its own `bibliography:` in the YAML**: `index.qmd` overrides the project bibliography with `book.bib` + `packages.bib`. Anything it names has to be in `.SHARED_ASSETS` (`scripts/render_docx_per_chapter.R`) or the per-chapter render dies in the temp dir with "Could not find bibliography file" while the other 27 chapters, which inherit `bibliography: book.bib` from `_quarto.yml`, render fine. Same applies to any `.csl` or asset a single chapter declares for itself.
 - **Typst phantom-chapter trap**: a table cell whose content starts with `=` becomes a Typst H1 (looks like a stray chapter). Wrap such cells in inline math, e.g. `$=$ 0.5` instead of `= 0.5`. (See project memory.)
 - **`prefer-html: true`**: required so HTML widgets (`grViz`, `leaflet`, etc.) render to static PNG via webshot2 in PDF/Word builds.
 - **Word table column collapse**: flextable's Word output stacks cell text vertically because `flextable::autofit()` writes a **degenerate `tblGrid` (a single `<w:gridCol>` for a multi-column table)** in the docx pipeline — confirmed by inspecting `word/document.xml` of a rendered book (Tabla 4.3 had 1 grid column for 2 cells/row). The fix in `.Rprofile`'s `ft_theme_auto` (docx branch): **do NOT call `autofit()`**; instead set explicit **equal** column widths summing to the page text width (`width(ft, width = page_in/ncol)`, `page_in = 6.5` matching the Letter + 1" margins pinned in `reference.docx`) then `set_table_properties(layout = "fixed")`. That emits N correct `<w:gridCol>` and Word wraps text inside cells. Equal widths aren't proportional — a specific wide table can be tuned by calling `width()` with a per-column vector downstream. If you change the page geometry in `reference.docx`, update `page_in`. **Critical:** do NOT set `table.layout = "autofit"` in `set_flextable_defaults()` — that global default makes flextable re-autofit at print time and overwrites the per-table fixed widths, regenerating the degenerate single-column grid. (Diagnosed via `save_as_docx()` of a minimal flextable: `width()+layout="fixed"` gives correct columns; adding the autofit default collapses them. flextable's own default layout is already `fixed`.)
@@ -353,5 +378,6 @@ Reformats every `.R`, `.Rprofile`, and `.qmd` chunk to the tidyverse style guide
 - `figuras_editor/**`
 - `docx_chapters/**` (per-chapter Word output from `render_docx_per_chapter.R`; **gitignored as of 2026-06-02**)
 - `docs/**`
+- `Entrega_Editorial_*.zip` and `Entrega_Figuras_*.zip` (publisher packages; regenerable)
 - `_freeze/` (intentionally always deleted at the start of a render)
 - `_archive/**` (local cleanup quarantine; gitignored — safe to delete by hand)

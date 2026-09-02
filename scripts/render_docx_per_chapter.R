@@ -51,8 +51,8 @@
 
 # Assets a enlazar dentro del temp dir; solo se enlaza si existe en ROOT.
 .SHARED_ASSETS <- c(
-  ".Rprofile", "R", "images", "figs", "data", "fonts",
-  "book.bib", "peerj.csl", "lankesteriana.csl",
+  ".Rprofile", ".renvignore", "R", "images", "figs", "data", "fonts",
+  "book.bib", "packages.bib", "peerj.csl", "lankesteriana.csl",
   "auto-functions.lua", "spanish-quotes.lua",
   "reference.docx",
   "theme.scss", "theme-dark.scss",
@@ -61,7 +61,7 @@
 
 # Capítulos a renderizar (mismo orden que _quarto.yml).
 .CHAPTERS <- c(
-  "index.qmd",
+  "index.qmd", "Prologos.qmd",
   "102-Intro.qmd", "103-Ciclos_de_Vida.qmd",
   "104-Recopilacion_datos_en_el_campo.qmd", "105-Transiciones.qmd",
   "106-calcular_fecundidad.qmd", "107-matU_matF_matC.qmd",
