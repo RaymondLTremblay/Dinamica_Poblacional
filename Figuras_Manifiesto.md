@@ -4,10 +4,10 @@ Inventario completo de TODAS las figuras del libro (estáticas markdown + genera
 
 ## Resumen
 
-- **Total figuras**: 138
+- **Total figuras**: 141
 - **Capítulos con figuras**: 20
 - **Por tipo**:
-  - imagen markdown estática: **53**
+  - imagen markdown estática: **56**
   - PNG generado por chunk R (ggplot, plot, etc.): **50**
   - PNG generado por `render_dual()` (DOT → PNG): **32**
   - PNG generado por `ggsave()`: **2**
@@ -284,14 +284,17 @@ Archivo fuente: `117_Historia_breve.qmd` — 1 figura(s)
 
 ### 22-Carl_Olof_Tamm
 
-Archivo fuente: `118-Carl_Olaf_Tamm.qmd` — 4 figura(s)
+Archivo fuente: `118-Carl_Olaf_Tamm.qmd` — 7 figura(s)
 
 | # | Fig X.Y | Línea | Tipo | Origen en .qmd | PNG | PDF | Caption |
 |---|---------|------:|------|----------------|-----|-----|---------|
-| 1 | 22.1 | 104 | static | `images/Dactylorhiza_sambucina_James_D._Ackerman.jpg` | `figuras_editor/22-Carl_Olof_Tamm/Fig_22.1_Dactylorhiza_sambucina_James_D._Ackerman.jpg` | `` | *Dactylorhiza sambucina*. Foto: James D. Ackerman. Estudios poblacionales: @oien2002flowering — seguimiento a largo plaz |
-| 2 | 22.2 | 147 | static | `images/Dactylorhiza_maculata_James_D._Ackerman.jpg` | `figuras_editor/22-Carl_Olof_Tamm/Fig_22.2_Dactylorhiza_maculata_James_D._Ackerman.jpg` | `` | *Dactylorhiza maculata con hormigas y spittle bugs*. Foto: James D. Ackerman. Estudios poblacionales: @oien2002flowering |
-| 3 | 22.3 | 351 | render_dual | `images/OCTamm_11_Dactylorhiza.png` | `figuras_editor/22-Carl_Olof_Tamm/Fig_22.3_OCTamm_11_Dactylorhiza.png` | `figuras_editor/22-Carl_Olof_Tamm/Fig_22.3_OCTamm_11_Dactylorhiza.pdf` |  |
-| 4 | 22.4 | 446 | dynamic | `chunk 'fig-OCTamm_17'` | `figuras_editor/22-Carl_Olof_Tamm/Fig_22.4_fig-OCTamm_17-1.png` | `figuras_editor/22-Carl_Olof_Tamm/Fig_22.4_fig-OCTamm_17-1.pdf` |  |
+| 1 | 22.1 | 90 | static | `images/Tamm_1972_Dactylorhiza_incarnata_2.jpeg` | `figuras_editor/22-Carl_Olof_Tamm/Fig_22.1_Tamm_1972_Dactylorhiza_incarnata_2.jpeg` | `` |  |
+| 2 | 22.2 | 104 | static | `images/Dactylorhiza_sambucina_James_D._Ackerman.jpg` | `figuras_editor/22-Carl_Olof_Tamm/Fig_22.2_Dactylorhiza_sambucina_James_D._Ackerman.jpg` | `` | *Dactylorhiza sambucina*. Foto: James D. Ackerman. Estudios poblacionales: @oien2002flowering — seguimiento a largo plaz |
+| 3 | 22.3 | 118 | static | `images/Tamm_1972_plot_48.jpeg` | `figuras_editor/22-Carl_Olof_Tamm/Fig_22.3_Tamm_1972_plot_48.jpeg` | `` |  |
+| 4 | 22.4 | 147 | static | `images/Dactylorhiza_maculata_James_D._Ackerman.jpg` | `figuras_editor/22-Carl_Olof_Tamm/Fig_22.4_Dactylorhiza_maculata_James_D._Ackerman.jpg` | `` | *Dactylorhiza maculata con hormigas y spittle bugs*. Foto: James D. Ackerman. Estudios poblacionales: @oien2002flowering |
+| 5 | 22.5 | 161 | static | `images/Tamm_D_sambucina_1945_1970_crop.jpeg` | `figuras_editor/22-Carl_Olof_Tamm/Fig_22.5_Tamm_D_sambucina_1945_1970_crop.jpeg` | `` |  |
+| 6 | 22.6 | 351 | render_dual | `images/OCTamm_11_Dactylorhiza.png` | `figuras_editor/22-Carl_Olof_Tamm/Fig_22.6_OCTamm_11_Dactylorhiza.png` | `figuras_editor/22-Carl_Olof_Tamm/Fig_22.6_OCTamm_11_Dactylorhiza.pdf` |  |
+| 7 | 22.7 | 446 | dynamic | `chunk 'fig-OCTamm_17'` | `figuras_editor/22-Carl_Olof_Tamm/Fig_22.7_fig-OCTamm_17-1.png` | `figuras_editor/22-Carl_Olof_Tamm/Fig_22.7_fig-OCTamm_17-1.pdf` |  |
 
 ### ApA-Lista_especies
 
@@ -299,8 +302,8 @@ Archivo fuente: `Appendix_A_Species_List.qmd` — 2 figura(s)
 
 | # | Fig X.Y | Línea | Tipo | Origen en .qmd | PNG | PDF | Caption |
 |---|---------|------:|------|----------------|-----|-----|---------|
-| 1 | A.1 | 166 | static | `images/Spiranthes_delitescens_Mitchel_Mcclaran.jpg` | `figuras_editor/ApA-Lista_especies/Fig_1_Spiranthes_delitescens_Mitchel_Mcclaran.jpg` | `` | *Spiranthes delitescens*. Foto: Mitchel McClaran. Estudio demográfico: @mcclaran1992population. |
-| 2 | A.2 | 170 | static | `images/Trichocentrum_undulatum_8_Hong_Liu.jpg` | `figuras_editor/ApA-Lista_especies/Fig_2_Trichocentrum_undulatum_8_Hong_Liu.jpg` | `` | *Trichocentrum undulatum*. Foto: Hong Liu. Estudio demográfico: @borrero2023populations. |
+| 1 | A.1 | 166 | static | `images/Spiranthes_delitescens_Mitchel_Mcclaran.jpg` | `figuras_editor/ApA-Lista_especies/Fig_A.1_Spiranthes_delitescens_Mitchel_Mcclaran.jpg` | `` | *Spiranthes delitescens*. Foto: Mitchel McClaran. Estudio demográfico: @mcclaran1992population. |
+| 2 | A.2 | 170 | static | `images/Trichocentrum_undulatum_8_Hong_Liu.jpg` | `figuras_editor/ApA-Lista_especies/Fig_A.2_Trichocentrum_undulatum_8_Hong_Liu.jpg` | `` | *Trichocentrum undulatum*. Foto: Hong Liu. Estudio demográfico: @borrero2023populations. |
 
 ## Figuras tipo widget (HTML) sin PNG
 

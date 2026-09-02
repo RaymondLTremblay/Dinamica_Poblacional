@@ -135,7 +135,7 @@ CHAPTERS <- list(
   c("Appendix_A_Species_List.qmd", "ApA-Lista_especies"),
   c("Appendix_B_Hoja_de_datos.qmd", "ApB-Hoja_de_datos"),
   c("Appendix_C_Datos.qmd", "ApC-Datos"),
-  c("Agradecimientos.qmd", "23-Agradecimientos")
+  c("Agradecimientos.qmd", "ApG-Agradecimientos")
 )
 
 # ---- Listas de detección ----
@@ -152,6 +152,12 @@ TABLE_CALLS <- c("flextable(", "kable(", "gt(", "datatable(", "huxtable(")
 IMG_PATTERN <- "!\\[([^\\]]*)\\]\\(([^\\)]+)\\)(\\{[^}]*\\})?"
 CHUNK_START_RE <- "^```\\{(r|python)([\\s,]+(.*))?\\}"
 RENDER_DUAL_RE <- "render_dual\\s*\\([^,]+,\\s*[\"']([^\"']+)[\"']\\s*\\)"
+# knitr::include_graphics("images/x.jpg"): la figura del bloque es un archivo
+# que YA existe en disco, no una gráfica que el chunk dibuja. Sin esta
+# entrada, los tres dibujos de Tamm no se recogían y las cuatro figuras
+# restantes del capítulo 22 quedaban numeradas 22.1-22.4 en la entrega
+# mientras el libro las imprimía como 22.4-22.7.
+INCLUDE_GRAPHICS_RE <- "include_graphics\\s*\\(\\s*[\"']([^\"']+)[\"']"
 GGSAVE_QUOTED_RE <- "ggsave\\s*\\(\\s*(?:filename\\s*=\\s*)?[\"']([^\"']+)[\"']"
 SAVE_PLOT_PNG_RE <- "save_plot_png\\s*\\([^,]+,\\s*(?:file\\s*=\\s*)?[\"']([^\"']+)[\"']"
 PLC_OR_GRVIZ_RE <- "(?:plc_save|grviz_save)\\s*\\([^)]*?png\\s*=\\s*[\"']([^\"']+)[\"']"
@@ -420,6 +426,16 @@ parse_figures_in_chapter <- function(qmd_path) {
         chunk_produces <- FALSE
         next
       }
+      # Imagen estática incluida desde un chunk
+      m_ig <- str_match(code_only, INCLUDE_GRAPHICS_RE)
+      if (!is.na(m_ig[1, 1])) {
+        push_fig(list(
+          type = "static", src = m_ig[1, 2], line = i,
+          caption = NA_character_, numbered = TRUE
+        ))
+        chunk_produces <- FALSE
+        next
+      }
       # Widget HTML
       for (w in WIDGET_CALLS) {
         if (str_detect(code_only, fixed(w)) &&
@@ -527,11 +543,25 @@ main <- function() {
 
   if (!audit) {
     if (dir.exists(DEST)) {
+      # Etiquetas de carpeta que este script debe producir.
+      etiquetas_validas <- vapply(CHAPTERS, function(x) x[[2]], character(1))
       for (child in sort(list.files(DEST,
         full.names = TRUE,
         include.dirs = TRUE
       ))) {
-        if (dir.exists(child)) try_clear_dir(child)
+        if (dir.exists(child)) {
+          try_clear_dir(child)
+          # Carpeta huérfana: quedó de una numeración anterior y ya no
+          # corresponde a ningún capítulo. Si se deja, viaja vacía en el
+          # .zip que recibe la editorial y hace dudar de la entrega. Pasó
+          # con "23-Agradecimientos" al convertirse los Agradecimientos en
+          # material final sin número.
+          if (!(basename(child) %in% etiquetas_validas)) {
+            tryCatch(unlink(child, recursive = TRUE, force = FALSE),
+              error = function(e) invisible(NULL)
+            )
+          }
+        }
       }
     } else {
       dir.create(DEST, recursive = TRUE)
