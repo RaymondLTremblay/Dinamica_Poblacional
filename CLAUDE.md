@@ -122,13 +122,15 @@ All R scripts can be run with `Rscript scripts/<name>.R [args]` from anywhere in
 | `extract_todo_chunks.R` | one-shot | Walks `.qmd` for `#| fig-cap: "[TODO: caption]"` and dumps `{chapter, label, line, code}` to `captions_todo.json`. Used to drive caption drafting. |
 | `apply_captions.R` | one-shot | Reads a `{label: caption}` JSON and replaces `[TODO: caption]` placeholders in `.qmd` files. `Rscript scripts/apply_captions.R --json captions_drafted.json [--dry]`. |
 | `style_all.R` | manual, periodic | Runs `styler::style_file()` on every `.R`, `.Rprofile`, and `.qmd` (chunks only) under the project. Skips auto-generated appendices. Commit before running so the diff is reviewable. `Rscript scripts/style_all.R [--dry]`. |
+| `cortar_docx_por_capitulo.py` | manual, after `quarto render` | **Use this for the editor's per-chapter Word files (Sept 2026).** Cuts the combined book `.docx` at every Heading1 into `docx_capitulos/` (`Preliminares_*`, `Cap_01`…`Cap_21`, `Apendice_A`…`E`, `Final_*` for glosario, referencias, índices, agradecimientos). Numbers stay as in the book, references are only in `Final_2_Referencias.docx`, unused images are dropped, «Appendix» becomes «Apéndice». On Dropbox, if reading the 71 MB docx fails, copy it to a local disk first. |
 | `render_docx_per_chapter.R` | manual, on-demand | Renders each chapter as a **standalone `.docx`** (one file per chapter) into `docx_chapters/`. Designed for editor review of one chapter at a time without lugging around a 500-page combined Word doc. Source in RStudio, then call `render_chapter("105-Transiciones.qmd")` or `render_all_chapters()`. See "Per-chapter Word output" workflow below. |
 | `armar_entrega_editorial.sh` | manual, on-demand | Packs the full `.zip` for the publisher: combined Word + PDF, per-chapter `.docx`, `figuras_editor/`, the forewords, and a generated `_LEER_PRIMERO.md`. Renders nothing — run it AFTER `quarto render` and `render_all_chapters()`. Refuses to build if a source file is newer than the combined Word (`FORZAR=1` overrides). See "Assemble the editorial delivery" below. |
 | `fix_docx_appendix_label.py` | called by the packaging script | Rewrites the English «Appendix A/B/C» headings to «Apéndice» in the packaged copy of the Word file. Quarto 1.9.38 does not localize that string, so it is fixed post-render on the copy, never on `docs/`. |
 | `embed_fonts_docx.py` | manual, after a docx render | Embeds JetBrains Mono into the final `.docx` (idempotent). Pandoc copies `fontTable.xml` but not the font binaries, so this has to run on the rendered file. See "Render only the Word version" below. |
 | `fix_callout_spacers.py` | manual, re-runnable | Converts standalone U+00A0 spacer lines to literal `&nbsp;` and guarantees a `&nbsp;` spacer **before and after every callout** (idempotent; normalizes any blank/`&nbsp;` run). Run `python3 scripts/fix_callout_spacers.py *.qmd` after adding callouts. See "Callout spacers" in Editorial conventions. |
 | `build_topic_index.py` | pre-render hook | **Still Python.** Builds `Apendice_Indice_Temas.qmd`. Convert to R if you prefer. |
-| `build_index_fig_tab.py` | pre-render hook | **Still Python.** Builds `Apendice_Indice_Fig_Tab.qmd`. Convert to R if you prefer. |
+| `build_index_fig_tab.py` | pre-render hook | **Still Python.** Builds `Apendice_Indice_Fig_Tab.qmd`. Entries use the short titles in `scripts/titulos_cortos_indice.tsv` (label TAB title); a figure without a line there falls back to its trimmed caption and the script prints a warning. Add a line whenever you add a figure or table. |
+| `capitulos_libro.py` | helper | Reads chapter order, numbers and H1 titles from `_quarto.yml` for both index scripts. `index.qmd` and `Prologos.qmd` are unnumbered front matter, so `102-Intro.qmd` is chapter 1 (editorial decision, Sept 2026). Run it directly to print the numbering. |
 | `patch-orange-book.sh` | pre-render hook | Bash, applies local Typst patch. |
 | `collect-figures.sh` | bash wrapper (legacy) | Pre-existing shell helper. |
 
@@ -167,6 +169,10 @@ Auto-loaded by R when launched from the project root. Defines:
 
 | Topic | Convention |
 |----|----|
+| Front matter order | Agreed with Lankester on 3 Sept 2026: Dedicatoria (`index.qmd`), Índice de figuras y cuadros (`Apendice_Indice_Fig_Tab.qmd`), Prólogos, Agradecimientos, Prefacio (`Prefacio.qmd`, split out of `index.qmd`), then chapters 1 to 21, appendices A to E, Glosario, Referencias, Índice de temas. All front-matter files have an `.unnumbered` H1 and no YAML `title:`; `capitulos_libro.py` numbers only `chapters:` files whose first H1 is not unnumbered. |
+| Chapter numbering | **Front matter is unnumbered (Sept 2026).** `index.qmd` has no `title:` in its YAML on purpose: a YAML title made Quarto number it chapter 1. `102-Intro.qmd` is chapter 1, Tamm is 21. `scripts/capitulos_libro.py` and the `CHAPTERS` list in `collect_figures.R` follow this. |
+| Tables are «Cuadro» | Set in `_language.yml` (`crossref-tbl-title`, `crossref-tbl-prefix`, `crossref-lot-title`) and in `build_index_fig_tab.py` (`NOMBRE_TABLA`). Prose that points to a displayed table says «cuadro»; «tabla de vida», data tables and tables in other publications (e.g. «Tabla S1») keep «tabla». |
+| References | **One list for the whole book** in `Referencias.qmd` (`::: {#refs}`), placed after the Glosario. Word/PDF compile as one document, so citeproc puts every cited work there. HTML chapter pages still show their own list online. |
 | Decimal separator | Period (`0.5`), not comma. Consistent with R numeric output. |
 | Table numbers | Displayed to **4 significant figures** book-wide (not fixed decimals, so small values like a `1e-5` Bayesian prior survive instead of rounding to `0.000`). Applied via `formatC(format="g", digits=4)` on `double` columns in `.Rprofile`'s `ft_theme_auto`; integer/count columns untouched. Presentation only — calculations keep full precision. Reader note in `102-Intro.qmd` ("Convención numérica"). |
 | Code & output | **Default Quarto rendering — all custom code/output styling was REVERTED on 2026-05-30** after repeated attempts (grey box, no-box, `#>` prefix, Rethinking input-box/output-plain via a Lua filter) caused problems — the Lua filter (`code-output-plain.lua`) flattened `.cell-output-display` and made flextables/figures vanish. So: no Lua code filter, no `comment` override. **Code box (added 2026-06-01):** a uniform box WAS later added to code chunks by editing the `SourceCode` paragraph style in `reference.docx` (4-sided `w:pBdr` colour `D0D7DE` + `w:shd` fill `F6F8FA`, `spacing before/after=0` so the per-line code paragraphs merge into one continuous box). This is **style-level only** — it never touches `.cell-output-display`, so it is safe (unlike the reverted Lua-filter attempt). `reference.docx` still keeps `SourceCode` left-aligned (`jc=left`, so code doesn't inherit the justified `Normal`) + JetBrains Mono. Input and output both render as ordinary code blocks. Don't re-attempt *input-vs-output* differentiation without a safe mechanism — Pandoc forces one style on all code blocks and touching `.cell-output-display` destroys tables/figures. |
@@ -183,7 +189,7 @@ Auto-loaded by R when launched from the project root. Defines:
 | Figure / table cross-references | Use Quarto's `@fig-name` / `@tbl-name`; never raw `Fig. N`. Quarto resolves the numbering. |
 | `freeze` | Disabled. Every render re-executes every chunk. Don't enable `_freeze` caching. |
 | Editor (IDE) | RStudio (not Positron). IDE-specific suggestions should assume RStudio. |
-| Quarto book parts | `Historia` (2 chapters) and `Apéndices` (3 lettered + glosario + indexes + agradecimientos). |
+| Quarto book parts | `Historia` (2 chapters) and `Apéndices` (A to E lettered + glosario + referencias + índice de temas). |
 
 ## Chunk conventions (output quality for the editor copy)
 
@@ -247,7 +253,7 @@ For most other chunks (model construction, plotting, flextable rendering), let t
 
 1.  Create `NNN-titulo.qmd` at repo root.
 2.  Add the filename to the `chapters:` list in `_quarto.yml` (under the appropriate part if any).
-3.  Add the matching `("NNN-titulo.qmd", "NN-titulo")` tuple to the `CHAPTERS` list in `scripts/collect_figures.R` so the figure pipeline knows about it, and the filename to `.CHAPTERS` in `scripts/render_docx_per_chapter.R` so it gets a per-chapter `.docx`. Neither list reads `_quarto.yml`.
+3.  The two index scripts pick the chapter up from `_quarto.yml` automatically; add short titles for its figures/tables to `scripts/titulos_cortos_indice.tsv`. Add the matching `("NNN-titulo.qmd", "NN-titulo")` tuple to the `CHAPTERS` list in `scripts/collect_figures.R` so the figure pipeline knows about it, and the filename to `.CHAPTERS` in `scripts/render_docx_per_chapter.R` so it gets a per-chapter `.docx`. Neither list reads `_quarto.yml`.
 4.  `quarto render`.
 
 ### Add a new figure (static image)

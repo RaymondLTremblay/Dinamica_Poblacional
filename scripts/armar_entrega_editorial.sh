@@ -7,8 +7,10 @@
 # encuentre, así que hay que correrlo DESPUÉS de:
 #
 #   1)  quarto render                          (libro completo + figuras_editor/)
-#   2)  Rscript -e 'source("scripts/render_docx_per_chapter.R");
-#                   render_all_chapters()'     (~30 min, un .docx por capítulo)
+#   2)  python3 scripts/cortar_docx_por_capitulo.py
+#                                              (corta el Word completo en un
+#                                               .docx por capítulo, con la
+#                                               numeración del libro)
 #   3)  bash scripts/armar_entrega_editorial.sh
 #
 # Si algo falta, el script se detiene y dice qué falta, en vez de producir un
@@ -30,7 +32,7 @@ aviso() { echo "  FALTA: $1"; faltan=1; }
 echo "== Comprobaciones previas =="
 [ -f "$WORD" ]              || aviso "el Word completo ($WORD)"
 [ -d "figuras_editor" ]     || aviso "figuras_editor/ (lo genera el post-render)"
-[ -d "docx_chapters" ]      || aviso "docx_chapters/ (paso 2: render_docx_per_chapter.R)"
+[ -d "docx_capitulos" ]     || aviso "docx_capitulos/ (paso 2: cortar_docx_por_capitulo.py)"
 
 # El Word tiene que ser MÁS NUEVO que las fuentes, o se estaría entregando
 # una compilación vieja. Es el error que más caro sale.
@@ -62,7 +64,7 @@ python3 scripts/fix_docx_appendix_label.py "$STAGE/01_Libro_completo/$(basename 
 rm -f "$STAGE/01_Libro_completo/$(basename "$WORD").bak"
 [ -f "$PDF" ] && cp "$PDF" "$STAGE/01_Libro_completo/"
 
-cp docx_chapters/*.docx "$STAGE/02_Capitulos_en_Word/" 2>/dev/null || true
+cp docx_capitulos/*.docx "$STAGE/02_Capitulos_en_Word/" 2>/dev/null || true
 cp -R figuras_editor/. "$STAGE/03_Figuras/"
 
 for f in Prologos*.docx docs/Prologos.docx docx_chapters/Prologos.docx; do
@@ -96,10 +98,9 @@ versiones viejas para que no queden dos circulando.
 
 - Cuando una figura existe en \`.pdf\` y en \`.png\`, **usar el .pdf**: escala
   sin pérdida. Las fotos de especies solo existen en \`.jpg\`.
-- En los .docx por capítulo las referencias cruzadas a otros capítulos salen
-  como \`?@fig-...\` y la numeración de figuras reinicia en 1.1. Es esperado:
-  esos archivos son para corregir texto, no para maquetar. **La numeración
-  válida es la del libro completo.**
+- Los .docx por capítulo están cortados del libro completo: conservan su
+  numeración de secciones, figuras y cuadros. Las referencias bibliográficas
+  van en un solo archivo, \`Final_2_Referencias.docx\`.
 - Las carpetas con \`SIN_FIGURAS.txt\` son capítulos que no tienen ninguna
   figura. No falta nada.
 

@@ -61,7 +61,7 @@
 
 # Capítulos a renderizar (mismo orden que _quarto.yml).
 .CHAPTERS <- c(
-  "index.qmd", "Prologos.qmd",
+  "index.qmd", "Prologos.qmd", "Prefacio.qmd",
   "102-Intro.qmd", "103-Ciclos_de_Vida.qmd",
   "104-Recopilacion_datos_en_el_campo.qmd", "105-Transiciones.qmd",
   "106-calcular_fecundidad.qmd", "107-matU_matF_matC.qmd",
@@ -76,7 +76,8 @@
   "122-Impacto_de_Datos_sin_Sentido.qmd",
   "123-Conclusion.qmd",
   "Appendix_A_Species_List.qmd", "Appendix_B_Hoja_de_datos.qmd",
-  "Appendix_C_Datos.qmd", "Apendice_Glosario.qmd",
+  "Appendix_C_Datos.qmd", "Appendix_D_Paquetes.qmd",
+  "Appendix_E_Autores.qmd", "Apendice_Glosario.qmd",
   "Agradecimientos.qmd"
 )
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-build_index_fig_tab.py — genera el apéndice "Índice de figuras y
+build_index_fig_tab.py: genera el apéndice "Índice de figuras y
 tablas" para el libro Dinámica Poblacional de Orquídeas.
 
 Recorre los .qmd en el orden del libro, extrae:
@@ -19,37 +19,21 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "Apendice_Indice_Fig_Tab.qmd"
 
-# Capítulos en el orden del libro, con nombre legible
-# Capitulos en el orden del libro: (archivo, numero de capitulo, nombre).
-# El numero es el que Quarto asigna realmente y el que aparece en "Figura X.Y".
-# `index.qmd` es el capitulo 1 (lleva `title:` en su YAML) y la parte
-# "Historia" va al final, de modo que 117 y 118 son los capitulos 21 y 22.
-# Los apendices no llevan numero de capitulo: se identifican por su letra.
-CHAPTERS = [
-    ("102-Intro.qmd",                           "2",  "Introducción"),
-    ("103-Ciclos_de_Vida.qmd",                  "3",  "Ciclos de Vida"),
-    ("104-Recopilacion_datos_en_el_campo.qmd",  "4",  "Recopilación de datos en el campo"),
-    ("105-Transiciones.qmd",                    "5",  "Transiciones"),
-    ("106-calcular_fecundidad.qmd",             "6",  "Fecundidad"),
-    ("107-matU_matF_matC.qmd",                  "7",  "Matrices U, F y C"),
-    ("108-Bayesian_PPM.qmd",                    "8",  "Acercamiento bayesiano"),
-    ("109-Crecimiento_poblacional.qmd",         "9",  "Crecimiento poblacional"),
-    ("110-Propriedades.qmd",                    "10", "Propiedades de la matriz"),
-    ("111-Elasticidad.qmd",                     "11", "Elasticidad y sensibilidad"),
-    ("112-Dinamica_de_Transiciones.qmd",        "12", "Dinámica transitoria"),
-    ("113-Funciones_de_Transferencia.qmd",      "13", "Funciones de transferencia"),
-    ("114-LTRE.qmd",                            "14", "LTRE"),
-    ("115-Metodos_de_simulaciones.qmd",         "15", "Métodos de simulaciones"),
-    ("119-COMPADRE_ORCHIDS.qmd",                "16", "COMPADRE"),
-    ("120-Rage_orquideas.qmd",                  "17", "Rage"),
-    ("121-Traduccion_protocolo_informacion.qmd","18", "Protocolo estándar"),
-    ("122-Impacto_de_Datos_sin_Sentido.qmd",    "19", "Datos sin sentido biológico"),
-    ("123-Conclusion.qmd",                      "20", "Conclusión"),
-    ("117_Historia_breve.qmd",                  "21", "Historia breve de MPP en orquídeas"),
-    ("118-Carl_Olaf_Tamm.qmd",                  "22", "Carl Olof Tamm"),
-    ("Appendix_A_Species_List.qmd",             "A",  "Apéndice A: Lista de especies"),
-    ("Appendix_B_Hoja_de_datos.qmd",            "B",  "Apéndice B: Hoja de datos"),
-]
+# Capitulos y apendices en el orden del libro, con su numero y titulo, leidos
+# de _quarto.yml por capitulos_libro.py (ver alli el criterio de numeracion).
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from capitulos_libro import capitulos  # noqa: E402
+
+CHAPTERS = [(f, et, tit) for f, et, tit in capitulos()]
+
+# Titulos cortos de cada figura y tabla para el indice (etiqueta -> titulo).
+TITULOS = ROOT / "scripts" / "titulos_cortos_indice.tsv"
+
+# Nombre de las tablas en el indice: «Cuadro» desde septiembre de 2026, igual
+# que crossref-tbl-title en _language.yml. Si se cambia, cambiar los dos.
+NOMBRE_TABLA = "Cuadro"
+NOMBRE_TABLA_PLURAL = "cuadros"
 
 # Llamadas que producen realmente una figura. Sirven para descartar los
 # bloques de configuracion que llevan `fig-cap` y etiqueta `fig-` heredadas
@@ -79,7 +63,7 @@ FIG_CAP_PATTERN = re.compile(
     r'^\s*#\|\s*fig-cap\s*:\s*(?:"([^"]+)"|\'([^\']+)\')')
 
 # Pie de tabla en markdown, debajo de la tabla:  ": Texto. {#tbl-id}"
-TBL_MD_PATTERN = re.compile(r'^:\s+(.+?)\s*\{#tbl-[\w:.-]+\}\s*$')
+TBL_MD_PATTERN = re.compile(r'^:\s+(.+?)\s*\{#(tbl-[\w:.-]+)\}\s*$')
 
 # Guardia: el estilo antiguo de knitr pone el pie en la CABECERA del bloque,
 # ```{r etiqueta, echo=FALSE, fig.cap="..."}, no en una linea #|. Ese estilo es
@@ -224,13 +208,15 @@ def parse_chapter(qmd_path):
             texto = '\n'.join(cuerpo)
             if tbl_cap:
                 tbl_n += 1
-                tbls.append({'n': tbl_n, 'line': chunk_line, 'caption': tbl_cap})
+                tbls.append({'n': tbl_n, 'line': chunk_line, 'caption': tbl_cap,
+                             'label': etiqueta})
             if fig_cap and etiqueta not in BLOQUES_SIN_FIGURA and \
                     any(c in codigo_efectivo(texto) for c in FIGURE_CALLS):
-                for _ in range(BLOQUES_MULTIPLES.get(etiqueta, 1)):
+                for k in range(BLOQUES_MULTIPLES.get(etiqueta, 1)):
                     fig_n += 1
                     figs.append({'n': fig_n, 'line': chunk_line,
-                                 'caption': fig_cap})
+                                 'caption': fig_cap,
+                                 'label': etiqueta if k == 0 else f"{etiqueta}#{k + 1}"})
             continue
 
         if in_chunk:
@@ -254,39 +240,76 @@ def parse_chapter(qmd_path):
             if not caption:
                 continue
             fig_n += 1
-            figs.append({'n': fig_n, 'line': i, 'caption': caption})
+            ancla = re.match(r'\{#(fig-[\w:.\-]+)', line[m.end():])
+            figs.append({'n': fig_n, 'line': i, 'caption': caption,
+                         'label': ancla.group(1) if ancla else None})
         # Pie de tabla markdown debajo de la tabla: ": Texto. {#tbl-id}"
         m = TBL_MD_PATTERN.match(line.rstrip())
         if m:
             tbl_n += 1
-            tbls.append({'n': tbl_n, 'line': i, 'caption': m.group(1).strip()})
+            tbls.append({'n': tbl_n, 'line': i, 'caption': m.group(1).strip(),
+                         'label': m.group(2)})
             continue
         # Tablas con pie en prosa ("Tabla 1. Matriz de ...")
         m = TABLA_REF_PATTERN.match(line)
         if m and i > 5:
             tbl_n += 1
-            tbls.append({'n': tbl_n, 'line': i, 'caption': m.group(2).strip()})
+            tbls.append({'n': tbl_n, 'line': i, 'caption': m.group(2).strip(),
+                         'label': None})
 
     return figs, tbls
 
 
+def leer_titulos():
+    """Leer scripts/titulos_cortos_indice.tsv como {etiqueta: titulo}."""
+    titulos = {}
+    if not TITULOS.exists():
+        return titulos
+    for linea in TITULOS.read_text(encoding='utf-8').splitlines():
+        if not linea.strip() or linea.startswith('#'):
+            continue
+        etiqueta, _, titulo = linea.partition('\t')
+        titulos[etiqueta.strip()] = titulo.strip()
+    return titulos
+
+
+def respaldo(caption):
+    """Titulo de emergencia cuando falta el titulo corto: primera frase del
+    pie, sin creditos de foto ni citas sin procesar."""
+    s = re.split(r'\.\s+(?:Foto|Estudio|Estudios|Dibujo|Figura de)\b', caption)[0]
+    s = re.sub(r'\s*\[?-?@[\w:.\-]+\]?', '', s)
+    return short(s.rstrip('.'), 90)
+
+
 def main():
+    titulos = leer_titulos()
+    faltan = []
     total_figs = 0
     total_tbls = 0
     chapter_data = []
 
-    for qmd_file, chap, label in CHAPTERS:
+    for qmd_file, chap, titulo in CHAPTERS:
         figs, tbls = parse_chapter(ROOT / qmd_file)
         if figs or tbls:
-            chapter_data.append((qmd_file, chap, label, figs, tbls))
+            chapter_data.append((qmd_file, chap, titulo, figs, tbls))
             total_figs += len(figs)
             total_tbls += len(tbls)
 
-    # Write the appendix
+    def entrada(item, chap, qmd_file):
+        tit = titulos.get(item.get('label') or '')
+        if not tit:
+            faltan.append(f"{qmd_file}:{item['line']} ({item.get('label')})")
+            tit = respaldo(item['caption'])
+        return tit
+
+    def encabezado(chap, titulo):
+        if chap.isdigit():
+            return f"Capítulo {chap}. {titulo}"
+        return f"Apéndice {chap}. {titulo}"
+
     out = []
-    desc = (f'Índice de figuras y tablas del libro: {total_figs} figuras y '
-            f'{total_tbls} tablas con leyenda, organizadas por capítulo y '
-            f'enlazadas a su lugar de aparición.')
+    desc = (f'Índice de figuras y {NOMBRE_TABLA_PLURAL} del libro, '
+            f'organizado por capítulo.')
     out.append('---\n')
     out.append(f'description: "{desc}"\n')
     out.append('image: "images/Lepanthes_eltoroensis_Tremblay.jpeg"\n')
@@ -295,52 +318,45 @@ def main():
     out.append('twitter-card:\n')
     out.append(f'  description: "{desc}"\n')
     out.append('---\n\n')
-    out.append("# Índice de figuras y tablas {#IndiceFigTab .unnumbered}\n\n")
-    out.append("Listado de todas las figuras y tablas del libro, organizadas "
-               "por capítulo y orden de aparición. Cada figura se identifica "
-               "con el número que lleva en el texto, «Figura X.Y», donde X es "
-               "el capítulo e Y la posición dentro de él. Clic en el enlace "
-               "del capítulo para navegar a su contenido.\n\n")
-    out.append(f"**Total:** {total_figs} figuras y {total_tbls} tablas con "
-               f"caption explícito en {len(chapter_data)} capítulos.\n\n")
-    out.append("> *Las tablas markdown simples sin caption (e.g., listas de "
-               "referencias, comparaciones tabulares cortas) no se incluyen en "
-               "este índice. Las figuras generadas dinámicamente por código R "
-               "que no tienen `fig-cap` explícito tampoco aparecen — se las "
-               "puede ubicar en el manifiesto de figuras para el productor (`Figuras_Manifiesto.md`).*\n\n")
-    out.append("------------------------------------------------------------------------\n\n")
-    out.append("## Figuras\n\n")
-    for qmd_file, chap, label, figs, _ in chapter_data:
+    out.append('<!-- Archivo generado por scripts/build_index_fig_tab.py. '
+               'No editar a mano: los titulos se cambian en '
+               'scripts/titulos_cortos_indice.tsv. -->\n\n')
+    out.append(f"# Índice de figuras y {NOMBRE_TABLA_PLURAL} "
+               "{#IndiceFigTab .unnumbered}\n\n")
+    out.append(f"Cada figura y cada {NOMBRE_TABLA.lower()} lleva el mismo "
+               "número que en el texto: el primer número corresponde al "
+               "capítulo, o a la letra del apéndice, y el segundo a su orden "
+               "dentro de él.\n\n")
+
+    out.append("## Figuras {.unnumbered}\n\n")
+    for qmd_file, chap, titulo, figs, _ in chapter_data:
         if not figs:
             continue
-        # Enlazar al .qmd: Quarto reescribe la extension segun el formato.
-        # Emitir .html dejaba enlaces muertos en el PDF y el .docx.
-        html_link = qmd_file
-        out.append(f"### [{label}]({html_link})\n\n")
+        out.append(f"### {encabezado(chap, titulo)} {{.unnumbered .unlisted}}\n\n")
         for f in figs:
-            out.append(f"- **Figura {etiqueta_fig(chap, f['n'])}** — {short(f['caption'])}\n")
+            out.append(f"- **Figura {etiqueta_fig(chap, f['n'])}.** "
+                       f"{entrada(f, chap, qmd_file)}\n")
         out.append("\n")
 
-    out.append("------------------------------------------------------------------------\n\n")
-    out.append("## Tablas\n\n")
-    has_any_table = any(tbls for _, _, _, _, tbls in chapter_data)
-    if not has_any_table:
-        out.append("*No se detectaron tablas con caption explícito en los capítulos analizados.*\n\n")
-    else:
-        for qmd_file, chap, label, _, tbls in chapter_data:
+    if any(tbls for *_, tbls in chapter_data):
+        out.append(f"## {NOMBRE_TABLA_PLURAL.capitalize()} {{.unnumbered}}\n\n")
+        for qmd_file, chap, titulo, _, tbls in chapter_data:
             if not tbls:
                 continue
-            html_link = qmd_file
-            out.append(f"### [{label}]({html_link})\n\n")
-            for t in tbls:
-                out.append(f"- **Tabla {etiqueta_fig(chap, t['n'])}** — {short(t['caption'])}\n")
+            out.append(f"### {encabezado(chap, titulo)} {{.unnumbered .unlisted}}\n\n")
+            for tb in tbls:
+                out.append(f"- **{NOMBRE_TABLA} {etiqueta_fig(chap, tb['n'])}.** "
+                           f"{entrada(tb, chap, qmd_file)}\n")
             out.append("\n")
 
     OUT.write_text(''.join(out), encoding='utf-8')
-    print(f"✓ Índice generado: {OUT.relative_to(ROOT)}")
-    print(f"  Figuras catalogadas: {total_figs}")
-    print(f"  Tablas catalogadas: {total_tbls}")
-    print(f"  Capítulos con figuras/tablas: {len(chapter_data)}")
+    print(f"Indice generado: {OUT.relative_to(ROOT)}")
+    print(f"  Figuras: {total_figs}   {NOMBRE_TABLA_PLURAL.capitalize()}: {total_tbls}")
+    if faltan:
+        print(f"  AVISO: {len(faltan)} sin titulo corto en {TITULOS.name}; "
+              "se uso el pie recortado:")
+        for x in faltan:
+            print(f"    {x}")
 
 
 if __name__ == '__main__':

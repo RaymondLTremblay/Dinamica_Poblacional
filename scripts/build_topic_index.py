@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-build_topic_index.py — genera Apendice_Indice_Temas.qmd, el índice
+build_topic_index.py: genera Apendice_Indice_Temas.qmd, el índice
 analítico del libro. A diferencia de un índice tradicional con números
 de página, éste apunta a capítulo y sección de cada aparición de un
-término — apropiado para un libro digital donde el número de página
+término, apropiado para un libro digital donde el número de página
 no es estable.
 
 El vocabulario indexable se deriva de los términos del glosario
@@ -23,41 +23,15 @@ from collections import defaultdict
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "Apendice_Indice_Temas.qmd"
 
-# IMPORTANTE: el numero de cada etiqueta es el que Quarto asigna realmente, y
-# esta lista sigue el orden de `_quarto.yml`, NO el orden alfabetico de los
-# archivos .qmd. Dos detalles que descuadraron este indice hasta septiembre de
-# 2026 (102-115 salian con -1, 119-123 con +1 y 117/118 con -6):
-#   1. `index.qmd` SI recibe numero: lleva `title:` en su YAML, de modo que es
-#      el capitulo 1 y todo lo demas corre a partir del 2. No se rastrea aqui
-#      porque son los preliminares, pero ocupa el numero 1.
-#   2. La parte «Historia» se declara al final de `_quarto.yml`, asi que
-#      117_Historia_breve y 118-Carl_Olaf_Tamm son los capitulos 21 y 22,
-#      aunque sus nombres de archivo los ordenen antes alfabeticamente.
-# Al anadir un capitulo, insertalo en su posicion de `_quarto.yml` y renumera
-# las etiquetas siguientes.
-CHAPTERS = [
-    ("102-Intro.qmd",                           "2. Introducción"),
-    ("103-Ciclos_de_Vida.qmd",                  "3. Ciclos de Vida"),
-    ("104-Recopilacion_datos_en_el_campo.qmd",  "4. Recopilación de datos"),
-    ("105-Transiciones.qmd",                    "5. Transiciones"),
-    ("106-calcular_fecundidad.qmd",             "6. Fecundidad"),
-    ("107-matU_matF_matC.qmd",                  "7. Matrices U, F y C"),
-    ("108-Bayesian_PPM.qmd",                    "8. Acercamiento bayesiano"),
-    ("109-Crecimiento_poblacional.qmd",         "9. Crecimiento poblacional"),
-    ("110-Propriedades.qmd",                    "10. Propiedades de la matriz"),
-    ("111-Elasticidad.qmd",                     "11. Elasticidad y sensibilidad"),
-    ("112-Dinamica_de_Transiciones.qmd",        "12. Dinámica transitoria"),
-    ("113-Funciones_de_Transferencia.qmd",      "13. Funciones de transferencia"),
-    ("114-LTRE.qmd",                            "14. LTRE"),
-    ("115-Metodos_de_simulaciones.qmd",         "15. Métodos de simulaciones"),
-    ("119-COMPADRE_ORCHIDS.qmd",                "16. COMPADRE"),
-    ("120-Rage_orquideas.qmd",                  "17. Rage"),
-    ("121-Traduccion_protocolo_informacion.qmd","18. Protocolo estándar"),
-    ("122-Impacto_de_Datos_sin_Sentido.qmd",    "19. Datos sin sentido"),
-    ("123-Conclusion.qmd",                      "20. Conclusión"),
-    ("117_Historia_breve.qmd",                  "21. Historia breve"),
-    ("118-Carl_Olaf_Tamm.qmd",                  "22. Carl Olof Tamm"),
-]
+# Capitulos numerados en el orden del libro, leidos de _quarto.yml por
+# capitulos_libro.py (alli esta el criterio de numeracion). Hasta septiembre de
+# 2026 esta lista estaba escrita a mano y se desfaso dos veces del libro.
+# Los apendices no se indexan.
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from capitulos_libro import capitulos  # noqa: E402
+
+CHAPTERS = [(f, f"{et}. {tit}") for f, et, tit in capitulos() if et.isdigit()]
 
 # Extension de los enlaces internos del indice.
 #   ".qmd"  -> Quarto reescribe el enlace segun el formato (.html en la web,
@@ -408,8 +382,12 @@ def main():
             first = "#"
         by_letter[first].append((term_label, appearances))
 
+    # Formato para el libro impreso (sugerencia editorial, septiembre de
+    # 2026): cada termino remite solo a los numeros de capitulo, y una nota al
+    # principio lo explica. Sin titulos de seccion, sin enlaces y sin «Cap.».
     out = []
-    desc = 'Índice analítico de temas del libro con enlaces a los capítulos y secciones donde se desarrolla cada concepto. 174 términos indexados.'
+    desc = (f'Índice de temas del libro: {len(index_entries)} términos, cada '
+            f'uno con los capítulos donde se trata.')
     out.append('---\n')
     out.append(f'description: "{desc}"\n')
     out.append('image: "images/Lepanthes_eltoroensis_Tremblay.jpeg"\n')
@@ -418,86 +396,27 @@ def main():
     out.append('twitter-card:\n')
     out.append(f'  description: "{desc}"\n')
     out.append('---\n\n')
+    out.append('<!-- Archivo generado por scripts/build_topic_index.py. '
+               'No editar a mano. -->\n\n')
     out.append("# Índice de temas {#IndiceTemas .unnumbered}\n\n")
-    out.append("Índice analítico del libro. Cada término aparece con los "
-               "capítulos y secciones donde se desarrolla — no con números "
-               "de página, porque éste es un libro digital cuya paginación "
-               "depende del dispositivo de lectura.\n\n")
-    out.append(f"**Total:** {len(index_entries)} términos indexados.\n\n")
-    out.append("Las entradas se generan automáticamente desde el "
-               "[glosario](Apendice_Glosario.qmd) y se buscan en cada "
-               "capítulo. Si echa de menos un término, puede sugerirlo "
-               "abriendo un *issue* en el repositorio del libro.\n\n")
-    out.append("------------------------------------------------------------------------\n\n")
+    out.append("*Los números que siguen a cada término remiten a los "
+               "capítulos donde se trata, no a páginas.*\n\n")
 
-    # Umbral: si un término aparece en muchos capítulos, listar sólo los
-    # capítulos (sin sub-secciones) para no inflar el índice con entradas
-    # extensas que son ruido en lugar de utilidad.
-    AGGREGATE_THRESHOLD = 7
-
-    def chapter_number(chapter_label: str) -> str:
-        """Extrae '1' de '1. Introducción', 'A' de 'A. Apéndice', etc."""
-        return chapter_label.split('.', 1)[0].strip()
+    def _num(chapter_label):
+        return int(chapter_label.split('.', 1)[0])
 
     for letter in sorted(by_letter.keys()):
         # H4 + .unlisted: las letras son separadores visuales, no entradas del
-        # TOC. El nivel H4 (< toc-depth=3) las excluye también del TOC de Word.
+        # TOC. El nivel H4 (< toc-depth) las excluye tambien del TOC de Word.
         out.append(f"#### {letter} {{.unlisted}}\n\n")
         for term_label, appearances in sorted(by_letter[letter], key=lambda x: x[0].lower()):
-            out.append(f"**{term_label}**\n\n")
-            # Si el término aparece en >= AGGREGATE_THRESHOLD capítulos,
-            # formato compacto: una sola línea con los NÚMEROS de capítulo
-            # como texto plano (sin hiperenlaces), separados por coma.
-            #
-            # IMPORTANTE: en la salida Typst (PDF), Quarto sustituye el texto
-            # de cualquier hiperenlace que apunte a un capítulo del libro por
-            # el TÍTULO completo del capítulo (con su número y todo) — lo que
-            # rompe nuestro formato compacto y reproduce el problema del
-            # listado vertical con comas huérfanas. Usar texto plano evita
-            # esta sustitución y produce la misma salida en HTML y PDF.
-            if len(appearances) >= AGGREGATE_THRESHOLD:
-                def _chapter_sort_key(item):
-                    label = item[0]
-                    prefix = label.split('. ', 1)[0]
-                    try:
-                        return (0, int(prefix))
-                    except ValueError:
-                        return (1, prefix)
-                sorted_chapters = sorted(appearances.keys(), key=_chapter_sort_key)
-                chapter_numbers = ", ".join(
-                    chapter_label.split('. ', 1)[0]
-                    for (chapter_label, _qmd_html) in sorted_chapters
-                )
-                out.append(f": *Concepto recurrente; ver caps.* {chapter_numbers}.\n")
-            else:
-                # Aplanar: una línea por sección, con la sección como link
-                # principal y el capítulo como contexto entre paréntesis.
-                entries = []
-                for (chapter_label, qmd_html), sections in appearances.items():
-                    # Deduplicar secciones con mismo título
-                    seen_titles = set()
-                    unique_sections = []
-                    for sec_title, sec_anchor in sections:
-                        if sec_title not in seen_titles:
-                            seen_titles.add(sec_title)
-                            unique_sections.append(sec_title)
-                    cnum = chapter_number(chapter_label)
-                    for sec_title in unique_sections:
-                        entries.append((sec_title, qmd_html, cnum, chapter_label))
-                # Ordenar por título de sección (alfabético) para facilitar lectura
-                for sec_title, qmd_html, cnum, chapter_label in sorted(entries, key=lambda x: x[0].lower()):
-                    if ENLACES is None:
-                        out.append(f": {sec_title} — Cap. {cnum}\n")
-                    else:
-                        out.append(f": [{sec_title}]({qmd_html}) — Cap. {cnum}\n")
-            out.append("\n")
+            numeros = sorted({_num(cl) for (cl, _q) in appearances.keys()})
+            out.append(f"**{term_label}**, {', '.join(str(n) for n in numeros)}\n\n")
         out.append("\n")
 
     OUT.write_text(''.join(out), encoding='utf-8')
-    print(f"✓ Índice generado: {OUT.relative_to(ROOT)}")
-    print(f"  Términos indexados: {len(index_entries)} de {len(TERMS)} en el vocabulario")
-    print(f"  Términos sin apariciones (no entran al índice): "
-          f"{len(TERMS) - len(index_entries)}")
+    print(f"Indice generado: {OUT.relative_to(ROOT)}")
+    print(f"  Terminos indexados: {len(index_entries)} de {len(TERMS)} en el vocabulario")
 
 
 if __name__ == '__main__':
