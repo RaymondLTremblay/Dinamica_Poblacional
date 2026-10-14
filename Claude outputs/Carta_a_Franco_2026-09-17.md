@@ -54,7 +54,9 @@ Acepto sacar del prefacio la lista de paquetes de R y la lista de autores por ca
 
 > Para consultar la lista completa de paquetes de R utilizados en este libro, puede dirigirse al Apéndice D. Además, puede consultar la lista de autores por capítulo en el Apéndice E, para facilitar su citación.
 
-[RAYMOND: FALTA DECIDIR, antes de enviar, (a) si se quitan también del prefacio los cuadros, el código y la sección «Cómo citar» con sus recuadros BibTeX, que ellos pasan al colofón; y (b) si la nota sobre el capítulo del protocolo sale del prefacio y va solo al comienzo del capítulo 17. Completar este párrafo según lo que decidas, o borrarlo.]
+También quité del prefacio la sección «Tabla de contenidos», que repetía a mano la lista de capítulos. El libro ya tiene su propio índice, así que no hacía falta.
+
+[RAYMOND: FALTA DECIDIR, antes de enviar, (a) si se quitan también del prefacio el código y la sección «Cómo citar» con sus recuadros BibTeX, que ellos pasan al colofón; y (b) si la nota sobre el capítulo del protocolo sale del prefacio y va solo al comienzo del capítulo 17. Completar este párrafo según lo que decidas, o borrarlo.]
 
 Una corrección para el apéndice de autores que me enviaron: la traductora se llama **Diana Molina Ozuma**, y así aparece ahora en todo el libro.
 
@@ -99,12 +101,12 @@ Quedan dos piezas que no estaban en ese esquema, y las puse al final, después d
 Esta entrega reemplaza por completo las anteriores. Les pido descartar las versiones viejas, incluidas las carpetas de figuras, para que no circulen dos numeraciones.
 
 - **01_Libro_completo:** el libro entero en Word, que es el archivo de trabajo, y el PDF como referencia visual.
-- **02_Capitulos_en_Word:** un Word por cada parte del libro, en orden y con la numeración definitiva:
+- **02_Capitulos_en_Word:** 34 archivos Word, uno por cada parte del libro, en orden y con la numeración definitiva:
   - Preliminares 1 a 5: Dedicatoria, Índice de figuras y cuadros, Prólogos, Agradecimientos y Prefacio.
   - Capítulos 1 a 21.
   - Apéndices A a E.
   - Finales 1 a 3: Glosario, Referencias e Índice de temas.
-- **03_Figuras:** las figuras por capítulo, en carpetas 01 a 21 y por apéndice. Cada archivo lleva el mismo número que su pie impreso, y cuando existe en PDF conviene usar esa versión, que escala sin pérdida.
+- **03_Figuras:** las 140 figuras por capítulo, en carpetas 01 a 21 y por apéndice. Cada archivo lleva el mismo número que su pie impreso, y cuando existe en PDF conviene usar esa versión, que escala sin pérdida.
 - **04_Prologos:** los dos prólogos firmados.
 
 Con esto la diseñadora debería poder trabajar sin correcciones adicionales de numeración. Quedo pendiente de la licencia, del año de publicación y de su parecer sobre el lugar de las Referencias y el Índice de temas.

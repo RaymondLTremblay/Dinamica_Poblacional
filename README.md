@@ -27,9 +27,9 @@ This open digital book introduces **Population Dynamics** using R, with orchid c
 
 ## Authors
 
-**Raymond L. Tremblay** (Autor Principal) Universidad de Puerto Rico, Recinto de Humacao, Departamento de Biología
+**Raymond L. Tremblay**, Universidad de Puerto Rico, Recinto de Humacao, Departamento de Biología
 
-**Co-authors:** - Aucencia Emeterio-Lara — ECOSUR, México - Edgar J. González — UNAM, México - Elaine González — Universidad de Artemisa, Cuba - Mariana Hernández-Apolinar — UNAM, México - Demetria Mondragón — IPN, México - Ernesto Mujíca Benitez — Universidad de Artemisa, Cuba - Paola Portillo Tzompa — UNAM, México - Adriana Ramírez Martínez — IPN, México - Tamara Ticktin — University of Hawaii at Manoa, USA
+**Collaborators:** - Aucencia Emeterio-Lara, ECOSUR, México - Edgar J. González, UNAM, México - Elaine González, Universidad de Artemisa, Cuba - Mariana Hernández-Apolinar, UNAM, México - Demetria Mondragón, IPN, México - Ernesto Mujica Benitez, Universidad de Artemisa, Cuba - Paola Portillo Tzompa, UNAM, México - Adriana Ramírez-Martínez, IPN, México - Tamara Ticktin, University of Hawaii at Manoa, USA
 
 ------------------------------------------------------------------------
 
@@ -37,14 +37,17 @@ This open digital book introduces **Population Dynamics** using R, with orchid c
 
 ```         
 Dinamica_Poblacional/
-├── index.qmd                  # Book landing page + Dedicatoria + Prefacio
-├── 102-123-*.qmd              # Book chapters (numbered)
-├── 117-118_Historia_*.qmd     # Historical chapters (Tamm, etc.)
-├── Appendix_A_*.qmd           # Static appendices (species list, data sheets)
-├── Apendice_Glosario.qmd      # Glossary (~144 terms)
-├── Apendice_Indice_Fig_Tab.qmd  # Auto-generated figure/table index
-├── Apendice_Indice_Temas.qmd  # Auto-generated topic/subject index
+├── index.qmd                  # Book landing page + Dedicatoria
+├── Apendice_Indice_Fig_Tab.qmd  # Auto-generated list of figures and cuadros (front matter)
+├── Prologos.qmd               # Forewords
 ├── Agradecimientos.qmd        # Acknowledgments
+├── Prefacio.qmd               # Preface
+├── 102-123-*.qmd              # Book chapters 1 to 19
+├── 117-118_Historia_*.qmd     # Historical chapters 20 and 21 (Tamm, etc.)
+├── Appendix_A-E_*.qmd         # Appendices: species list, data sheets, data, R packages, authors by chapter
+├── Apendice_Glosario.qmd      # Glossary
+├── Referencias.qmd            # Single bibliography for the whole book
+├── Apendice_Indice_Temas.qmd  # Auto-generated subject index
 ├── _quarto.yml                # Quarto project config
 ├── _language.yml              # Spanish callout labels (e.g., callout-tip → "Recomendación")
 ├── book.bib                   # Bibliography (471 entries, peerj CSL)
@@ -64,11 +67,13 @@ Dinamica_Poblacional/
 
 These run automatically during `quarto render` (configured as `pre-render` / `post-render` hooks in `_quarto.yml`). You don't need to invoke them by hand, but you can:
 
--   **`scripts/build_topic_index.py`** — regenerates `Apendice_Indice_Temas.qmd` (174 indexed terms drawn from the glossary, mapped to chapter/section appearances).
--   **`scripts/build_index_fig_tab.py`** — regenerates `Apendice_Indice_Fig_Tab.qmd` (52 figures, 7 captioned tables).
--   **`scripts/collect_figures.py`** — after render, copies every figure (static + R-chunk PNG + render_dual diagrams) into `figuras_editor/CC-Chapter_Name/NN_filename.png` for delivery to the book producer.
--   **`scripts/collect-figures.sh`** — shell wrapper around the above.
--   **`scripts/patch-orange-book.sh`** — Typst pagebreak compatibility patch (orange-book extension, Typst 0.13+).
+-   **`scripts/build_topic_index.py`**: regenerates `Apendice_Indice_Temas.qmd` (177 terms drawn from the glossary, each with the numbers of the chapters where it appears).
+-   **`scripts/build_index_fig_tab.py`**: regenerates `Apendice_Indice_Fig_Tab.qmd` (140 figures and 10 cuadros, with the short titles in `scripts/titulos_cortos_indice.tsv`).
+-   **`scripts/collect_figures.R`**: after render, copies every figure (static + R-chunk PNG + render_dual diagrams) into `figuras_editor/NN-Chapter_Name/Fig_X.Y_filename` for delivery to the book producer.
+-   **`scripts/cortar_docx_por_capitulo.py`** (manual): cuts the full Word file into one `.docx` per chapter with the book's numbering, plus a zip.
+-   **`scripts/armar_entrega_editorial.sh`** (manual): builds the full delivery zip for the publisher.
+-   **`scripts/collect-figures.sh`**: shell wrapper around the above.
+-   **`scripts/patch-orange-book.sh`**: Typst pagebreak compatibility patch (orange-book extension, Typst 0.13+).
 
 ------------------------------------------------------------------------
 
@@ -129,4 +134,4 @@ This work is licensed under a [Creative Commons Attribution-NonCommercial 4.0 In
 
 If you use this material, please cite:
 
-> Tremblay, R. L., Emeterio-Lara, A., González, E. J., González, E., Hernández-Apolinar, M., Mondragón, D., Mujíca Benitez, E., Portillo Tzompa, P., Ramírez Martínez, A., & Ticktin, T. (2026). *Dinámica Poblacional con Ejemplos de Orquídeas*. GitHub. https://raymondltremblay.github.io/Dinamica_Poblacional
+> Tremblay, R. L., Emeterio-Lara, A., González, E. J., González, E., Hernández-Apolinar, M., Mondragón, D., Mujica Benitez, E., Portillo Tzompa, P., Ramírez-Martínez, A., & Ticktin, T. (2026). *Dinámica Poblacional con Ejemplos de Orquídeas*. GitHub. https://raymondltremblay.github.io/Dinamica_Poblacional

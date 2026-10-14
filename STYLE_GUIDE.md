@@ -54,7 +54,7 @@ Convenciones editoriales del libro. Estándar: español panhispánico (RAE/ASALE
 
 ## Estructura
 
-- Pies de tabla y figura: "Tabla 1. ..." / "Figura 1. ..." con número y punto.
+- Pies de cuadro y figura: los numera Quarto («Cuadro 3.1», «Figura 3.1»). Se dice **«Cuadro»**, no «Tabla» (decisión editorial de septiembre de 2026); «tabla de vida», las tablas de datos y las tablas de otros artículos conservan «tabla».
 - Referencias cruzadas: preferir `[nombre del capítulo](archivo.qmd)` sobre "Capítulo X".
 - Callouts: `::: callout-note`, `::: callout-tip`, `::: callout-important`, `::: callout-warning`.
 - **Espaciador de callouts**: una línea con el texto literal `&nbsp;` (con línea en blanco arriba y abajo) **antes y después** de cada callout. No usar el carácter U+00A0 (no funciona como espaciador y RStudio lo muestra como punto rojo). Ayudante: `scripts/fix_callout_spacers.py`.
